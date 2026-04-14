@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes create-next-app@latest ecopulse-next --typescript --tailwind --app --src-dir --eslint --import-alias \"@/*\" --no-turbopack --use-npm --yes)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
