@@ -45,7 +45,7 @@ export function ProfilePage() {
   const stage = gardenStage(level);
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
       <GlassCard variant="hud" accent="mint" className="px-5 py-5">
         <div className="flex items-start gap-4">
           <button
@@ -60,16 +60,16 @@ export function ProfilePage() {
           </button>
 
           <div className="min-w-0 flex-1">
-            <div className="hud-label">Seu perfil</div>
-            <h1 className="mt-2 text-[2rem] font-semibold leading-none text-text-primary">{name}</h1>
+            <div className="hud-label">Seu espaço</div>
+            <h1 className="mt-2 text-[1.9rem] font-semibold leading-none text-text-primary">{name}</h1>
             <p className="mt-3 text-sm leading-6 text-text-secondary">
-              Um retrato claro da sua jornada: progresso, recompensas, impacto e presença na comunidade.
+              Progresso, impacto e recompensas organizados para você ler rápido e decidir o próximo passo.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="command-pill" data-active="true">
                 Nível {level}
               </span>
-              <span className="command-pill">{tribe}</span>
+              <span className="command-pill">{tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}</span>
               <span className="command-pill">{GARDEN_LABEL[stage]}</span>
             </div>
           </div>
@@ -83,7 +83,7 @@ export function ProfilePage() {
 
         <div className="mt-5">
           <div className="mb-2 flex items-center justify-between text-sm text-text-secondary">
-            <span>Progresso até o próximo nível</span>
+            <span>Próximo nível</span>
             <span>{xp}/{xpToNext} XP</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-white/6">
@@ -122,7 +122,7 @@ export function ProfilePage() {
 function QuickStat({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="surface surface-ghost rounded-[20px] px-3 py-3 text-center">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
       <div className="mt-1 text-lg font-semibold text-text-primary">{value}</div>
     </div>
   );
@@ -138,9 +138,8 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
     <div className="space-y-5">
       <GlassCard variant="panel" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Jardim"
-          title="Seu impacto já está tomando forma"
-          subtitle="Uma leitura visual do que suas escolhas já representam dentro do ecossistema."
+          title="Seu impacto em formação"
+          subtitle="Um resumo direto do que suas escolhas já começaram a mover."
         />
         <div className="grid grid-cols-3 gap-3">
           <ImpactMetric pct={Math.min(100, scannedCount * 10)} color="var(--accent-green)" label="CO2" value={`${co2}kg`} />
@@ -156,9 +155,8 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
 
       <GlassCard variant="panel" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Fundo EcoPulse"
-          title="Transparência sobre impacto e repasse"
-          subtitle="O Mercado Verde nasce com uma lógica simples: explicar com clareza como o valor circula."
+          title="Fundo EcoPulse"
+          subtitle="Como a lógica de repasse aparece hoje dentro do app."
           right={
             <button type="button" onClick={() => openModal({ kind: 'greenMarketInfo' })} className="command-pill">
               Como funciona
@@ -183,9 +181,8 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
 
       <section className="space-y-4">
         <SectionHeader
-          eyebrow="Perguntas rápidas"
-          title="O que muda com o Mercado Verde"
-          subtitle="Respostas diretas para manter a monetização transparente desde a fase inicial."
+          title="Perguntas rápidas"
+          subtitle="Respostas curtas para entender o Mercado Verde sem rodeios."
         />
         <div className="space-y-3">
           {MARKET_FAQS.map((item, index) => (
@@ -204,9 +201,8 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
 
       <section className="space-y-4">
         <SectionHeader
-          eyebrow="Parceiros"
-          title="OSCs em destaque nesta fase"
-          subtitle="Exemplos de como a curadoria de impacto vai aparecer dentro do app."
+          title="OSCs em destaque"
+          subtitle="Exemplos de como a curadoria de impacto aparece nesta fase."
         />
         <div className="space-y-3">
           {IMPACT_PARTNERS.map((partner, index) => (
@@ -260,12 +256,11 @@ function ShopPanel() {
   const owned = useGameStore((s) => s.ownedShopItems);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <GlassCard variant="hud" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Mercado Verde"
-          title="Tokens, clareza e impacto no mesmo lugar"
-          subtitle="A loja premium nasce primeiro como narrativa confiável: mesma moeda do jogo, mais transparência sobre destino do valor."
+          title="Mercado Verde"
+          subtitle="A loja premium aparece aqui de forma direta: mesma moeda, mais clareza sobre impacto."
         />
         <div className="grid grid-cols-3 gap-3">
           <QuickStat label="Seu saldo" value={`${tokens}`} />
@@ -284,9 +279,8 @@ function ShopPanel() {
 
       <section className="space-y-4">
         <SectionHeader
-          eyebrow="Packs"
-          title="Escolha seu pack de EcoTokens"
-          subtitle="A lógica comercial já aparece aqui, mesmo antes de existir checkout real."
+          title="Packs de EcoTokens"
+          subtitle="Veja a lógica comercial antes da chegada do checkout real."
         />
         <div className="space-y-3">
           {TOKEN_PACKS.map((pack, index) => (
@@ -325,8 +319,7 @@ function ShopPanel() {
 
       <section className="space-y-4">
         <SectionHeader
-          eyebrow="Loja atual"
-          title="Itens já disponíveis no app"
+          title="Itens já disponíveis"
           subtitle="Os tokens comprados futuramente entram no mesmo saldo usado aqui."
         />
         <div className="grid grid-cols-2 gap-3">
@@ -359,44 +352,49 @@ function ShopPanel() {
 
 function BadgesPanel({ owned }: { owned: string[] }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {BADGES.map((badge, index) => {
-        const unlocked = owned.includes(badge.id);
-        const accent =
-          badge.tier === 'gold' ? 'amber' : badge.tier === 'epic' ? 'cyan' : index % 2 === 0 ? 'mint' : 'amber';
+    <div className="space-y-3">
+      <SectionHeader
+        title="Badges conquistados"
+        subtitle="Suas conquistas ficam mais fáceis de ler quando aparecem como coleção, não como vitrine."
+      />
+      <div className="grid grid-cols-2 gap-3">
+        {BADGES.map((badge, index) => {
+          const unlocked = owned.includes(badge.id);
+          const accent =
+            badge.tier === 'gold' ? 'amber' : badge.tier === 'epic' ? 'cyan' : index % 2 === 0 ? 'mint' : 'amber';
 
-        return (
-          <GlassCard
-            key={badge.id}
-            variant="tile"
-            accent={accent}
-            className={cn('flex h-full flex-col gap-3 px-4 py-4 text-center', !unlocked && 'opacity-45 grayscale')}
-          >
-            <div className="flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-white/6 text-3xl">
-                {badge.emoji}
+          return (
+            <GlassCard
+              key={badge.id}
+              variant="tile"
+              accent={accent}
+              className={cn('flex h-full flex-col gap-3 px-4 py-4 text-center', !unlocked && 'opacity-45 grayscale')}
+            >
+              <div className="flex justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-white/6 text-3xl">
+                  {badge.emoji}
+                </div>
               </div>
-            </div>
-            <div className="text-sm font-semibold text-text-primary">{badge.name}</div>
-            <div className="text-xs leading-5 text-text-secondary">{badge.desc}</div>
-            <span className="command-pill justify-center" data-active={unlocked ? 'true' : undefined}>
-              {badge.tier}
-            </span>
-          </GlassCard>
-        );
-      })}
+              <div className="text-sm font-semibold text-text-primary">{badge.name}</div>
+              <div className="text-xs leading-5 text-text-secondary">{badge.desc}</div>
+              <span className="command-pill justify-center" data-active={unlocked ? 'true' : undefined}>
+                {badge.tier}
+              </span>
+            </GlassCard>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 function TribesPanel({ currentTribe }: { currentTribe: string }) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <section className="space-y-4">
         <SectionHeader
-          eyebrow="Tribos"
-          title="Onde você se encaixa na rede"
-          subtitle="Veja sua facção atual e acompanhe o clima competitivo da semana."
+          title="Sua posição na rede"
+          subtitle="Entenda sua tribo atual e o clima competitivo da semana."
         />
         <div className="space-y-3">
           {TRIBES.map((tribe) => {
@@ -437,8 +435,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
 
       <GlassCard variant="panel" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Ranking"
-          title="Leitura rápida da semana"
+          title="Ranking da semana"
           subtitle="Quem está puxando a comunidade agora."
         />
         <ol className="space-y-3">
@@ -482,7 +479,7 @@ function FundMetric({
 }) {
   return (
     <div className={cn('rounded-[20px] border border-white/8 bg-white/5 px-4 py-4', className)}>
-      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
       <div className="mt-2 text-base font-semibold text-text-primary">{value}</div>
     </div>
   );
@@ -491,7 +488,7 @@ function FundMetric({
 function PackMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[18px] border border-white/8 bg-white/5 px-3 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
       <div className="mt-2 text-sm font-semibold text-text-primary">{value}</div>
     </div>
   );

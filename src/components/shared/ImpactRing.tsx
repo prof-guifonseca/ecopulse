@@ -19,9 +19,9 @@ export function ImpactRing({ pct, color = 'var(--accent-green)', size = 72, labe
           } as React.CSSProperties
         }
       >
-        <span className="font-display text-sm font-bold">{value}</span>
+        <span className="text-sm font-semibold">{value}</span>
       </div>
-      <span className="text-center text-[10px] font-medium text-text-secondary">{label}</span>
+      <span className="text-center text-[0.72rem] font-medium text-text-secondary">{label}</span>
     </div>
   );
 }

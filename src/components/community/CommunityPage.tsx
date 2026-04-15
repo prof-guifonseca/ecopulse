@@ -28,16 +28,15 @@ export function CommunityPage() {
   const openModal = useUIStore((s) => s.openModal);
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
-      <GlassCard variant="hud" accent="mint" className="px-5 py-5">
+    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
+      <GlassCard variant="panel" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Comunidade"
-          title="Veja o que está movimentando a rede"
-          subtitle="Histórias curtas, posts úteis e conversas rápidas para manter o senso de pertencimento."
+          title="A rede em movimento"
+          subtitle="Histórias rápidas no topo, conversa útil logo abaixo e sem blocos concorrendo pelo mesmo espaço."
           right={
             <button
               onClick={openChatList}
-              className="rounded-full bg-white/7 px-4 py-2 text-sm font-semibold text-text-primary"
+              className="rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm font-medium text-text-primary"
             >
               Mensagens
             </button>
@@ -49,19 +48,17 @@ export function CommunityPage() {
             <button
               key={story.user}
               onClick={() => openStory(index)}
-              className="group flex min-w-[110px] shrink-0 flex-col gap-2 text-left"
+              className="group flex min-w-[116px] shrink-0 flex-col gap-2 text-left"
             >
-              <div className="surface surface-tile surface-accent-mint flex h-[132px] items-end rounded-[24px] px-4 py-4 transition-transform duration-200 group-hover:translate-y-[-2px]">
+              <div className="surface surface-tile surface-accent-mint flex h-[128px] items-end rounded-[22px] px-4 py-4 transition-transform duration-200 group-hover:translate-y-[-2px]">
                 <div>
                   <div className="text-4xl">{story.avatar}</div>
-                  <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70">
-                    story
-                  </div>
+                  <div className="mt-3 text-[0.72rem] font-medium text-white/70">Story</div>
                 </div>
               </div>
               <div>
                 <div className="truncate text-sm font-semibold text-text-primary">{story.user}</div>
-                <div className="text-xs text-text-secondary">{story.text}</div>
+                <div className="text-xs leading-5 text-text-secondary">{story.text}</div>
               </div>
             </button>
           ))}
@@ -188,7 +185,7 @@ function FeedPostCard({
 
 function HashtagList() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="space-y-3">
       {HASHTAGS.map((entry, index) => (
         <GlassCard
           key={entry.tag}
@@ -196,10 +193,14 @@ function HashtagList() {
           accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'amber' : 'cyan'}
           className="px-4 py-4"
         >
-          <div className="hud-label">Tópico em alta</div>
-          <div className="mt-3 text-base font-semibold text-text-primary">{entry.tag}</div>
-          <div className="mt-2 text-sm text-text-secondary">
-            {entry.count.toLocaleString('pt-BR')} posts ativos
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-base font-semibold text-text-primary">{entry.tag}</div>
+              <div className="mt-1 text-sm text-text-secondary">
+                {entry.count.toLocaleString('pt-BR')} posts ativos
+              </div>
+            </div>
+            <span className="command-pill">Em alta</span>
           </div>
         </GlassCard>
       ))}

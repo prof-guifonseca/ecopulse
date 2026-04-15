@@ -18,16 +18,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [hydrated, onboarded, router]);
 
   return (
-    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden border-x border-white/5 bg-[rgba(10,17,13,0.72)] shadow-[0_30px_120px_rgba(1,8,5,0.45)]">
+    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden bg-[rgba(9,16,13,0.78)] sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[36px] sm:border sm:border-white/6 sm:shadow-[0_28px_90px_rgba(1,8,5,0.4)]">
       <AppHeader />
       <main
-        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4 pt-1"
         style={{
-          paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 20px)',
+          paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 22px)',
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        <div className="mx-auto max-w-[var(--shell-width)] pt-3">
+        <div className="mx-auto max-w-[var(--shell-width)]">
           {children}
         </div>
       </main>

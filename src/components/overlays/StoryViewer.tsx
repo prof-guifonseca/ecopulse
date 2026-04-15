@@ -47,7 +47,7 @@ export function StoryViewer({ index }: Props) {
 
   return (
     <div className="fixed inset-0 z-[500] flex justify-center bg-[rgba(5,10,8,0.92)]" style={{ animation: 'fadeIn 0.3s ease' }}>
-      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#0a120d_0%,#111a14_100%)]">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#09110d_0%,#111914_100%)]">
         <div className="flex gap-1 px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)]">
           {STORIES.map((_, i) => {
             const fill = i < index ? 100 : i === index ? progress : 0;
@@ -64,7 +64,7 @@ export function StoryViewer({ index }: Props) {
             <span className="text-2xl">{story.avatar}</span>
             <div>
               <div className="text-sm font-semibold text-text-primary">{story.user}</div>
-              <div className="text-[11px] text-text-secondary">agora na comunidade</div>
+              <div className="text-xs text-text-secondary">Agora na comunidade</div>
             </div>
           </div>
           <button

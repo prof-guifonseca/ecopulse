@@ -43,10 +43,10 @@ export function MapPointModal({ id }: Props) {
           >
             {point.emoji}
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-display text-base font-bold">{point.name}</h3>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base font-semibold">{point.name}</h3>
             <span
-              className="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="mt-1 inline-block rounded-full px-2 py-0.5 text-[0.68rem] font-semibold"
               style={{ background: `${point.color}25`, color: point.color }}
             >
               {MAP_DETAIL_LABELS[point.type]}

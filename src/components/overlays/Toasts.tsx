@@ -17,7 +17,7 @@ export function Toasts() {
         <div
           key={t.id}
           className={cn(
-            'surface pointer-events-auto flex w-full items-center gap-3 rounded-[22px] px-4 py-3 text-sm font-medium shadow-[0_18px_40px_rgba(1,8,5,0.28)]',
+            'surface pointer-events-auto flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-sm font-medium shadow-[0_16px_34px_rgba(1,8,5,0.24)]',
             t.type === 'reward'
               ? 'surface-panel surface-accent-amber'
               : t.type === 'info'
@@ -28,7 +28,7 @@ export function Toasts() {
         >
           <span
             aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-lg"
+            className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-base"
           >
             {ICONS[t.type]}
           </span>

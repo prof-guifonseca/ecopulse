@@ -63,65 +63,59 @@ export function ScannerPage() {
   };
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
       <GlassCard variant="hud" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Scanner"
-          title="Leia produtos em segundos"
-          subtitle="Escaneie um item, entenda seu impacto e transforme consumo em decisão mais consciente."
+          title="Escaneie e entenda rápido"
+          subtitle="Abra um produto, veja a ficha completa e alimente seu histórico sem passar por um painel técnico."
         />
 
         <div className="scan-frame px-5 py-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="command-pill" data-active="true">
-              {scannedProducts.length} já vistos
-            </div>
-            <div className="command-pill">{missionScan ? 'missão concluída' : 'missão pendente'}</div>
-          </div>
-
-          <div className="relative flex min-h-[280px] items-center justify-center py-8">
-            <div className="absolute h-[240px] w-[240px] rounded-full bg-[radial-gradient(circle,rgba(145,216,159,0.2),transparent_62%)] blur-2xl" />
+          <div className="relative flex min-h-[260px] items-center justify-center py-8">
+            <div className="absolute h-[240px] w-[240px] rounded-full bg-[radial-gradient(circle,rgba(145,216,159,0.16),transparent_62%)] blur-2xl" />
             <div className="absolute h-[210px] w-[210px] rounded-full border border-white/8" />
-            <div className="absolute h-[150px] w-[150px] rounded-full border border-accent-green/30" />
+            <div className="absolute h-[156px] w-[156px] rounded-full border border-accent-green/20" />
             <div
               className="pointer-events-none absolute inset-x-8 top-1/2 h-px"
               style={{
                 background: 'var(--gradient-primary)',
                 animation: scanning ? 'scanLine 1.2s linear infinite' : 'none',
-                opacity: scanning ? 1 : 0.35,
+                opacity: scanning ? 1 : 0.3,
               }}
             />
-            <div className="flex h-28 w-28 items-center justify-center rounded-[32px] border border-white/8 bg-white/6 text-6xl shadow-[0_18px_36px_rgba(145,216,159,0.12)]">
+            <div className="flex h-28 w-28 items-center justify-center rounded-[32px] border border-white/8 bg-white/6 text-6xl shadow-[0_18px_36px_rgba(145,216,159,0.1)]">
               📷
             </div>
           </div>
 
-          <div className="space-y-4">
-            <p className="text-sm leading-6 text-text-secondary">
-              {scanning
-                ? 'Estamos analisando o item agora.'
-                : 'Use o simulador para abrir um produto, ganhar recompensa e alimentar seu histórico.'}
-            </p>
-            <button
-              onClick={simulateScan}
-              disabled={scanning}
-              className={cn(
-                'w-full rounded-full px-5 py-3 text-sm font-bold text-bg-primary transition-opacity',
-                scanning && 'opacity-70'
-              )}
-              style={{ background: 'var(--gradient-primary)' }}
-            >
-              {scanning ? 'Escaneando...' : 'Simular scan'}
-            </button>
+          <div className="grid grid-cols-2 gap-2">
+            <QuietStat label="Histórico" value={`${scannedProducts.length} itens`} />
+            <QuietStat label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} />
           </div>
+
+          <p className="mt-4 text-sm leading-6 text-text-secondary">
+            {scanning
+              ? 'Estamos analisando o item agora.'
+              : 'Use o simulador para abrir uma ficha completa, ganhar recompensa e registrar esse produto na sua rotina.'}
+          </p>
+          <button
+            onClick={simulateScan}
+            disabled={scanning}
+            className={cn(
+              'mt-4 w-full rounded-full px-5 py-3 text-sm font-semibold text-bg-primary transition-opacity',
+              scanning && 'opacity-70'
+            )}
+            style={{ background: 'var(--gradient-primary)' }}
+          >
+            {scanning ? 'Escaneando...' : 'Simular scan'}
+          </button>
         </div>
       </GlassCard>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         <SectionHeader
-          eyebrow="Busca"
-          title="Encontre um produto"
-          subtitle="Pesquise por nome, marca ou categoria para abrir a ficha completa."
+          title="Pesquisar antes de escanear"
+          subtitle="Busque por nome, marca ou categoria para abrir a ficha direto."
         />
         <div className="input-shell flex items-center gap-3 px-4 py-3">
           <span className="text-xl text-text-secondary">🔎</span>
@@ -134,11 +128,10 @@ export function ScannerPage() {
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         <SectionHeader
-          eyebrow="Catálogo"
-          title="Produtos disponíveis"
-          subtitle={`${filtered.length} item${filtered.length === 1 ? '' : 's'} prontos para consulta.`}
+          title="Produtos para consultar"
+          subtitle={`${filtered.length} item${filtered.length === 1 ? '' : 's'} disponíveis agora.`}
         />
 
         <div className="space-y-3">
@@ -154,15 +147,13 @@ export function ScannerPage() {
                 className="overflow-hidden px-4 py-4 transition-transform duration-200 group-hover:translate-y-[-2px]"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[22px] bg-white/6 text-3xl">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-white/6 text-3xl">
                     {product.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-base font-semibold leading-6 text-text-primary">
-                          {product.name}
-                        </h3>
+                        <h3 className="text-base font-semibold leading-6 text-text-primary">{product.name}</h3>
                         <p className="mt-1 text-sm text-text-secondary">
                           {product.brand} · {product.category}
                         </p>
@@ -182,6 +173,15 @@ export function ScannerPage() {
           ))}
         </div>
       </section>
+    </div>
+  );
+}
+
+function QuietStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="surface surface-ghost rounded-[18px] px-3 py-3">
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
+      <div className="mt-1 text-sm font-semibold text-text-primary">{value}</div>
     </div>
   );
 }

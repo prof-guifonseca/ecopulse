@@ -24,73 +24,68 @@ export function HomePage() {
   const activeChallenges = useGameStore((s) => s.activeChallenges.length);
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
       <GlassCard variant="hud" accent="mint" className="px-5 py-5">
         <div className="flex items-start gap-4">
-          <div className="rounded-[28px] border border-white/8 bg-white/6 p-2 shadow-[0_18px_36px_rgba(145,216,159,0.12)]">
+          <div className="rounded-[28px] border border-white/8 bg-white/6 p-2 shadow-[0_16px_30px_rgba(145,216,159,0.12)]">
             <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="hud-label">Hoje no EcoPulse</div>
-            <h1 className="mt-2 text-[2rem] font-semibold leading-none text-text-primary">
-              {name}, seu impacto continua hoje.
-            </h1>
+            <div className="hud-label">Bom te ver</div>
+            <h1 className="mt-2 text-[1.9rem] font-semibold text-text-primary">{name}, siga pelo essencial.</h1>
             <p className="mt-3 text-sm leading-6 text-text-secondary">
-              Priorize sua próxima missão, acompanhe os tokens do dia e mantenha o ritmo da semana.
+              Concluir as missões do dia é o caminho mais curto para manter ritmo e abrir recompensas.
             </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-3">
-          <StatChip label="Streak" value={`${streak} dias`} />
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <StatChip label="Sequência" value={`${streak} dias`} />
           <StatChip label="Tokens" value={tokens} />
           <StatChip label="Scans" value={scannedCount} />
         </div>
 
-        <div className="mt-5 flex items-center gap-3">
+        <div className="mt-5 flex items-center gap-2">
           <Link
             href="/scanner"
-            className="flex-1 rounded-full px-5 py-3 text-center text-sm font-bold text-bg-primary"
+            className="flex-1 rounded-full px-5 py-3 text-center text-sm font-semibold text-bg-primary"
             style={{ background: 'var(--gradient-primary)' }}
           >
             Abrir scanner
           </Link>
-          <div className="command-pill" data-active="true">
+          <span className="command-pill whitespace-nowrap" data-active="true">
             +{tokensToday} hoje
-          </div>
+          </span>
         </div>
       </GlassCard>
 
       <MissionsPanel />
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         <SectionHeader
-          eyebrow="Panorama"
-          title="Como está seu ritmo hoje"
-          subtitle="Uma leitura rápida para decidir onde investir sua atenção agora."
+          title="Seu dia em uma leitura rápida"
+          subtitle="Os sinais principais para decidir onde colocar energia agora."
         />
         <div className="grid grid-cols-2 gap-3">
-          <MetricCard label="Tokens do dia" value={tokensToday} icon="🪙" accent="amber" />
-          <MetricCard label="Produtos escaneados" value={scannedCount} icon="📦" accent="mint" />
-          <MetricCard label="Streak atual" value={streak} icon="🔥" accent="amber" />
+          <MetricCard label="Tokens hoje" value={tokensToday} icon="🪙" accent="amber" />
+          <MetricCard label="Produtos vistos" value={scannedCount} icon="📦" accent="mint" />
+          <MetricCard label="Sequência" value={streak} icon="🔥" accent="amber" />
           <MetricCard label="Desafios ativos" value={activeChallenges} icon="🌱" accent="mint" />
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         <SectionHeader
-          eyebrow="Desafios"
-          title="Seu próximo ciclo da semana"
-          subtitle="Entre em desafios solo ou em grupo para subir de nível sem dispersar sua atenção."
+          title="Desafios para manter ritmo"
+          subtitle="Entre em um ciclo por vez e avance sem espalhar sua atenção."
         />
         <ChallengesList />
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         <SectionHeader
-          eyebrow="Criatividade"
-          title="Academia de upcycling"
-          subtitle="Ideias práticas para transformar materiais do dia a dia em novas utilidades."
+          title="Ideias para reaproveitar melhor"
+          subtitle="Tutoriais curtos para transformar materiais comuns em algo útil."
         />
         <UpcyclingGrid />
       </section>
@@ -100,9 +95,9 @@ export function HomePage() {
 
 function StatChip({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="surface surface-ghost rounded-[20px] px-3 py-3 text-center">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
-      <div className="mt-1 text-lg font-semibold text-text-primary">{value}</div>
+    <div className="surface surface-ghost rounded-[18px] px-3 py-3 text-center">
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
+      <div className="mt-1 text-base font-semibold text-text-primary">{value}</div>
     </div>
   );
 }
@@ -122,7 +117,7 @@ function MetricCard({
     <GlassCard variant="tile" accent={accent === 'mint' ? 'mint' : 'amber'} className="px-4 py-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
+          <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
           <div className="mt-2 text-2xl font-semibold text-text-primary">{value}</div>
         </div>
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/7 text-xl">
@@ -140,20 +135,17 @@ function MissionsPanel() {
 
   return (
     <GlassCard variant="panel" accent="mint" className="px-5 py-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="hud-label">Missões do dia</div>
-          <h2 className="mt-2 text-2xl font-semibold">Comece pelo que gera tração agora</h2>
-          <p className="mt-2 text-sm leading-6 text-text-secondary">
-            Três ações simples para manter consistência no app e abrir o bônus diário.
-          </p>
-        </div>
-        <div className="command-pill" data-active="true">
-          {done}/3 completas
-        </div>
-      </div>
+      <SectionHeader
+        title="Missões do dia"
+        subtitle="Três ações simples para manter constância e liberar o bônus diário."
+        right={
+          <span className="command-pill" data-active="true">
+            {done}/3 concluídas
+          </span>
+        }
+      />
 
-      <div className="mt-5 space-y-3">
+      <div className="space-y-3">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
 
@@ -161,8 +153,8 @@ function MissionsPanel() {
             <div
               key={mission.id}
               className={cn(
-                'surface surface-ghost flex items-center gap-3 rounded-[22px] px-4 py-4',
-                isDone && 'surface-accent-mint border-accent-green/20 bg-accent-green/10'
+                'surface surface-ghost flex items-center gap-3 rounded-[20px] px-4 py-4',
+                isDone && 'border-accent-green/20 bg-accent-green/10'
               )}
             >
               <div
@@ -175,7 +167,7 @@ function MissionsPanel() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold text-text-primary">{mission.title}</div>
-                <div className="mt-1 text-sm text-text-secondary">+{mission.reward} tokens</div>
+                <div className="mt-1 text-sm text-text-secondary">Recompensa: +{mission.reward} tokens</div>
               </div>
             </div>
           );
@@ -185,7 +177,7 @@ function MissionsPanel() {
       <div className="mt-5">
         <div className="mb-2 flex items-center justify-between gap-3 text-sm text-text-secondary">
           <span>Bônus diário</span>
-          <span>{bonusClaimed ? 'Coletado' : '+25 ao completar tudo'}</span>
+          <span>{bonusClaimed ? 'Coletado' : '+25 ao concluir tudo'}</span>
         </div>
         <div className="relative h-2 overflow-hidden rounded-full bg-white/6">
           <div
@@ -203,7 +195,7 @@ function ClaimBonusButton() {
   return (
     <button
       onClick={tryClaimDailyBonus}
-      className="mt-4 w-full rounded-full px-5 py-3 text-sm font-bold text-bg-primary"
+      className="mt-4 w-full rounded-full px-5 py-3 text-sm font-semibold text-bg-primary"
       style={{ background: 'var(--gradient-gold)' }}
     >
       Coletar bônus diário
@@ -217,7 +209,7 @@ function ChallengesList() {
   const progress = useGameStore((s) => s.challengeProgress);
   const join = useGameStore((s) => s.joinChallenge);
   const advance = useGameStore((s) => s.advanceChallenge);
-  const completeCh = useGameStore((s) => s.completeChallenge);
+  const completeChallenge = useGameStore((s) => s.completeChallenge);
   const showToast = useUIStore((s) => s.showToast);
   const fireConfetti = useUIStore((s) => s.fireConfetti);
 
@@ -226,8 +218,12 @@ function ChallengesList() {
       {CHALLENGES.map((challenge) => {
         const isActive = activeChallenges.includes(challenge.id);
         const isDone = completedChallenges.includes(challenge.id);
-        const cur = progress[challenge.id] ?? 0;
-        const prog = isDone ? 100 : isActive ? Math.min(100, (cur / challenge.duration) * 100) : 0;
+        const currentProgress = progress[challenge.id] ?? 0;
+        const completion = isDone
+          ? 100
+          : isActive
+          ? Math.min(100, (currentProgress / challenge.duration) * 100)
+          : 0;
 
         const handle = () => {
           if (isDone) return;
@@ -243,7 +239,7 @@ function ChallengesList() {
           showToast('+5 Eco-Tokens! 💪', 'reward');
 
           if (finished) {
-            completeCh(challenge.id);
+            completeChallenge(challenge.id);
             awardTokens(challenge.tokens);
             showToast(`Desafio completo! +${challenge.tokens} tokens 🏆`, 'reward');
             fireConfetti();
@@ -253,7 +249,12 @@ function ChallengesList() {
         };
 
         return (
-          <GlassCard key={challenge.id} variant="tile" accent={challenge.type === 'individual' ? 'mint' : 'violet'} className="px-4 py-4">
+          <GlassCard
+            key={challenge.id}
+            variant="tile"
+            accent={challenge.type === 'individual' ? 'mint' : 'violet'}
+            className="px-4 py-4"
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -262,7 +263,7 @@ function ChallengesList() {
                 </div>
                 <div className="mt-2 flex flex-wrap gap-3 text-sm text-text-secondary">
                   <span>{challenge.type === 'individual' ? 'Solo' : 'Em grupo'}</span>
-                  <span>{challenge.participants.toLocaleString('pt-BR')} participantes</span>
+                  <span>{challenge.participants.toLocaleString('pt-BR')} pessoas</span>
                   <span>{challenge.duration} dias</span>
                 </div>
               </div>
@@ -272,13 +273,13 @@ function ChallengesList() {
             <div className="mt-4">
               <div className="mb-2 flex items-center justify-between text-sm text-text-secondary">
                 <span>Progresso</span>
-                <span>{Math.round(prog)}%</span>
+                <span>{Math.round(completion)}%</span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/6">
                 <div
                   className="h-full rounded-full transition-[width] duration-500"
                   style={{
-                    width: `${prog}%`,
+                    width: `${completion}%`,
                     background:
                       challenge.type === 'individual' ? 'var(--gradient-primary)' : 'var(--gradient-purple)',
                   }}
@@ -332,13 +333,8 @@ function UpcyclingGrid() {
             accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'amber' : 'cyan'}
             className="h-full overflow-hidden p-0 transition-transform duration-200 group-hover:translate-y-[-2px]"
           >
-            <div
-              className="flex min-h-[124px] items-end px-4 py-4"
-              style={{ background: tutorial.gradient }}
-            >
-              <div>
-                <div className="text-4xl">{tutorial.emoji}</div>
-              </div>
+            <div className="flex min-h-[120px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
+              <div className="text-4xl">{tutorial.emoji}</div>
             </div>
             <div className="px-4 py-4">
               <h3 className="text-sm font-semibold leading-5 text-text-primary">{tutorial.title}</h3>

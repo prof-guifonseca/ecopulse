@@ -47,7 +47,7 @@ export function ProductDetailModal({ id }: Props) {
         >
           {product.score}
         </div>
-        <h3 className="mt-3 font-display text-lg font-bold">{product.name}</h3>
+        <h3 className="mt-3 text-lg font-semibold">{product.name}</h3>
         <p className="mt-0.5 text-xs text-text-secondary">
           {product.brand} · {product.category}
         </p>

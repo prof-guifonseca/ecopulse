@@ -6,6 +6,7 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { SectionHeader } from '@/components/shared/SectionHeader';
+import { cn } from '@/lib/cn';
 import type { MapPointType } from '@/types';
 
 const FILTERS: Array<'todos' | MapPointType> = [
@@ -20,6 +21,7 @@ const FILTERS: Array<'todos' | MapPointType> = [
 
 export function MapPage() {
   const [filter, setFilter] = useState<'todos' | MapPointType>('todos');
+  const [panel, setPanel] = useState<'places' | 'events'>('places');
   const openModal = useUIStore((s) => s.openModal);
   const visited = useGameStore((s) => s.visitedPoints);
 
@@ -29,12 +31,11 @@ export function MapPage() {
   );
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
       <GlassCard variant="hud" accent="mint" className="px-5 py-5">
         <SectionHeader
-          eyebrow="Mapa"
-          title="O que está perto de você"
-          subtitle="Encontre ecopontos, reparos, trocas e compras conscientes sem sair do fluxo do app."
+          title="Perto de você"
+          subtitle="Filtre por tipo, veja o mapa e escolha só o próximo lugar que faz sentido visitar."
         />
 
         <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
@@ -52,7 +53,7 @@ export function MapPage() {
 
         <div className="scan-frame p-4">
           <div
-            className="relative overflow-hidden rounded-[26px] border border-white/8"
+            className="relative overflow-hidden rounded-[24px] border border-white/8"
             style={{
               aspectRatio: '1 / 1',
               background:
@@ -79,7 +80,7 @@ export function MapPage() {
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
                 background: 'var(--accent-green)',
-                boxShadow: '0 0 0 8px rgba(145,216,159,0.12), 0 0 20px rgba(145,216,159,0.2)',
+                boxShadow: '0 0 0 8px rgba(145,216,159,0.12), 0 0 20px rgba(145,216,159,0.18)',
               }}
               title="Você está aqui"
             />
@@ -97,8 +98,8 @@ export function MapPage() {
                     top: `${point.y}%`,
                     background: point.color,
                     boxShadow: isVisited
-                      ? '0 0 0 3px rgba(145,216,159,0.24), 0 14px 28px rgba(1,8,5,0.28)'
-                      : '0 14px 28px rgba(1,8,5,0.28)',
+                      ? '0 0 0 3px rgba(145,216,159,0.18), 0 14px 28px rgba(1,8,5,0.24)'
+                      : '0 14px 28px rgba(1,8,5,0.24)',
                   }}
                   aria-label={point.name}
                 >
@@ -108,7 +109,7 @@ export function MapPage() {
             })}
           </div>
 
-          <div className="mt-4 grid grid-cols-3 gap-3">
+          <div className="mt-4 grid grid-cols-3 gap-2">
             <InfoPill label="Locais" value={pins.length} />
             <InfoPill label="Visitados" value={visited.length} />
             <InfoPill label="Filtro" value={MAP_TYPE_LABELS[filter]} />
@@ -116,91 +117,107 @@ export function MapPage() {
         </div>
       </GlassCard>
 
-      <section className="space-y-4">
-        <SectionHeader
-          eyebrow="Próximos pontos"
-          title="Locais que merecem sua próxima visita"
-          subtitle="Abra cada ponto para ver detalhes, distância e como gerar recompensas no mapa."
-        />
-        <div className="space-y-3">
-          {pins.map((point, index) => (
-            <button
-              key={point.id}
-              onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-              className="block w-full text-left"
-            >
+      <div className="flex gap-2">
+        {([
+          ['places', 'Locais'],
+          ['events', 'Agenda'],
+        ] as const).map(([value, label]) => (
+          <button
+            key={value}
+            onClick={() => setPanel(value)}
+            className="command-pill"
+            data-active={panel === value ? 'true' : undefined}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {panel === 'places' ? (
+        <section className="space-y-3">
+          <SectionHeader
+            title="Locais para sua próxima visita"
+            subtitle={`${pins.length} ponto${pins.length === 1 ? '' : 's'} combinando com o filtro atual.`}
+          />
+          <div className="space-y-3">
+            {pins.map((point, index) => (
+              <button
+                key={point.id}
+                onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
+                className="block w-full text-left"
+              >
+                <GlassCard
+                  variant="tile"
+                  accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'amber' : 'cyan'}
+                  className="px-4 py-4"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl"
+                      style={{ background: point.color }}
+                    >
+                      {point.emoji}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-text-primary">{point.name}</h3>
+                          <p className="mt-1 text-sm text-text-secondary">{point.address}</p>
+                        </div>
+                        <span className="command-pill">{point.distance}</span>
+                      </div>
+                      <div className="mt-3 text-sm text-text-secondary">{point.hours}</div>
+                    </div>
+                  </div>
+                </GlassCard>
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="space-y-3">
+          <SectionHeader
+            title="Agenda próxima"
+            subtitle="Encontros presenciais para ampliar sua rotina fora do app."
+          />
+          <div className="space-y-3">
+            {EVENTS.map((event, index) => (
               <GlassCard
+                key={event.id}
                 variant="tile"
-                accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'amber' : 'cyan'}
+                accent={index % 2 === 0 ? 'mint' : 'amber'}
                 className="px-4 py-4"
               >
-                <div className="flex items-start gap-4">
-                  <div
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl"
-                    style={{ background: point.color }}
-                  >
-                    {point.emoji}
+                <div className="flex items-center gap-4">
+                  <div className="flex h-16 w-16 flex-col items-center justify-center rounded-[22px] bg-white/7 text-text-primary">
+                    <span className="text-lg font-semibold leading-none">{event.day}</span>
+                    <span className="text-[0.72rem] font-medium text-text-secondary">{event.month}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-base font-semibold text-text-primary">{point.name}</h3>
-                        <p className="mt-1 text-sm text-text-secondary">{point.address}</p>
-                      </div>
-                      <span className="command-pill">{point.distance}</span>
+                    <div className="text-base font-semibold text-text-primary">
+                      {event.emoji} {event.title}
                     </div>
-                    <div className="mt-3 text-sm text-text-secondary">{point.hours}</div>
+                    <div className="mt-1 text-sm text-text-secondary">
+                      {event.time} · {event.rsvp} confirmados
+                    </div>
                   </div>
                 </div>
               </GlassCard>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <SectionHeader
-          eyebrow="Agenda"
-          title="Eventos próximos"
-          subtitle="Experiências presenciais para reforçar a comunidade e ampliar seu alcance local."
-        />
-        <div className="space-y-3">
-          {EVENTS.map((event, index) => (
-            <GlassCard
-              key={event.id}
-              variant="tile"
-              accent={index % 2 === 0 ? 'mint' : 'amber'}
-              className="px-4 py-4"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 flex-col items-center justify-center rounded-[24px] bg-white/7 text-text-primary">
-                  <span className="text-lg font-semibold leading-none">{event.day}</span>
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-secondary">
-                    {event.month}
-                  </span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-base font-semibold text-text-primary">
-                    {event.emoji} {event.title}
-                  </div>
-                  <div className="mt-1 text-sm text-text-secondary">
-                    {event.time} · {event.rsvp} confirmados
-                  </div>
-                </div>
-              </div>
-            </GlassCard>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
 
 function InfoPill({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="surface surface-ghost rounded-[20px] px-3 py-3 text-center">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">{label}</div>
-      <div className="mt-1 text-sm font-semibold text-text-primary">{value}</div>
+    <div className="surface surface-ghost rounded-[18px] px-3 py-3 text-center">
+      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
+      <div className={cn('mt-1 text-sm font-semibold text-text-primary', label === 'Filtro' && 'truncate')}>
+        {value}
+      </div>
     </div>
   );
 }

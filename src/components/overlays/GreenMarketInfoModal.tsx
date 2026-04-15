@@ -40,8 +40,8 @@ export function GreenMarketInfoModal({ packId }: Props) {
     <Modal onClose={closeModal} variant="center">
       <div className="space-y-5">
         <div>
-          <div className="hud-label">mercado verde</div>
-          <h3 className="mt-2 font-display text-3xl font-bold">Como os EcoTokens pagos entram no jogo</h3>
+          <div className="hud-label">Mercado Verde</div>
+          <h3 className="mt-2 text-2xl font-semibold">Como os EcoTokens pagos entram no jogo</h3>
           <p className="mt-3 text-sm text-text-secondary">
             Esta primeira versão é de conteúdo e transparência. Não existe checkout nem crédito real de saldo ainda.
           </p>
@@ -51,7 +51,7 @@ export function GreenMarketInfoModal({ packId }: Props) {
           <GlassCard variant="ghost" accent={selectedPack.featured ? 'amber' : 'mint'} className="px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className="font-display text-2xl font-bold">{selectedPack.name}</div>
+                <div className="text-xl font-semibold">{selectedPack.name}</div>
                 <div className="mt-1 text-sm text-text-secondary">{selectedPack.description}</div>
               </div>
               <span className="command-pill" data-active="true">
@@ -79,7 +79,7 @@ export function GreenMarketInfoModal({ packId }: Props) {
                   {step.icon}
                 </div>
                 <div>
-                  <div className="font-display text-xl font-bold">{step.title}</div>
+                  <div className="text-lg font-semibold">{step.title}</div>
                   <p className="mt-1 text-sm text-text-secondary">{step.text}</p>
                 </div>
               </div>
@@ -88,7 +88,7 @@ export function GreenMarketInfoModal({ packId }: Props) {
         </div>
 
         <GlassCard variant="panel" accent="violet" className="px-4 py-4">
-          <div className="hud-label">regras desta fase</div>
+          <div className="hud-label">Regras desta fase</div>
           <div className="mt-3 grid gap-2 text-sm text-text-secondary">
             <p>O saldo continua único: tokens ganhos e tokens pagos convivem na mesma economia.</p>
             <p>A escolha das OSCs não é individual nesta etapa; o repasse é feito por fundo curado.</p>
@@ -113,7 +113,7 @@ function InfoMetric({ label, value, accent }: { label: string; value: string; ac
   return (
     <div className="rounded-[20px] border border-white/10 bg-white/5 px-3 py-3">
       <div className="hud-label">{label}</div>
-      <div className="mt-2 font-display text-xl font-bold" style={{ color: accent }}>
+      <div className="mt-2 text-lg font-semibold" style={{ color: accent }}>
         {value}
       </div>
     </div>

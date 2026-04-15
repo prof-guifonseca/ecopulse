@@ -13,13 +13,13 @@ export function ChatListOverlay() {
 
   return (
     <div className="fixed inset-0 z-[600] flex justify-center bg-[rgba(5,10,8,0.92)]" style={{ animation: 'fadeIn 0.3s ease' }}>
-      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#0a120d_0%,#111a14_100%)]">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#09110d_0%,#111914_100%)]">
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-white/6 bg-[rgba(10,18,13,0.94)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4">
           <button onClick={close} className="text-2xl" aria-label="Fechar">
             ←
           </button>
           <div>
-            <div className="hud-label">Mensagens</div>
+            <div className="text-xs text-text-secondary">Mensagens</div>
             <h2 className="text-base font-semibold text-text-primary">Conversas da comunidade</h2>
           </div>
         </div>
@@ -36,12 +36,12 @@ export function ChatListOverlay() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="truncate text-sm font-semibold text-text-primary">{c.with.name}</span>
-                    <span className="text-[10px] text-text-secondary">{c.lastTime}</span>
+                    <span className="text-xs text-text-secondary">{c.lastTime}</span>
                   </div>
-                  <p className="truncate text-xs text-text-secondary">{c.lastMsg}</p>
+                  <p className="truncate text-sm text-text-secondary">{c.lastMsg}</p>
                 </div>
                 {c.unread > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-green px-1.5 text-[10px] font-bold text-bg-primary">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-green px-1.5 text-[0.68rem] font-bold text-bg-primary">
                     {c.unread}
                   </span>
                 )}
@@ -75,7 +75,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
 
   return (
     <div className="fixed inset-0 z-[650] flex justify-center bg-[rgba(5,10,8,0.94)]" style={{ animation: 'fadeIn 0.3s ease' }}>
-      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#0a120d_0%,#111a14_100%)]">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#09110d_0%,#111914_100%)]">
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-white/6 bg-[rgba(10,18,13,0.94)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4">
           <button onClick={close} className="text-2xl" aria-label="Voltar">
             ←
@@ -85,7 +85,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
           </span>
           <div>
             <div className="text-sm font-semibold text-text-primary">{conv.with.name}</div>
-            <div className="text-[11px] text-text-secondary">Nível {conv.with.level}</div>
+            <div className="text-xs text-text-secondary">Nível {conv.with.level}</div>
           </div>
         </div>
 
@@ -100,22 +100,20 @@ export function ChatConversationOverlay({ id }: { id: string }) {
                 }}
               >
                 {m.text}
-                <div className="mt-1 text-[10px] opacity-70">{m.time}</div>
+                <div className="mt-1 text-[0.68rem] opacity-70">{m.time}</div>
               </div>
             </div>
           ))}
         </div>
 
         <div className="border-t border-white/6 px-4 pb-[calc(env(safe-area-inset-bottom,0px)+18px)] pt-4">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">
-            Respostas rápidas
-          </p>
+          <p className="mb-2 text-xs font-medium text-text-secondary">Respostas rápidas</p>
           <div className="flex flex-wrap gap-2">
             {CHAT_REPLIES.slice(0, 5).map((r) => (
               <button
                 key={r}
                 onClick={() => send(r)}
-                className="rounded-full bg-white/6 px-3 py-2 text-xs font-medium text-text-primary"
+                className="rounded-full bg-white/6 px-3 py-2 text-sm font-medium text-text-primary"
               >
                 {r}
               </button>

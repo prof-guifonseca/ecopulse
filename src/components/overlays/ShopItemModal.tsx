@@ -40,13 +40,13 @@ export function ShopItemModal({ id }: Props) {
         <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-bg-tertiary text-5xl">
           {item.emoji}
         </div>
-        <h3 className="mt-3 font-display text-lg font-bold">{item.name}</h3>
+        <h3 className="mt-3 text-lg font-semibold">{item.name}</h3>
         <p className="mt-1 text-xs text-text-secondary">{item.desc}</p>
 
         <div className="mt-4 text-2xl font-bold" style={{ color: 'var(--accent-gold)' }}>
           🪙 {item.price}
         </div>
-        <p className="mt-1 text-[11px] text-text-secondary">
+        <p className="mt-1 text-xs text-text-secondary">
           Você tem {tokens} Eco-Tokens
         </p>
 

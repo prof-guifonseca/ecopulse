@@ -34,7 +34,7 @@ export function TutorialModal({ id }: Props) {
     <Modal onClose={closeModal}>
       <div>
         <div className="mb-2 text-center text-5xl">{tutorial.emoji}</div>
-        <h3 className="text-center font-display text-base font-bold">{tutorial.title}</h3>
+        <h3 className="text-center text-base font-semibold">{tutorial.title}</h3>
         <p className="mt-1 text-center text-xs text-text-secondary">
           {'🌿'.repeat(tutorial.difficulty)} · ⏱ {tutorial.time} · {tutorial.steps} passos
         </p>
@@ -43,7 +43,7 @@ export function TutorialModal({ id }: Props) {
           <p className="mb-2 text-xs text-text-secondary">Materiais:</p>
           <div className="flex flex-wrap gap-1.5">
             {tutorial.materials.map((m) => (
-              <span key={m} className="rounded-full bg-bg-tertiary px-2.5 py-1 text-[11px]">{m}</span>
+              <span key={m} className="rounded-full bg-bg-tertiary px-2.5 py-1 text-xs">{m}</span>
             ))}
           </div>
         </div>

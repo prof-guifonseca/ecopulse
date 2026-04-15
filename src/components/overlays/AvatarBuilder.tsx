@@ -53,10 +53,10 @@ export function AvatarBuilder() {
 
   return (
     <div className="fixed inset-0 z-[700] flex flex-col bg-bg-primary" style={{ animation: 'fadeIn 0.3s ease' }}>
-      <div className="glass flex items-center justify-between border-b px-4 py-3">
+      <div className="surface flex items-center justify-between border-b border-white/6 px-4 py-3">
         <button onClick={close} className="text-xl" aria-label="Fechar">✕</button>
-        <h2 className="font-display text-base font-bold">Personalizar Avatar</h2>
-        <button onClick={save} className="text-sm font-bold" style={{ color: 'var(--accent-green)' }}>
+        <h2 className="text-base font-semibold">Personalizar avatar</h2>
+        <button onClick={save} className="text-sm font-semibold" style={{ color: 'var(--accent-green)' }}>
           Salvar
         </button>
       </div>
@@ -71,7 +71,7 @@ export function AvatarBuilder() {
             key={t}
             onClick={() => setTab(t)}
             className={cn(
-              'shrink-0 border-b-2 px-3 py-2 text-xs font-semibold transition-colors',
+              'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors',
               tab === t ? 'border-accent-green text-text-primary' : 'border-transparent text-text-secondary'
             )}
           >
@@ -93,7 +93,7 @@ export function AvatarBuilder() {
                 )}
               >
                 <Avatar baseId={b.id} size="md" />
-                <span className="text-[10px] font-medium">{b.name}</span>
+                <span className="text-xs font-medium">{b.name}</span>
               </button>
             ))}
           </div>
@@ -123,11 +123,11 @@ export function AvatarBuilder() {
                   <span className="text-3xl">{o.emoji}</span>
                   <span className="text-xs font-semibold">{o.name}</span>
                   {owned ? (
-                    <span className="text-[10px] text-text-secondary">
+                    <span className="text-xs text-text-secondary">
                       {equipped ? 'Equipado' : 'Toque para equipar'}
                     </span>
                   ) : (
-                    <span className="text-[10px]" style={{ color: 'var(--accent-gold)' }}>
+                    <span className="text-xs" style={{ color: 'var(--accent-gold)' }}>
                       🪙 {o.price}
                     </span>
                   )}
