@@ -1,10 +1,13 @@
 'use client';
 
+import { Coins } from 'lucide-react';
 import { SHOP_ITEMS } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
-import { Modal } from './Modal';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { ModalShell } from './ModalShell';
 
 interface Props {
   id: string;
@@ -25,41 +28,42 @@ export function ShopItemModal({ id }: Props) {
   const buy = () => {
     if (owned) return;
     if (!spend(item.price)) {
-      showToast('Tokens insuficientes 😢', 'info');
+      showToast('Tokens insuficientes', 'info');
       return;
     }
     addOwned(id);
-    showToast(`${item.name} adquirido! ${item.emoji}`, 'reward');
+    showToast(`${item.name} adquirido!`, 'reward');
     fireConfetti();
     closeModal();
   };
 
+  const disabled = owned || tokens < item.price;
+
   return (
-    <Modal onClose={closeModal}>
-      <div className="text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-bg-tertiary text-5xl">
+    <ModalShell eyebrow="Mercado Verde" title={item.name}>
+      <div className="flex flex-col items-center text-center">
+        <div className="flex h-24 w-24 items-center justify-center rounded-full border border-[var(--line-soft)] bg-white/[0.04] text-5xl">
           {item.emoji}
         </div>
-        <h3 className="mt-3 text-lg font-semibold">{item.name}</h3>
-        <p className="mt-1 text-xs text-text-secondary">{item.desc}</p>
+        <p className="mt-3 max-w-[32ch] text-[0.88rem] leading-5 text-text-muted">{item.desc}</p>
 
-        <div className="mt-4 text-2xl font-bold" style={{ color: 'var(--accent-gold)' }}>
-          🪙 {item.price}
+        <div className="mt-5 inline-flex items-center gap-1.5 text-[1.6rem] font-semibold text-accent-gold">
+          <Icon icon={Coins} size={22} />
+          {item.price}
         </div>
-        <p className="mt-1 text-xs text-text-secondary">
-          Você tem {tokens} Eco-Tokens
-        </p>
+        <p className="mt-1 text-[0.78rem] text-text-muted">Você tem {tokens} Eco-Tokens</p>
 
-        <button
-          type="button"
+        <Button
+          variant="reward"
+          size="lg"
+          fullWidth
+          className="mt-6"
           onClick={buy}
-          disabled={owned || tokens < item.price}
-          className="mt-5 w-full rounded-full py-3 text-sm font-bold text-bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ background: 'var(--gradient-gold)' }}
+          disabled={disabled}
         >
-          {owned ? '✅ Já adquirido' : tokens < item.price ? 'Tokens insuficientes' : 'Comprar'}
-        </button>
+          {owned ? 'Já adquirido' : tokens < item.price ? 'Tokens insuficientes' : 'Comprar'}
+        </Button>
       </div>
-    </Modal>
+    </ModalShell>
   );
 }

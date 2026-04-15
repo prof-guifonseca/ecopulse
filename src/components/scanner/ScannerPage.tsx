@@ -1,15 +1,18 @@
 'use client';
 
 import { useDeferredValue, useMemo, useState } from 'react';
+import { Camera, Search } from 'lucide-react';
 import { PRODUCTS } from '@/data';
 import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
-import { GlassCard } from '@/components/shared/GlassCard';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
-import { cn } from '@/lib/cn';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { Stat } from '@/components/ui/Stat';
 
 export function ScannerPage() {
   const [query, setQuery] = useState('');
@@ -37,7 +40,6 @@ export function ScannerPage() {
 
   const simulateScan = () => {
     if (scanning) return;
-
     setScanning(true);
 
     setTimeout(() => {
@@ -63,125 +65,115 @@ export function ScannerPage() {
   };
 
   return (
-    <div className="space-y-4" style={{ animation: 'fadeIn 0.35s ease' }}>
-      <GlassCard variant="hud" accent="mint" className="px-5 py-5">
+    <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+      <Card tone="hero" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Escaneie e entenda rápido"
-          subtitle="Abra um produto, veja a ficha completa e alimente seu histórico sem passar por um painel técnico."
+          subtitle="Veja a ficha completa e alimente seu histórico sem passar por painel técnico."
         />
 
-        <div className="scan-frame px-5 py-5">
-          <div className="relative flex min-h-[260px] items-center justify-center py-8">
-            <div className="absolute h-[240px] w-[240px] rounded-full bg-[radial-gradient(circle,rgba(145,216,159,0.16),transparent_62%)] blur-2xl" />
-            <div className="absolute h-[210px] w-[210px] rounded-full border border-white/8" />
-            <div className="absolute h-[156px] w-[156px] rounded-full border border-accent-green/20" />
+        <div className="scan-frame px-5 py-6">
+          <div className="relative flex min-h-[240px] items-center justify-center py-4">
+            <div className="absolute h-[220px] w-[220px] rounded-full bg-[radial-gradient(circle,rgba(141,219,152,0.16),transparent_62%)] blur-2xl" />
+            <div className="absolute h-[190px] w-[190px] rounded-full border border-white/6" />
+            <div className="absolute h-[140px] w-[140px] rounded-full border border-[rgba(141,219,152,0.28)]" />
             <div
-              className="pointer-events-none absolute inset-x-8 top-1/2 h-px"
+              className="pointer-events-none absolute inset-x-10 top-1/2 h-px"
               style={{
                 background: 'var(--gradient-primary)',
                 animation: scanning ? 'scanLine 1.2s linear infinite' : 'none',
-                opacity: scanning ? 1 : 0.3,
+                opacity: scanning ? 1 : 0.35,
               }}
             />
-            <div className="flex h-28 w-28 items-center justify-center rounded-[32px] border border-white/8 bg-white/6 text-6xl shadow-[0_18px_36px_rgba(145,216,159,0.1)]">
-              📷
+            <div className="flex h-24 w-24 items-center justify-center rounded-[24px] border border-[var(--line-soft)] bg-white/4 text-accent-green shadow-[0_18px_36px_rgba(141,219,152,0.12)]">
+              <Icon icon={Camera} size={40} strokeWidth={1.6} />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <QuietStat label="Histórico" value={`${scannedProducts.length} itens`} />
-            <QuietStat label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} />
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Stat label="Histórico" value={`${scannedProducts.length} itens`} align="start" />
+            <Stat label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} align="start" />
           </div>
 
-          <p className="mt-4 text-sm leading-6 text-text-secondary">
+          <p className="mt-4 text-[0.85rem] leading-5 text-text-muted">
             {scanning
-              ? 'Estamos analisando o item agora.'
-              : 'Use o simulador para abrir uma ficha completa, ganhar recompensa e registrar esse produto na sua rotina.'}
+              ? 'Analisando o item agora…'
+              : 'Simule um scan para abrir a ficha completa e ganhar recompensa.'}
           </p>
-          <button
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            className="mt-4"
             onClick={simulateScan}
             disabled={scanning}
-            className={cn(
-              'mt-4 w-full rounded-full px-5 py-3 text-sm font-semibold text-bg-primary transition-opacity',
-              scanning && 'opacity-70'
-            )}
-            style={{ background: 'var(--gradient-primary)' }}
+            loading={scanning}
+            leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
           >
             {scanning ? 'Escaneando...' : 'Simular scan'}
-          </button>
+          </Button>
         </div>
-      </GlassCard>
+      </Card>
 
-      <section className="space-y-3">
+      <section>
         <SectionHeader
           title="Pesquisar antes de escanear"
-          subtitle="Busque por nome, marca ou categoria para abrir a ficha direto."
+          subtitle="Busque por nome, marca ou categoria."
         />
         <div className="input-shell flex items-center gap-3 px-4 py-3">
-          <span className="text-xl text-text-secondary">🔎</span>
+          <Icon icon={Search} size={18} className="text-text-muted" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Nome, marca ou categoria"
-            className="w-full bg-transparent text-base outline-none placeholder:text-text-muted"
+            className="w-full bg-transparent text-[0.95rem] outline-none placeholder:text-text-muted"
           />
         </div>
       </section>
 
-      <section className="space-y-3">
+      <section>
         <SectionHeader
           title="Produtos para consultar"
           subtitle={`${filtered.length} item${filtered.length === 1 ? '' : 's'} disponíveis agora.`}
         />
 
         <div className="space-y-3">
-          {filtered.map((product, index) => (
+          {filtered.map((product) => (
             <button
               key={product.id}
               onClick={() => openModal({ kind: 'product', id: product.id })}
-              className="group block w-full text-left"
+              className="group block w-full text-left transition-transform duration-200 hover:-translate-y-0.5"
             >
-              <GlassCard
-                variant="tile"
-                accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'amber' : 'cyan'}
-                className="overflow-hidden px-4 py-4 transition-transform duration-200 group-hover:translate-y-[-2px]"
-              >
+              <Card tone="solid" padded={false} className="px-4 py-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-white/6 text-3xl">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px] border border-[var(--line-soft)] bg-white/4 text-3xl">
                     {product.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-base font-semibold leading-6 text-text-primary">{product.name}</h3>
-                        <p className="mt-1 text-sm text-text-secondary">
+                      <div className="min-w-0">
+                        <h3 className="truncate text-[0.98rem] font-semibold leading-tight text-text-primary">{product.name}</h3>
+                        <p className="mt-0.5 truncate text-[0.8rem] text-text-muted">
                           {product.brand} · {product.category}
                         </p>
                       </div>
                       <ScoreBadge score={product.score} className="shrink-0" />
                     </div>
-                    <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-                      <span style={{ color: SCORE_COLORS[product.score] }}>{product.tip}</span>
+                    <div className="mt-3 flex items-center justify-between gap-3 text-[0.82rem]">
+                      <span className="truncate" style={{ color: SCORE_COLORS[product.score] }}>
+                        {product.tip}
+                      </span>
                       {scannedProducts.includes(product.id) ? (
-                        <span className="whitespace-nowrap text-text-secondary">já visto</span>
+                        <span className="shrink-0 text-[0.72rem] text-text-muted">já visto</span>
                       ) : null}
                     </div>
                   </div>
                 </div>
-              </GlassCard>
+              </Card>
             </button>
           ))}
         </div>
       </section>
-    </div>
-  );
-}
-
-function QuietStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="surface surface-ghost rounded-[18px] px-3 py-3">
-      <div className="text-[0.72rem] font-medium text-text-secondary">{label}</div>
-      <div className="mt-1 text-sm font-semibold text-text-primary">{value}</div>
     </div>
   );
 }

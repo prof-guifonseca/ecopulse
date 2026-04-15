@@ -2,27 +2,32 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Home, ScanLine, MapPin, Users, UserRound, type LucideIcon } from 'lucide-react';
+import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 
-const TABS = [
-  { page: 'home', label: 'Início', icon: '⌂' },
-  { page: 'scanner', label: 'Scanner', icon: '◉' },
-  { page: 'map', label: 'Mapa', icon: '⌖' },
-  { page: 'community', label: 'Rede', icon: '☰' },
-  { page: 'profile', label: 'Perfil', icon: '◌' },
-] as const;
+const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
+  { page: 'home', label: 'Início', icon: Home },
+  { page: 'scanner', label: 'Scanner', icon: ScanLine },
+  { page: 'map', label: 'Mapa', icon: MapPin },
+  { page: 'community', label: 'Rede', icon: Users },
+  { page: 'profile', label: 'Perfil', icon: UserRound },
+];
 
 export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+10px)]">
+    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
       <nav
         id="bottom-nav"
         className="pointer-events-auto mx-auto max-w-[var(--shell-width)]"
         role="tablist"
       >
-        <div className="surface surface-panel flex min-h-[var(--nav-height)] items-center justify-between rounded-[28px] px-2 py-2">
+        <div
+          className="flex items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[rgba(15,23,19,0.9)] px-2 py-1.5 shadow-[var(--shadow-lifted)]"
+          style={{ backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)' }}
+        >
           {TABS.map((t) => {
             const active = pathname === `/${t.page}`;
 
@@ -34,23 +39,26 @@ export function BottomNav() {
                 aria-current={active ? 'page' : undefined}
                 aria-selected={active}
                 className={cn(
-                  'group flex min-w-0 flex-1 items-center justify-center px-1 py-1.5 transition-transform duration-200',
-                  active ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
+                  'group flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 py-2 transition-colors duration-200',
+                  active ? 'text-accent-green' : 'text-text-muted hover:text-text-secondary'
                 )}
               >
-                <div className="flex min-w-0 flex-col items-center gap-1">
-                  <span
-                    className={cn(
-                      'flex h-10 w-10 items-center justify-center rounded-2xl text-lg transition-all duration-200',
-                      active
-                        ? 'bg-accent-green/14 text-accent-green shadow-[0_10px_24px_rgba(145,216,159,0.1)]'
-                        : 'bg-white/4 text-text-secondary'
-                    )}
-                  >
-                    {t.icon}
-                  </span>
-                  <span className="text-[0.72rem] font-medium">{t.label}</span>
-                </div>
+                <span
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-200',
+                    active ? 'bg-[rgba(141,219,152,0.14)]' : 'bg-transparent'
+                  )}
+                >
+                  <Icon
+                    icon={t.icon}
+                    size={20}
+                    strokeWidth={active ? 2.1 : 1.6}
+                    className={active ? 'text-accent-green' : 'text-current'}
+                  />
+                </span>
+                <span className={cn('text-[0.68rem] font-semibold leading-none', active ? 'text-text-primary' : '')}>
+                  {t.label}
+                </span>
               </Link>
             );
           })}

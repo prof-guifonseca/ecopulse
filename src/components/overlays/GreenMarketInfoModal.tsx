@@ -1,9 +1,13 @@
 'use client';
 
+import { Coins, Globe2, Target } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { TOKEN_PACKS } from '@/data';
 import { useUIStore } from '@/store/uiStore';
-import { GlassCard } from '@/components/shared/GlassCard';
-import { Modal } from './Modal';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
+import { ModalShell } from './ModalShell';
 
 interface Props {
   packId?: string;
@@ -14,108 +18,92 @@ const PRICE_FORMATTER = new Intl.NumberFormat('pt-BR', {
   currency: 'BRL',
 });
 
-const EXPLANATION_STEPS = [
+const EXPLANATION_STEPS: Array<{ title: string; icon: LucideIcon; text: string }> = [
   {
     title: 'Jogue',
-    icon: '🎯',
-    text: 'Continue ganhando EcoTokens por missões, desafios, scanner e ações cooperativas dentro do app.',
+    icon: Target,
+    text: 'Continue ganhando EcoTokens por missões, desafios, scanner e ações cooperativas.',
   },
   {
     title: 'Acelere',
-    icon: '🪙',
-    text: 'Quando o checkout real entrar no ar, os tokens comprados vão cair no mesmo saldo usado na loja e nos boosts.',
+    icon: Coins,
+    text: 'Quando o checkout real entrar, os tokens comprados caem no mesmo saldo da loja.',
   },
   {
     title: 'Impacte',
-    icon: '🌍',
-    text: '20% de cada compra compõem o Fundo EcoPulse para OSCs auditadas e alinhadas aos 17 ODS.',
+    icon: Globe2,
+    text: '20% de cada compra compõem o Fundo EcoPulse, destinado a OSCs auditadas.',
   },
-] as const;
+];
 
 export function GreenMarketInfoModal({ packId }: Props) {
   const closeModal = useUIStore((s) => s.closeModal);
   const selectedPack = TOKEN_PACKS.find((pack) => pack.id === packId);
 
   return (
-    <Modal onClose={closeModal} variant="center">
+    <ModalShell eyebrow="Mercado Verde" title="Como os EcoTokens pagos entram no jogo" variant="center">
       <div className="space-y-5">
-        <div>
-          <div className="hud-label">Mercado Verde</div>
-          <h3 className="mt-2 text-2xl font-semibold">Como os EcoTokens pagos entram no jogo</h3>
-          <p className="mt-3 text-sm text-text-secondary">
-            Esta primeira versão é de conteúdo e transparência. Não existe checkout nem crédito real de saldo ainda.
-          </p>
-        </div>
+        <p className="text-[0.88rem] leading-5 text-text-muted">
+          Esta primeira versão é de conteúdo e transparência. Não existe checkout nem crédito real de saldo ainda.
+        </p>
 
         {selectedPack ? (
-          <GlassCard variant="ghost" accent={selectedPack.featured ? 'amber' : 'mint'} className="px-4 py-4">
+          <Card tone="soft" accent={selectedPack.featured ? 'reward' : 'brand'} padded={false} className="px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className="text-xl font-semibold">{selectedPack.name}</div>
-                <div className="mt-1 text-sm text-text-secondary">{selectedPack.description}</div>
+                <div className="text-[1.05rem] font-semibold text-text-primary">{selectedPack.name}</div>
+                <div className="mt-1 text-[0.85rem] text-text-muted">{selectedPack.description}</div>
               </div>
-              <span className="command-pill" data-active="true">
+              <span className="command-pill shrink-0" data-active="true">
                 {selectedPack.badge}
               </span>
             </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <InfoMetric label="EcoTokens" value={`${selectedPack.tokens}`} accent="var(--accent-gold)" />
-              <InfoMetric label="Preço futuro" value={PRICE_FORMATTER.format(selectedPack.priceInCents / 100)} accent="var(--accent-cyan)" />
-              <InfoMetric label="Fundo verde" value={PRICE_FORMATTER.format(selectedPack.fundShareInCents / 100)} accent="var(--accent-green)" />
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <InfoMetric label="Tokens" value={`${selectedPack.tokens}`} />
+              <InfoMetric label="Preço" value={PRICE_FORMATTER.format(selectedPack.priceInCents / 100)} />
+              <InfoMetric label="Fundo" value={PRICE_FORMATTER.format(selectedPack.fundShareInCents / 100)} />
             </div>
-          </GlassCard>
+          </Card>
         ) : null}
 
-        <div className="grid gap-3">
-          {EXPLANATION_STEPS.map((step, index) => (
-            <GlassCard
-              key={step.title}
-              variant="ghost"
-              accent={index === 0 ? 'cyan' : index === 1 ? 'amber' : 'mint'}
-              className="px-4 py-4"
-            >
+        <div className="space-y-3">
+          {EXPLANATION_STEPS.map((step) => (
+            <Card key={step.title} tone="solid" padded={false} className="px-4 py-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-2xl">
-                  {step.icon}
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(141,219,152,0.12)] text-accent-green">
+                  <Icon icon={step.icon} size={18} strokeWidth={2} />
                 </div>
                 <div>
-                  <div className="text-lg font-semibold">{step.title}</div>
-                  <p className="mt-1 text-sm text-text-secondary">{step.text}</p>
+                  <div className="text-[0.98rem] font-semibold text-text-primary">{step.title}</div>
+                  <p className="mt-1 text-[0.85rem] leading-5 text-text-muted">{step.text}</p>
                 </div>
               </div>
-            </GlassCard>
+            </Card>
           ))}
         </div>
 
-        <GlassCard variant="panel" accent="violet" className="px-4 py-4">
-          <div className="hud-label">Regras desta fase</div>
-          <div className="mt-3 grid gap-2 text-sm text-text-secondary">
-            <p>O saldo continua único: tokens ganhos e tokens pagos convivem na mesma economia.</p>
-            <p>A escolha das OSCs não é individual nesta etapa; o repasse é feito por fundo curado.</p>
-            <p>Os critérios de validação ficam públicos no app antes da entrada do checkout real.</p>
+        <Card tone="soft" padded={false} className="px-4 py-4">
+          <div className="display-eyebrow mb-2">Regras desta fase</div>
+          <div className="space-y-1.5 text-[0.85rem] leading-5 text-text-muted">
+            <p>• O saldo é único: tokens ganhos e tokens pagos convivem na mesma economia.</p>
+            <p>• A escolha das OSCs não é individual; o repasse é feito por fundo curado.</p>
+            <p>• Os critérios de validação ficam públicos no app antes do checkout real.</p>
           </div>
-        </GlassCard>
+        </Card>
 
-        <button
-          type="button"
-          onClick={closeModal}
-          className="w-full rounded-full py-3 text-sm font-bold text-bg-primary"
-          style={{ background: 'var(--gradient-primary)' }}
-        >
+        <Button variant="primary" size="lg" fullWidth onClick={closeModal}>
           Entendi
-        </button>
+        </Button>
       </div>
-    </Modal>
+    </ModalShell>
   );
 }
 
-function InfoMetric({ label, value, accent }: { label: string; value: string; accent: string }) {
+function InfoMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-white/10 bg-white/5 px-3 py-3">
-      <div className="hud-label">{label}</div>
-      <div className="mt-2 text-lg font-semibold" style={{ color: accent }}>
-        {value}
-      </div>
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.03] px-3 py-3">
+      <div className="text-[0.68rem] font-semibold uppercase tracking-wide text-text-muted">{label}</div>
+      <div className="mt-1.5 text-[0.92rem] font-semibold text-text-primary">{value}</div>
     </div>
   );
 }

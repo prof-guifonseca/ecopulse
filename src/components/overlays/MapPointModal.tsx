@@ -1,10 +1,14 @@
 'use client';
 
+import { Clock, MapPin, Ruler } from 'lucide-react';
 import { MAP_POINTS, MAP_DETAIL_LABELS } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
-import { Modal } from './Modal';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { ModalShell } from './ModalShell';
+import type { LucideIcon } from 'lucide-react';
 
 interface Props {
   id: string;
@@ -25,63 +29,56 @@ export function MapPointModal({ id }: Props) {
     const { visitedPoints, dailyMissions, markMission } = useGameStore.getState();
     if (!dailyMissions.map) {
       markMission('map', true);
-      showToast('Missão diária: visitar Mapa ✅', 'success');
+      showToast('Missão diária: visitar Mapa concluída', 'success');
     } else {
-      showToast('+10 Eco-Tokens! 🗺️', 'reward');
+      showToast('+10 Eco-Tokens', 'reward');
     }
     if (visitedPoints.length >= 3) unlockBadge('map-explorer');
     closeModal();
   };
 
   return (
-    <Modal onClose={closeModal}>
+    <ModalShell eyebrow={MAP_DETAIL_LABELS[point.type]} title={point.name}>
       <div>
-        <div className="mb-4 flex items-center gap-3">
-          <div
-            className="flex h-14 w-14 items-center justify-center rounded-full text-2xl"
-            style={{ background: `${point.color}25` }}
-          >
+        <div className="flex items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-white/[0.04] text-3xl">
             {point.emoji}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold">{point.name}</h3>
-            <span
-              className="mt-1 inline-block rounded-full px-2 py-0.5 text-[0.68rem] font-semibold"
-              style={{ background: `${point.color}25`, color: point.color }}
-            >
-              {MAP_DETAIL_LABELS[point.type]}
-            </span>
+            <div className="text-[0.78rem] text-text-muted">{point.address}</div>
           </div>
         </div>
 
-        <div className="space-y-3 rounded-md bg-bg-tertiary p-3 text-sm">
-          <Row icon="📍" label="Endereço" value={point.address} />
-          <Row icon="🕐" label="Horário" value={point.hours} />
-          <Row icon="📏" label="Distância" value={point.distance} />
+        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02]">
+          <Row icon={MapPin} label="Endereço" value={point.address} />
+          <Row icon={Clock} label="Horário" value={point.hours} />
+          <Row icon={Ruler} label="Distância" value={point.distance} />
         </div>
 
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-5"
           onClick={visit}
           disabled={visited}
-          className="mt-5 w-full rounded-full py-3 text-sm font-bold text-bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ background: 'var(--gradient-primary)' }}
+          leftIcon={<Icon icon={MapPin} size={16} />}
         >
-          {visited ? '✅ Já visitado' : '📍 Marcar como visitado · 10 Tokens'}
-        </button>
+          {visited ? 'Já visitado' : 'Marcar como visitado · +10 Tokens'}
+        </Button>
       </div>
-    </Modal>
+    </ModalShell>
   );
 }
 
-function Row({ icon, label, value }: { icon: string; label: string; value: string }) {
+function Row({ icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-2">
-      <span className="flex items-center gap-2 text-text-secondary">
-        <span aria-hidden>{icon}</span>
-        <span className="text-xs">{label}</span>
+    <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <span className="inline-flex items-center gap-2 text-text-muted">
+        <Icon icon={icon} size={14} />
+        <span className="text-[0.78rem]">{label}</span>
       </span>
-      <span className="truncate text-right text-sm font-medium">{value}</span>
+      <span className="truncate text-right text-[0.88rem] font-medium text-text-primary">{value}</span>
     </div>
   );
 }

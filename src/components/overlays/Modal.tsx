@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { cn } from '@/lib/cn';
 
 interface Props {
   onClose: () => void;
@@ -22,9 +23,11 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[999] flex items-end justify-center bg-[rgba(5,10,8,0.62)] backdrop-blur-md data-[variant=center]:items-center"
-      data-variant={variant}
-      style={{ animation: 'fadeIn 0.25s ease' }}
+      className={cn(
+        'fixed inset-0 z-[999] flex justify-center bg-[rgba(3,8,5,0.6)] backdrop-blur-md',
+        variant === 'center' ? 'items-center' : 'items-end'
+      )}
+      style={{ animation: 'fadeIn 0.22s ease' }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -32,24 +35,16 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
       aria-modal="true"
     >
       <div
-        className="surface surface-panel surface-accent-mint relative w-full max-w-[var(--shell-width)] overflow-hidden rounded-t-[28px] p-0 data-[variant=center]:mx-4 data-[variant=center]:rounded-[28px]"
-        data-variant={variant}
-        style={{ animation: 'slideUp 0.35s cubic-bezier(.4,0,.2,1)', maxHeight: '88dvh' }}
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-white/8 bg-white/6 text-sm text-text-secondary transition-colors hover:text-text-primary"
-          aria-label="Fechar"
-        >
-          ✕
-        </button>
-        {variant === 'bottom' && (
-          <div className="mx-auto my-3 h-1 w-14 rounded-full bg-white/14" aria-hidden />
+        className={cn(
+          'relative w-full max-w-[var(--shell-width)] border border-[var(--line-soft)] bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)]',
+          variant === 'center' ? 'mx-4 rounded-[var(--radius-lg)]' : 'rounded-t-[var(--radius-lg)]'
         )}
-        <div className="max-h-[82dvh] overflow-y-auto px-5 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-4">
-          {children}
-        </div>
+        style={{
+          animation: variant === 'center' ? 'fadeIn 0.25s ease' : 'slideUp 0.32s cubic-bezier(.22,1,.36,1)',
+          maxHeight: '88dvh',
+        }}
+      >
+        {children}
       </div>
     </div>,
     document.body

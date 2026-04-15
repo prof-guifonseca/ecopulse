@@ -1,11 +1,14 @@
 'use client';
 
+import { Lightbulb, Plus } from 'lucide-react';
 import { PRODUCTS } from '@/data';
 import { BREAKDOWN_LABELS, SCORE_COLORS, findAlternatives } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
-import { Modal } from './Modal';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { ModalShell } from './ModalShell';
 import type { Product } from '@/types';
 
 interface Props {
@@ -30,7 +33,7 @@ export function ProductDetailModal({ id }: Props) {
   const addToList = () => {
     addScanned(id);
     awardTokens(5);
-    showToast('+5 Eco-Tokens! Produto escaneado 🔍', 'reward');
+    showToast('+5 Eco-Tokens adicionados ao saldo', 'reward');
     if (!missionScan) markMission('scan', true);
     const count = useGameStore.getState().scannedProducts.length;
     if (count === 1) unlockBadge('first-scan');
@@ -39,56 +42,57 @@ export function ProductDetailModal({ id }: Props) {
   };
 
   return (
-    <Modal onClose={closeModal}>
+    <ModalShell eyebrow="Produto" title={product.name}>
       <div className="flex flex-col items-center text-center">
         <div
-          className="flex h-20 w-20 items-center justify-center rounded-full text-3xl font-extrabold text-bg-primary"
+          className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[#0a140e]"
           style={{ background: color, animation: 'scoreReveal 0.5s cubic-bezier(.34,1.56,.64,1)' }}
         >
           {product.score}
         </div>
-        <h3 className="mt-3 text-lg font-semibold">{product.name}</h3>
-        <p className="mt-0.5 text-xs text-text-secondary">
+        <p className="mt-2 text-[0.82rem] text-text-muted">
           {product.brand} · {product.category}
         </p>
 
-        <div className="mt-4 w-full space-y-3">
+        <div className="mt-5 w-full space-y-3">
           {Object.entries(product.breakdown).map(([k, v]) => (
             <BreakdownRow key={k} label={BREAKDOWN_LABELS[k]!} value={v as number} color={color} />
           ))}
         </div>
 
-        <div
-          className="mt-4 w-full rounded-md border-l-2 p-3 text-left text-xs leading-relaxed"
-          style={{ background: 'rgba(255,209,102,0.06)', borderColor: 'var(--accent-gold)' }}
-        >
-          💡 {product.tip}
+        <div className="mt-5 flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-[rgba(224,194,122,0.25)] bg-[rgba(224,194,122,0.07)] px-4 py-3 text-left text-[0.85rem] leading-5 text-text-secondary">
+          <Icon icon={Lightbulb} size={16} className="mt-0.5 text-accent-gold" />
+          <span>{product.tip}</span>
         </div>
 
-        {alternatives.length > 0 && <AlternativesList items={alternatives} openItem={(pid) => openModal({ kind: 'product', id: pid })} />}
+        {alternatives.length > 0 && (
+          <AlternativesList items={alternatives} openItem={(pid) => openModal({ kind: 'product', id: pid })} />
+        )}
 
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-6"
           onClick={addToList}
           disabled={scanned}
-          className="mt-5 w-full rounded-full py-3 text-sm font-bold text-bg-primary transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ background: 'var(--gradient-primary)' }}
+          leftIcon={!scanned ? <Icon icon={Plus} size={16} strokeWidth={2.4} /> : undefined}
         >
-          {scanned ? '✅ Já adicionado' : '+ Adicionar à lista · 5 Tokens'}
-        </button>
+          {scanned ? 'Já adicionado' : 'Adicionar · +5 Tokens'}
+        </Button>
       </div>
-    </Modal>
+    </ModalShell>
   );
 }
 
 function BreakdownRow({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div>
-      <div className="mb-1 flex justify-between text-xs font-medium text-text-secondary">
-        <span>{label}</span>
-        <span>{value}/100</span>
+      <div className="mb-1.5 flex items-center justify-between text-[0.78rem]">
+        <span className="font-semibold text-text-secondary">{label}</span>
+        <span className="text-text-muted">{value}/100</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-bg-tertiary">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
         <div
           className="h-full rounded-full transition-[width] duration-700"
           style={{ width: `${value}%`, background: color }}
@@ -101,22 +105,22 @@ function BreakdownRow({ label, value, color }: { label: string; value: number; c
 function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id: string) => void }) {
   return (
     <div className="mt-5 w-full text-left">
-      <h4 className="mb-2 text-sm font-semibold">✅ Alternativas mais sustentáveis</h4>
+      <div className="display-eyebrow mb-2">Alternativas melhores</div>
       <div className="space-y-2">
         {items.map((a) => (
           <button
             key={a.id}
             type="button"
             onClick={() => openItem(a.id)}
-            className="flex w-full items-center gap-3 rounded-md bg-bg-tertiary p-3 text-left transition-transform active:scale-[0.98]"
+            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
           >
             <span className="text-2xl">{a.emoji}</span>
-            <div className="flex-1 min-w-0">
-              <div className="truncate text-sm font-semibold">{a.name}</div>
-              <div className="truncate text-xs text-text-secondary">{a.brand}</div>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[0.9rem] font-semibold">{a.name}</div>
+              <div className="truncate text-[0.78rem] text-text-muted">{a.brand}</div>
             </div>
             <span
-              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-bg-primary"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[#0a140e]"
               style={{ background: SCORE_COLORS[a.score] }}
             >
               {a.score}
