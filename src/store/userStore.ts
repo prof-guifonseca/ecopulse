@@ -1,9 +1,9 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import type { AvatarOutfits } from '@/types';
-import { readLegacyState, markLegacyMigrated } from './storage';
+import { createSafeJSONStorage, readLegacyState, markLegacyMigrated } from './storage';
 
 interface UserState {
   name: string;
@@ -91,7 +91,7 @@ export const useUserStore = create<UserState>()(
     {
       name: 'ecopulse:user',
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createSafeJSONStorage<UserState>(),
       migrate: (state) => {
         const legacy = readLegacyState();
         if (legacy) {

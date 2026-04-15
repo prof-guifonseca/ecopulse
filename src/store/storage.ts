@@ -1,8 +1,28 @@
+import { createJSONStorage, type PersistStorage } from 'zustand/middleware';
+
 // Runs once on first boot — reads legacy `ecopulse_v2` state and
 // distributes it across the new namespaced stores.
 
 const LEGACY_KEY = 'ecopulse_v2';
 const SENTINEL = 'ecopulse:migrated';
+
+function readSafeStorageItem(storage: Storage, name: string) {
+  const raw = storage.getItem(name);
+  if (raw === null) return null;
+
+  try {
+    JSON.parse(raw);
+    return raw;
+  } catch (error) {
+    storage.removeItem(name);
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`[ecopulse] Discarded corrupted persisted state for "${name}".`, error);
+    }
+
+    return null;
+  }
+}
 
 export interface LegacyState {
   name?: string;
@@ -29,6 +49,20 @@ export interface LegacyState {
   avatarOutfits?: Record<string, string | null>;
   ownedOutfits?: string[];
   chatSentFirst?: boolean;
+}
+
+export function createSafeJSONStorage<S>(
+  getStorage: () => Storage = () => localStorage
+): PersistStorage<S, unknown> | undefined {
+  return createJSONStorage<S>(() => {
+    const storage = getStorage();
+
+    return {
+      getItem: (name) => readSafeStorageItem(storage, name),
+      setItem: (name, value) => storage.setItem(name, value),
+      removeItem: (name) => storage.removeItem(name),
+    };
+  });
 }
 
 export function readLegacyState(): LegacyState | null {

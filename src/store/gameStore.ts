@@ -1,9 +1,9 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import type { DailyMissionsProgress } from '@/types';
-import { readLegacyState } from './storage';
+import { createSafeJSONStorage, readLegacyState } from './storage';
 
 interface GameState {
   scannedProducts: string[];
@@ -104,7 +104,7 @@ export const useGameStore = create<GameState>()(
     {
       name: 'ecopulse:game',
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createSafeJSONStorage<GameState>(),
       migrate: (state) => {
         const legacy = readLegacyState();
         if (legacy) {

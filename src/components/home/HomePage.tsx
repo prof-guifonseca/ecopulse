@@ -20,136 +20,211 @@ export function HomePage() {
   const streak = useUserStore((s) => s.streak);
   const tokensToday = useUserStore((s) => s.tokensToday);
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
-  const openModal = useUIStore((s) => s.openModal);
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
-      {/* Welcome banner */}
-      <section className="flex items-center gap-3 rounded-lg p-4" style={{ background: 'var(--gradient-primary)' }}>
-        <div className="rounded-full bg-white/20 p-1">
-          <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
-        </div>
-        <div className="flex-1 min-w-0 text-bg-primary">
-          <div className="text-xs opacity-80">Olá,</div>
-          <div className="truncate font-display text-lg font-bold">{name}</div>
-        </div>
-        <div className="flex flex-col items-end text-bg-primary">
-          <div className="text-xs opacity-80">🔥 {streak} dias</div>
-          <div className="font-bold">🪙 {tokens}</div>
-        </div>
-      </section>
-
-      {/* Daily missions */}
-      <MissionsCard />
-
-      {/* Weekly challenges */}
-      <section>
-        <SectionHeader title="Desafios Semanais" subtitle="Ative para ganhar tokens" />
-        <ChallengesRow />
-      </section>
-
-      {/* Quick stats */}
-      <section>
-        <SectionHeader title="Impacto de Hoje" />
-        <div className="grid grid-cols-2 gap-3">
-          <GlassCard className="text-center">
-            <div className="text-[10px] text-text-secondary">Tokens hoje</div>
-            <div className="mt-1 font-display text-2xl font-bold" style={{ color: 'var(--accent-gold)' }}>🪙 {tokensToday}</div>
-          </GlassCard>
-          <GlassCard className="text-center">
-            <div className="text-[10px] text-text-secondary">Produtos escaneados</div>
-            <div className="mt-1 font-display text-2xl font-bold" style={{ color: 'var(--accent-green)' }}>📱 {scannedCount}</div>
-          </GlassCard>
-        </div>
-      </section>
-
-      {/* Upcycling */}
-      <section>
-        <SectionHeader title="Academia de Upcycling" subtitle="Transforme, crie, ganhe tokens" />
-        <div className="grid grid-cols-2 gap-3">
-          {TUTORIALS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => openModal({ kind: 'tutorial', id: t.id })}
-              className="glass-card overflow-hidden text-left transition-transform active:scale-[0.98]"
-            >
-              <div
-                className="flex h-24 items-center justify-center text-4xl"
-                style={{ background: t.gradient }}
-              >
-                {t.emoji}
+    <div className="space-y-6 lg:space-y-8" style={{ animation: 'fadeIn 0.35s ease' }}>
+      <section className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_380px]">
+        <GlassCard variant="hud" accent="mint" className="px-5 py-5 sm:px-6 sm:py-6">
+          <div className="grid gap-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-end">
+            <div className="flex items-start gap-4">
+              <div className="rounded-[26px] border border-white/10 bg-white/5 p-2 shadow-[0_0_40px_rgba(70,247,194,0.12)]">
+                <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />
               </div>
-              <div className="p-3">
-                <div className="line-clamp-2 text-xs font-semibold">{t.title}</div>
-                <div className="mt-1.5 flex items-center gap-2 text-[10px] text-text-secondary">
-                  <span>{'🌿'.repeat(t.difficulty)}</span>
-                  <span>⏱{t.time}</span>
-                  <span style={{ color: 'var(--accent-gold)' }}>🪙{t.tokens}</span>
-                </div>
+              <div className="min-w-0">
+                <div className="hud-label">central de comando</div>
+                <h1 className="mt-2 font-display text-3xl font-bold leading-none sm:text-4xl lg:text-5xl">
+                  {name}, o grid verde esta pronto.
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm text-text-secondary sm:text-base">
+                  Suas missoes, desafios e upgrades estao sincronizados. Continue operando para ampliar impacto hoje.
+                </p>
               </div>
-            </button>
-          ))}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <StatCard label="Streak ativo" value={`${streak} dias`} icon="🔥" accent="amber" />
+              <StatCard label="Tokens totais" value={tokens} icon="🪙" accent="mint" />
+              <StatCard label="Scan log" value={scannedCount} icon="📡" accent="cyan" />
+            </div>
+          </div>
+
+          <div className="my-5 hud-divider" />
+
+          <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+            <GlassCard variant="ghost" className="px-4 py-4">
+              <div className="hud-label">Operacao do dia</div>
+              <div className="mt-2 font-display text-2xl font-bold text-text-primary">Tokens hoje: {tokensToday}</div>
+              <div className="mt-2 text-sm text-text-secondary">
+                Complete missoes e desafios para manter o setor em vantagem.
+              </div>
+            </GlassCard>
+            <GlassCard variant="ghost" accent="cyan" className="px-4 py-4">
+              <div className="hud-label">Feed de progressao</div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <span className="command-pill" data-active="true">scan live</span>
+                <span className="command-pill">tribe sync</span>
+                <span className="command-pill">upcycling drop</span>
+              </div>
+            </GlassCard>
+            <div className="flex items-end md:justify-end">
+              <div className="command-pill" data-active="true">
+                <span>Operador</span>
+                <span className="text-text-primary">{name}</span>
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+
+        <MissionsPanel />
+      </section>
+
+      <section className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
+        <div className="space-y-4">
+          <SectionHeader
+            eyebrow="weekly loop"
+            title="Desafios Semanais"
+            subtitle="Ative operacoes solo ou cooperativas para ganhar tokens e destravar badges."
+          />
+          <ChallengesGrid />
+        </div>
+
+        <div className="space-y-6">
+          <section>
+            <SectionHeader
+              eyebrow="telemetry"
+              title="Impacto de Hoje"
+              subtitle="Numeros de campo para acompanhar sua presenca no ecossistema."
+            />
+            <div className="grid gap-3 sm:grid-cols-3">
+              <MetricTile label="Tokens hoje" value={tokensToday} icon="🪙" accent="amber" />
+              <MetricTile label="Produtos escaneados" value={scannedCount} icon="📱" accent="cyan" />
+              <MetricTile label="Streak corrente" value={streak} icon="🔥" accent="mint" />
+            </div>
+          </section>
+
+          <section>
+            <SectionHeader
+              eyebrow="craft lab"
+              title="Academia de Upcycling"
+              subtitle="Colete receitas de transformacao e converta criatividade em tokens."
+            />
+            <UpcyclingGrid />
+          </section>
         </div>
       </section>
     </div>
   );
 }
 
-function MissionsCard() {
+function StatCard({
+  label,
+  value,
+  icon,
+  accent,
+}: {
+  label: string;
+  value: string | number;
+  icon: string;
+  accent: 'mint' | 'cyan' | 'amber';
+}) {
+  return (
+    <GlassCard variant="ghost" accent={accent} className="px-4 py-4">
+      <div className="hud-label">{label}</div>
+      <div className="mt-3 flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-xl">
+          {icon}
+        </div>
+        <div className="font-display text-2xl font-bold text-text-primary">{value}</div>
+      </div>
+    </GlassCard>
+  );
+}
+
+function MetricTile({
+  label,
+  value,
+  icon,
+  accent,
+}: {
+  label: string;
+  value: string | number;
+  icon: string;
+  accent: 'mint' | 'cyan' | 'amber';
+}) {
+  return (
+    <GlassCard variant="tile" accent={accent} className="px-4 py-4">
+      <div className="hud-label">{label}</div>
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="font-display text-3xl font-bold">{value}</div>
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-2xl">
+          {icon}
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
+
+function MissionsPanel() {
   const checks = missionChecks();
   const done = Object.values(checks).filter(Boolean).length;
   const bonusClaimed = useGameStore((s) => s.dailyMissions.bonusClaimed);
 
   return (
-    <GlassCard>
-      <div className="mb-3 flex items-center justify-between">
+    <GlassCard variant="panel" accent="cyan" className="px-5 py-5 sm:px-6">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="font-display text-base font-bold">Missões Diárias</h2>
-          <p className="text-xs text-text-secondary">Renovam à meia-noite</p>
+          <div className="hud-label">daily mission rail</div>
+          <h2 className="mt-2 font-display text-2xl font-bold">Missoes Diarias</h2>
+          <p className="mt-2 text-sm text-text-secondary">Reiniciam a meia-noite. Feche o ciclo completo para liberar bonus.</p>
         </div>
-        <div className="text-sm font-bold" style={{ color: 'var(--accent-green)' }}>{done}/3</div>
+        <div className="command-pill" data-active="true">
+          <span>{done}/3</span>
+          <span>ready</span>
+        </div>
       </div>
 
-      <ul className="space-y-2">
-        {DAILY_MISSIONS.map((m) => {
-          const isDone = checks[m.id as keyof typeof checks];
+      <div className="mt-5 grid gap-3">
+        {DAILY_MISSIONS.map((mission) => {
+          const isDone = checks[mission.id as keyof typeof checks];
+
           return (
-            <li
-              key={m.id}
+            <div
+              key={mission.id}
               className={cn(
-                'flex items-center gap-3 rounded-md p-2 transition-colors',
-                isDone && 'bg-accent-green/10'
+                'surface surface-ghost flex items-center gap-3 px-4 py-3',
+                isDone && 'surface-accent-mint border-accent-green/25 bg-accent-green/8'
               )}
             >
               <div
                 className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-full text-lg',
-                  isDone ? 'bg-accent-green text-bg-primary' : 'bg-bg-tertiary'
+                  'flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-xl',
+                  isDone ? 'bg-accent-green/12 text-accent-green' : 'bg-white/5'
                 )}
               >
-                {isDone ? '✓' : m.emoji}
+                {isDone ? '✓' : mission.emoji}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="truncate text-sm font-semibold">{m.title}</div>
-                <div className="text-[11px]" style={{ color: 'var(--accent-gold)' }}>🪙 +{m.reward} tokens</div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold text-text-primary sm:text-base">{mission.title}</div>
+                <div className="mt-1 text-sm text-accent-gold">+{mission.reward} tokens</div>
               </div>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
 
-      <div className="mt-3">
-        <div className="mb-1.5 flex justify-between text-[11px] text-text-secondary">
-          <span>Bônus diário</span>
-          <span>{bonusClaimed ? '✅ Coletado' : '🎁 +25 tokens ao completar'}</span>
+      <div className="mt-5 space-y-3">
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span className="hud-label">bonus diario</span>
+          <span className="text-text-secondary">{bonusClaimed ? 'Coletado' : '+25 ao completar as 3 missoes'}</span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-bg-tertiary">
+        <div className="relative h-3 overflow-hidden rounded-full bg-white/6">
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04),transparent)]" />
           <div
-            className="h-full rounded-full transition-[width] duration-500"
+            className="relative h-full rounded-full shadow-[0_0_22px_rgba(70,247,194,0.25)] transition-[width] duration-500"
             style={{ width: `${(done / 3) * 100}%`, background: 'var(--gradient-primary)' }}
           />
         </div>
-        {done === 3 && !bonusClaimed && <ClaimBonusButton />}
+        {done === 3 && !bonusClaimed ? <ClaimBonusButton /> : null}
       </div>
     </GlassCard>
   );
@@ -159,15 +234,14 @@ function ClaimBonusButton() {
   return (
     <button
       onClick={tryClaimDailyBonus}
-      className="mt-3 w-full rounded-full py-2.5 text-xs font-bold text-bg-primary"
-      style={{ background: 'var(--gradient-gold)' }}
+      className="w-full rounded-full bg-[var(--gradient-gold)] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.18em] text-bg-primary shadow-[0_0_24px_rgba(255,191,90,0.22)] transition-transform duration-200 hover:translate-y-[-1px]"
     >
-      🎁 Coletar Bônus
+      Coletar Bonus
     </button>
   );
 }
 
-function ChallengesRow() {
+function ChallengesGrid() {
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
   const progress = useGameStore((s) => s.challengeProgress);
@@ -178,74 +252,134 @@ function ChallengesRow() {
   const fireConfetti = useUIStore((s) => s.fireConfetti);
 
   return (
-    <div className="grid grid-cols-1 gap-3">
-      {CHALLENGES.map((c) => {
-        const isActive = activeChallenges.includes(c.id);
-        const isDone = completedChallenges.includes(c.id);
-        const cur = progress[c.id] ?? 0;
-        const prog = isDone ? 100 : isActive ? Math.min(100, (cur / c.duration) * 100) : 0;
+    <div className="grid gap-4 lg:grid-cols-2">
+      {CHALLENGES.map((challenge) => {
+        const isActive = activeChallenges.includes(challenge.id);
+        const isDone = completedChallenges.includes(challenge.id);
+        const cur = progress[challenge.id] ?? 0;
+        const prog = isDone ? 100 : isActive ? Math.min(100, (cur / challenge.duration) * 100) : 0;
+        const accent = challenge.type === 'individual' ? 'cyan' : 'violet';
+
         const handle = () => {
           if (isDone) return;
+
           if (!isActive) {
-            join(c.id);
-            showToast(`Desafio aceito! ${c.emoji}`, 'info');
+            join(challenge.id);
+            showToast(`Desafio aceito! ${challenge.emoji}`, 'info');
             return;
           }
-          const finished = advance(c.id, c.duration);
+
+          const finished = advance(challenge.id, challenge.duration);
           awardTokens(5);
           showToast('+5 Eco-Tokens! 💪', 'reward');
+
           if (finished) {
-            completeCh(c.id);
-            awardTokens(c.tokens);
-            showToast(`Desafio completo! +${c.tokens} tokens 🏆`, 'reward');
+            completeCh(challenge.id);
+            awardTokens(challenge.tokens);
+            showToast(`Desafio completo! +${challenge.tokens} tokens 🏆`, 'reward');
             fireConfetti();
             const total = useGameStore.getState().completedChallenges.length;
             if (total === 1) unlockBadge('challenge-1');
           }
         };
+
         return (
-          <GlassCard key={c.id}>
-            <span
-              className="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-              style={{
-                background: c.type === 'individual' ? 'rgba(0,180,216,0.15)' : 'rgba(167,139,250,0.15)',
-                color: c.type === 'individual' ? 'var(--accent-cyan)' : 'var(--accent-purple)',
-              }}
-            >
-              {c.type === 'individual' ? '🧑 Individual' : '👥 Cooperativo'}
-            </span>
-            <h3 className="mt-2 text-sm font-semibold">{c.emoji} {c.title}</h3>
-            <div className="mt-1 flex gap-3 text-[11px] text-text-secondary">
-              <span>👥 {c.participants.toLocaleString('pt-BR')}</span>
-              <span>📅 {c.duration} dia{c.duration > 1 ? 's' : ''}</span>
+          <GlassCard key={challenge.id} variant="tile" accent={accent} className="px-4 py-4 sm:px-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-3">
+                <span className="command-pill" data-active={isActive ? 'true' : undefined}>
+                  <span>{challenge.type === 'individual' ? 'Solo' : 'Co-op'}</span>
+                </span>
+                <div>
+                  <h3 className="font-display text-xl font-bold leading-tight">{challenge.emoji} {challenge.title}</h3>
+                  <div className="mt-2 flex flex-wrap gap-3 text-sm text-text-secondary">
+                    <span>👥 {challenge.participants.toLocaleString('pt-BR')}</span>
+                    <span>📅 {challenge.duration} dia{challenge.duration > 1 ? 's' : ''}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="font-display text-2xl font-bold text-accent-gold">🪙 {challenge.tokens}</div>
             </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-bg-tertiary">
-              <div
-                className="h-full rounded-full transition-[width] duration-500"
-                style={{ width: `${prog}%`, background: 'var(--gradient-primary)' }}
-              />
+
+            <div className="mt-5">
+              <div className="mb-2 flex items-center justify-between gap-3 text-sm text-text-secondary">
+                <span>Progresso da operacao</span>
+                <span>{isDone ? '100%' : `${Math.round(prog)}%`}</span>
+              </div>
+              <div className="relative h-2.5 overflow-hidden rounded-full bg-white/6">
+                <div
+                  className="relative h-full rounded-full transition-[width] duration-500"
+                  style={{
+                    width: `${prog}%`,
+                    background: challenge.type === 'individual' ? 'var(--gradient-primary)' : 'var(--gradient-purple)',
+                  }}
+                />
+              </div>
             </div>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-xs font-bold" style={{ color: 'var(--accent-gold)' }}>🪙 {c.tokens}</span>
+
+            <div className="mt-5 flex items-center justify-between gap-3">
+              <div className="text-sm text-text-muted">
+                {isDone ? 'Operacao concluida' : isActive ? 'Missao em andamento' : 'Pronto para ativar'}
+              </div>
               <button
                 onClick={handle}
                 disabled={isDone}
                 className={cn(
-                  'rounded-full px-4 py-1.5 text-xs font-bold transition-colors',
-                  isDone
-                    ? 'bg-bg-tertiary text-text-secondary'
-                    : isActive
-                    ? 'text-bg-primary'
-                    : 'border border-accent-green text-accent-green'
+                  'rounded-full px-5 py-2 text-xs font-extrabold uppercase tracking-[0.16em] transition-transform duration-200',
+                  isDone ? 'bg-white/6 text-text-secondary' : 'text-bg-primary hover:translate-y-[-1px]'
                 )}
-                style={isActive && !isDone ? { background: 'var(--gradient-primary)' } : undefined}
+                style={
+                  isDone
+                    ? undefined
+                    : {
+                        background: challenge.type === 'individual' ? 'var(--gradient-primary)' : 'var(--gradient-purple)',
+                      }
+                }
               >
-                {isDone ? '✅ Completo' : isActive ? 'Avançar' : 'Participar'}
+                {isDone ? 'Completo' : isActive ? 'Avancar' : 'Participar'}
               </button>
             </div>
           </GlassCard>
         );
       })}
+    </div>
+  );
+}
+
+function UpcyclingGrid() {
+  const openModal = useUIStore((s) => s.openModal);
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {TUTORIALS.map((tutorial, index) => (
+        <button
+          key={tutorial.id}
+          onClick={() => openModal({ kind: 'tutorial', id: tutorial.id })}
+          className="group text-left"
+        >
+          <GlassCard
+            variant="tile"
+            accent={index % 4 === 0 ? 'mint' : index % 4 === 1 ? 'cyan' : index % 4 === 2 ? 'amber' : 'violet'}
+            className="overflow-hidden p-0 transition-transform duration-200 group-hover:translate-y-[-4px]"
+          >
+            <div className="relative flex min-h-[170px] items-end overflow-hidden px-5 py-5" style={{ background: tutorial.gradient }}>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(7,11,17,0.2)_100%)]" />
+              <div className="relative">
+                <div className="hud-label text-white/70">recipe drop</div>
+                <div className="mt-3 text-5xl">{tutorial.emoji}</div>
+              </div>
+            </div>
+            <div className="px-5 py-4">
+              <h3 className="font-display text-xl font-bold leading-tight">{tutorial.title}</h3>
+              <div className="mt-3 flex flex-wrap gap-3 text-sm text-text-secondary">
+                <span>{'🌿'.repeat(tutorial.difficulty)}</span>
+                <span>⏱ {tutorial.time}</span>
+                <span className="text-accent-gold">🪙 {tutorial.tokens}</span>
+              </div>
+            </div>
+          </GlassCard>
+        </button>
+      ))}
     </div>
   );
 }

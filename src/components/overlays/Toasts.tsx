@@ -1,6 +1,7 @@
 'use client';
 
 import { useUIStore } from '@/store/uiStore';
+import { cn } from '@/lib/cn';
 
 const ICONS = { success: '✅', info: 'ℹ️', reward: '🪙' } as const;
 
@@ -15,10 +16,22 @@ export function Toasts() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="glass-card pointer-events-auto flex w-full items-center gap-2 px-4 py-3 text-sm font-medium"
+          className={cn(
+            'surface pointer-events-auto flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-sm font-medium',
+            t.type === 'reward'
+              ? 'surface-panel surface-accent-amber'
+              : t.type === 'info'
+              ? 'surface-panel surface-accent-cyan'
+              : 'surface-panel surface-accent-mint'
+          )}
           style={{ animation: 'slideDown 0.3s ease' }}
         >
-          <span aria-hidden>{ICONS[t.type]}</span>
+          <span
+            aria-hidden
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-lg"
+          >
+            {ICONS[t.type]}
+          </span>
           <span className="flex-1">{t.message}</span>
         </div>
       ))}

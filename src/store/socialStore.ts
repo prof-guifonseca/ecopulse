@@ -1,8 +1,8 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { readLegacyState } from './storage';
+import { persist } from 'zustand/middleware';
+import { createSafeJSONStorage, readLegacyState } from './storage';
 
 interface SocialState {
   likedPosts: string[];
@@ -39,7 +39,7 @@ export const useSocialStore = create<SocialState>()(
     {
       name: 'ecopulse:social',
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createSafeJSONStorage<SocialState>(),
       migrate: (state) => {
         const legacy = readLegacyState();
         if (legacy) {

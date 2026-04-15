@@ -1,17 +1,19 @@
 interface Props {
   title: string;
   subtitle?: string;
+  eyebrow?: string;
   right?: React.ReactNode;
 }
 
-export function SectionHeader({ title, subtitle, right }: Props) {
+export function SectionHeader({ title, subtitle, eyebrow, right }: Props) {
   return (
-    <div className="mb-3 flex items-end justify-between gap-3">
-      <div>
-        <h2 className="font-display text-base font-bold text-text-primary">{title}</h2>
-        {subtitle && <p className="mt-0.5 text-xs text-text-secondary">{subtitle}</p>}
+    <div className="mb-4 flex items-end justify-between gap-4">
+      <div className="min-w-0">
+        {eyebrow ? <div className="hud-label mb-2">{eyebrow}</div> : null}
+        <h2 className="font-display text-lg font-bold text-text-primary sm:text-xl">{title}</h2>
+        {subtitle ? <p className="mt-1 max-w-2xl text-sm text-text-secondary">{subtitle}</p> : null}
       </div>
-      {right && <div className="shrink-0">{right}</div>}
+      {right ? <div className="shrink-0">{right}</div> : null}
     </div>
   );
 }

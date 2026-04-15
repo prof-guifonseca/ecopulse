@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Manrope, Oxanium } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-manrope',
   weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
+const oxanium = Oxanium({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  weight: ['500', '600', '700'],
+  variable: '--font-oxanium',
+  weight: ['500', '600', '700', '800'],
   display: 'swap',
 });
 
@@ -26,7 +26,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0d1117',
+  themeColor: '#070b11',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="pt-BR"
       data-scroll-behavior="smooth"
-      className={`${inter.variable} ${spaceGrotesk.variable}`}
+      className={`${manrope.variable} ${oxanium.variable} antialiased`}
     >
       <body>{children}</body>
     </html>

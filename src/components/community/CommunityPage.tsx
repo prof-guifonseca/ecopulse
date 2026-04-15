@@ -10,6 +10,17 @@ import { GlassCard } from '@/components/shared/GlassCard';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { cn } from '@/lib/cn';
 
+const HASHTAGS = [
+  { tag: '#Upcycling', count: 1240 },
+  { tag: '#ZeroWaste', count: 892 },
+  { tag: '#HortaUrbana', count: 567 },
+  { tag: '#Compostagem', count: 423 },
+  { tag: '#Granel', count: 389 },
+  { tag: '#DescarteCorreto', count: 312 },
+  { tag: '#ConsumoConsciente', count: 285 },
+  { tag: '#ModaSustentavel', count: 178 },
+];
+
 export function CommunityPage() {
   const [tab, setTab] = useState<'feed' | 'hashtags'>('feed');
   const openStory = useUIStore((s) => s.openStory);
@@ -17,74 +28,98 @@ export function CommunityPage() {
   const openModal = useUIStore((s) => s.openModal);
 
   return (
-    <div className="space-y-5" style={{ animation: 'fadeIn 0.35s ease' }}>
-      <div className="flex items-center justify-between">
-        <SectionHeader title="Comunidade" subtitle="Histórias, dicas e amigos" />
-        <button
-          onClick={openChatList}
-          className="relative rounded-full bg-bg-tertiary p-2 text-lg"
-          aria-label="Mensagens"
-        >
-          💬
-          <span
-            className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-bg-primary"
-            style={{ background: 'var(--accent-red)' }}
-          >
-            3
-          </span>
-        </button>
-      </div>
-
-      {/* Stories */}
-      <section>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {STORIES.map((s, i) => (
-            <button
-              key={s.user}
-              onClick={() => openStory(i)}
-              className="flex shrink-0 flex-col items-center gap-1"
-            >
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-full p-[2px]"
-                style={{ background: 'var(--gradient-primary)' }}
-              >
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-bg-primary text-2xl">
-                  {s.avatar}
-                </div>
+    <div className="space-y-6 lg:space-y-8" style={{ animation: 'fadeIn 0.35s ease' }}>
+      <section className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.1fr)_320px]">
+        <GlassCard variant="hud" accent="violet" className="px-5 py-5 sm:px-6 sm:py-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <SectionHeader
+                eyebrow="social relay"
+                title="Comunidade"
+                subtitle="Historias, dicas, tribos e trocas em uma camada mais viva e menos quadrada."
+              />
+              <div className="flex flex-wrap gap-2">
+                <span className="command-pill" data-active="true">story relay</span>
+                <span className="command-pill">faction chatter</span>
+                <span className="command-pill">field posts</span>
               </div>
-              <span className="max-w-[64px] truncate text-[10px] text-text-secondary">
-                {s.user}
-              </span>
+            </div>
+
+            <button
+              onClick={openChatList}
+              className="surface surface-tile surface-accent-violet flex items-center gap-3 self-start rounded-full px-4 py-3"
+              aria-label="Mensagens"
+            >
+              <span className="text-2xl">💬</span>
+              <div className="text-left">
+                <div className="hud-label">inbox</div>
+                <div className="font-display text-lg font-bold">3 sinais novos</div>
+              </div>
             </button>
-          ))}
-        </div>
+          </div>
+
+          <div className="mt-6 flex gap-3 overflow-x-auto pb-1">
+            {STORIES.map((story, index) => (
+              <button
+                key={story.user}
+                onClick={() => openStory(index)}
+                className="group flex min-w-[104px] shrink-0 flex-col gap-2 text-left"
+              >
+                <div className="surface surface-tile surface-accent-cyan flex h-[132px] items-end rounded-[24px] px-4 py-4 transition-transform duration-200 group-hover:translate-y-[-4px]">
+                  <div>
+                    <div className="text-4xl">{story.avatar}</div>
+                    <div className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">live</div>
+                  </div>
+                </div>
+                <div>
+                  <div className="truncate text-sm font-semibold text-text-primary">{story.user}</div>
+                  <div className="text-xs text-text-secondary">story chain</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </GlassCard>
+
+        <GlassCard variant="panel" accent="cyan" className="px-5 py-5">
+          <div className="hud-label">stream filters</div>
+          <div className="mt-3 flex gap-2">
+            {(['feed', 'hashtags'] as const).map((currentTab) => (
+              <button
+                key={currentTab}
+                onClick={() => setTab(currentTab)}
+                className="command-pill"
+                data-active={tab === currentTab ? 'true' : undefined}
+              >
+                {currentTab === 'feed' ? 'Feed' : 'Hashtags'}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 space-y-3">
+            <GlassCard variant="ghost" accent="mint" className="px-4 py-4">
+              <div className="hud-label">status</div>
+              <div className="mt-2 font-display text-2xl font-bold">setor ativo</div>
+              <div className="mt-2 text-sm text-text-secondary">
+                O feed esta priorizando historias recentes e operacoes em grupo.
+              </div>
+            </GlassCard>
+            <GlassCard variant="ghost" accent="violet" className="px-4 py-4">
+              <div className="hud-label">ritmo social</div>
+              <div className="mt-2 text-sm text-text-secondary">
+                Curta, comente e participe dos chats para acelerar missoes de comunidade.
+              </div>
+            </GlassCard>
+          </div>
+        </GlassCard>
       </section>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-white/5">
-        {(['feed', 'hashtags'] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={cn(
-              'flex-1 border-b-2 py-2 text-xs font-semibold transition-colors',
-              tab === t
-                ? 'border-accent-green text-text-primary'
-                : 'border-transparent text-text-secondary'
-            )}
-          >
-            {t === 'feed' ? 'Feed' : '#Hashtags'}
-          </button>
-        ))}
-      </div>
-
       {tab === 'feed' ? (
-        <ul className="space-y-4">
-          {FEED_POSTS.map((p) => (
+        <ul className="grid gap-5 xl:grid-cols-2">
+          {FEED_POSTS.map((post, index) => (
             <FeedPostCard
-              key={p.id}
-              post={p}
-              onOpenComments={() => openModal({ kind: 'postComments', id: p.id })}
+              key={post.id}
+              accent={index % 3 === 0 ? 'mint' : index % 3 === 1 ? 'violet' : 'cyan'}
+              post={post}
+              onOpenComments={() => openModal({ kind: 'postComments', id: post.id })}
             />
           ))}
         </ul>
@@ -98,9 +133,11 @@ export function CommunityPage() {
 function FeedPostCard({
   post,
   onOpenComments,
+  accent,
 }: {
   post: (typeof FEED_POSTS)[number];
   onOpenComments: () => void;
+  accent: 'mint' | 'cyan' | 'violet';
 }) {
   const likedPosts = useSocialStore((s) => s.likedPosts);
   const toggleLike = useSocialStore((s) => s.toggleLike);
@@ -114,52 +151,64 @@ function FeedPostCard({
 
   const handleLike = () => {
     const newState = toggleLike(post.id);
+
     if (newState) {
       awardTokens(1);
       incrementLikeMission();
       const nextCount = likesMission + 1;
+
       if (nextCount === 5) {
         markMission('likes', 5);
-        showToast('Missão diária: 5 likes ✅', 'success');
+        showToast('Missao diaria: 5 likes ✅', 'success');
       }
+
       if (likedPosts.length === 0) unlockBadge('first-like');
     }
   };
 
   return (
     <li>
-      <GlassCard className="p-0">
-        <div className="flex items-center gap-2 p-3">
-          <span className="text-2xl">{post.user.avatar}</span>
-          <div className="flex-1 min-w-0">
-            <div className="truncate text-sm font-semibold">{post.user.name}</div>
-            <div className="text-[10px] text-text-secondary">
-              Nível {post.user.level} · {post.time}
+      <GlassCard variant="panel" accent={accent} className="overflow-hidden p-0">
+        <div className="flex items-center gap-3 px-5 py-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-2xl">
+            {post.user.avatar}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="font-display text-xl font-bold">{post.user.name}</div>
+            <div className="text-sm text-text-secondary">
+              Nivel {post.user.level} · {post.time}
             </div>
           </div>
+          <div className="command-pill">signal</div>
         </div>
-        <div className="h-48" style={{ background: post.gradient }} />
-        <div className="p-3">
-          <p className="text-sm">{post.caption}</p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            {post.hashtags.map((h) => (
-              <span key={h} className="text-[11px]" style={{ color: 'var(--accent-cyan)' }}>
-                {h}
+
+        <div className="relative h-72 overflow-hidden sm:h-80" style={{ background: post.gradient }}>
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,11,17,0)_30%,rgba(7,11,17,0.35)_100%)]" />
+          <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
+            {post.hashtags.map((tag) => (
+              <span key={tag} className="command-pill bg-black/25 text-white/80">
+                {tag}
               </span>
             ))}
           </div>
-          <div className="mt-3 flex items-center gap-4 text-xs text-text-secondary">
+        </div>
+
+        <div className="space-y-4 px-5 py-5">
+          <p className="text-base text-text-primary">{post.caption}</p>
+          <div className="flex items-center gap-3 text-sm text-text-secondary">
             <button
               onClick={handleLike}
-              className="flex items-center gap-1.5 transition-transform active:scale-95"
-              style={liked ? { color: 'var(--accent-red)' } : undefined}
+              className={cn(
+                'surface surface-ghost flex items-center gap-2 rounded-full px-4 py-2 transition-transform duration-200 hover:translate-y-[-1px]',
+                liked && 'text-accent-red'
+              )}
             >
               <span className="text-base">{liked ? '❤️' : '🤍'}</span>
               <span className="font-semibold">{likeCount}</span>
             </button>
             <button
               onClick={onOpenComments}
-              className="flex items-center gap-1.5 transition-transform active:scale-95"
+              className="surface surface-ghost flex items-center gap-2 rounded-full px-4 py-2 transition-transform duration-200 hover:translate-y-[-1px]"
             >
               <span className="text-base">💬</span>
               <span className="font-semibold">{post.comments}</span>
@@ -172,27 +221,20 @@ function FeedPostCard({
 }
 
 function HashtagList() {
-  const tags = [
-    { tag: '#Upcycling', count: 1240 },
-    { tag: '#ZeroWaste', count: 892 },
-    { tag: '#HortaUrbana', count: 567 },
-    { tag: '#Compostagem', count: 423 },
-    { tag: '#Granel', count: 389 },
-    { tag: '#DescarteCorreto', count: 312 },
-    { tag: '#ConsumoConsciente', count: 285 },
-    { tag: '#ModaSustentavel', count: 178 },
-  ];
   return (
-    <ul className="grid grid-cols-2 gap-3">
-      {tags.map((t) => (
-        <li key={t.tag}>
-          <GlassCard className="text-center">
-            <div className="text-sm font-bold" style={{ color: 'var(--accent-cyan)' }}>
-              {t.tag}
+    <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {HASHTAGS.map((entry, index) => (
+        <li key={entry.tag}>
+          <GlassCard
+            variant="tile"
+            accent={index % 4 === 0 ? 'cyan' : index % 4 === 1 ? 'mint' : index % 4 === 2 ? 'violet' : 'amber'}
+            className="px-5 py-5"
+          >
+            <div className="hud-label">trend packet</div>
+            <div className="mt-4 font-display text-2xl font-bold" style={{ color: 'var(--accent-cyan)' }}>
+              {entry.tag}
             </div>
-            <div className="mt-1 text-[11px] text-text-secondary">
-              {t.count.toLocaleString('pt-BR')} posts
-            </div>
+            <div className="mt-3 text-sm text-text-secondary">{entry.count.toLocaleString('pt-BR')} posts ativos</div>
           </GlassCard>
         </li>
       ))}
