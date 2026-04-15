@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Battery, Cpu, Droplet, Hammer, Leaf, MapPin, Recycle, Shirt, type LucideIcon } from 'lucide-react';
+import { Battery, Cpu, Droplet, Hammer, Leaf, MapPin, Shirt, type LucideIcon } from 'lucide-react';
 import { MAP_POINTS, MAP_TYPE_LABELS, EVENTS } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';

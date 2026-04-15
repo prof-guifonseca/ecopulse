@@ -1,11 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { Check, Coins, X } from 'lucide-react';
 import { AVATAR_BASES, AVATAR_OUTFITS } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { unlockBadge } from '@/lib/gameActions';
 import { Avatar } from '@/components/shared/Avatar';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { Tabs } from '@/components/ui/Tabs';
 import { cn } from '@/lib/cn';
 import type { OutfitSlot } from '@/types';
 
@@ -17,6 +21,17 @@ const SLOT_LABELS: Record<OutfitSlot, string> = {
   background: 'Fundo',
 };
 
+const TAB_ITEMS = [
+  { value: 'base', label: 'Base' },
+  { value: 'hat', label: SLOT_LABELS.hat },
+  { value: 'glasses', label: SLOT_LABELS.glasses },
+  { value: 'shirt', label: SLOT_LABELS.shirt },
+  { value: 'accessory', label: SLOT_LABELS.accessory },
+  { value: 'background', label: SLOT_LABELS.background },
+] as const;
+
+type TabValue = (typeof TAB_ITEMS)[number]['value'];
+
 export function AvatarBuilder() {
   const close = useUIStore((s) => s.closeAvatarBuilder);
   const showToast = useUIStore((s) => s.showToast);
@@ -24,13 +39,13 @@ export function AvatarBuilder() {
   const user = useUserStore();
   const [baseId, setBaseId] = useState(user.avatarBase ?? AVATAR_BASES[0].id);
   const [outfits, setOutfits] = useState(user.avatarOutfits);
-  const [tab, setTab] = useState<'base' | OutfitSlot>('base');
+  const [tab, setTab] = useState<TabValue>('base');
 
   const save = () => {
     user.setProfile({ avatarBase: baseId, avatarOutfits: outfits });
     const equipped = Object.values(outfits).filter(Boolean).length;
     if (equipped >= 3) unlockBadge('fashionista');
-    showToast('Avatar atualizado! ✨', 'success');
+    showToast('Avatar atualizado', 'success');
     close();
   };
 
@@ -47,95 +62,123 @@ export function AvatarBuilder() {
       return false;
     }
     user.addOwnedOutfit(id);
-    showToast(`${outfit.name} adquirido! ${outfit.emoji}`, 'reward');
+    showToast(`${outfit.name} adquirido`, 'reward');
     return true;
   };
 
   return (
-    <div className="fixed inset-0 z-[700] flex flex-col bg-bg-primary" style={{ animation: 'fadeIn 0.3s ease' }}>
-      <div className="surface flex items-center justify-between border-b border-white/6 px-4 py-3">
-        <button onClick={close} className="text-xl" aria-label="Fechar">✕</button>
-        <h2 className="text-base font-semibold">Personalizar avatar</h2>
-        <button onClick={save} className="text-sm font-semibold" style={{ color: 'var(--accent-green)' }}>
-          Salvar
-        </button>
-      </div>
-
-      <div className="flex flex-col items-center py-6">
-        <Avatar baseId={baseId} outfits={outfits} size="xl" />
-      </div>
-
-      <div className="flex gap-1 overflow-x-auto border-b border-white/5 px-3 pb-0">
-        {(['base', 'hat', 'glasses', 'shirt', 'accessory', 'background'] as const).map((t) => (
+    <div
+      className="fixed inset-0 z-[700] flex justify-center bg-[rgba(5,10,8,0.92)]"
+      style={{ animation: 'fadeIn 0.3s ease' }}
+    >
+      <div
+        className="flex h-full w-full max-w-[var(--shell-width)] flex-col"
+        style={{ background: 'var(--bg-primary)' }}
+      >
+        <header
+          className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4"
+          style={{ background: 'rgba(10,18,13,0.94)', backdropFilter: 'blur(14px)' }}
+        >
           <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={cn(
-              'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors',
-              tab === t ? 'border-accent-green text-text-primary' : 'border-transparent text-text-secondary'
-            )}
+            onClick={close}
+            aria-label="Fechar"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-white/6 hover:text-text-primary"
           >
-            {t === 'base' ? 'Base' : SLOT_LABELS[t]}
+            <Icon icon={X} size={18} />
           </button>
-        ))}
-      </div>
+          <div className="flex-1 text-center">
+            <div className="display-eyebrow">Avatar</div>
+            <h2 className="text-[1rem] font-semibold leading-tight text-text-primary">Personalizar</h2>
+          </div>
+          <Button variant="ghost" size="sm" onClick={save}>
+            Salvar
+          </Button>
+        </header>
 
-      <div className="flex-1 overflow-y-auto p-4">
-        {tab === 'base' ? (
-          <div className="grid grid-cols-3 gap-3">
-            {AVATAR_BASES.map((b) => (
-              <button
-                key={b.id}
-                onClick={() => setBaseId(b.id)}
-                className={cn(
-                  'flex flex-col items-center gap-1 rounded-md border-2 p-2 transition-colors',
-                  baseId === b.id ? 'border-accent-green bg-accent-green/10' : 'border-transparent bg-bg-tertiary'
-                )}
-              >
-                <Avatar baseId={b.id} size="md" />
-                <span className="text-xs font-medium">{b.name}</span>
-              </button>
-            ))}
+        <div className="flex flex-col items-center px-4 py-6">
+          <div
+            className="rounded-[28px] border border-[var(--line-soft)] p-6"
+            style={{ background: 'rgba(255,255,255,0.03)' }}
+          >
+            <Avatar baseId={baseId} outfits={outfits} size="xl" />
           </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {AVATAR_OUTFITS.filter((o) => o.slot === tab).map((o) => {
-              const owned = user.ownedOutfits.includes(o.id);
-              const equipped = outfits[o.slot] === o.id;
-              const act = () => {
-                if (!owned) {
-                  if (buyOutfit(o.id)) toggleOutfit(tab, o.id);
-                } else {
-                  toggleOutfit(tab, o.id);
-                }
-              };
-              return (
-                <button
-                  key={o.id}
-                  onClick={act}
-                  className={cn(
-                    'flex flex-col items-center gap-1.5 rounded-md border-2 p-3 transition-colors',
-                    equipped
-                      ? 'border-accent-green bg-accent-green/10'
-                      : 'border-transparent bg-bg-tertiary'
-                  )}
-                >
-                  <span className="text-3xl">{o.emoji}</span>
-                  <span className="text-xs font-semibold">{o.name}</span>
-                  {owned ? (
-                    <span className="text-xs text-text-secondary">
-                      {equipped ? 'Equipado' : 'Toque para equipar'}
-                    </span>
-                  ) : (
-                    <span className="text-xs" style={{ color: 'var(--accent-gold)' }}>
-                      🪙 {o.price}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        </div>
+
+        <div className="px-3">
+          <Tabs<TabValue> items={TAB_ITEMS} value={tab} onChange={setTab} />
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          {tab === 'base' ? (
+            <div className="grid grid-cols-3 gap-3">
+              {AVATAR_BASES.map((b) => {
+                const active = baseId === b.id;
+                return (
+                  <button
+                    key={b.id}
+                    onClick={() => setBaseId(b.id)}
+                    className={cn(
+                      'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border p-3 transition-colors',
+                      active
+                        ? 'border-[rgba(141,219,152,0.55)] bg-[rgba(141,219,152,0.08)]'
+                        : 'border-[var(--line-soft)] bg-white/[0.02] hover:bg-white/[0.04]'
+                    )}
+                  >
+                    <Avatar baseId={b.id} size="md" />
+                    <span className="text-[0.78rem] font-semibold text-text-primary">{b.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {AVATAR_OUTFITS.filter((o) => o.slot === tab).map((o) => {
+                const owned = user.ownedOutfits.includes(o.id);
+                const equipped = outfits[o.slot] === o.id;
+                const act = () => {
+                  if (!owned) {
+                    if (buyOutfit(o.id)) toggleOutfit(tab, o.id);
+                  } else {
+                    toggleOutfit(tab, o.id);
+                  }
+                };
+                return (
+                  <button
+                    key={o.id}
+                    onClick={act}
+                    className={cn(
+                      'relative flex flex-col items-center gap-2 rounded-[var(--radius-md)] border p-4 transition-colors',
+                      equipped
+                        ? 'border-[rgba(141,219,152,0.55)] bg-[rgba(141,219,152,0.08)]'
+                        : 'border-[var(--line-soft)] bg-white/[0.02] hover:bg-white/[0.04]'
+                    )}
+                  >
+                    {equipped ? (
+                      <span
+                        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full"
+                        style={{ background: 'var(--gradient-primary)', color: '#0a140e' }}
+                      >
+                        <Icon icon={Check} size={12} strokeWidth={2.4} />
+                      </span>
+                    ) : null}
+                    <span className="text-4xl leading-none">{o.emoji}</span>
+                    <span className="text-[0.85rem] font-semibold text-text-primary">{o.name}</span>
+                    {owned ? (
+                      <span className="text-[0.72rem] text-text-muted">
+                        {equipped ? 'Equipado' : 'Toque para equipar'}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[0.78rem] font-semibold text-accent-gold">
+                        <Icon icon={Coins} size={12} />
+                        {o.price}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

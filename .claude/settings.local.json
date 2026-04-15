@@ -6,7 +6,8 @@
       "Bash(npx tsc:*)",
       "mcp__Claude_Preview__preview_start",
       "Bash(npx next:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(taskkill //PID 21292 //F)"
     ]
   }
 }
