@@ -1,37 +1,57 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import { isDemoMode } from '@/lib/demoMode';
+import { usePathname } from 'next/navigation';
+import { useGameStore } from '@/store/gameStore';
+import { useSocialStore } from '@/store/socialStore';
+import { useUserStore } from '@/store/userStore';
+import { useHydrated } from '@/hooks/useHydrated';
 
-const ROUTE_TITLES: Record<string, { title: string; summary: string }> = {
-  '/home': { title: 'Sua rotina', summary: 'Fluxo do dia' },
-  '/scanner': { title: 'Scanner', summary: 'Leitura em 1 toque' },
-  '/map': { title: 'Mapa local', summary: 'Próxima parada' },
-  '/community': { title: 'Comunidade', summary: 'Prova social' },
-  '/profile': { title: 'Seu perfil', summary: 'Impacto e identidade' },
+const ROUTE_TITLES: Record<string, { title: string; loading: string }> = {
+  '/home': { title: 'Sua rotina', loading: 'Sincronizando' },
+  '/scanner': { title: 'Scanner', loading: 'Sincronizando' },
+  '/map': { title: 'Mapa local', loading: 'Sincronizando' },
+  '/community': { title: 'Comunidade', loading: 'Sincronizando' },
+  '/profile': { title: 'Seu perfil', loading: 'Sincronizando' },
 };
 
 export function AppHeader() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const demoMode = isDemoMode(searchParams);
-  const current = ROUTE_TITLES[pathname] ?? { title: 'EcoPulse', summary: 'Demo guiada' };
+  const hydrated = useHydrated();
+  const level = useUserStore((s) => s.level);
+  const tokensToday = useUserStore((s) => s.tokensToday);
+  const tokens = useUserStore((s) => s.tokens);
+  const scannedCount = useGameStore((s) => s.scannedProducts.length);
+  const visitedCount = useGameStore((s) => s.visitedPoints.length);
+  const likedPosts = useSocialStore((s) => s.likedPosts.length);
+
+  const current = ROUTE_TITLES[pathname] ?? { title: 'EcoPulse', loading: 'Sincronizando' };
+  const summary = !hydrated
+    ? current.loading
+    : pathname === '/home'
+    ? `+${tokensToday} hoje`
+    : pathname === '/scanner'
+    ? `${scannedCount} itens`
+    : pathname === '/map'
+    ? `${visitedCount} visitas`
+    : pathname === '/community'
+    ? `${likedPosts} curtidas`
+    : `Nível ${level} · ${tokens} tokens`;
 
   return (
     <header
       id="app-header"
-      className="sticky top-0 z-50 px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)]"
+      className="sticky top-0 z-50 px-3 pt-[calc(env(safe-area-inset-top,0px)+10px)]"
     >
-      <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/8 bg-[rgba(9,14,12,0.72)] px-4 py-3 shadow-[0_18px_44px_rgba(1,8,5,0.22)] backdrop-blur-xl">
+      <div className="surface surface-panel flex items-center justify-between gap-3 rounded-[26px] px-4 py-3">
         <div className="min-w-0">
-          <div className="text-[0.75rem] font-medium text-text-secondary">
-            {demoMode ? 'EcoPulse demo' : 'EcoPulse'}
+          <div className="font-display text-[0.8rem] font-semibold tracking-[0.08em] text-text-secondary">
+            EcoPulse
           </div>
-          <div className="mt-1 text-[1.08rem] font-semibold leading-none text-text-primary">{current.title}</div>
+          <div className="mt-1 text-[1.08rem] font-semibold leading-none text-text-primary">
+            {current.title}
+          </div>
         </div>
-        <span className="shrink-0 rounded-full border border-white/8 bg-white/[0.045] px-3 py-1.5 text-[0.75rem] font-medium text-text-secondary">
-          {current.summary}
-        </span>
+        <span className="command-pill shrink-0 whitespace-nowrap">{summary}</span>
       </div>
     </header>
   );

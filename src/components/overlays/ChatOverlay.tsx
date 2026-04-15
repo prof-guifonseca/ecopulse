@@ -28,7 +28,7 @@ export function ChatListOverlay() {
             <li key={c.id}>
               <button
                 onClick={() => openChat(c.id)}
-                className="flex w-full items-center gap-3 rounded-[24px] border border-transparent px-3 py-3 text-left transition-colors hover:border-white/6 hover:bg-white/4"
+                className="flex w-full items-center gap-3 rounded-[22px] px-3 py-3 text-left transition-colors hover:bg-white/4"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/6 text-3xl">
                   {c.with.avatar}
@@ -113,7 +113,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
               <button
                 key={r}
                 onClick={() => send(r)}
-                className="rounded-full border border-white/8 bg-white/6 px-3 py-2 text-sm font-medium text-text-primary"
+                className="rounded-full bg-white/6 px-3 py-2 text-sm font-medium text-text-primary"
               >
                 {r}
               </button>
