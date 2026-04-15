@@ -69,7 +69,7 @@ export function StoryViewer({ index }: Props) {
           </div>
           <button
             onClick={close}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/8 bg-white/8 text-lg"
             aria-label="Fechar story"
           >
             ✕
@@ -77,7 +77,7 @@ export function StoryViewer({ index }: Props) {
         </div>
 
         <div className="flex flex-1 flex-col justify-center px-6 text-center">
-          <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-white/8 bg-white/6 text-5xl shadow-[0_18px_36px_rgba(145,216,159,0.12)]">
+          <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-white/8 bg-white/6 text-5xl shadow-[0_18px_36px_rgba(145,216,159,0.1)]">
             {story.emoji}
           </div>
           <p className="mt-6 text-xl font-semibold leading-8 text-text-primary">{story.text}</p>
@@ -94,7 +94,7 @@ export function StoryViewer({ index }: Props) {
                     key={i}
                     onClick={vote}
                     className={cn(
-                      'relative overflow-hidden rounded-[20px] border bg-white/5 px-4 py-3 text-sm font-medium transition-transform active:scale-[0.97]',
+                      'relative overflow-hidden rounded-[22px] border bg-white/5 px-4 py-3 text-sm font-medium transition-transform active:scale-[0.97]',
                       voted ? 'border-accent-green/30' : 'border-white/8'
                     )}
                   >

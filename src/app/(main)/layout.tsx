@@ -1,38 +1,18 @@
-'use client';
+import { Suspense } from 'react';
+import { MainShell } from '@/components/shared/MainShell';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useHydrated } from '@/hooks/useHydrated';
-import { useUserStore } from '@/store/userStore';
-import { AppHeader } from '@/components/shared/AppHeader';
-import { BottomNav } from '@/components/shared/BottomNav';
-import { Overlays } from '@/components/overlays/Overlays';
+function ShellFallback() {
+  return (
+    <div className="phone-stage-shell">
+      <div className="phone-stage bg-[linear-gradient(180deg,rgba(14,21,17,0.94),rgba(9,15,12,0.98))]" />
+    </div>
+  );
+}
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const hydrated = useHydrated();
-  const onboarded = useUserStore((s) => s.onboarded);
-
-  useEffect(() => {
-    if (hydrated && !onboarded) router.replace('/onboarding');
-  }, [hydrated, onboarded, router]);
-
   return (
-    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden bg-[rgba(9,16,13,0.78)] sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[36px] sm:border sm:border-white/6 sm:shadow-[0_28px_90px_rgba(1,8,5,0.4)]">
-      <AppHeader />
-      <main
-        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4 pt-1"
-        style={{
-          paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 22px)',
-          WebkitOverflowScrolling: 'touch',
-        }}
-      >
-        <div className="mx-auto max-w-[var(--shell-width)]">
-          {children}
-        </div>
-      </main>
-      <BottomNav />
-      <Overlays />
-    </div>
+    <Suspense fallback={<ShellFallback />}>
+      <MainShell>{children}</MainShell>
+    </Suspense>
   );
 }
