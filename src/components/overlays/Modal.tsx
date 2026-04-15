@@ -22,7 +22,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[999] flex items-end bg-[rgba(2,6,14,0.76)] backdrop-blur-md data-[variant=center]:items-center data-[variant=center]:justify-center"
+      className="fixed inset-0 z-[999] flex items-end justify-center bg-[rgba(5,10,8,0.62)] backdrop-blur-md data-[variant=center]:items-center"
       data-variant={variant}
       style={{ animation: 'fadeIn 0.25s ease' }}
       onClick={(e) => {
@@ -32,14 +32,14 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
       aria-modal="true"
     >
       <div
-        className="surface surface-hud surface-accent-cyan relative mx-auto w-full max-w-xl overflow-hidden rounded-t-[28px] p-0 data-[variant=center]:rounded-[28px]"
+        className="surface surface-hud surface-accent-mint relative w-full max-w-[var(--shell-width)] overflow-hidden rounded-t-[32px] p-0 data-[variant=center]:mx-4 data-[variant=center]:rounded-[32px]"
         data-variant={variant}
-        style={{ animation: 'slideUp 0.35s cubic-bezier(.4,0,.2,1)', maxHeight: '85dvh' }}
+        style={{ animation: 'slideUp 0.35s cubic-bezier(.4,0,.2,1)', maxHeight: '88dvh' }}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm text-text-secondary transition-colors hover:border-white/15 hover:bg-white/8 hover:text-text-primary"
+          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-white/8 bg-white/6 text-sm text-text-secondary transition-colors hover:text-text-primary"
           aria-label="Fechar"
         >
           ✕
@@ -47,7 +47,9 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         {variant === 'bottom' && (
           <div className="mx-auto my-3 h-1 w-14 rounded-full bg-white/16" aria-hidden />
         )}
-        <div className="max-h-[80dvh] overflow-y-auto px-5 pb-6 pt-3 sm:px-6">{children}</div>
+        <div className="max-h-[82dvh] overflow-y-auto px-5 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-3">
+          {children}
+        </div>
       </div>
     </div>,
     document.body

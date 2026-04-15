@@ -55,3 +55,9 @@ export const useSocialStore = create<SocialState>()(
     }
   )
 );
+
+if (typeof window !== 'undefined') {
+  useSocialStore.persist.setOptions({
+    storage: createSafeJSONStorage<SocialState>(),
+  });
+}

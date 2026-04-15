@@ -126,3 +126,9 @@ export const useGameStore = create<GameState>()(
     }
   )
 );
+
+if (typeof window !== 'undefined') {
+  useGameStore.persist.setOptions({
+    storage: createSafeJSONStorage<GameState>(),
+  });
+}

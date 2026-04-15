@@ -11,7 +11,7 @@ export function ScoreBadge({ score, className }: Props) {
   return (
     <span
       className={cn(
-        'flex h-10 w-10 items-center justify-center rounded-[18px] border border-white/10 text-sm font-extrabold text-bg-primary shadow-[0_0_24px_rgba(54,215,255,0.12)]',
+        'flex h-11 w-11 items-center justify-center rounded-[18px] border border-white/8 text-sm font-extrabold text-bg-primary shadow-[0_14px_30px_rgba(1,8,5,0.22)]',
         className
       )}
       style={{ background: SCORE_COLORS[score] }}

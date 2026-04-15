@@ -34,7 +34,12 @@ export function GlassCard({
 }: Props) {
   return (
     <As
-      className={cn('surface p-4', VARIANT_CLASS[variant], ACCENT_CLASS[accent], className)}
+      className={cn(
+        'surface p-4 shadow-card',
+        VARIANT_CLASS[variant],
+        ACCENT_CLASS[accent],
+        className
+      )}
       {...rest}
     />
   );

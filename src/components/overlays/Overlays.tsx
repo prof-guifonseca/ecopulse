@@ -33,7 +33,7 @@ export function Overlays() {
       {modal?.kind === 'shopItem' && <ShopItemModal id={modal.id} />}
       {modal?.kind === 'greenMarketInfo' && <GreenMarketInfoModal packId={modal.packId} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
-      {storyIndex !== null && <StoryViewer index={storyIndex} />}
+      {storyIndex !== null && <StoryViewer key={storyIndex} index={storyIndex} />}
       {chatListOpen && <ChatListOverlay />}
       {chatId && <ChatConversationOverlay id={chatId} />}
       {avatarOpen && <AvatarBuilder />}

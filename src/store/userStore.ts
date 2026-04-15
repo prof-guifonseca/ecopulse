@@ -118,3 +118,9 @@ export const useUserStore = create<UserState>()(
     }
   )
 );
+
+if (typeof window !== 'undefined') {
+  useUserStore.persist.setOptions({
+    storage: createSafeJSONStorage<UserState>(),
+  });
+}

@@ -10,14 +10,14 @@ export function Toasts() {
 
   return (
     <div
-      className="pointer-events-none fixed left-1/2 top-20 z-[1100] flex w-full max-w-xs -translate-x-1/2 flex-col items-center gap-2 px-4"
+      className="pointer-events-none fixed bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom,0px)+14px)] left-1/2 z-[1100] flex w-full max-w-[var(--shell-width)] -translate-x-1/2 flex-col items-center gap-2 px-4"
       aria-live="polite"
     >
       {toasts.map((t) => (
         <div
           key={t.id}
           className={cn(
-            'surface pointer-events-auto flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-sm font-medium',
+            'surface pointer-events-auto flex w-full items-center gap-3 rounded-[22px] px-4 py-3 text-sm font-medium shadow-[0_18px_40px_rgba(1,8,5,0.28)]',
             t.type === 'reward'
               ? 'surface-panel surface-accent-amber'
               : t.type === 'info'

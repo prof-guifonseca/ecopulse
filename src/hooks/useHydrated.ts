@@ -13,11 +13,14 @@ export function useHydrated(): boolean {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    const stores = [useUserStore.persist, useGameStore.persist, useSocialStore.persist];
     const flags = [false, false, false];
     const mark = (idx: number) => {
       flags[idx] = true;
       if (flags.every(Boolean)) setHydrated(true);
     };
+
+    stores.forEach((store) => store?.rehydrate?.());
 
     const u = useUserStore.persist?.hasHydrated?.();
     const g = useGameStore.persist?.hasHydrated?.();
@@ -31,10 +34,13 @@ export function useHydrated(): boolean {
     const gg = useGameStore.persist?.onFinishHydration?.(() => mark(1));
     const ss = useSocialStore.persist?.onFinishHydration?.(() => mark(2));
 
+    const fallback = window.setTimeout(() => setHydrated(true), 1200);
+
     return () => {
       uu?.();
       gg?.();
       ss?.();
+      window.clearTimeout(fallback);
     };
   }, []);
 

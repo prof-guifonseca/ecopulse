@@ -17,32 +17,17 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     if (hydrated && !onboarded) router.replace('/onboarding');
   }, [hydrated, onboarded, router]);
 
-  if (!hydrated) {
-    return (
-      <div className="flex h-[100dvh] items-center justify-center bg-bg-primary px-4">
-        <div className="surface surface-hud surface-accent-mint flex min-w-[280px] max-w-md flex-col items-center gap-3 px-8 py-10 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[28px] border border-white/10 bg-white/5 text-5xl shadow-[0_0_40px_rgba(70,247,194,0.12)]">
-            🌿
-          </div>
-          <div className="hud-label">syncing eco systems</div>
-          <div className="font-display text-2xl font-bold">Inicializando Terminal</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-[100dvh] flex-col overflow-hidden bg-bg-primary">
+    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden border-x border-white/5 bg-[rgba(10,17,13,0.72)] shadow-[0_30px_120px_rgba(1,8,5,0.45)]">
       <AppHeader />
       <main
-        className="flex-1 overflow-y-auto overflow-x-hidden"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4"
         style={{
-          paddingTop: 'var(--header-height)',
           paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 20px)',
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        <div className="mx-auto max-w-[1500px] px-3 py-4 sm:px-5 lg:px-8 lg:py-6 xl:px-10">
+        <div className="mx-auto max-w-[var(--shell-width)] pt-3">
           {children}
         </div>
       </main>
