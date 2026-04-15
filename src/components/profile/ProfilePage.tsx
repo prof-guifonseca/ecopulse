@@ -125,7 +125,7 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
       <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Seu impacto em formação"
-          subtitle="Um resumo direto do que suas escolhas já começaram a mover."
+          subtitle="Seu rastro começando."
         />
         <div className="grid grid-cols-3 gap-3">
           <ImpactMetric pct={Math.min(100, scannedCount * 10)} color="var(--accent-green)" label="CO2" value={`${co2}kg`} />
@@ -140,7 +140,7 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
       <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Fundo EcoPulse"
-          subtitle="Como a lógica de repasse aparece hoje dentro do app."
+          subtitle="Para onde vai parte de cada pack."
           right={
             <Button variant="ghost" size="sm" onClick={() => openModal({ kind: 'greenMarketInfo' })}>
               Como funciona
@@ -165,45 +165,48 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
         </div>
       </Card>
 
-      <section>
-        <SectionHeader
-          title="Perguntas rápidas"
-          subtitle="Respostas curtas para entender o Mercado Verde sem rodeios."
-        />
-        <div className="space-y-3">
-          {MARKET_FAQS.map((item) => (
-            <Card key={item.id} tone="solid" padded={false} className="px-4 py-4">
-              <div className="text-[0.9rem] font-semibold text-text-primary">{item.question}</div>
-              <p className="mt-1.5 text-[0.85rem] leading-5 text-text-muted">{item.answer}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <details className="group rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-white/[0.02] px-5 py-4 [&[open]>summary>span:last-child]:rotate-90">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[0.95rem] font-semibold text-text-primary">
+          <span>Saiba mais</span>
+          <span className="text-text-muted transition-transform duration-200">›</span>
+        </summary>
 
-      <section>
-        <SectionHeader
-          title="OSCs em destaque"
-          subtitle="Exemplos de como a curadoria de impacto aparece nesta fase."
-        />
-        <div className="space-y-3">
-          {IMPACT_PARTNERS.map((partner) => (
-            <Card key={partner.id} tone="solid" padded={false} className="px-4 py-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[0.95rem] font-semibold text-text-primary">{partner.name}</div>
-                  <div className="mt-0.5 text-[0.78rem] text-text-muted">
-                    {partner.city}/{partner.state}
+        <div className="mt-5 space-y-6">
+          <section>
+            <div className="mb-3 text-[0.88rem] font-semibold text-text-primary">Perguntas rápidas</div>
+            <div className="space-y-3">
+              {MARKET_FAQS.map((item) => (
+                <Card key={item.id} tone="solid" padded={false} className="px-4 py-4">
+                  <div className="text-[0.9rem] font-semibold text-text-primary">{item.question}</div>
+                  <p className="mt-1.5 text-[0.85rem] leading-5 text-text-muted">{item.answer}</p>
+                </Card>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <div className="mb-3 text-[0.88rem] font-semibold text-text-primary">Organizações apoiadas</div>
+            <div className="space-y-3">
+              {IMPACT_PARTNERS.map((partner) => (
+                <Card key={partner.id} tone="solid" padded={false} className="px-4 py-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-[0.95rem] font-semibold text-text-primary">{partner.name}</div>
+                      <div className="mt-0.5 text-[0.78rem] text-text-muted">
+                        {partner.city}/{partner.state}
+                      </div>
+                    </div>
+                    <span className="command-pill shrink-0" data-active="true">
+                      {partner.verificationStatus}
+                    </span>
                   </div>
-                </div>
-                <span className="command-pill shrink-0" data-active="true">
-                  {partner.verificationStatus}
-                </span>
-              </div>
-              <p className="mt-3 text-[0.85rem] leading-5 text-text-muted">{partner.summary}</p>
-            </Card>
-          ))}
+                  <p className="mt-3 text-[0.85rem] leading-5 text-text-muted">{partner.summary}</p>
+                </Card>
+              ))}
+            </div>
+          </section>
         </div>
-      </section>
+      </details>
     </div>
   );
 }
@@ -234,10 +237,6 @@ function ShopPanel() {
   return (
     <div className="space-y-6">
       <Card tone="solid" accent="reward" padded={false} className="px-5 py-5">
-        <SectionHeader
-          title="Mercado Verde"
-          subtitle="Mesma moeda, mais clareza sobre impacto."
-        />
         <div className="grid grid-cols-3 gap-2">
           <Stat label="Seu saldo" value={tokens} icon={<Icon icon={Coins} size={13} />} />
           <Stat label="Fundo" value="20%" />
@@ -250,15 +249,12 @@ function ShopPanel() {
           className="mt-5"
           onClick={() => openModal({ kind: 'greenMarketInfo' })}
         >
-          Entender como funciona
+          Como funciona
         </Button>
       </Card>
 
       <section>
-        <SectionHeader
-          title="Packs de EcoTokens"
-          subtitle="Veja a lógica comercial antes do checkout real."
-        />
+        <SectionHeader title="Packs de Eco-Tokens" />
         <div className="space-y-3">
           {TOKEN_PACKS.map((pack) => (
             <Card
@@ -297,10 +293,7 @@ function ShopPanel() {
       </section>
 
       <section>
-        <SectionHeader
-          title="Itens já disponíveis"
-          subtitle="Os tokens comprados entram no mesmo saldo usado aqui."
-        />
+        <SectionHeader title="Itens disponíveis" />
         <div className="grid grid-cols-2 gap-3">
           {SHOP_ITEMS.map((item) => {
             const isOwned = owned.includes(item.id);
@@ -340,10 +333,7 @@ function ShopPanel() {
 function BadgesPanel({ owned }: { owned: string[] }) {
   return (
     <section>
-      <SectionHeader
-        title="Badges conquistados"
-        subtitle="Suas conquistas aparecem como coleção, não como vitrine."
-      />
+      <SectionHeader title="Badges conquistados" />
       <div className="grid grid-cols-2 gap-3">
         {BADGES.map((badge) => {
           const unlocked = owned.includes(badge.id);
@@ -378,10 +368,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
   return (
     <div className="space-y-6">
       <section>
-        <SectionHeader
-          title="Sua posição na rede"
-          subtitle="Entenda sua tribo e o clima competitivo da semana."
-        />
+        <SectionHeader title="Sua tribo" subtitle="Onde você está e quem corre ao lado." />
         <div className="space-y-3">
           {TRIBES.map((tribe) => {
             const isMine =
@@ -416,10 +403,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
       </section>
 
       <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
-        <SectionHeader
-          title="Ranking da semana"
-          subtitle="Quem está puxando a comunidade agora."
-        />
+        <SectionHeader title="Ranking da semana" />
         <ol className="space-y-2">
           {LEADERBOARD.slice(0, 10).map((entry) => {
             const isMe = entry.name === 'Você';

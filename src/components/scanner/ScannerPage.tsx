@@ -67,10 +67,7 @@ export function ScannerPage() {
   return (
     <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
       <Card tone="hero" padded={false} className="px-5 py-5">
-        <SectionHeader
-          title="Escaneie e entenda rápido"
-          subtitle="Veja a ficha completa e alimente seu histórico sem passar por painel técnico."
-        />
+        <SectionHeader title="Scanner" subtitle="Ficha clara, histórico vivo." />
 
         <div className="scan-frame px-5 py-6">
           <div className="relative flex min-h-[240px] items-center justify-center py-4">
@@ -116,10 +113,7 @@ export function ScannerPage() {
       </Card>
 
       <section>
-        <SectionHeader
-          title="Pesquisar antes de escanear"
-          subtitle="Busque por nome, marca ou categoria."
-        />
+        <SectionHeader title="Buscar" />
         <div className="input-shell flex items-center gap-3 px-4 py-3">
           <Icon icon={Search} size={18} className="text-text-muted" />
           <input
@@ -133,8 +127,8 @@ export function ScannerPage() {
 
       <section>
         <SectionHeader
-          title="Produtos para consultar"
-          subtitle={`${filtered.length} item${filtered.length === 1 ? '' : 's'} disponíveis agora.`}
+          title="Produtos"
+          right={<span className="text-[0.78rem] text-text-muted">{filtered.length} {filtered.length === 1 ? 'item' : 'itens'}</span>}
         />
 
         <div className="space-y-3">

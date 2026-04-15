@@ -33,7 +33,7 @@ export function ProductDetailModal({ id }: Props) {
   const addToList = () => {
     addScanned(id);
     awardTokens(5);
-    showToast('+5 Eco-Tokens adicionados ao saldo', 'reward');
+    showToast('+5 Eco-Tokens', 'reward');
     if (!missionScan) markMission('scan', true);
     const count = useGameStore.getState().scannedProducts.length;
     if (count === 1) unlockBadge('first-scan');
@@ -78,7 +78,7 @@ export function ProductDetailModal({ id }: Props) {
           disabled={scanned}
           leftIcon={!scanned ? <Icon icon={Plus} size={16} strokeWidth={2.4} /> : undefined}
         >
-          {scanned ? 'Já adicionado' : 'Adicionar · +5 Tokens'}
+          {scanned ? 'Já adicionado' : 'Adicionar ao histórico'}
         </Button>
       </div>
     </ModalShell>

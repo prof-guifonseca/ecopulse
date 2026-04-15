@@ -58,7 +58,7 @@ export function AvatarBuilder() {
     const outfit = AVATAR_OUTFITS.find((o) => o.id === id);
     if (!outfit) return false;
     if (!user.spendTokens(outfit.price)) {
-      showToast('Tokens insuficientes', 'info');
+      showToast('Eco-Tokens insuficientes', 'info');
       return false;
     }
     user.addOwnedOutfit(id);

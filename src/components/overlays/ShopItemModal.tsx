@@ -28,7 +28,7 @@ export function ShopItemModal({ id }: Props) {
   const buy = () => {
     if (owned) return;
     if (!spend(item.price)) {
-      showToast('Tokens insuficientes', 'info');
+      showToast('Eco-Tokens insuficientes', 'info');
       return;
     }
     addOwned(id);
@@ -40,7 +40,7 @@ export function ShopItemModal({ id }: Props) {
   const disabled = owned || tokens < item.price;
 
   return (
-    <ModalShell eyebrow="Mercado Verde" title={item.name}>
+    <ModalShell eyebrow="Loja" title={item.name}>
       <div className="flex flex-col items-center text-center">
         <div className="flex h-24 w-24 items-center justify-center rounded-full border border-[var(--line-soft)] bg-white/[0.04] text-5xl">
           {item.emoji}
@@ -61,7 +61,7 @@ export function ShopItemModal({ id }: Props) {
           onClick={buy}
           disabled={disabled}
         >
-          {owned ? 'Já adquirido' : tokens < item.price ? 'Tokens insuficientes' : 'Comprar'}
+          {owned ? 'Já adquirido' : tokens < item.price ? 'Eco-Tokens insuficientes' : 'Comprar'}
         </Button>
       </div>
     </ModalShell>

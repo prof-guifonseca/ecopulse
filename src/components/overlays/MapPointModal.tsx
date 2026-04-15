@@ -64,8 +64,11 @@ export function MapPointModal({ id }: Props) {
           disabled={visited}
           leftIcon={<Icon icon={MapPin} size={16} />}
         >
-          {visited ? 'Já visitado' : 'Marcar como visitado · +10 Tokens'}
+          {visited ? 'Já visitado' : 'Marcar como visitado'}
         </Button>
+        {!visited ? (
+          <p className="mt-2 text-center text-[0.78rem] text-text-muted">+10 Eco-Tokens</p>
+        ) : null}
       </div>
     </ModalShell>
   );

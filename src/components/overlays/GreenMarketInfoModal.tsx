@@ -22,17 +22,17 @@ const EXPLANATION_STEPS: Array<{ title: string; icon: LucideIcon; text: string }
   {
     title: 'Jogue',
     icon: Target,
-    text: 'Continue ganhando EcoTokens por missões, desafios, scanner e ações cooperativas.',
+    text: 'Ganhe Eco-Tokens em missões, desafios, scanner e ações na comunidade.',
   },
   {
     title: 'Acelere',
     icon: Coins,
-    text: 'Quando o checkout real entrar, os tokens comprados caem no mesmo saldo da loja.',
+    text: 'Compre packs para abrir recompensas mais rápido. Tudo no mesmo saldo.',
   },
   {
     title: 'Impacte',
     icon: Globe2,
-    text: '20% de cada compra compõem o Fundo EcoPulse, destinado a OSCs auditadas.',
+    text: '20% de cada pack vai direto para o Fundo EcoPulse de organizações auditadas.',
   },
 ];
 
@@ -41,12 +41,8 @@ export function GreenMarketInfoModal({ packId }: Props) {
   const selectedPack = TOKEN_PACKS.find((pack) => pack.id === packId);
 
   return (
-    <ModalShell eyebrow="Mercado Verde" title="Como os EcoTokens pagos entram no jogo" variant="center">
+    <ModalShell eyebrow="Loja" title="Como os Eco-Tokens pagos entram no jogo" variant="center">
       <div className="space-y-5">
-        <p className="text-[0.88rem] leading-5 text-text-muted">
-          Esta primeira versão é de conteúdo e transparência. Não existe checkout nem crédito real de saldo ainda.
-        </p>
-
         {selectedPack ? (
           <Card tone="soft" accent={selectedPack.featured ? 'reward' : 'brand'} padded={false} className="px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -81,15 +77,6 @@ export function GreenMarketInfoModal({ packId }: Props) {
             </Card>
           ))}
         </div>
-
-        <Card tone="soft" padded={false} className="px-4 py-4">
-          <div className="display-eyebrow mb-2">Regras desta fase</div>
-          <div className="space-y-1.5 text-[0.85rem] leading-5 text-text-muted">
-            <p>• O saldo é único: tokens ganhos e tokens pagos convivem na mesma economia.</p>
-            <p>• A escolha das OSCs não é individual; o repasse é feito por fundo curado.</p>
-            <p>• Os critérios de validação ficam públicos no app antes do checkout real.</p>
-          </div>
-        </Card>
 
         <Button variant="primary" size="lg" fullWidth onClick={closeModal}>
           Entendi

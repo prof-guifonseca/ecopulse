@@ -49,7 +49,7 @@ export interface Tutorial {
   difficulty: 1 | 2 | 3;
   time: string;
   materials: string[];
-  steps: number;
+  steps: string[];
   tokens: number;
   emoji: string;
   gradient: string;

@@ -112,8 +112,8 @@ export const IMPACT_PARTNERS: ImpactPartner[] = [
 export const MARKET_FAQS: MarketFaqItem[] = [
   {
     id: 'faq-saldo',
-    question: 'EcoTokens comprados substituem os ganhos do jogo?',
-    answer: 'Não. Você continua ganhando tokens normalmente por missões, scanner, desafios e ações da comunidade.',
+    question: 'Eco-Tokens comprados substituem os ganhos do jogo?',
+    answer: 'Não. Você continua ganhando Eco-Tokens normalmente por missões, scanner, desafios e ações da comunidade.',
   },
   {
     id: 'faq-fundo',
@@ -123,7 +123,7 @@ export const MARKET_FAQS: MarketFaqItem[] = [
   {
     id: 'faq-ong',
     question: 'Posso escolher a ONG?',
-    answer: 'Ainda não. Nesta fase, o fundo é curado automaticamente pela EcoPulse.',
+    answer: 'Ainda não. O fundo é curado automaticamente pela EcoPulse.',
   },
   {
     id: 'faq-validacao',

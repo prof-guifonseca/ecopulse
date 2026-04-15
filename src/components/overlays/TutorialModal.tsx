@@ -34,7 +34,7 @@ export function TutorialModal({ id }: Props) {
   };
 
   return (
-    <ModalShell eyebrow="Upcycling" title={tutorial.title}>
+    <ModalShell title={tutorial.title}>
       <div>
         <div
           className="relative flex min-h-[120px] items-center justify-center overflow-hidden rounded-[var(--radius-md)]"
@@ -52,7 +52,7 @@ export function TutorialModal({ id }: Props) {
             <Icon icon={Clock} size={12} />
             {tutorial.time}
           </span>
-          <span>{tutorial.steps} passos</span>
+          <span>{tutorial.steps.length} passos</span>
         </div>
 
         <div className="mt-5">
@@ -72,18 +72,18 @@ export function TutorialModal({ id }: Props) {
         <div className="mt-5">
           <div className="display-eyebrow mb-2">Passos</div>
           <div className="space-y-2">
-            {Array.from({ length: tutorial.steps }, (_, i) => (
+            {tutorial.steps.map((step, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02] px-3 py-2.5 text-[0.85rem]"
+                className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02] px-3 py-2.5 text-[0.85rem]"
               >
                 <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.72rem] font-bold text-[#0a140e]"
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.72rem] font-bold text-[#0a140e]"
                   style={{ background: 'var(--gradient-primary)' }}
                 >
                   {i + 1}
                 </span>
-                <span className="text-text-secondary">Passo {i + 1} do tutorial…</span>
+                <span className="leading-5 text-text-secondary">{step}</span>
               </div>
             ))}
           </div>

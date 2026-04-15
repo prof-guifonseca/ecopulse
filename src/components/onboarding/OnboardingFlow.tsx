@@ -136,7 +136,7 @@ export function OnboardingFlow() {
                   Escolha uma base para o seu perfil
                 </h1>
                 <p className="mt-3 max-w-[32ch] text-[0.9rem] leading-5 text-text-muted">
-                  Você pode personalizar depois. O importante agora é começar com uma identidade clara.
+                  Você personaliza depois. Comece com uma identidade clara.
                 </p>
               </div>
 
@@ -174,7 +174,7 @@ export function OnboardingFlow() {
                   Escolha com quem você quer começar
                 </h1>
                 <p className="mt-3 max-w-[32ch] text-[0.9rem] leading-5 text-text-muted">
-                  A tribo dá contexto ao ranking e torna sua jornada menos solitária.
+                  A tribo dá contexto ao ranking e companhia na jornada.
                 </p>
               </div>
 

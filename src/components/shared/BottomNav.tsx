@@ -10,7 +10,7 @@ const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
   { page: 'home', label: 'Início', icon: Home },
   { page: 'scanner', label: 'Scanner', icon: ScanLine },
   { page: 'map', label: 'Mapa', icon: MapPin },
-  { page: 'community', label: 'Rede', icon: Users },
+  { page: 'community', label: 'Comunidade', icon: Users },
   { page: 'profile', label: 'Perfil', icon: UserRound },
 ];
 

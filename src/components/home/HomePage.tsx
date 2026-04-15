@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Coins, Flame, Package, Sparkles, Sprout, Target, Users } from 'lucide-react';
+import { ArrowRight, Coins, Flame, Package, Sparkles, Target, Users } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -24,9 +24,7 @@ export function HomePage() {
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
-  const tokensToday = useUserStore((s) => s.tokensToday);
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
-  const activeChallenges = useGameStore((s) => s.activeChallenges.length);
 
   return (
     <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
@@ -38,17 +36,17 @@ export function HomePage() {
           <div className="min-w-0 flex-1">
             <div className="display-eyebrow">Bom te ver</div>
             <h1 className="mt-2 text-[1.55rem] font-semibold leading-tight text-text-primary">
-              {name}, siga pelo essencial.
+              Oi, {name}
             </h1>
             <p className="mt-2 text-[0.9rem] leading-6 text-text-muted">
-              Concluir as missões de hoje é o caminho mais curto pro bônus diário.
+              Complete as missões e libere o bônus do dia.
             </p>
           </div>
         </div>
 
         <div className="mt-5 grid grid-cols-3 gap-2">
           <Stat label="Sequência" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
-          <Stat label="Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
+          <Stat label="Eco-Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
           <Stat label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />
         </div>
 
@@ -65,67 +63,15 @@ export function HomePage() {
       <MissionsPanel />
 
       <section>
-        <SectionHeader
-          title="Seu dia em uma leitura rápida"
-          subtitle="Sinais principais pra decidir onde colocar energia agora."
-        />
-        <div className="grid grid-cols-2 gap-3">
-          <MetricCard label="Tokens hoje" value={tokensToday} icon={Coins} tone="reward" />
-          <MetricCard label="Produtos vistos" value={scannedCount} icon={Package} tone="brand" />
-          <MetricCard label="Sequência" value={`${streak}d`} icon={Flame} tone="reward" />
-          <MetricCard label="Desafios ativos" value={activeChallenges} icon={Sprout} tone="brand" />
-        </div>
-      </section>
-
-      <section>
-        <SectionHeader
-          title="Desafios para manter ritmo"
-          subtitle="Entre em um ciclo por vez e avance sem espalhar atenção."
-        />
+        <SectionHeader title="Desafios" />
         <ChallengesList />
       </section>
 
       <section>
-        <SectionHeader
-          title="Ideias para reaproveitar melhor"
-          subtitle="Tutoriais curtos pra transformar o que sobra em algo útil."
-        />
+        <SectionHeader title="Upcycling" />
         <UpcyclingGrid />
       </section>
     </div>
-  );
-}
-
-function MetricCard({
-  label,
-  value,
-  icon,
-  tone,
-}: {
-  label: string;
-  value: string | number;
-  icon: typeof Coins;
-  tone: 'brand' | 'reward';
-}) {
-  return (
-    <Card tone="solid" accent="none" padded={false} className="px-4 py-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <div className="text-[0.7rem] font-semibold uppercase tracking-wide text-text-muted">{label}</div>
-          <div className="mt-2 text-[1.5rem] font-semibold leading-none text-text-primary">{value}</div>
-        </div>
-        <div
-          className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-xl',
-            tone === 'brand'
-              ? 'bg-[rgba(141,219,152,0.12)] text-accent-green'
-              : 'bg-[rgba(224,194,122,0.12)] text-accent-gold'
-          )}
-        >
-          <Icon icon={icon} size={18} strokeWidth={2} />
-        </div>
-      </div>
-    </Card>
   );
 }
 
@@ -138,7 +84,6 @@ function MissionsPanel() {
     <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
       <SectionHeader
         title="Missões do dia"
-        subtitle="Três ações simples pra manter constância e liberar o bônus."
         right={
           <span className="command-pill" data-active="true">
             {done}/3
