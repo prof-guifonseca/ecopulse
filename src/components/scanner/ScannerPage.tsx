@@ -1,12 +1,15 @@
 'use client';
 
-import { useDeferredValue, useMemo, useState } from 'react';
-import { Camera, Search } from 'lucide-react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Camera, Search, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '@/data';
 import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
+import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { hapticTap } from '@/lib/haptic';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Card } from '@/components/ui/Card';
@@ -18,13 +21,30 @@ export function ScannerPage() {
   const [query, setQuery] = useState('');
   const [scanning, setScanning] = useState(false);
   const deferredQuery = useDeferredValue(query);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const welcome = searchParams.get('welcome') === '1';
   const openModal = useUIStore((s) => s.openModal);
+  const modal = useUIStore((s) => s.modal);
   const showToast = useUIStore((s) => s.showToast);
   const fireConfetti = useUIStore((s) => s.fireConfetti);
   const scannedProducts = useGameStore((s) => s.scannedProducts);
   const addScannedProduct = useGameStore((s) => s.addScannedProduct);
   const markMission = useGameStore((s) => s.markMission);
   const missionScan = useGameStore((s) => s.dailyMissions.scan);
+  const firstScanCompleted = useUserStore((s) => s.firstScanCompleted);
+  const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
+  const firstRun = welcome && !firstScanCompleted;
+  const awaitingFirstClose = useRef(false);
+
+  // After the first scan's product modal closes, send the user home.
+  useEffect(() => {
+    if (awaitingFirstClose.current && modal === null) {
+      awaitingFirstClose.current = false;
+      showToast('🏠 Home liberada', 'reward');
+      router.push('/home');
+    }
+  }, [modal, router, showToast]);
 
   const filtered = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
@@ -40,6 +60,7 @@ export function ScannerPage() {
 
   const simulateScan = () => {
     if (scanning) return;
+    hapticTap();
     setScanning(true);
 
     setTimeout(() => {
@@ -59,6 +80,12 @@ export function ScannerPage() {
 
       showToast(`+10 tokens por ${chosen.name}`, 'reward');
       fireConfetti();
+
+      if (firstRun) {
+        markFirstScanCompleted();
+        awaitingFirstClose.current = true;
+      }
+
       openModal({ kind: 'product', id: chosen.id });
       setScanning(false);
     }, 1600);
@@ -66,6 +93,23 @@ export function ScannerPage() {
 
   return (
     <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+      {firstRun ? (
+        <Card tone="soft" padded={false} className="flex items-start gap-3 px-4 py-4">
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] text-[#0a140e]"
+            style={{ background: 'var(--gradient-primary)' }}
+          >
+            <Icon icon={Sparkles} size={18} strokeWidth={2.2} />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[0.95rem] font-semibold text-text-primary">Primeiro scan libera a home</div>
+            <p className="mt-1 text-[0.82rem] leading-5 text-text-muted">
+              Toque em Simular scan — você vê como funciona em 2 segundos.
+            </p>
+          </div>
+        </Card>
+      ) : null}
+
       <Card tone="hero" padded={false} className="px-5 py-5">
         <SectionHeader title="Scanner" subtitle="Ficha clara, histórico vivo." />
 
@@ -95,7 +139,9 @@ export function ScannerPage() {
           <p className="mt-4 text-[0.85rem] leading-5 text-text-muted">
             {scanning
               ? 'Analisando o item agora…'
-              : 'Simule um scan para abrir a ficha completa e ganhar recompensa.'}
+              : scannedProducts.length === 0
+                ? 'Seu primeiro scan abre sua ficha e libera tokens.'
+                : 'Simule um scan para abrir a ficha completa e ganhar recompensa.'}
           </p>
           <Button
             variant="primary"
@@ -120,6 +166,7 @@ export function ScannerPage() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Nome, marca ou categoria"
+            aria-label="Buscar produtos"
             className="w-full bg-transparent text-[0.95rem] outline-none placeholder:text-text-muted"
           />
         </div>
@@ -130,6 +177,15 @@ export function ScannerPage() {
           title="Produtos"
           right={<span className="text-[0.78rem] text-text-muted">{filtered.length} {filtered.length === 1 ? 'item' : 'itens'}</span>}
         />
+
+        {filtered.length === 0 ? (
+          <Card tone="soft" padded={false} className="px-4 py-4">
+            <div className="text-[0.88rem] font-semibold text-text-primary">Nada encontrado</div>
+            <p className="mt-1 text-[0.8rem] leading-5 text-text-muted">
+              Nada encontrado para &ldquo;{query.trim()}&rdquo;. Tente outra palavra.
+            </p>
+          </Card>
+        ) : null}
 
         <div className="space-y-3">
           {filtered.map((product) => (

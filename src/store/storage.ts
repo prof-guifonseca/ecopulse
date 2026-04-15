@@ -44,6 +44,8 @@ export interface LegacyState {
   following?: string[];
   tokensToday?: number;
   dailyMissions?: { scan: boolean; likes: number; map: boolean; bonusClaimed: boolean };
+  lastMissionDay?: string | null;
+  firstScanCompleted?: boolean;
   onboarded?: boolean;
   avatarBase?: string | null;
   avatarOutfits?: Record<string, string | null>;

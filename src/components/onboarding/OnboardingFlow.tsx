@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Check, Leaf } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
@@ -35,9 +35,12 @@ export function OnboardingFlow() {
   const [name, setName] = useState('');
   const [baseId, setBaseId] = useState<string>(AVATAR_BASES[0].id);
   const [tribe, setTribe] = useState<string>('guardioes');
+  const finishing = useRef(false);
 
   useEffect(() => {
-    if (hydrated && onboarded) router.replace('/home');
+    if (!hydrated) return;
+    if (finishing.current) return;
+    if (onboarded) router.replace('/home');
   }, [hydrated, onboarded, router]);
 
   const totalSteps = INTRO_SLIDES.length + 3;
@@ -49,13 +52,14 @@ export function OnboardingFlow() {
   const progress = ((step + 1) / totalSteps) * 100;
 
   const finish = () => {
+    finishing.current = true;
     completeOnboarding({
       name: name.trim() || 'Eco-User',
       avatar: '🌿',
       avatarBase: baseId,
       tribe,
     });
-    router.replace('/home');
+    router.replace('/scanner?welcome=1');
   };
 
   return (
@@ -120,6 +124,7 @@ export function OnboardingFlow() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Digite seu nome"
+                  aria-label="Seu nome"
                   autoFocus
                   maxLength={24}
                   className="w-full bg-transparent px-5 py-4 text-[1.1rem] font-semibold outline-none placeholder:text-text-muted"

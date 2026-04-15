@@ -3,6 +3,7 @@
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens } from './gameActions';
+import { hapticSuccess } from './haptic';
 
 export function missionChecks() {
   const dm = useGameStore.getState().dailyMissions;
@@ -22,5 +23,6 @@ export function tryClaimDailyBonus() {
     awardTokens(25);
     useUIStore.getState().showToast('Bônus diário! +25 Eco-Tokens 🎁', 'reward');
     useUIStore.getState().fireConfetti();
+    hapticSuccess();
   }
 }

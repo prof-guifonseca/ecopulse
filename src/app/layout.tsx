@@ -18,15 +18,25 @@ const oxanium = Oxanium({
 
 export const metadata: Metadata = {
   title: 'EcoPulse — Sustentabilidade é Lifestyle',
-  description: 'Plataforma social gamificada para hábitos sustentáveis',
+  description: 'Hábitos sustentáveis com impacto real.',
   applicationName: 'EcoPulse',
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [{ url: '/icons/icon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/icons/icon.svg', type: 'image/svg+xml' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'EcoPulse',
+    statusBarStyle: 'black-translucent',
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#070b11',
+  themeColor: '#0a120e',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

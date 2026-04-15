@@ -13,18 +13,26 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Stat } from '@/components/ui/Stat';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { Skeleton } from '@/components/shared/Skeleton';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { missionChecks, tryClaimDailyBonus } from '@/lib/missions';
 import { cn } from '@/lib/cn';
+import { useHydrated } from '@/hooks/useHydrated';
 
 export function HomePage() {
+  const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
   const avatar = useUserStore((s) => s.avatar);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
+  const level = useUserStore((s) => s.level);
+  const xp = useUserStore((s) => s.xp);
+  const xpToNext = useUserStore((s) => s.xpToNext);
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
+
+  if (!hydrated) return <HomeSkeleton />;
 
   return (
     <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
@@ -50,9 +58,19 @@ export function HomePage() {
           <Stat label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />
         </div>
 
+        <div className="mt-5">
+          <div className="mb-1.5 flex items-center justify-between text-[0.78rem]">
+            <span className="text-text-muted">Nível {level}</span>
+            <span className="font-semibold text-text-secondary">
+              {xp}/{xpToNext} XP
+            </span>
+          </div>
+          <ProgressBar value={xpToNext > 0 ? (xp / xpToNext) * 100 : 0} tone="brand" size="sm" />
+        </div>
+
         <Link
           href="/scanner"
-          className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-[0.95rem] font-semibold text-[#0a140e] shadow-[0_10px_22px_rgba(141,219,152,0.22)] transition-all hover:shadow-[0_14px_28px_rgba(141,219,152,0.3)] active:translate-y-px"
+          className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-[0.95rem] font-semibold text-[#0a140e] shadow-[0_10px_22px_rgba(141,219,152,0.22)] transition-all duration-150 hover:shadow-[0_14px_28px_rgba(141,219,152,0.3)] active:scale-[0.98]"
           style={{ background: 'var(--gradient-primary)' }}
         >
           Abrir scanner
@@ -234,6 +252,36 @@ function ChallengesList() {
           </Card>
         );
       })}
+    </div>
+  );
+}
+
+function HomeSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-live="polite">
+      <div className="card-hero px-5 py-6">
+        <div className="flex items-start gap-4">
+          <Skeleton className="h-16 w-16 rounded-[var(--radius-lg)]" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-7 w-40" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+        </div>
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <Skeleton className="h-[60px] w-full" />
+          <Skeleton className="h-[60px] w-full" />
+          <Skeleton className="h-[60px] w-full" />
+        </div>
+        <div className="mt-5 space-y-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-2 w-full" />
+        </div>
+        <Skeleton className="mt-5 h-12 w-full rounded-full" />
+      </div>
+      <Skeleton className="h-44 w-full" />
+      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-32 w-full" />
     </div>
   );
 }

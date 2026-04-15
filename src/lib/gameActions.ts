@@ -4,6 +4,7 @@ import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { BADGES } from '@/data';
+import { hapticSuccess, hapticTap } from '@/lib/haptic';
 
 /**
  * Awards tokens + XP in one atomic action, handles level-up toasts,
@@ -14,10 +15,12 @@ export function awardTokens(amount: number) {
   user.addTokens(amount);
   const { leveled, newLevel } = user.addXp(amount);
   const ui = useUIStore.getState();
+  hapticTap();
 
   if (leveled) {
-    ui.showToast(`Nível ${newLevel} alcançado! 🎉`, 'reward');
+    ui.showToast(`🎉 Nível ${newLevel} desbloqueado`, 'reward');
     ui.fireConfetti();
+    hapticSuccess();
   }
 
   // Auto-unlock token-100 badge
@@ -40,5 +43,6 @@ export function unlockBadge(id: string) {
     const b = BADGES.find((x) => x.id === id);
     if (b) ui.showToast(`Conquista: ${b.name} ${b.emoji}`, 'reward');
     ui.fireConfetti();
+    hapticSuccess();
   }
 }

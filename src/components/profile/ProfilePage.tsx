@@ -332,8 +332,21 @@ function ShopPanel() {
 
 function BadgesPanel({ owned }: { owned: string[] }) {
   return (
-    <section>
+    <section className="space-y-4">
       <SectionHeader title="Badges conquistados" />
+      {owned.length === 0 ? (
+        <Card tone="soft" padded={false} className="flex items-start gap-3 px-4 py-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-white/[0.04] text-2xl">
+            🏆
+          </div>
+          <div className="min-w-0">
+            <div className="text-[0.95rem] font-semibold text-text-primary">Seu primeiro badge tá esperando</div>
+            <p className="mt-1 text-[0.82rem] leading-5 text-text-muted">
+              Escaneie, complete desafios e construa upcycling pra desbloquear.
+            </p>
+          </div>
+        </Card>
+      ) : null}
       <div className="grid grid-cols-2 gap-3">
         {BADGES.map((badge) => {
           const unlocked = owned.includes(badge.id);

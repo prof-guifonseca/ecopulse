@@ -15,6 +15,7 @@ interface GameState {
   completedTutorials: string[];
   badges: string[];
   dailyMissions: DailyMissionsProgress;
+  lastMissionDay: string | null;
 
   addScannedProduct: (id: string) => void;
   addVisitedPoint: (id: string) => void;
@@ -27,18 +28,21 @@ interface GameState {
   markMission: (key: keyof DailyMissionsProgress, value: DailyMissionsProgress[keyof DailyMissionsProgress]) => void;
   incrementLikeMission: () => void;
   claimBonus: () => void;
+  resetDailyMissions: (day: string) => void;
+  setLastMissionDay: (day: string) => void;
 }
 
 const DEFAULT_GAME = {
-  scannedProducts: ['p1', 'p3'],
+  scannedProducts: [] as string[],
   visitedPoints: [] as string[],
   ownedShopItems: [] as string[],
-  activeChallenges: ['c1', 'c3'],
+  activeChallenges: [] as string[],
   completedChallenges: [] as string[],
-  challengeProgress: { c1: 3, c3: 2 } as Record<string, number>,
+  challengeProgress: {} as Record<string, number>,
   completedTutorials: [] as string[],
-  badges: ['first-scan', 'upcycler-1', 'week-streak'],
+  badges: [] as string[],
   dailyMissions: { scan: false, likes: 0, map: false, bonusClaimed: false } as DailyMissionsProgress,
+  lastMissionDay: null as string | null,
 };
 
 export const useGameStore = create<GameState>()(
@@ -100,6 +104,14 @@ export const useGameStore = create<GameState>()(
 
       claimBonus: () =>
         set((s) => ({ dailyMissions: { ...s.dailyMissions, bonusClaimed: true } })),
+
+      resetDailyMissions: (day) =>
+        set({
+          dailyMissions: { scan: false, likes: 0, map: false, bonusClaimed: false },
+          lastMissionDay: day,
+        }),
+
+      setLastMissionDay: (day) => set({ lastMissionDay: day }),
     }),
     {
       name: 'ecopulse:game',
@@ -119,6 +131,7 @@ export const useGameStore = create<GameState>()(
             completedTutorials: legacy.completedTutorials ?? [],
             badges: legacy.badges ?? DEFAULT_GAME.badges,
             dailyMissions: legacy.dailyMissions ?? DEFAULT_GAME.dailyMissions,
+            lastMissionDay: legacy.lastMissionDay ?? null,
           } as GameState;
         }
         return state as GameState;

@@ -17,6 +17,7 @@ export function StoryViewer({ index }: Props) {
   const [progress, setProgress] = useState(0);
   const [voted, setVoted] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const story = STORIES[index];
 
@@ -45,8 +46,30 @@ export function StoryViewer({ index }: Props) {
     showToast('+3 Eco-Tokens por participar da enquete', 'reward');
   };
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartX.current;
+    touchStartX.current = null;
+    if (start == null) return;
+    const endX = e.changedTouches[0]?.clientX ?? start;
+    const dx = endX - start;
+    if (dx > 60) {
+      if (index > 0) openStory(index - 1);
+    } else if (dx < -60) {
+      if (index < STORIES.length - 1) openStory(index + 1);
+      else close();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-[500] flex justify-center bg-[rgba(5,10,8,0.92)]" style={{ animation: 'fadeIn 0.3s ease' }}>
+    <div
+      className="fixed inset-0 z-[500] flex justify-center bg-[rgba(5,10,8,0.92)]"
+      style={{ animation: 'fadeIn 0.3s ease' }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#09110d_0%,#111914_100%)]">
         <div className="flex gap-1 px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)]">
           {STORIES.map((_, i) => {

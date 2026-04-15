@@ -22,11 +22,13 @@ const SIZE: Record<Size, string> = {
 };
 
 const VARIANT: Record<Variant, string> = {
-  primary: 'text-[#0a140e] shadow-[0_10px_22px_rgba(141,219,152,0.22)] hover:shadow-[0_14px_28px_rgba(141,219,152,0.3)] active:translate-y-px',
-  reward: 'text-[#1a130a] shadow-[0_10px_22px_rgba(224,194,122,0.22)] hover:shadow-[0_14px_28px_rgba(224,194,122,0.3)] active:translate-y-px',
+  primary:
+    'text-[#0a140e] shadow-[0_10px_22px_rgba(141,219,152,0.22)] hover:shadow-[0_14px_28px_rgba(141,219,152,0.3)] active:scale-[0.97]',
+  reward:
+    'text-[#1a130a] shadow-[0_10px_22px_rgba(224,194,122,0.22)] hover:shadow-[0_14px_28px_rgba(224,194,122,0.3)] active:scale-[0.97]',
   secondary:
-    'border border-[var(--line-strong)] bg-white/3 text-text-primary hover:bg-white/6 active:translate-y-px',
-  ghost: 'text-text-secondary hover:text-text-primary hover:bg-white/4',
+    'border border-[var(--line-strong)] bg-white/3 text-text-primary hover:bg-white/6 active:scale-[0.98]',
+  ghost: 'text-text-secondary hover:text-text-primary hover:bg-white/4 active:scale-[0.98]',
 };
 
 export const Button = forwardRef<HTMLButtonElement, Props>(function Button(

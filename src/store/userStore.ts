@@ -16,6 +16,7 @@ interface UserState {
   tokensToday: number;
   streak: number;
   onboarded: boolean;
+  firstScanCompleted: boolean;
   avatarBase: string | null;
   avatarOutfits: AvatarOutfits;
   ownedOutfits: string[];
@@ -24,8 +25,11 @@ interface UserState {
   addXp: (amount: number) => { leveled: boolean; newLevel: number };
   addTokens: (amount: number) => void;
   spendTokens: (amount: number) => boolean;
+  resetTokensToday: () => void;
+  setStreak: (value: number) => void;
   setOutfit: (slot: keyof AvatarOutfits, id: string | null) => void;
   addOwnedOutfit: (id: string) => void;
+  markFirstScanCompleted: () => void;
   completeOnboarding: (data: { name: string; avatar: string; avatarBase: string | null; tribe: string }) => void;
 }
 
@@ -33,13 +37,14 @@ const DEFAULT_USER = {
   name: 'Eco-User',
   avatar: '🌿',
   tribe: 'guardioes',
-  level: 5,
-  xp: 340,
-  xpToNext: 500,
-  tokens: 127,
-  tokensToday: 35,
-  streak: 12,
+  level: 1,
+  xp: 0,
+  xpToNext: 100,
+  tokens: 0,
+  tokensToday: 0,
+  streak: 0,
   onboarded: false,
+  firstScanCompleted: false,
   avatarBase: null as string | null,
   avatarOutfits: { hat: null, glasses: null, shirt: null, accessory: null, background: null } as AvatarOutfits,
   ownedOutfits: [] as string[],
@@ -79,6 +84,12 @@ export const useUserStore = create<UserState>()(
         return true;
       },
 
+      resetTokensToday: () => set({ tokensToday: 0 }),
+
+      setStreak: (value) => set({ streak: Math.max(0, value) }),
+
+      markFirstScanCompleted: () => set({ firstScanCompleted: true }),
+
       setOutfit: (slot, id) =>
         set((s) => ({ avatarOutfits: { ...s.avatarOutfits, [slot]: id } })),
 
@@ -107,6 +118,7 @@ export const useUserStore = create<UserState>()(
             tokensToday: legacy.tokensToday ?? DEFAULT_USER.tokensToday,
             streak: legacy.streak ?? DEFAULT_USER.streak,
             onboarded: legacy.onboarded ?? false,
+            firstScanCompleted: legacy.firstScanCompleted ?? DEFAULT_USER.firstScanCompleted,
             avatarBase: legacy.avatarBase ?? null,
             avatarOutfits: { ...DEFAULT_USER.avatarOutfits, ...(legacy.avatarOutfits ?? {}) },
             ownedOutfits: legacy.ownedOutfits ?? [],
