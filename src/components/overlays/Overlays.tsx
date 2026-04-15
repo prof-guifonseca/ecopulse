@@ -11,6 +11,7 @@ import { CommentsModal } from './CommentsModal';
 import { StoryViewer } from './StoryViewer';
 import { ChatListOverlay, ChatConversationOverlay } from './ChatOverlay';
 import { AvatarBuilder } from './AvatarBuilder';
+import { GreenMarketInfoModal } from './GreenMarketInfoModal';
 
 /**
  * Single mount that renders any currently-active overlay based on UI store state.
@@ -30,6 +31,7 @@ export function Overlays() {
       {modal?.kind === 'mapPoint' && <MapPointModal id={modal.id} />}
       {modal?.kind === 'tutorial' && <TutorialModal id={modal.id} />}
       {modal?.kind === 'shopItem' && <ShopItemModal id={modal.id} />}
+      {modal?.kind === 'greenMarketInfo' && <GreenMarketInfoModal packId={modal.packId} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
       {storyIndex !== null && <StoryViewer index={storyIndex} />}
       {chatListOpen && <ChatListOverlay />}

@@ -134,6 +134,45 @@ export interface ShopItem {
   type: ShopItemType;
 }
 
+export interface TokenPack {
+  id: string;
+  lookupKey: string;
+  name: string;
+  description: string;
+  tokens: number;
+  priceInCents: number;
+  currency: 'BRL';
+  fundSharePercent: number;
+  fundShareInCents: number;
+  badge: string;
+  featured?: boolean;
+}
+
+export interface ImpactPartner {
+  id: string;
+  name: string;
+  city: string;
+  state: string;
+  summary: string;
+  sdgs: string[];
+  verificationStatus: string;
+}
+
+export interface ImpactFundSnapshot {
+  totalRaisedInCents: number;
+  totalCommittedInCents: number;
+  supportedOrgs: number;
+  coveredSdgs: number;
+  lastTransferAt: string;
+  verificationNote: string;
+}
+
+export interface MarketFaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface EcoEvent {
   id: string;
   title: string;
