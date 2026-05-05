@@ -39,11 +39,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     <div className="device-shell mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden sm:h-[calc(100dvh-3rem)] sm:max-h-[920px] sm:rounded-[var(--radius-shell)]">
       <AppHeader />
       <main
-        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4 pt-1"
-        style={{
-          paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 22px)',
-          WebkitOverflowScrolling: 'touch',
-        }}
+        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 pt-1"
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         <div className="mx-auto max-w-[var(--shell-width)]">
           {children}
