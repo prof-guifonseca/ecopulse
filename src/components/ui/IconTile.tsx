@@ -12,9 +12,9 @@ interface Props {
 }
 
 const SIZE_CLASSES: Record<Size, string> = {
-  sm: 'h-9 w-9 text-base rounded-[10px]',
-  md: 'h-11 w-11 text-xl rounded-[14px]',
-  lg: 'h-14 w-14 text-2xl rounded-[18px]',
+  sm: 'h-9 w-9 text-base rounded-[var(--radius-xs)]',
+  md: 'h-11 w-11 text-xl rounded-[var(--radius-sm)]',
+  lg: 'h-14 w-14 text-2xl rounded-[var(--radius-md)]',
 };
 
 const TONE_CLASSES: Record<Tone, string> = {

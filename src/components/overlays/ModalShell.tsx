@@ -60,7 +60,7 @@ export function ModalShell({
           footer ? 'pb-4' : '',
           bodyClassName
         )}
-        style={{ maxHeight: '72dvh' }}
+        style={{ maxHeight: 'var(--modal-body-max-h)' }}
       >
         {children}
       </div>

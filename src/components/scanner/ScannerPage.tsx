@@ -16,6 +16,9 @@ import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { cn } from '@/lib/cn';
 
+// Scan completes (and modal opens) before the visual scan-line loop ends —
+// the user perceives the result as soon as the camera "lock" feels right.
+// The CSS keyframe (--animate-scan-line: 2.4s) keeps looping behind the modal.
 const SCAN_ANIMATION_MS = 1600;
 
 export function ScannerPage() {
