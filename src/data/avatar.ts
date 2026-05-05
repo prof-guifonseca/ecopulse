@@ -20,11 +20,16 @@ export const AVATAR_BASES: AvatarBase[] = [
 ];
 
 /**
- * Outfits keep the same gameplay slots; visual styling restrained
- * to the editorial palette. Hat colors, glasses tints and shirts
- * coordinate with the brand greens / golds / earths.
+ * Outfit slots:
+ *  hat / glasses / shirt / accessory / background — original 5
+ *  weapon / hairstyle — added with the SkinPack expansion to support
+ *    composite anime/samurai looks.
+ *
+ * Visual styling stays restrained to the editorial palette so a
+ * composite avatar (without a SkinPack) still reads as part of the brand.
  */
 export const AVATAR_OUTFITS: AvatarOutfit[] = [
+  // ----- Original 11 -----
   { id: 'hat1', name: 'Chapéu de Folhas', slot: 'hat', price: 40, emoji: '🍃', tier: 'common' },
   { id: 'hat2', name: 'Coroa de Flores', slot: 'hat', price: 80, emoji: '🌸', tier: 'rare' },
   { id: 'hat3', name: 'Gorro Reciclado', slot: 'hat', price: 60, emoji: '🧶', tier: 'common' },
@@ -36,4 +41,23 @@ export const AVATAR_OUTFITS: AvatarOutfit[] = [
   { id: 'acc2', name: 'Colar de Sementes', slot: 'accessory', price: 45, emoji: '📿', tier: 'common' },
   { id: 'bg1', name: 'Aura Verde', slot: 'background', price: 120, emoji: '💚', tier: 'epic' },
   { id: 'bg2', name: 'Aura Dourada', slot: 'background', price: 200, emoji: '✨', tier: 'epic' },
+
+  // ----- New (anime / samurai expansion) -----
+  // Weapons
+  { id: 'weap-katana-bambu', name: 'Katana de Bambu', slot: 'weapon', price: 80, emoji: '🗡️', tier: 'common' },
+  { id: 'weap-cajado-folha', name: 'Cajado de Folha', slot: 'weapon', price: 70, emoji: '🪄', tier: 'common' },
+  { id: 'weap-bo-madeira', name: 'Bo de Madeira', slot: 'weapon', price: 60, emoji: '🥢', tier: 'common' },
+  { id: 'weap-shuriken', name: 'Shuriken Reciclada', slot: 'weapon', price: 110, emoji: '✴️', tier: 'rare' },
+
+  // Hairstyles
+  { id: 'hair-topknot', name: 'Topknot Samurai', slot: 'hairstyle', price: 90, emoji: '🎎', tier: 'rare' },
+  { id: 'hair-spike', name: 'Cabelo Anime', slot: 'hairstyle', price: 70, emoji: '💢', tier: 'common' },
+
+  // Hats / masks (anime themed)
+  { id: 'hat-headband-eco', name: 'Headband Eco', slot: 'hat', price: 40, emoji: '🟢', tier: 'common' },
+  { id: 'glass-mascara-ninja', name: 'Máscara Ninja', slot: 'glasses', price: 50, emoji: '🥷', tier: 'common' },
+
+  // Shirt / accessory
+  { id: 'shirt-capa-curta', name: 'Capa Curta', slot: 'shirt', price: 80, emoji: '🧥', tier: 'rare' },
+  { id: 'acc-tabis', name: 'Tabis', slot: 'accessory', price: 30, emoji: '🥿', tier: 'common' },
 ];
