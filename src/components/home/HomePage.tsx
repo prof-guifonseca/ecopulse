@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { ArrowRight, Coins, Flame } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { Avatar } from '@/components/shared/Avatar';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useHydrated } from '@/hooks/useHydrated';
+import { unsplashUrl } from '@/lib/unsplash';
 import { InlineStat } from './InlineStat';
 import { MissionsBlock } from './MissionsBlock';
 import { DiscoveryBlock } from './DiscoveryBlock';
@@ -30,35 +30,39 @@ export function HomePage() {
   if (!hydrated) return <HomeSkeleton />;
 
   const xpPct = xpToNext > 0 ? (xp / xpToNext) * 100 : 0;
+  const heroImage = unsplashUrl('urbanGarden', { w: 900, h: 720, q: 70 });
 
   return (
     <PageShell spacing={5}>
-      {/* Editorial cover */}
-      <header className="flex items-start justify-between gap-4 pt-2">
-        <div className="min-w-0">
-          <p className="t-eyebrow">Hoje</p>
-          <h1 className="t-display mt-1.5 leading-[0.95]">
-            Oi, <span className="t-italic-soft">{name}.</span>
-          </h1>
-        </div>
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
-          <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
-        </div>
-      </header>
+      {/* Editorial cover with imagery */}
+      <section
+        className="card-editorial -mx-1 px-6 pb-6 pt-7"
+        style={{ ['--bg-image' as string]: `url("${heroImage}")` }}
+      >
+        <header className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="t-eyebrow">Hoje</p>
+            <h1 className="t-display mt-1.5 leading-[0.92]" style={{ fontSize: '2.3rem' }}>
+              Oi, <span className="t-italic-soft">{name}.</span>
+            </h1>
+          </div>
+          <div
+            className="impact-ring shrink-0"
+            style={{
+              ['--ring-pct' as string]: xpPct,
+              ['--ring-color' as string]: 'var(--accent-green)',
+              ['--ring-size' as string]: '60px',
+            }}
+          >
+            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="sm" />
+          </div>
+        </header>
 
-      {/* Instrument: condensed status + single CTA */}
-      <Card tone="hero" padded={false} className="px-5 py-5">
-        <div className="flex items-baseline justify-between gap-2 t-caption">
-          <span className="font-semibold text-[var(--text-secondary)]">Nível {level}</span>
-          <span>{xp}/{xpToNext} XP</span>
+        <div className="mt-6 flex items-baseline justify-between gap-2 t-caption">
+          <span className="font-semibold text-[var(--text-primary)]">Nível {level}</span>
+          <span className="text-[var(--text-secondary)]">{xp}/{xpToNext} XP</span>
         </div>
         <ProgressBar value={xpPct} size="sm" className="mt-2" />
-
-        <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
-          <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
-          <span className="text-[var(--line-strong)]">·</span>
-          <InlineStat icon={Coins} value={tokens} label="tokens" />
-        </div>
 
         <Button
           as={Link}
@@ -71,7 +75,17 @@ export function HomePage() {
         >
           Abrir scanner
         </Button>
-      </Card>
+      </section>
+
+      {/* Stat ribbon — secondary stats live below the cover, never in it */}
+      <div className="flex items-center justify-center gap-2 -mt-2">
+        <span className="stat-ribbon">
+          <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
+        </span>
+        <span className="stat-ribbon">
+          <InlineStat icon={Coins} value={tokens} label="tokens" />
+        </span>
+      </div>
 
       <MissionsBlock />
 
