@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Check, Coins, X } from 'lucide-react';
 import { AVATAR_BASES, AVATAR_OUTFITS } from '@/data';
 import { useUserStore } from '@/store/userStore';
@@ -10,8 +10,41 @@ import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Tabs } from '@/components/ui/Tabs';
-import { SelectableTile } from '@/components/ui/SelectableTile';
+import { cn } from '@/lib/cn';
 import type { OutfitSlot } from '@/types';
+
+/**
+ * Small column-style selectable tile, inlined here because AvatarBuilder
+ * is its only consumer.
+ */
+function PickerTile({
+  selected,
+  onClick,
+  children,
+  className,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onClick}
+      className={cn(
+        'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
+        selected
+          ? 'border-[var(--line-active)] bg-[var(--tint-green-2)] shadow-[var(--shadow-glow)]'
+          : 'border-[var(--line-soft)] bg-[var(--tint-1)] hover:border-[var(--line-strong)]',
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
 
 const SLOT_LABELS: Record<OutfitSlot, string> = {
   hat: 'Chapéu',
@@ -108,15 +141,14 @@ export function AvatarBuilder() {
               {AVATAR_BASES.map((b) => {
                 const active = baseId === b.id;
                 return (
-                  <SelectableTile
+                  <PickerTile
                     key={b.id}
                     selected={active}
-                    align="column"
                     onClick={() => setBaseId(b.id)}
                   >
                     <Avatar baseId={b.id} size="md" />
                     <span className="t-caption font-semibold text-[var(--text-primary)]">{b.name}</span>
-                  </SelectableTile>
+                  </PickerTile>
                 );
               })}
             </div>
@@ -133,10 +165,9 @@ export function AvatarBuilder() {
                   }
                 };
                 return (
-                  <SelectableTile
+                  <PickerTile
                     key={o.id}
                     selected={equipped}
-                    align="column"
                     onClick={act}
                     className="relative"
                   >
@@ -160,7 +191,7 @@ export function AvatarBuilder() {
                         {o.price}
                       </span>
                     )}
-                  </SelectableTile>
+                  </PickerTile>
                 );
               })}
             </div>
