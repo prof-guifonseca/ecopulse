@@ -51,10 +51,20 @@ export type MapPointType =
 
 export interface Product {
   id: string;
+  /** Fictional EAN-13 starting with 789 (BR prefix). Used by the scan simulator. */
+  barcode: string;
   name: string;
   brand: string;
   category: string;
   emoji: string;
+  /** Optional Unsplash photo key (see src/lib/unsplash.ts) for a richer card. */
+  photoKey?: string;
+  /** Packaging signals consumed by lib/scoring.ts when re-deriving a score. */
+  packagingTags: string[];
+  /** True when the manufacturer is Brazilian — tilts the origin proxy. */
+  isLocal: boolean;
+  /** 1–4 NOVA group when the product is a food; null otherwise. */
+  novaGroup: 1 | 2 | 3 | 4 | null;
   score: Score;
   breakdown: {
     carbono: number;
@@ -69,11 +79,18 @@ export interface MapPoint {
   id: string;
   name: string;
   type: MapPointType;
+  /** Bairro ou referência do endereço (ex. "Centro · R. Pernambuco, 432"). */
   address: string;
+  /** Operating hours, free-form (ex. "Seg-Sáb 9h-18h"). */
   hours: string;
-  distance: string;
-  x: number;
-  y: number;
+  /** Real-world latitude — used by the Londrina projector. */
+  lat: number;
+  /** Real-world longitude. */
+  lng: number;
+  /** "Verificado há N dias" badge for trust signal. */
+  lastVerifiedDays: number;
+  /** Optional phone for the detail modal. */
+  phone?: string;
 }
 
 export interface Tutorial {

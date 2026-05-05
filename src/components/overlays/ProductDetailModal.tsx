@@ -18,18 +18,18 @@ interface Props {
 }
 
 interface UnifiedView {
-  source: 'demo' | 'scan';
+  source: 'catalog' | 'scan';
   name: string;
-  brand: string | null;
-  category: string | null;
-  emoji: string | null;
-  imageUrl: string | null;
+  brand: string;
+  category: string;
+  emoji: string;
+  barcode: string;
   score: Score;
   breakdown: Record<string, number>;
   tip: string;
   rationale: string[];
-  /** Only for demo entries — identifier in PRODUCTS catalog. */
-  demoId?: string;
+  /** Identifier in the catalog so we can find alternatives. */
+  catalogId: string;
 }
 
 export function ProductDetailModal({ id }: Props) {
@@ -46,14 +46,14 @@ export function ProductDetailModal({ id }: Props) {
   if (!view) return null;
 
   const color = SCORE_COLORS[view.score];
-  const isDemo = view.source === 'demo';
-  const alternatives = isDemo && view.demoId
-    ? findAlternatives(PRODUCTS.find((p) => p.id === view.demoId)!, PRODUCTS)
+  const isFromHistory = view.source === 'scan';
+  const catalogProduct = PRODUCTS.find((p) => p.id === view.catalogId);
+  const alternatives = catalogProduct
+    ? findAlternatives(catalogProduct, PRODUCTS)
     : [];
 
-  const addToDemoList = () => {
-    if (!isDemo || !view.demoId) return;
-    addScanned(view.demoId);
+  const addToHistoryFromCatalog = () => {
+    addScanned(view.catalogId);
     awardTokens(5);
     showToast('+5 Eco-Tokens', 'reward');
     if (!missionScan) markMission('scan', true);
@@ -64,7 +64,10 @@ export function ProductDetailModal({ id }: Props) {
   };
 
   return (
-    <ModalShell eyebrow={isDemo ? 'Produto demo' : 'Scan real'} title={view.name}>
+    <ModalShell
+      eyebrow={isFromHistory ? `Scan · ${view.barcode}` : `Catálogo · ${view.barcode}`}
+      title={view.name}
+    >
       <div className="flex flex-col items-center text-center">
         <div
           className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[var(--on-primary)]"
@@ -108,21 +111,21 @@ export function ProductDetailModal({ id }: Props) {
           />
         ) : null}
 
-        {isDemo ? (
+        {isFromHistory ? (
+          <Button variant="secondary" size="lg" fullWidth className="mt-6" onClick={closeModal}>
+            Fechar
+          </Button>
+        ) : (
           <Button
             variant="primary"
             size="lg"
             fullWidth
             className="mt-6"
-            onClick={addToDemoList}
+            onClick={addToHistoryFromCatalog}
             disabled={scanned}
             leftIcon={!scanned ? <Icon icon={Plus} size={16} strokeWidth={2.4} /> : undefined}
           >
             {scanned ? 'Já adicionado' : 'Adicionar ao histórico'}
-          </Button>
-        ) : (
-          <Button variant="secondary" size="lg" fullWidth className="mt-6" onClick={closeModal}>
-            Fechar
           </Button>
         )}
       </div>
@@ -137,30 +140,31 @@ function resolveView(
   if (scan) {
     return {
       source: 'scan',
+      catalogId: scan.productId,
       name: scan.name,
       brand: scan.brand,
       category: scan.category,
-      emoji: null,
-      imageUrl: scan.imageUrl,
+      emoji: scan.emoji,
+      barcode: scan.barcode,
       score: scan.score,
       breakdown: { ...scan.breakdown },
       tip: scan.tip,
       rationale: scan.rationale,
     };
   }
-  const demo = PRODUCTS.find((p) => p.id === id);
-  if (!demo) return null;
+  const catalogProduct = PRODUCTS.find((p) => p.id === id);
+  if (!catalogProduct) return null;
   return {
-    source: 'demo',
-    demoId: demo.id,
-    name: demo.name,
-    brand: demo.brand,
-    category: demo.category,
-    emoji: demo.emoji,
-    imageUrl: null,
-    score: demo.score,
-    breakdown: demo.breakdown,
-    tip: demo.tip,
+    source: 'catalog',
+    catalogId: catalogProduct.id,
+    name: catalogProduct.name,
+    brand: catalogProduct.brand,
+    category: catalogProduct.category,
+    emoji: catalogProduct.emoji,
+    barcode: catalogProduct.barcode,
+    score: catalogProduct.score,
+    breakdown: catalogProduct.breakdown,
+    tip: catalogProduct.tip,
     rationale: [],
   };
 }

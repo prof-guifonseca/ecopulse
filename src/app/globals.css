@@ -10,8 +10,8 @@
 
   /* ---------- Text ---------- */
   --text-primary: #f2f4ef;
-  --text-secondary: #aab3a7;
-  --text-muted: #6f7b72;
+  --text-secondary: #b3bcaf;  /* bumped from #aab3a7 — comfortably WCAG AA on bg-primary */
+  --text-muted: #8a948c;      /* bumped from #6f7b72 — was 4.49 (AA fail for body); now ≈6.5 */
 
   /* ---------- Brand ---------- */
   --accent-green: #8ddb98;
@@ -89,6 +89,8 @@
   --animate-shimmer: shimmer 2.6s linear infinite;
   --animate-score-reveal: scoreReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-pin-pulse: pinPulse 1.7s ease-in-out infinite;
+  --animate-stagger-enter: staggerEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-token-pulse: tokenPulse 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes fadeIn {
@@ -125,6 +127,17 @@
 @keyframes pinPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(141, 219, 152, 0.35); }
   50% { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(141, 219, 152, 0); }
+}
+
+@keyframes staggerEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tokenPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.18); filter: brightness(1.4); }
+  100% { transform: scale(1); filter: brightness(1); }
 }
 
 @keyframes confettiFall {
@@ -548,5 +561,28 @@ input, textarea, select {
     background-size: 200% 100%;
     animation: shimmer 2.5s infinite;
   }
+
+  /* =========================================================
+     Stagger utility — apply to a container; each direct child
+     animates in with an incremental delay. Up to 10 children
+     get a unique delay; further children inherit the last step.
+     The reduced-motion media query above collapses the animation.
+     ========================================================= */
+  .stagger > * {
+    animation: var(--animate-stagger-enter);
+    animation-delay: calc(var(--stagger-step, 35ms) * var(--stagger-index, 0));
+    opacity: 0;
+  }
+  .stagger > *:nth-child(1) { --stagger-index: 0; }
+  .stagger > *:nth-child(2) { --stagger-index: 1; }
+  .stagger > *:nth-child(3) { --stagger-index: 2; }
+  .stagger > *:nth-child(4) { --stagger-index: 3; }
+  .stagger > *:nth-child(5) { --stagger-index: 4; }
+  .stagger > *:nth-child(6) { --stagger-index: 5; }
+  .stagger > *:nth-child(7) { --stagger-index: 6; }
+  .stagger > *:nth-child(8) { --stagger-index: 7; }
+  .stagger > *:nth-child(9) { --stagger-index: 8; }
+  .stagger > *:nth-child(10) { --stagger-index: 9; }
+  .stagger > *:nth-child(n+11) { --stagger-index: 10; }
 
 }

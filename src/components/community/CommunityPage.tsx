@@ -16,13 +16,21 @@ export function CommunityPage() {
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
-        <p className="t-eyebrow">Comunidade</p>
+        <p className="t-eyebrow">Comunidade · Londrina</p>
         <h1 className="t-display mt-1.5 leading-[0.95]">
           Quem caminha <span className="t-italic-soft">com você</span>
         </h1>
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] px-2.5 py-1 t-caption">
+          <span
+            aria-hidden
+            className="inline-block h-1.5 w-1.5 rounded-full"
+            style={{ background: 'var(--accent-gold)' }}
+          />
+          Feed simulado · prototype
+        </p>
       </header>
 
-      <div className="space-y-5">
+      <div className="stagger space-y-5">
         {FEED_POSTS.map((post) => (
           <FeedPostCard
             key={post.id}

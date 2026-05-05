@@ -20,11 +20,12 @@ export function Toasts() {
   return (
     <div
       className="pointer-events-none absolute bottom-[96px] left-0 right-0 z-[60] flex flex-col items-center gap-2 px-4"
-      aria-live="polite"
     >
       {toasts.map((t) => (
         <div
           key={t.id}
+          role={t.type === 'reward' ? 'status' : 'alert'}
+          aria-live={t.type === 'reward' ? 'assertive' : 'polite'}
           className={cn(
             'card pointer-events-auto flex w-full max-w-[calc(var(--shell-width)-2rem)] items-center gap-3 px-4 py-3',
             ACCENT_MAP[t.type]

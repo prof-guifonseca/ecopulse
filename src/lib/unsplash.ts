@@ -45,6 +45,28 @@ export const UNSPLASH_PHOTOS = {
   // Forest / nature / outdoor / hiking
   forest: 'photo-1441974231531-c6227db76b6e',
   beachCleanup: 'photo-1530514126434-0d56eda64a2c',
+
+  // Product cards — added in v3 for the expanded scanner catalog
+  coffeeBag: 'photo-1559056199-641a0ac8b55e',
+  glassBottle: 'photo-1556228720-195a672e8a03',
+  paperPackage: 'photo-1607082348824-0a96f2a4b9da',
+  aluminiumCan: 'photo-1622543925917-763c34d1a86e',
+  plasticBottle: 'photo-1572584642822-6f8de0243c93',
+  oats: 'photo-1614961233913-a5113a4a34ed',
+  shampoo: 'photo-1556228453-efd6c1ff04f6',
+  soap: 'photo-1600857544200-b2f666a9a2ec',
+  detergent: 'photo-1583947215259-38e31be8751f',
+  tshirtRack: 'photo-1620799140408-edc6dcb6d633',
+  smartphone: 'photo-1511707171634-5f897ff02aa9',
+  battery: 'photo-1620283085439-39620a1e21c4',
+  petFood: 'photo-1601758174039-2bb37046f43c',
+  diaper: 'photo-1607101212615-cdba6c91dd80',
+  toothbrush: 'photo-1559591935-c6c92c6cb6b9',
+  chocolate: 'photo-1606312619070-d48b4c652a52',
+  milk: 'photo-1609501676725-7186f017a4b7',
+  jeans: 'photo-1542272604-787c3835535d',
+  oliveOil: 'photo-1474979266404-7eaacbcd87c5',
+  honey: 'photo-1587049352846-4a222e784d38',
 } as const;
 
 export type UnsplashKey = keyof typeof UNSPLASH_PHOTOS;
