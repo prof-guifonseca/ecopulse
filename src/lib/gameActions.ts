@@ -1,5 +1,3 @@
-'use client';
-
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
