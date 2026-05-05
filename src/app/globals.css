@@ -442,14 +442,6 @@ input, textarea, select {
   /* =========================================================
      Utilities
      ========================================================= */
-  .gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
   .gradient-primary { background: var(--gradient-primary); }
   .gradient-gold { background: var(--gradient-gold); }
 
@@ -559,19 +551,4 @@ input, textarea, select {
     animation: shimmer 2.5s infinite;
   }
 
-  /* Brand section mark — left-hand green bar used by SectionHeader */
-  .section-mark {
-    position: relative;
-    padding-left: 0.85rem;
-  }
-  .section-mark::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.18rem;
-    bottom: 0.18rem;
-    width: 3px;
-    border-radius: 999px;
-    background: var(--gradient-primary);
-  }
 }
