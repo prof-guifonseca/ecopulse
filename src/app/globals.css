@@ -76,8 +76,8 @@
   --color-accent-green: var(--accent-green);
   --color-accent-gold: var(--accent-gold);
   --color-accent-red: var(--accent-red);
-  --font-sans: var(--font-manrope), Manrope, system-ui, sans-serif;
-  --font-display: var(--font-oxanium), Oxanium, system-ui, sans-serif;
+  --font-sans: var(--font-sans), Inter, system-ui, sans-serif;
+  --font-display: var(--font-display), Fraunces, Georgia, serif;
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -130,7 +130,14 @@
 }
 
 @keyframes confettiFall {
-  to {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: var(--peak-opacity, 1);
+  }
+  18% {
+    opacity: var(--peak-opacity, 1);
+  }
+  100% {
     transform: translateY(120vh) translateX(var(--drift, 0px)) rotate(var(--spin, 360deg));
     opacity: 0;
   }
@@ -177,11 +184,12 @@ body::before {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   text-wrap: balance;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
 }
 
 p {
@@ -306,68 +314,85 @@ input, textarea, select {
 
   /* =========================================================
      Typography scale
+     Editorial pairing: Fraunces (display/headline) + Inter (body).
      Single source of truth. Components must NOT use text-[Nrem].
      ========================================================= */
   .t-display {
-    font-size: 1.55rem;
-    font-weight: 700;
-    line-height: 1.1;
+    font-family: var(--font-display);
+    font-size: 2.05rem;
+    font-weight: 600;
+    line-height: 1.02;
     letter-spacing: -0.025em;
     color: var(--text-primary);
+    font-variation-settings: "SOFT" 50, "opsz" 144;
   }
 
   .t-headline {
-    font-size: 1.18rem;
-    font-weight: 700;
-    line-height: 1.15;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 600;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     color: var(--text-primary);
+    font-variation-settings: "SOFT" 60, "opsz" 96;
   }
 
   .t-title {
+    font-family: var(--font-sans);
     font-size: 1rem;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.25;
     letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
   .t-body {
+    font-family: var(--font-sans);
     font-size: 0.92rem;
     font-weight: 400;
-    line-height: 1.55;
+    line-height: 1.6;
     color: var(--text-primary);
   }
 
   .t-body-sm {
+    font-family: var(--font-sans);
     font-size: 0.82rem;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--text-muted);
   }
 
   .t-caption {
+    font-family: var(--font-sans);
     font-size: 0.74rem;
     font-weight: 500;
     line-height: 1.4;
     color: var(--text-muted);
+    letter-spacing: 0;
   }
 
   .t-eyebrow {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
+    font-weight: 600;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
   }
 
   .t-label {
+    font-family: var(--font-sans);
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--text-muted);
+  }
+
+  /* Editorial italic flourish on Fraunces — apply to specific words via a span */
+  .t-italic-soft {
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "opsz" 144;
   }
 
   /* =========================================================
@@ -472,7 +497,11 @@ input, textarea, select {
     width: 10px;
     height: 14px;
     border-radius: 2px;
-    animation: confettiFall var(--fall-duration, 2.5s) cubic-bezier(0.3, 0.1, 0.7, 1) var(--delay, 0s) forwards;
+    /* cubic-bezier(0.4, 0.05, 0.55, 0.95) is a softer ease-out — slow start,
+       gentle settle, no whip at the end. Pieces can hit terminal velocity
+       sooner without the "yanked" feel of cubic-bezier(0.3, 0.1, 0.7, 1). */
+    animation: confettiFall var(--fall-duration, 3s)
+      cubic-bezier(0.4, 0.05, 0.55, 0.95) var(--delay, 0s) forwards;
   }
 
   .shimmer-bg {

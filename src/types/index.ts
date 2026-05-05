@@ -84,7 +84,10 @@ export interface FeedPost {
   likes: number;
   comments: number;
   liked: boolean;
+  /** Soft gradient used as fallback / overlay tint */
   gradient: string;
+  /** Curated Unsplash photo key (see src/lib/unsplash.ts) */
+  imageKey?: string;
   commentList: FeedComment[];
 }
 
@@ -99,6 +102,8 @@ export interface Story {
   avatar: string;
   emoji: string;
   text: string;
+  /** Curated Unsplash photo key for full-bleed background */
+  imageKey?: string;
   poll?: StoryPoll;
 }
 

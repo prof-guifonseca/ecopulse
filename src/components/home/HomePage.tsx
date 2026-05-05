@@ -40,17 +40,23 @@ export function HomePage() {
 
   return (
     <PageShell>
-      <Card tone="hero" accent="none" padded={false} className="px-5 py-6">
-        <div className="flex items-start gap-4">
-          <IconTile size="xl" tone="ghost" icon={<Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />} />
-          <div className="min-w-0 flex-1">
-            <div className="t-eyebrow">Bom te ver</div>
-            <h1 className="t-display mt-2">Oi, {name}</h1>
-            <p className="t-body-sm mt-2">Complete as missões e libere o bônus do dia.</p>
-          </div>
+      <header className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="t-eyebrow">Hoje</p>
+          <h1 className="t-display mt-1.5 leading-[0.95]">
+            Oi, <span className="t-italic-soft">{name}.</span>
+          </h1>
         </div>
+        <IconTile
+          size="xl"
+          tone="ghost"
+          className="h-16 w-16 rounded-full"
+          icon={<Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />}
+        />
+      </header>
 
-        <div className="mt-5 grid grid-cols-3 gap-2">
+      <Card tone="hero" accent="none" padded={false} className="px-5 py-5">
+        <div className="grid grid-cols-3 gap-2">
           <Tile size="sm" label="Sequência" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
           <Tile size="sm" label="Eco-Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
           <Tile size="sm" label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />

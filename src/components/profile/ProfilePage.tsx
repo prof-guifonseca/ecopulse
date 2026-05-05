@@ -64,34 +64,43 @@ export function ProfilePage() {
 
   return (
     <PageShell>
-      <Card tone="hero" padded={false} className="px-5 py-6">
-        <div className="flex items-start gap-4">
-          <button
-            onClick={openAvatarBuilder}
-            className="relative rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--tint-2)] p-3"
-            aria-label="Editar avatar"
+      {/* Editorial portrait hero — avatar centered, name as a magazine cover */}
+      <header className="relative flex flex-col items-center px-4 pb-2 pt-2 text-center">
+        <button
+          onClick={openAvatarBuilder}
+          className="relative h-32 w-32 rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] p-2"
+          aria-label="Editar avatar"
+        >
+          <span
+            aria-hidden
+            className="absolute inset-[-6px] rounded-full opacity-70"
+            style={{
+              background:
+                'conic-gradient(from 130deg, color-mix(in srgb, var(--accent-green) 35%, transparent), transparent 35%, color-mix(in srgb, var(--accent-gold) 30%, transparent), transparent 70%)',
+            }}
+          />
+          <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
+            <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />
+          </span>
+          <span
+            className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full text-[var(--on-reward)]"
+            style={{ background: 'var(--gradient-gold)' }}
           >
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="xl" />
-            <span
-              className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full text-[var(--on-reward)]"
-              style={{ background: 'var(--gradient-gold)' }}
-            >
-              <Icon icon={Pencil} size={14} strokeWidth={2.4} />
-            </span>
-          </button>
+            <Icon icon={Pencil} size={14} strokeWidth={2.4} />
+          </span>
+        </button>
 
-          <div className="min-w-0 flex-1">
-            <div className="t-eyebrow">Seu espaço</div>
-            <h1 className="t-display mt-2">{name}</h1>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Chip asStatic active>Nível {level}</Chip>
-              <Chip asStatic>{tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}</Chip>
-              <Chip asStatic>{GARDEN_LABEL[stage]}</Chip>
-            </div>
-          </div>
+        <p className="t-eyebrow mt-5">Seu espaço</p>
+        <h1 className="t-display mt-1.5 leading-[1]">{name}</h1>
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          <Chip asStatic active>Nível {level}</Chip>
+          <Chip asStatic>{tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}</Chip>
+          <Chip asStatic>{GARDEN_LABEL[stage]}</Chip>
         </div>
+      </header>
 
-        <div className="mt-5 grid grid-cols-3 gap-2">
+      <Card tone="solid" padded={false} className="px-5 py-5">
+        <div className="grid grid-cols-3 gap-2">
           <Tile size="sm" label="Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
           <Tile size="sm" label="Streak" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
           <Tile size="sm" label="Badges" value={badges.length} icon={<Icon icon={Award} size={13} />} />
@@ -127,7 +136,7 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
   return (
     <div className="space-y-6">
       <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
-        <SectionHeader title="Seu impacto em formação" subtitle="Seu rastro começando." />
+        <SectionHeader title="Seu impacto" />
         <div className="grid grid-cols-3 gap-3">
           <ImpactMetric pct={Math.min(100, scannedCount * 10)} color="var(--accent-green)" label="CO2" value={`${co2}kg`} />
           <ImpactMetric pct={Math.min(100, scannedCount * 8)} color="var(--accent-gold)" label="Água" value={`${water}L`} />
@@ -141,7 +150,6 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
       <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Fundo EcoPulse"
-          subtitle="Para onde vai parte de cada pack."
           right={
             <Button variant="ghost" size="sm" onClick={() => openModal({ kind: 'greenMarketInfo' })}>
               Como funciona
@@ -237,25 +245,31 @@ function ShopPanel() {
 
   return (
     <div className="space-y-6">
-      <Card tone="solid" accent="reward" padded={false} className="px-5 py-5">
-        <div className="grid grid-cols-3 gap-2">
-          <Tile size="sm" label="Seu saldo" value={tokens} icon={<Icon icon={Coins} size={13} />} />
-          <Tile size="sm" label="Fundo" value="20%" />
-          <Tile size="sm" label="Status" value="Em breve" />
+      {/* Wallet hero — single emphatic balance, secondary action only */}
+      <Card tone="hero" padded={false} className="px-5 py-6">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <p className="t-eyebrow">Sua carteira</p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
+              <span className="t-body-sm">Eco-Tokens</span>
+            </div>
+            <p className="t-caption mt-2 max-w-[28ch]">
+              20% do que entra em packs vai pro Fundo EcoPulse.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => openModal({ kind: 'greenMarketInfo' })}
+          >
+            Como funciona
+          </Button>
         </div>
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="mt-5"
-          onClick={() => openModal({ kind: 'greenMarketInfo' })}
-        >
-          Como funciona
-        </Button>
       </Card>
 
       <section>
-        <SectionHeader title="Packs de Eco-Tokens" />
+        <SectionHeader title="Packs de apoio" />
         <div className="space-y-3">
           {TOKEN_PACKS.map((pack) => (
             <Card
@@ -265,6 +279,9 @@ function ShopPanel() {
               padded={false}
               className="px-5 py-5"
             >
+              {pack.featured ? (
+                <p className="t-eyebrow mb-2 text-[var(--accent-gold)]">Mais escolhido</p>
+              ) : null}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="t-title">{pack.name}</div>
@@ -278,13 +295,13 @@ function ShopPanel() {
                 <Tile size="sm" label="Fundo" value={formatCurrency(pack.fundShareInCents)} />
               </div>
               <Button
-                variant={pack.featured ? 'reward' : 'primary'}
+                variant={pack.featured ? 'reward' : 'secondary'}
                 size="md"
                 fullWidth
                 className="mt-4"
                 onClick={() => openModal({ kind: 'greenMarketInfo', packId: pack.id })}
               >
-                Ver detalhes
+                Saiba mais
               </Button>
             </Card>
           ))}
@@ -292,7 +309,7 @@ function ShopPanel() {
       </section>
 
       <section>
-        <SectionHeader title="Itens disponíveis" />
+        <SectionHeader title="Itens" />
         <div className="grid grid-cols-2 gap-3">
           {SHOP_ITEMS.map((item) => {
             const isOwned = owned.includes(item.id);
@@ -378,7 +395,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
   return (
     <div className="space-y-6">
       <section>
-        <SectionHeader title="Sua tribo" subtitle="Onde você está e quem corre ao lado." />
+        <SectionHeader title="Sua tribo" />
         <div className="space-y-3">
           {TRIBES.map((tribe) => {
             const isMine =

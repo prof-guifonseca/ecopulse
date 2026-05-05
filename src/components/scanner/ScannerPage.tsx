@@ -106,7 +106,6 @@ export function ScannerPage() {
       ) : null}
 
       <Card tone="hero" padded={false} className="px-5 py-5">
-        <SectionHeader title="Scanner" subtitle="Ficha clara, histórico vivo." />
 
         <div className="scan-frame px-5 py-6">
           <div className="relative flex min-h-[240px] items-center justify-center py-4">
