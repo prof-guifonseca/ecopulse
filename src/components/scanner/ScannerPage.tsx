@@ -158,7 +158,7 @@ export function ScannerPage() {
                       {product.tip}
                     </p>
                   </div>
-                  <ScoreBadge score={product.score} className="h-9 w-9 shrink-0" />
+                  <ScoreBadge score={product.score} size="sm" className="shrink-0" />
                 </button>
               </li>
             ))}

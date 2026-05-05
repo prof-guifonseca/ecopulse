@@ -11,7 +11,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Tabs } from '@/components/ui/Tabs';
 import { PageShell } from '@/components/ui/PageShell';
 import { gardenStage, GARDEN_LABEL } from '@/lib/garden';
-import { Stat } from './Stat';
+import { Stat } from '@/components/ui/Stat';
 import { ImpactPanel } from './ImpactPanel';
 import { ShopPanel } from './ShopPanel';
 import { BadgesPanel } from './BadgesPanel';

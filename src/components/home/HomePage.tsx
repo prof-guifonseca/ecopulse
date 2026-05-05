@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useHydrated } from '@/hooks/useHydrated';
-import { InlineStat } from './InlineStat';
+import { Stat } from '@/components/ui/Stat';
 import { MissionsBlock } from './MissionsBlock';
 import { DiscoveryBlock } from './DiscoveryBlock';
 import { HomeSkeleton } from './HomeSkeleton';
@@ -55,9 +55,9 @@ export function HomePage() {
         <ProgressBar value={xpPct} size="sm" className="mt-2" />
 
         <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
-          <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
+          <Stat layout="inline" icon={Flame} value={`${streak}d`} label="sequência" />
           <span className="text-[var(--line-strong)]">·</span>
-          <InlineStat icon={Coins} value={tokens} label="tokens" />
+          <Stat layout="inline" icon={Coins} value={tokens} label="tokens" />
         </div>
 
         <Button
