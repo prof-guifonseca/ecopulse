@@ -650,10 +650,18 @@ input, textarea, select {
     animation: scanHaloPulse 3s ease-in-out infinite;
   }
 
-  /* Outer rotating ring (slow), inner faster — when scanning */
+  /* Outer rotating ring (slow), inner faster — when scanning.
+     Anchored to the reticle center via top/left + the modern `translate`
+     property, which composes independently with the `transform: rotate()`
+     animation (so the spin doesn't fight the centering). */
   .scan-ring-outer,
   .scan-ring-inner {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    /* `translate` is a Tailwind v4 utility too, so we use !important here
+       to defeat the preflight reset that would otherwise zero it out. */
+    translate: -50% -50% !important;
     border-radius: 999px;
     pointer-events: none !important;
   }
