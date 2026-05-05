@@ -31,7 +31,7 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
                     : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
                 )}
               >
-                {Lucide ? <Icon icon={Lucide} size={18} /> : <span>{tribe.emoji}</span>}
+                {Lucide ? <Icon icon={Lucide} size={18} /> : null}
               </span>
               <h3 className="t-title leading-tight">{tribe.name}</h3>
               <p className="t-caption">

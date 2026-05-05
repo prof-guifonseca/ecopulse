@@ -6,12 +6,6 @@ export function gardenStage(level: number): GardenStage {
   return 'sprout';
 }
 
-export const GARDEN_EMOJI: Record<GardenStage, string> = {
-  sprout: '🌱',
-  shrub: '🌿',
-  tree: '🌳',
-};
-
 export const GARDEN_LABEL: Record<GardenStage, string> = {
   sprout: 'Broto',
   shrub: 'Arbusto',

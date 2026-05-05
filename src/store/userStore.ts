@@ -7,7 +7,6 @@ import { createSafeJSONStorage, readLegacyState, markLegacyMigrated } from './st
 
 interface UserState {
   name: string;
-  avatar: string;
   tribe: string;
   level: number;
   xp: number;
@@ -20,6 +19,10 @@ interface UserState {
   avatarBase: string | null;
   avatarOutfits: AvatarOutfits;
   ownedOutfits: string[];
+  /** SkinPack id currently equipped, or null = composite (base + slots). */
+  equippedSkinPack: string | null;
+  /** Unlocked SkinPacks (via progression OR purchase). */
+  ownedSkinPacks: string[];
 
   setProfile: (partial: Partial<UserState>) => void;
   addXp: (amount: number) => { leveled: boolean; newLevel: number };
@@ -30,12 +33,15 @@ interface UserState {
   setOutfit: (slot: keyof AvatarOutfits, id: string | null) => void;
   addOwnedOutfit: (id: string) => void;
   markFirstScanCompleted: () => void;
-  completeOnboarding: (data: { name: string; avatar: string; avatarBase: string | null; tribe: string }) => void;
+  completeOnboarding: (data: { name: string; avatarBase: string | null; tribe: string }) => void;
+  /** Equip a SkinPack (must be owned) or null to switch back to composite. */
+  equipSkinPack: (id: string | null) => void;
+  /** Idempotent unlock; returns true if newly unlocked. */
+  unlockSkinPack: (id: string) => boolean;
 }
 
 const DEFAULT_USER = {
   name: 'Eco-User',
-  avatar: '🌿',
   tribe: 'guardioes',
   level: 1,
   xp: 0,
@@ -46,8 +52,18 @@ const DEFAULT_USER = {
   onboarded: false,
   firstScanCompleted: false,
   avatarBase: null as string | null,
-  avatarOutfits: { hat: null, glasses: null, shirt: null, accessory: null, background: null } as AvatarOutfits,
+  avatarOutfits: {
+    hat: null,
+    glasses: null,
+    shirt: null,
+    accessory: null,
+    background: null,
+    weapon: null,
+    hairstyle: null,
+  } as AvatarOutfits,
   ownedOutfits: [] as string[],
+  equippedSkinPack: null as string | null,
+  ownedSkinPacks: [] as string[],
 };
 
 export const useUserStore = create<UserState>()(
@@ -96,20 +112,34 @@ export const useUserStore = create<UserState>()(
       addOwnedOutfit: (id) =>
         set((s) => (s.ownedOutfits.includes(id) ? s : { ownedOutfits: [...s.ownedOutfits, id] })),
 
-      completeOnboarding: ({ name, avatar, avatarBase, tribe }) =>
-        set({ name, avatar, avatarBase, tribe, onboarded: true }),
+      completeOnboarding: ({ name, avatarBase, tribe }) =>
+        set({ name, avatarBase, tribe, onboarded: true }),
+
+      equipSkinPack: (id) =>
+        set((s) => {
+          // Allow null (un-equip) or any owned id. Silently no-op if id not owned.
+          if (id !== null && !s.ownedSkinPacks.includes(id)) return s;
+          return { equippedSkinPack: id };
+        }),
+
+      unlockSkinPack: (id) => {
+        const { ownedSkinPacks } = get();
+        if (ownedSkinPacks.includes(id)) return false;
+        set({ ownedSkinPacks: [...ownedSkinPacks, id] });
+        return true;
+      },
     }),
     {
       name: 'ecopulse:user',
-      version: 1,
+      version: 2,
       storage: createSafeJSONStorage<UserState>(),
-      migrate: (state) => {
+      migrate: (state, version) => {
+        // Legacy localStorage import (still supported for v0).
         const legacy = readLegacyState();
         if (legacy) {
           return {
             ...(state as UserState),
             name: legacy.name ?? DEFAULT_USER.name,
-            avatar: legacy.avatar ?? DEFAULT_USER.avatar,
             tribe: legacy.tribe ?? DEFAULT_USER.tribe,
             level: legacy.level ?? DEFAULT_USER.level,
             xp: legacy.xp ?? DEFAULT_USER.xp,
@@ -122,6 +152,18 @@ export const useUserStore = create<UserState>()(
             avatarBase: legacy.avatarBase ?? null,
             avatarOutfits: { ...DEFAULT_USER.avatarOutfits, ...(legacy.avatarOutfits ?? {}) },
             ownedOutfits: legacy.ownedOutfits ?? [],
+            equippedSkinPack: null,
+            ownedSkinPacks: [],
+          } as UserState;
+        }
+        // v1 → v2: ensure new skin fields + new slot defaults
+        if (version === 1) {
+          const prev = state as Partial<UserState>;
+          return {
+            ...(state as UserState),
+            avatarOutfits: { ...DEFAULT_USER.avatarOutfits, ...(prev.avatarOutfits ?? {}) },
+            equippedSkinPack: prev.equippedSkinPack ?? null,
+            ownedSkinPacks: prev.ownedSkinPacks ?? [],
           } as UserState;
         }
         return state as UserState;

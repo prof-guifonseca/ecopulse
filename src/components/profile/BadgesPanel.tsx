@@ -29,7 +29,7 @@ export function BadgesPanel({ owned }: { owned: string[] }) {
                     : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
                 )}
               >
-                {Lucide ? <Icon icon={Lucide} size={20} /> : <span>{badge.emoji}</span>}
+                {Lucide ? <Icon icon={Lucide} size={20} /> : null}
               </span>
               <div className="t-caption font-semibold leading-tight text-[var(--text-primary)]">
                 {badge.name}

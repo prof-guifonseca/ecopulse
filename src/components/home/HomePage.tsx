@@ -18,9 +18,9 @@ import { HomeSkeleton } from './HomeSkeleton';
 export function HomePage() {
   const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
-  const avatar = useUserStore((s) => s.avatar);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
+  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
   const level = useUserStore((s) => s.level);
@@ -42,7 +42,7 @@ export function HomePage() {
           </h1>
         </div>
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
-          <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
+          <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
         </div>
       </header>
 
@@ -52,7 +52,7 @@ export function HomePage() {
           <span className="font-semibold text-[var(--text-secondary)]">Nível {level}</span>
           <span>{xp}/{xpToNext} XP</span>
         </div>
-        <ProgressBar value={xpPct} tone="brand" size="sm" className="mt-2" />
+        <ProgressBar value={xpPct} size="sm" className="mt-2" />
 
         <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
           <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />

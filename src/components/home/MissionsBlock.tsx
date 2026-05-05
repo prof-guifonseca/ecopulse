@@ -48,9 +48,7 @@ export function MissionsBlock() {
                   <Icon icon={Check} size={14} strokeWidth={2.6} />
                 ) : MissionIcon ? (
                   <Icon icon={MissionIcon} size={15} />
-                ) : (
-                  <span className="text-sm">{mission.emoji}</span>
-                )}
+                ) : null}
               </span>
               <span className={cn('flex-1 t-body', isDone && 'text-[var(--accent-green)]')}>
                 {mission.title}

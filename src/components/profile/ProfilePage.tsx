@@ -29,9 +29,9 @@ type TabValue = (typeof PROFILE_TABS)[number]['value'];
 export function ProfilePage() {
   const [tab, setTab] = useState<TabValue>('impact');
   const name = useUserStore((s) => s.name);
-  const avatar = useUserStore((s) => s.avatar);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
+  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
   const level = useUserStore((s) => s.level);
   const xp = useUserStore((s) => s.xp);
   const xpToNext = useUserStore((s) => s.xpToNext);
@@ -63,7 +63,7 @@ export function ProfilePage() {
             }}
           />
           <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
+            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
           </span>
           <span
             className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]"
@@ -91,7 +91,7 @@ export function ProfilePage() {
               {xp}/{xpToNext} XP
             </span>
           </div>
-          <ProgressBar value={pct} tone="brand" size="sm" />
+          <ProgressBar value={pct} size="sm" />
         </div>
       </header>
 

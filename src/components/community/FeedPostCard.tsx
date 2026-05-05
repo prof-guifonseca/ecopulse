@@ -24,17 +24,13 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
     <Card tone="solid" padded={false} className="overflow-hidden">
       {/* Photo only — caption sits below in clean text, not floating overlay */}
       <div className="relative aspect-[4/5] w-full overflow-hidden">
-        {post.imageKey ? (
-          <Image
-            src={unsplashUrl(post.imageKey as UnsplashKey, { w: 900, h: 1125 })}
-            alt={post.caption}
-            fill
-            sizes="(max-width: 430px) 100vw, 430px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0" style={{ background: post.gradient }} />
-        )}
+        <Image
+          src={unsplashUrl(post.imageKey as UnsplashKey, { w: 900, h: 1125 })}
+          alt={post.caption}
+          fill
+          sizes="(max-width: 430px) 100vw, 430px"
+          className="object-cover"
+        />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/55 to-transparent" />
         <div className="absolute left-4 top-4 right-4 flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/40 text-lg backdrop-blur-md">

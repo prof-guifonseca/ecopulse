@@ -44,7 +44,7 @@ export function DiscoveryBlock() {
       <Card tone="solid" padded={false} className="px-4 py-4">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]">
-            {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : <span>{featured.emoji}</span>}
+            {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : null}
           </span>
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Desafio</p>
@@ -60,7 +60,7 @@ export function DiscoveryBlock() {
         </div>
 
         {(isActive || isDone) ? (
-          <ProgressBar value={completion} tone="brand" size="sm" className="mt-4" />
+          <ProgressBar value={completion} size="sm" className="mt-4" />
         ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3">

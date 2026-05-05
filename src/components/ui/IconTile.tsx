@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 
-type Size = 'sm' | 'md' | 'lg' | 'xl';
-type Tone = 'default' | 'brand' | 'reward' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+type Tone = 'default' | 'brand' | 'reward';
 
 interface Props {
   icon: ReactNode;
@@ -15,14 +15,12 @@ const SIZE_CLASSES: Record<Size, string> = {
   sm: 'h-9 w-9 text-base rounded-[10px]',
   md: 'h-11 w-11 text-xl rounded-[14px]',
   lg: 'h-14 w-14 text-2xl rounded-[18px]',
-  xl: 'h-20 w-20 text-3xl rounded-[22px]',
 };
 
 const TONE_CLASSES: Record<Tone, string> = {
   default: 'border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-primary)]',
   brand: 'border border-[var(--line-active)] bg-[var(--tint-green-3)] text-[var(--accent-green)]',
   reward: 'border border-[color:color-mix(in_srgb,var(--accent-gold)_36%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_12%,transparent)] text-[var(--accent-gold)]',
-  ghost: 'bg-transparent text-[var(--text-secondary)]',
 };
 
 /**

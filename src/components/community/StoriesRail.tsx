@@ -33,19 +33,13 @@ export function StoriesRail({
                 )}
               >
                 <span className="relative h-full w-full overflow-hidden rounded-full border-2 border-[var(--bg-primary)]">
-                  {story.imageKey ? (
-                    <Image
-                      src={unsplashUrl(story.imageKey as UnsplashKey, { w: 200, h: 200 })}
-                      alt={story.user}
-                      fill
-                      sizes="78px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-full w-full items-center justify-center bg-[var(--tint-2)] text-2xl">
-                      {story.avatar}
-                    </span>
-                  )}
+                  <Image
+                    src={unsplashUrl(story.imageKey as UnsplashKey, { w: 200, h: 200 })}
+                    alt={story.user}
+                    fill
+                    sizes="78px"
+                    className="object-cover"
+                  />
                 </span>
               </span>
               <span className="t-caption max-w-[72px] truncate">{story.user}</span>
