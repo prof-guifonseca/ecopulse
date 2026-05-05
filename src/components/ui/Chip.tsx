@@ -10,6 +10,8 @@ interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'
   children: ReactNode;
   /** When true, render as a non-interactive span instead of a button. */
   asStatic?: boolean;
+  /** Role to apply when asStatic. Default: 'status' (announces value updates). */
+  staticRole?: 'status' | 'note' | 'presentation';
 }
 
 /**
@@ -26,6 +28,7 @@ export function Chip({
   children,
   className,
   asStatic,
+  staticRole = 'status',
   ...rest
 }: Props) {
   const content = (
@@ -38,7 +41,11 @@ export function Chip({
 
   if (asStatic) {
     return (
-      <span className={cn('command-pill', className)} data-active={active ? 'true' : undefined}>
+      <span
+        className={cn('command-pill', className)}
+        data-active={active ? 'true' : undefined}
+        role={staticRole}
+      >
         {content}
       </span>
     );

@@ -14,6 +14,9 @@ interface Props {
   className?: string;
   /** When set, renders a full SkinPack illustration and ignores base + outfits. */
   skinPackId?: string | null;
+  /** Optional accessible label. When provided, the avatar renders as role="img"
+   *  with the label; when omitted, it stays decorative (aria-hidden). */
+  alt?: string;
 }
 
 /**
@@ -26,8 +29,11 @@ interface Props {
  *    behavior, now augmented with weapon / hairstyle slots.
  * 3. Neither → quiet circular placeholder.
  */
-export function Avatar({ baseId, outfits, size = 'md', className, skinPackId }: Props) {
+export function Avatar({ baseId, outfits, size = 'md', className, skinPackId, alt }: Props) {
   const sz = SIZE_MAP[size];
+  const a11y = alt
+    ? { role: 'img' as const, 'aria-label': alt }
+    : { 'aria-hidden': true };
 
   if (skinPackId) {
     return <SkinPackArt id={skinPackId} size={size as SkinArtSize} className={className} />;
@@ -37,6 +43,7 @@ export function Avatar({ baseId, outfits, size = 'md', className, skinPackId }: 
     return (
       <div
         className={className}
+        {...a11y}
         style={{
           width: sz,
           height: sz,
@@ -57,7 +64,7 @@ export function Avatar({ baseId, outfits, size = 'md', className, skinPackId }: 
   const BLUSH = 'rgba(220, 160, 130, 0.55)';
 
   return (
-    <div className={className} style={{ width: sz, height: sz }}>
+    <div className={className} {...a11y} style={{ width: sz, height: sz }}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width={sz} height={sz}>
         <defs>
           <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
