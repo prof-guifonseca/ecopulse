@@ -343,8 +343,7 @@ input, textarea, select {
 
   /* Slim 2px top accent bar — never a full-card wash */
   .card-accent-brand::before,
-  .card-accent-reward::before,
-  .card-accent-alert::before {
+  .card-accent-reward::before {
     content: "";
     position: absolute;
     inset: 0 0 auto 0;
@@ -354,7 +353,6 @@ input, textarea, select {
   }
   .card-accent-brand::before { background: var(--gradient-primary); }
   .card-accent-reward::before { background: var(--gradient-gold); }
-  .card-accent-alert::before { background: linear-gradient(135deg, #e38a84, #b76a64); }
 
   /* =========================================================
      Typography scale

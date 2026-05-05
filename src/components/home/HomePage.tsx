@@ -57,7 +57,7 @@ export function HomePage() {
           <span className="font-semibold text-[var(--text-secondary)]">Nível {level}</span>
           <span>{xp}/{xpToNext} XP</span>
         </div>
-        <ProgressBar value={xpPct} tone="brand" size="sm" className="mt-2" />
+        <ProgressBar value={xpPct} size="sm" className="mt-2" />
 
         <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
           <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
@@ -238,7 +238,7 @@ function DiscoveryBlock() {
         </div>
 
         {(isActive || isDone) ? (
-          <ProgressBar value={completion} tone="brand" size="sm" className="mt-4" />
+          <ProgressBar value={completion} size="sm" className="mt-4" />
         ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3">

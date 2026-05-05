@@ -102,7 +102,7 @@ export function ProfilePage() {
               {xp}/{xpToNext} XP
             </span>
           </div>
-          <ProgressBar value={pct} tone="brand" size="sm" />
+          <ProgressBar value={pct} size="sm" />
         </div>
       </header>
 

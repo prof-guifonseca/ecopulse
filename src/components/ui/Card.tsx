@@ -1,13 +1,16 @@
 import { cn } from '@/lib/cn';
 import type { ElementType, HTMLAttributes, ReactNode } from 'react';
 
-type Tone = 'solid' | 'soft' | 'glass' | 'hero';
-type Accent = 'brand' | 'reward' | 'alert' | 'none';
+type Tone = 'solid' | 'soft' | 'hero';
+type Accent = 'brand' | 'reward' | 'none';
 
 interface Props extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
   tone?: Tone;
   accent?: Accent;
+  /** Apply default p-5 padding. Defaults to false; pass true (or set
+   *  className) for explicit padding control. Every call site in the
+   *  codebase is explicit, so flipping the default avoids surprises. */
   padded?: boolean;
   children?: ReactNode;
 }
@@ -15,14 +18,12 @@ interface Props extends HTMLAttributes<HTMLElement> {
 const TONE: Record<Tone, string> = {
   solid: 'card',
   soft: 'card-soft',
-  glass: 'card-glass',
   hero: 'card-hero',
 };
 
 const ACCENT: Record<Accent, string> = {
   brand: 'card-accent-brand',
   reward: 'card-accent-reward',
-  alert: 'card-accent-alert',
   none: '',
 };
 
@@ -30,7 +31,7 @@ export function Card({
   as: As = 'div',
   tone = 'solid',
   accent = 'none',
-  padded = true,
+  padded = false,
   className,
   children,
   ...rest
