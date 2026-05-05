@@ -1,6 +1,6 @@
 'use client';
 
-import { SKIN_PACKS } from '@/data';
+import { BADGES, SKIN_PACKS } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -100,8 +100,11 @@ export function unlockHint(skin: SkinPack): string {
       return `${skin.priceTokens} tokens`;
     case 'level':
       return `Nível ${skin.unlock.value}`;
-    case 'badge':
-      return `Conquiste a badge`;
+    case 'badge': {
+      const badgeId = skin.unlock.id;
+      const found = BADGES.find((b) => b.id === badgeId);
+      return `Conquista: ${found?.name ?? badgeId}`;
+    }
     case 'count': {
       const labels: Record<typeof skin.unlock.metric, string> = {
         scans: 'scans',
