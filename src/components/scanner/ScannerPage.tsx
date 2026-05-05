@@ -8,12 +8,14 @@ import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
-import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { performScan } from '@/lib/scanActions';
 import { hapticTap } from '@/lib/haptic';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
+
+const SCAN_ANIMATION_MS = 1600;
 
 export function ScannerPage() {
   const [query, setQuery] = useState('');
@@ -25,10 +27,7 @@ export function ScannerPage() {
   const openModal = useUIStore((s) => s.openModal);
   const modal = useUIStore((s) => s.modal);
   const showToast = useUIStore((s) => s.showToast);
-  const fireConfetti = useUIStore((s) => s.fireConfetti);
   const scannedProducts = useGameStore((s) => s.scannedProducts);
-  const addScannedProduct = useGameStore((s) => s.addScannedProduct);
-  const markMission = useGameStore((s) => s.markMission);
   const missionScan = useGameStore((s) => s.dailyMissions.scan);
   const firstScanCompleted = useUserStore((s) => s.firstScanCompleted);
   const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
@@ -61,31 +60,14 @@ export function ScannerPage() {
     setScanning(true);
 
     setTimeout(() => {
-      const pool = PRODUCTS.filter((product) => !scannedProducts.includes(product.id));
-      const chosen = (pool.length ? pool : PRODUCTS)[Math.floor(Math.random() * (pool.length || PRODUCTS.length))];
-
-      addScannedProduct(chosen.id);
-      awardTokens(10);
-
-      if (!missionScan) {
-        markMission('scan', true);
-        showToast('Missão diária: scan', 'success');
-      }
-
-      if (scannedProducts.length + 1 === 1) unlockBadge('first-scan');
-      if (scannedProducts.length + 1 >= 5) unlockBadge('scanner-5');
-
-      showToast(`+10 tokens · ${chosen.name}`, 'reward');
-      fireConfetti();
-
+      const chosen = performScan();
       if (firstRun) {
         markFirstScanCompleted();
         awaitingFirstClose.current = true;
       }
-
       openModal({ kind: 'product', id: chosen.id });
       setScanning(false);
-    }, 1600);
+    }, SCAN_ANIMATION_MS);
   };
 
   return (

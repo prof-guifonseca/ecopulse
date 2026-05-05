@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import { STORIES } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens } from '@/lib/gameActions';
+import { useStoryTimer } from '@/hooks/useStoryTimer';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
@@ -14,49 +15,30 @@ interface Props {
   index: number;
 }
 
-const STORY_DURATION_MS = 5500;
-const TICK_MS = 60;
-
 export function StoryViewer({ index }: Props) {
   const close = useUIStore((s) => s.closeStory);
   const openStory = useUIStore((s) => s.openStory);
   const showToast = useUIStore((s) => s.showToast);
-  // Encoding "fresh story state" via a key reset rather than setState-in-effect.
-  // We track the index this state belongs to; when it diverges we reset locally.
-  const [stateForIndex, setStateForIndex] = useState(index);
-  const [progress, setProgress] = useState(0);
-  const [paused, setPaused] = useState(false);
+
+  const { progress, paused, setPaused, resetProgress } = useStoryTimer({
+    index,
+    total: STORIES.length,
+    onAdvance: openStory,
+    onClose: close,
+  });
+
+  // `voted` resets per-index using the same setState-during-render pattern.
+  const [votedForIndex, setVotedForIndex] = useState(index);
   const [voted, setVoted] = useState(false);
-  if (stateForIndex !== index) {
-    setStateForIndex(index);
-    setProgress(0);
+  if (votedForIndex !== index) {
+    setVotedForIndex(index);
     setVoted(false);
   }
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const touchStartX = useRef<number | null>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const story = STORIES[index];
-
-  // Tick progress; pause when held
-  useEffect(() => {
-    if (paused) return;
-    intervalRef.current = setInterval(() => {
-      setProgress((p) => Math.min(100, p + (100 * TICK_MS) / STORY_DURATION_MS));
-    }, TICK_MS);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [paused, index]);
-
-  // Advance when full
-  useEffect(() => {
-    if (progress < 100) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (index < STORIES.length - 1) openStory(index + 1);
-    else close();
-  }, [progress, index, close, openStory]);
-
   if (!story) return null;
 
   const vote = () => {
@@ -90,7 +72,7 @@ export function StoryViewer({ index }: Props) {
   const handleZoneClick = (zone: 'prev' | 'next') => {
     if (zone === 'prev') {
       if (progress > 12 && !paused) {
-        setProgress(0);
+        resetProgress();
       } else if (index > 0) {
         openStory(index - 1);
       }
