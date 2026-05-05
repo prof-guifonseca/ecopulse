@@ -79,11 +79,18 @@ export interface MapPoint {
   id: string;
   name: string;
   type: MapPointType;
+  /** Bairro ou referência do endereço (ex. "Centro · R. Pernambuco, 432"). */
   address: string;
+  /** Operating hours, free-form (ex. "Seg-Sáb 9h-18h"). */
   hours: string;
-  distance: string;
-  x: number;
-  y: number;
+  /** Real-world latitude — used by the Londrina projector. */
+  lat: number;
+  /** Real-world longitude. */
+  lng: number;
+  /** "Verificado há N dias" badge for trust signal. */
+  lastVerifiedDays: number;
+  /** Optional phone for the detail modal. */
+  phone?: string;
 }
 
 export interface Tutorial {

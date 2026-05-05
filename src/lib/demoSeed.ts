@@ -114,7 +114,13 @@ export function seedDemoStateIfEmpty(): void {
     game.addScannedProduct(product.id);
   }
 
-  for (const id of ['m1', 'm3', 'm4', 'm6', 'm7']) {
+  for (const id of [
+    'ldb-bat-centro',
+    'ldb-granel-empório',
+    'ldb-troca-feira',
+    'ldb-rep-centro',
+    'ldb-bat-aurora',
+  ]) {
     game.addVisitedPoint(id);
   }
 

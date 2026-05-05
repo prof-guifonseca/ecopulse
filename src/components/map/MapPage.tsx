@@ -9,7 +9,8 @@ import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { PageShell } from '@/components/ui/PageShell';
 import { resolveIcon } from '@/lib/iconRegistry';
-import { TopoMap } from './TopoMap';
+import { LondrinaMap } from './LondrinaMap';
+import { latLngToPercent, distanceFromCenter } from '@/lib/map/londrina';
 import { cn } from '@/lib/cn';
 import type { MapPointType } from '@/types';
 
@@ -37,38 +38,25 @@ export function MapPage() {
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
-        <p className="t-eyebrow">Mapa local</p>
+        <p className="t-eyebrow">Londrina · Centro</p>
         <h1 className="t-display mt-1.5 leading-[0.95]">
           Onde a sua rua <span className="t-italic-soft">recicla</span>
         </h1>
       </header>
 
-      <TopoMap>
-        {/* User position */}
-        <div
-          className="absolute h-3 w-3 rounded-full"
-          style={{
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'var(--accent-green)',
-            boxShadow: '0 0 0 5px var(--tint-green-3), 0 0 16px var(--tint-green-4)',
-            animation: 'pinPulse 1.8s ease-in-out infinite',
-          }}
-          title="Você está aqui"
-        />
-
+      <LondrinaMap>
         {pins.map((point) => {
           const isVisited = visited.includes(point.id);
           const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
+          const { x, y } = latLngToPercent({ lat: point.lat, lng: point.lng });
           return (
             <button
               key={point.id}
               onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
               className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line-strong)] backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95"
               style={{
-                left: `${point.x}%`,
-                top: `${point.y}%`,
+                left: `${x}%`,
+                top: `${y}%`,
                 background: isVisited ? 'var(--accent-green)' : 'rgba(15,23,19,0.78)',
                 boxShadow: isVisited
                   ? '0 0 0 3px var(--tint-green-3), 0 10px 20px rgba(0,0,0,0.4)'
@@ -81,7 +69,7 @@ export function MapPage() {
             </button>
           );
         })}
-      </TopoMap>
+      </LondrinaMap>
 
       {/* Filter chips */}
       <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -147,7 +135,9 @@ export function MapPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{point.name}</h3>
-                    <p className="t-caption truncate">{point.distance} · {point.address}</p>
+                    <p className="t-caption truncate">
+                      {distanceFromCenter({ lat: point.lat, lng: point.lng })} · {point.address}
+                    </p>
                   </div>
                   <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />
                 </button>
