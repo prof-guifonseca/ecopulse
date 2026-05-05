@@ -15,7 +15,7 @@ import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Skeleton } from '@/components/shared/Skeleton';
 import { resolveIcon } from '@/lib/iconRegistry';
-import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { runChallenge } from '@/lib/challengeActions';
 import { missionChecks, tryClaimDailyBonus } from '@/lib/missions';
 import { cn } from '@/lib/cn';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -172,11 +172,6 @@ function DiscoveryBlock() {
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
   const progress = useGameStore((s) => s.challengeProgress);
-  const join = useGameStore((s) => s.joinChallenge);
-  const advance = useGameStore((s) => s.advanceChallenge);
-  const completeChallenge = useGameStore((s) => s.completeChallenge);
-  const showToast = useUIStore((s) => s.showToast);
-  const fireConfetti = useUIStore((s) => s.fireConfetti);
 
   // Surface the most relevant challenge: an active one if any, else next up.
   const featured =
@@ -191,26 +186,6 @@ function DiscoveryBlock() {
     ? Math.min(100, ((progress[featured.id] ?? 0) / featured.duration) * 100)
     : 0;
   const ChallengeIcon = resolveIcon(featured.iconName);
-
-  const handleChallenge = () => {
-    if (isDone) return;
-    if (!isActive) {
-      join(featured.id);
-      showToast(`Desafio aceito! ${featured.title}`, 'info');
-      return;
-    }
-    const finished = advance(featured.id, featured.duration);
-    awardTokens(5);
-    showToast('+5 Eco-Tokens', 'reward');
-    if (finished) {
-      completeChallenge(featured.id);
-      awardTokens(featured.tokens);
-      showToast(`Desafio completo! +${featured.tokens} tokens`, 'reward');
-      fireConfetti();
-      const total = useGameStore.getState().completedChallenges.length;
-      if (total === 1) unlockBadge('challenge-1');
-    }
-  };
 
   const tutorials = TUTORIALS.slice(0, 2);
 
@@ -250,7 +225,7 @@ function DiscoveryBlock() {
           <Button
             variant={isDone ? 'secondary' : 'primary'}
             size="sm"
-            onClick={handleChallenge}
+            onClick={() => runChallenge(featured)}
             disabled={isDone}
           >
             {isDone ? 'Completo' : isActive ? 'Avançar' : 'Participar'}

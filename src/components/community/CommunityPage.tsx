@@ -3,11 +3,9 @@
 import Image from 'next/image';
 import { Heart, MessageCircle, MessageSquare } from 'lucide-react';
 import { FEED_POSTS, STORIES } from '@/data';
-import { useSocialStore } from '@/store/socialStore';
-import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useHydrated } from '@/hooks/useHydrated';
-import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { useLikePost } from '@/hooks/useLikePost';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -117,30 +115,8 @@ function FeedPostCard({
   post: (typeof FEED_POSTS)[number];
   onOpenComments: () => void;
 }) {
-  const likedPosts = useSocialStore((s) => s.likedPosts);
-  const toggleLike = useSocialStore((s) => s.toggleLike);
-  const incrementLikeMission = useGameStore((s) => s.incrementLikeMission);
-  const likesMission = useGameStore((s) => s.dailyMissions.likes);
-  const markMission = useGameStore((s) => s.markMission);
-  const showToast = useUIStore((s) => s.showToast);
-
-  const liked = likedPosts.includes(post.id);
+  const { liked, toggle } = useLikePost(post.id);
   const likeCount = post.likes + (liked ? 1 : 0);
-
-  const handleLike = () => {
-    const newState = toggleLike(post.id);
-    if (newState) {
-      awardTokens(1);
-      incrementLikeMission();
-      const nextCount = likesMission + 1;
-      if (nextCount === 5) {
-        markMission('likes', 5);
-        showToast('Missão diária: 5 likes', 'success');
-      }
-      if (likedPosts.length === 0) unlockBadge('first-like');
-    }
-  };
-
   const firstComment = post.commentList[0];
 
   return (
@@ -178,7 +154,7 @@ function FeedPostCard({
         <div className="flex items-center gap-2">
           <Chip
             active={liked}
-            onClick={handleLike}
+            onClick={toggle}
             leftIcon={<Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />}
             className={cn(liked && 'text-[var(--accent-red)]')}
           >
