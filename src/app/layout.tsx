@@ -2,21 +2,21 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 
-// Editorial display — Fraunces variable font (wght axis only by default keeps
-// the bundle small; SOFT/opsz are still controllable via font-variation-settings
-// at usage sites since the variable font itself contains those axes).
+// Editorial display — Fraunces variable font (wght axis as default; SOFT/opsz
+// remain controllable via font-variation-settings at usage sites since the
+// variable font carries those axes). Italic is reached through font-style: italic
+// at the usage site, not by requesting a separate subset here.
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-display',
-  style: ['normal', 'italic'],
   display: 'swap',
 });
 
-// Body — Inter handles tight UI text and longer captions equally well.
+// Body — Inter as a variable font; weights are handled via font-weight at
+// usage sites rather than pre-bundled per-weight subsets.
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 

@@ -1,5 +1,3 @@
-'use client';
-
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens } from './gameActions';

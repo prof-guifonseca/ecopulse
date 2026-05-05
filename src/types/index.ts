@@ -119,44 +119,12 @@ export interface FeedPost {
   commentList: FeedComment[];
 }
 
-export interface StoryPoll {
-  q: string;
-  opts: string[];
-  pcts: number[];
-}
-
-export interface Story {
-  user: string;
-  avatar: string;
-  text: string;
-  /** Curated Unsplash photo key for full-bleed background */
-  imageKey: string;
-  poll?: StoryPoll;
-}
-
 export interface Badge {
   id: string;
   name: string;
   iconName: string;
   desc: string;
   tier: BadgeTier;
-}
-
-export interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  avatar: string;
-  xp: number;
-  tribe: string;
-}
-
-export interface Tribe {
-  id: string;
-  name: string;
-  iconName: string;
-  members: number;
-  weeklyXP: number;
-  rank: number;
 }
 
 export interface ShopItem {
@@ -166,29 +134,6 @@ export interface ShopItem {
   desc: string;
   price: number;
   type: ShopItemType;
-}
-
-export interface TokenPack {
-  id: string;
-  lookupKey: string;
-  name: string;
-  description: string;
-  tokens: number;
-  priceInCents: number;
-  currency: 'BRL';
-  fundSharePercent: number;
-  fundShareInCents: number;
-  badge: string;
-  featured?: boolean;
-}
-
-export interface ImpactFundSnapshot {
-  totalRaisedInCents: number;
-  totalCommittedInCents: number;
-  supportedOrgs: number;
-  coveredSdgs: number;
-  lastTransferAt: string;
-  verificationNote: string;
 }
 
 export interface EcoEvent {
@@ -228,22 +173,6 @@ export interface AvatarOutfit {
 }
 
 export type AvatarOutfits = Partial<Record<OutfitSlot, string | null>>;
-
-export interface ChatMessage {
-  from: string;
-  text: string;
-  time: string;
-  sent: boolean;
-}
-
-export interface ChatConversation {
-  id: string;
-  with: { name: string; avatar: string; level: number };
-  lastMsg: string;
-  lastTime: string;
-  unread: number;
-  messages: ChatMessage[];
-}
 
 export interface DailyMissionsProgress {
   scan: boolean;

@@ -1,5 +1,3 @@
-'use client';
-
 function canVibrate(): boolean {
   return typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
 }
