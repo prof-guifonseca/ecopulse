@@ -10,8 +10,8 @@
 
   /* ---------- Text ---------- */
   --text-primary: #f2f4ef;
-  --text-secondary: #aab3a7;
-  --text-muted: #6f7b72;
+  --text-secondary: #b3bcaf;  /* bumped from #aab3a7 — comfortably WCAG AA on bg-primary */
+  --text-muted: #8a948c;      /* bumped from #6f7b72 — was 4.49 (AA fail for body); now ≈6.5 */
 
   /* ---------- Brand ---------- */
   --accent-green: #8ddb98;
