@@ -1,18 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Check, Coins, Flame, Package, Sparkles, Target, Users } from 'lucide-react';
+import { ArrowRight, Check, Coins, Flame, Sparkles, type LucideIcon } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { DAILY_MISSIONS, CHALLENGES, TUTORIALS } from '@/data';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Avatar } from '@/components/shared/Avatar';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Tile } from '@/components/ui/Tile';
-import { IconTile } from '@/components/ui/IconTile';
 import { Chip } from '@/components/ui/Chip';
 import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -34,42 +31,38 @@ export function HomePage() {
   const level = useUserStore((s) => s.level);
   const xp = useUserStore((s) => s.xp);
   const xpToNext = useUserStore((s) => s.xpToNext);
-  const scannedCount = useGameStore((s) => s.scannedProducts.length);
 
   if (!hydrated) return <HomeSkeleton />;
 
+  const xpPct = xpToNext > 0 ? (xp / xpToNext) * 100 : 0;
+
   return (
-    <PageShell>
-      <header className="flex items-center justify-between gap-4">
+    <PageShell spacing={5}>
+      {/* Editorial cover */}
+      <header className="flex items-start justify-between gap-4 pt-2">
         <div className="min-w-0">
           <p className="t-eyebrow">Hoje</p>
           <h1 className="t-display mt-1.5 leading-[0.95]">
             Oi, <span className="t-italic-soft">{name}.</span>
           </h1>
         </div>
-        <IconTile
-          size="xl"
-          tone="ghost"
-          className="h-16 w-16 rounded-full"
-          icon={<Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />}
-        />
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
+          <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
+        </div>
       </header>
 
-      <Card tone="hero" accent="none" padded={false} className="px-5 py-5">
-        <div className="grid grid-cols-3 gap-2">
-          <Tile size="sm" label="Sequência" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
-          <Tile size="sm" label="Eco-Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
-          <Tile size="sm" label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />
+      {/* Instrument: condensed status + single CTA */}
+      <Card tone="hero" padded={false} className="px-5 py-5">
+        <div className="flex items-baseline justify-between gap-2 t-caption">
+          <span className="font-semibold text-[var(--text-secondary)]">Nível {level}</span>
+          <span>{xp}/{xpToNext} XP</span>
         </div>
+        <ProgressBar value={xpPct} tone="brand" size="sm" className="mt-2" />
 
-        <div className="mt-5">
-          <div className="mb-1.5 flex items-center justify-between">
-            <span className="t-caption">Nível {level}</span>
-            <span className="t-caption font-semibold text-[var(--text-secondary)]">
-              {xp}/{xpToNext} XP
-            </span>
-          </div>
-          <ProgressBar value={xpToNext > 0 ? (xp / xpToNext) * 100 : 0} tone="brand" size="sm" />
+        <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
+          <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
+          <span className="text-[var(--line-strong)]">·</span>
+          <InlineStat icon={Coins} value={tokens} label="tokens" />
         </div>
 
         <Button
@@ -85,96 +78,95 @@ export function HomePage() {
         </Button>
       </Card>
 
-      <MissionsPanel />
+      <MissionsBlock />
 
-      <section>
-        <SectionHeader title="Desafios" />
-        <ChallengesList />
-      </section>
-
-      <section>
-        <SectionHeader title="Upcycling" />
-        <UpcyclingGrid />
-      </section>
+      <DiscoveryBlock />
     </PageShell>
   );
 }
 
-function MissionsPanel() {
+function InlineStat({ icon, value, label }: { icon: LucideIcon; value: number | string; label: string }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5 t-body-sm">
+      <Icon icon={icon} size={13} className="translate-y-[1px] text-[var(--accent-green)]" />
+      <span className="font-semibold text-[var(--text-primary)]">{value}</span>
+      <span className="t-caption">{label}</span>
+    </span>
+  );
+}
+
+function MissionsBlock() {
   const checks = missionChecks();
   const done = Object.values(checks).filter(Boolean).length;
   const bonusClaimed = useGameStore((s) => s.dailyMissions.bonusClaimed);
 
   return (
-    <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
-      <SectionHeader
-        title="Missões do dia"
-        right={
-          <Chip asStatic active>
-            {done}/3
-          </Chip>
-        }
-      />
+    <section>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="t-title">Missões de hoje</h2>
+        <span className="t-caption">{done}/3</span>
+      </div>
 
-      <div className="space-y-2">
+      <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
           const MissionIcon = resolveIcon(mission.iconName as never);
 
           return (
-            <div
+            <li
               key={mission.id}
               className={cn(
-                'flex items-center gap-3 rounded-[var(--radius-md)] border px-4 py-3 transition-colors',
-                isDone
-                  ? 'border-[var(--line-active)] bg-[var(--tint-green-2)]'
-                  : 'border-[var(--line-soft)] bg-[var(--tint-1)]'
+                'flex items-center gap-3 px-4 py-3 transition-colors',
+                isDone && 'bg-[var(--tint-green-2)]'
               )}
             >
-              <IconTile
-                size="md"
-                tone={isDone ? 'brand' : 'default'}
-                icon={
-                  isDone ? (
-                    <Icon icon={Check} size={18} strokeWidth={2.4} />
-                  ) : MissionIcon ? (
-                    <Icon icon={MissionIcon} size={18} />
-                  ) : (
-                    <span>{mission.emoji}</span>
-                  )
-                }
-              />
-              <div className="min-w-0 flex-1">
-                <div className={cn('t-title', isDone && 'text-[var(--accent-green)]')}>{mission.title}</div>
-                <div className="mt-0.5 flex items-center gap-1 t-caption">
-                  <Icon icon={Coins} size={12} />
-                  +{mission.reward} tokens
-                </div>
-              </div>
-            </div>
+              <span
+                className={cn(
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
+                  isDone
+                    ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
+                    : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                )}
+              >
+                {isDone ? (
+                  <Icon icon={Check} size={14} strokeWidth={2.6} />
+                ) : MissionIcon ? (
+                  <Icon icon={MissionIcon} size={15} />
+                ) : (
+                  <span className="text-sm">{mission.emoji}</span>
+                )}
+              </span>
+              <span className={cn('flex-1 t-body', isDone && 'text-[var(--accent-green)]')}>
+                {mission.title}
+              </span>
+              <span className="t-caption font-semibold text-[var(--accent-gold)]">+{mission.reward}</span>
+            </li>
           );
         })}
-      </div>
+      </ul>
 
-      <div className="mt-5">
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <span className="t-caption">Bônus diário</span>
-          <span className={cn('t-caption font-semibold', bonusClaimed ? 'text-[var(--accent-green)]' : 'text-[var(--text-secondary)]')}>
-            {bonusClaimed ? 'Coletado' : '+25 ao concluir'}
-          </span>
-        </div>
-        <ProgressBar value={(done / 3) * 100} tone="brand" />
-        {done === 3 && !bonusClaimed ? (
-          <Button variant="reward" size="md" fullWidth className="mt-4" onClick={tryClaimDailyBonus} leftIcon={<Icon icon={Sparkles} size={16} />}>
-            Coletar bônus diário
-          </Button>
-        ) : null}
-      </div>
-    </Card>
+      {done === 3 && !bonusClaimed ? (
+        <Button
+          variant="reward"
+          size="md"
+          fullWidth
+          className="mt-3"
+          onClick={tryClaimDailyBonus}
+          leftIcon={<Icon icon={Sparkles} size={16} />}
+        >
+          Coletar bônus diário
+        </Button>
+      ) : (
+        <p className="mt-2 t-caption text-center">
+          {bonusClaimed ? 'Bônus de hoje coletado.' : `Complete os 3 e ganhe +25.`}
+        </p>
+      )}
+    </section>
   );
 }
 
-function ChallengesList() {
+function DiscoveryBlock() {
+  const openModal = useUIStore((s) => s.openModal);
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
   const progress = useGameStore((s) => s.challengeProgress);
@@ -184,149 +176,133 @@ function ChallengesList() {
   const showToast = useUIStore((s) => s.showToast);
   const fireConfetti = useUIStore((s) => s.fireConfetti);
 
+  // Surface the most relevant challenge: an active one if any, else next up.
+  const featured =
+    CHALLENGES.find((c) => activeChallenges.includes(c.id) && !completedChallenges.includes(c.id)) ??
+    CHALLENGES.find((c) => !completedChallenges.includes(c.id)) ??
+    CHALLENGES[0];
+  const isActive = activeChallenges.includes(featured.id);
+  const isDone = completedChallenges.includes(featured.id);
+  const completion = isDone
+    ? 100
+    : isActive
+    ? Math.min(100, ((progress[featured.id] ?? 0) / featured.duration) * 100)
+    : 0;
+  const ChallengeIcon = resolveIcon(featured.iconName as never);
+
+  const handleChallenge = () => {
+    if (isDone) return;
+    if (!isActive) {
+      join(featured.id);
+      showToast(`Desafio aceito! ${featured.title}`, 'info');
+      return;
+    }
+    const finished = advance(featured.id, featured.duration);
+    awardTokens(5);
+    showToast('+5 Eco-Tokens', 'reward');
+    if (finished) {
+      completeChallenge(featured.id);
+      awardTokens(featured.tokens);
+      showToast(`Desafio completo! +${featured.tokens} tokens`, 'reward');
+      fireConfetti();
+      const total = useGameStore.getState().completedChallenges.length;
+      if (total === 1) unlockBadge('challenge-1');
+    }
+  };
+
+  const tutorials = TUTORIALS.slice(0, 2);
+
   return (
-    <div className="space-y-3">
-      {CHALLENGES.map((challenge) => {
-        const isActive = activeChallenges.includes(challenge.id);
-        const isDone = completedChallenges.includes(challenge.id);
-        const currentProgress = progress[challenge.id] ?? 0;
-        const completion = isDone
-          ? 100
-          : isActive
-          ? Math.min(100, (currentProgress / challenge.duration) * 100)
-          : 0;
-        const ChallengeIcon = resolveIcon(challenge.iconName as never);
+    <section>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="t-title">Em destaque</h2>
+      </div>
 
-        const handle = () => {
-          if (isDone) return;
-          if (!isActive) {
-            join(challenge.id);
-            showToast(`Desafio aceito! ${challenge.title}`, 'info');
-            return;
-          }
-          const finished = advance(challenge.id, challenge.duration);
-          awardTokens(5);
-          showToast('+5 Eco-Tokens', 'reward');
-          if (finished) {
-            completeChallenge(challenge.id);
-            awardTokens(challenge.tokens);
-            showToast(`Desafio completo! +${challenge.tokens} tokens`, 'reward');
-            fireConfetti();
-            const total = useGameStore.getState().completedChallenges.length;
-            if (total === 1) unlockBadge('challenge-1');
-          }
-        };
+      {/* Featured challenge */}
+      <Card tone="solid" padded={false} className="px-4 py-4">
+        <div className="flex items-start gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]">
+            {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : <span>{featured.emoji}</span>}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="t-eyebrow">Desafio</p>
+            <h3 className="mt-0.5 t-title">{featured.title}</h3>
+            <p className="mt-1 t-caption">
+              {featured.duration} dias · {featured.participants.toLocaleString('pt-BR')} pessoas
+            </p>
+          </div>
+          <Chip asStatic active className="shrink-0">
+            <Icon icon={Coins} size={12} />
+            {featured.tokens}
+          </Chip>
+        </div>
 
-        return (
-          <Card key={challenge.id} tone="solid" padded={false} className="px-4 py-4">
-            <div className="flex items-start gap-3">
-              <IconTile
-                size="md"
-                tone="brand"
-                icon={ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : <span>{challenge.emoji}</span>}
-              />
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="t-title">{challenge.title}</h3>
-                  <div className="flex shrink-0 items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
-                    <Icon icon={Coins} size={13} />
-                    {challenge.tokens}
-                  </div>
-                </div>
-                <div className="mt-1.5 flex flex-wrap items-center gap-3 t-caption">
-                  <span className="inline-flex items-center gap-1">
-                    <Icon icon={challenge.type === 'individual' ? Target : Users} size={12} />
-                    {challenge.type === 'individual' ? 'Solo' : 'Em grupo'}
-                  </span>
-                  <span>{challenge.participants.toLocaleString('pt-BR')} pessoas</span>
-                  <span>{challenge.duration} dias</span>
-                </div>
+        {(isActive || isDone) ? (
+          <ProgressBar value={completion} tone="brand" size="sm" className="mt-4" />
+        ) : null}
+
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="t-caption">
+            {isDone ? 'Concluído' : isActive ? `${Math.round(completion)}% feito` : 'Pronto pra começar'}
+          </span>
+          <Button
+            variant={isDone ? 'secondary' : 'primary'}
+            size="sm"
+            onClick={handleChallenge}
+            disabled={isDone}
+          >
+            {isDone ? 'Completo' : isActive ? 'Avançar' : 'Participar'}
+          </Button>
+        </div>
+      </Card>
+
+      {/* Two upcycling cards */}
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        {tutorials.map((tutorial) => (
+          <button
+            key={tutorial.id}
+            onClick={() => openModal({ kind: 'tutorial', id: tutorial.id })}
+            className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
+          >
+            <Card tone="solid" padded={false} className="h-full">
+              <div className="relative flex min-h-[100px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
+                <div className="absolute inset-0 bg-black/15" aria-hidden />
+                <div className="relative text-3xl drop-shadow-md">{tutorial.emoji}</div>
               </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="mb-2 flex items-center justify-between t-caption">
-                <span>Progresso</span>
-                <span className="font-semibold text-[var(--text-secondary)]">{Math.round(completion)}%</span>
+              <div className="px-4 py-3">
+                <h3 className="t-title leading-tight">{tutorial.title}</h3>
+                <p className="mt-1 t-caption">
+                  {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))} · {tutorial.time}
+                </p>
               </div>
-              <ProgressBar value={completion} tone="brand" />
-            </div>
-
-            <div className="mt-4 flex items-center justify-between gap-3">
-              <span className="t-caption">
-                {isDone ? 'Concluído' : isActive ? 'Em andamento' : 'Pronto pra começar'}
-              </span>
-              <Button
-                variant={isDone ? 'secondary' : 'primary'}
-                size="sm"
-                onClick={handle}
-                disabled={isDone}
-              >
-                {isDone ? 'Completo' : isActive ? 'Avançar' : 'Participar'}
-              </Button>
-            </div>
-          </Card>
-        );
-      })}
-    </div>
+            </Card>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
 function HomeSkeleton() {
   return (
-    <div className="space-y-6" aria-busy="true" aria-live="polite">
-      <div className="card-hero px-5 py-6">
-        <div className="flex items-start gap-4">
-          <Skeleton className="h-16 w-16 rounded-[var(--radius-lg)]" />
-          <div className="min-w-0 flex-1 space-y-2">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-7 w-40" />
-            <Skeleton className="h-4 w-56" />
-          </div>
+    <div className="space-y-5 pt-2" aria-busy="true" aria-live="polite">
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="h-9 w-44" />
         </div>
-        <div className="mt-5 grid grid-cols-3 gap-2">
-          <Skeleton className="h-[60px] w-full" />
-          <Skeleton className="h-[60px] w-full" />
-          <Skeleton className="h-[60px] w-full" />
-        </div>
-        <div className="mt-5 space-y-2">
-          <Skeleton className="h-3 w-full" />
-          <Skeleton className="h-2 w-full" />
-        </div>
-        <Skeleton className="mt-5 h-12 w-full rounded-full" />
+        <Skeleton className="h-14 w-14 rounded-full" />
       </div>
+      <div className="card-hero px-5 py-5 space-y-3">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-2 w-full" />
+        <Skeleton className="h-3 w-40" />
+        <Skeleton className="mt-2 h-12 w-full rounded-full" />
+      </div>
+      <Skeleton className="h-3 w-32" />
       <Skeleton className="h-44 w-full" />
-      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-3 w-32" />
       <Skeleton className="h-32 w-full" />
-    </div>
-  );
-}
-
-function UpcyclingGrid() {
-  const openModal = useUIStore((s) => s.openModal);
-
-  return (
-    <div className="grid grid-cols-2 gap-3">
-      {TUTORIALS.map((tutorial) => (
-        <button
-          key={tutorial.id}
-          onClick={() => openModal({ kind: 'tutorial', id: tutorial.id })}
-          className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
-        >
-          <Card tone="solid" padded={false} className="h-full">
-            <div className="relative flex min-h-[110px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
-              <div className="absolute inset-0 bg-black/15" aria-hidden />
-              <div className="relative text-4xl drop-shadow-md">{tutorial.emoji}</div>
-            </div>
-            <div className="px-4 py-3">
-              <h3 className="t-title">{tutorial.title}</h3>
-              <div className="mt-1 t-caption">
-                {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))} · {tutorial.time}
-              </div>
-            </div>
-          </Card>
-        </button>
-      ))}
     </div>
   );
 }

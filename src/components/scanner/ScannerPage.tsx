@@ -10,13 +10,9 @@ import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Tile } from '@/components/ui/Tile';
-import { IconTile } from '@/components/ui/IconTile';
 import { PageShell } from '@/components/ui/PageShell';
 
 export function ScannerPage() {
@@ -51,7 +47,6 @@ export function ScannerPage() {
   const filtered = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
     if (!normalizedQuery) return PRODUCTS;
-
     return PRODUCTS.filter(
       (product) =>
         product.name.toLowerCase().includes(normalizedQuery) ||
@@ -74,13 +69,13 @@ export function ScannerPage() {
 
       if (!missionScan) {
         markMission('scan', true);
-        showToast('Missão diária: escanear produto concluída', 'success');
+        showToast('Missão diária: scan', 'success');
       }
 
       if (scannedProducts.length + 1 === 1) unlockBadge('first-scan');
       if (scannedProducts.length + 1 >= 5) unlockBadge('scanner-5');
 
-      showToast(`+10 tokens por ${chosen.name}`, 'reward');
+      showToast(`+10 tokens · ${chosen.name}`, 'reward');
       fireConfetti();
 
       if (firstRun) {
@@ -94,127 +89,97 @@ export function ScannerPage() {
   };
 
   return (
-    <PageShell>
-      {firstRun ? (
-        <Card tone="soft" padded={false} className="flex items-start gap-3 px-4 py-4">
-          <IconTile size="md" tone="brand" icon={<Icon icon={Sparkles} size={18} strokeWidth={2.2} />} />
-          <div className="min-w-0">
-            <div className="t-title">Primeiro scan libera a home</div>
-            <p className="t-body-sm mt-1">Toque em Simular scan — você vê como funciona em 2 segundos.</p>
+    <PageShell spacing={5}>
+      <header className="pt-2">
+        <p className="t-eyebrow">Scanner</p>
+        <h1 className="t-display mt-1.5 leading-[0.95]">
+          O que você <span className="t-italic-soft">vai comprar</span>?
+        </h1>
+      </header>
+
+      {/* Editorial scan instrument */}
+      <div className="scan-frame px-6 py-7">
+        <div className="relative flex h-[220px] items-center justify-center">
+          {/* Soft scan-line */}
+          <div
+            className="pointer-events-none absolute inset-x-10 top-1/2 h-px"
+            style={{
+              background: 'var(--gradient-primary)',
+              animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
+              opacity: scanning ? 0.9 : 0.25,
+            }}
+          />
+          {/* Camera target */}
+          <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-active)] bg-[var(--tint-green-3)] text-[var(--accent-green)] shadow-[var(--shadow-glow)]">
+            <Icon icon={Camera} size={40} strokeWidth={1.5} />
           </div>
-        </Card>
+        </div>
+
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-5"
+          onClick={simulateScan}
+          disabled={scanning}
+          loading={scanning}
+          leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
+        >
+          {scanning ? 'Escaneando…' : 'Simular scan'}
+        </Button>
+
+        <p className="mt-3 text-center t-caption">
+          {scannedProducts.length} item{scannedProducts.length === 1 ? '' : 's'} no histórico ·{' '}
+          {missionScan ? 'missão concluída' : 'missão pendente'}
+        </p>
+      </div>
+
+      {firstRun ? (
+        <p className="rounded-[var(--radius-md)] border border-[var(--line-active)] bg-[var(--tint-green-1)] px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
+          Toque em Simular scan e a home libera.
+        </p>
       ) : null}
 
-      <Card tone="hero" padded={false} className="px-5 py-5">
-
-        <div className="scan-frame px-5 py-6">
-          <div className="relative flex min-h-[240px] items-center justify-center py-4">
-            <div
-              className="pointer-events-none absolute inset-x-10 top-1/2 h-px"
-              style={{
-                background: 'var(--gradient-primary)',
-                animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
-                opacity: scanning ? 0.9 : 0.25,
-              }}
-            />
-            <IconTile
-              size="xl"
-              tone="brand"
-              icon={<Icon icon={Camera} size={36} strokeWidth={1.6} />}
-              className="h-24 w-24 rounded-[var(--radius-lg)]"
-            />
-          </div>
-
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <Tile size="sm" align="start" label="Histórico" value={`${scannedProducts.length} itens`} />
-            <Tile size="sm" align="start" label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} />
-          </div>
-
-          <p className="t-body-sm mt-4">
-            {scanning
-              ? 'Analisando o item agora…'
-              : scannedProducts.length === 0
-                ? 'Seu primeiro scan abre sua ficha e libera tokens.'
-                : 'Simule um scan para abrir a ficha completa e ganhar recompensa.'}
-          </p>
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            className="mt-4"
-            onClick={simulateScan}
-            disabled={scanning}
-            loading={scanning}
-            leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
-          >
-            {scanning ? 'Escaneando...' : 'Simular scan'}
-          </Button>
-        </div>
-      </Card>
-
       <section>
-        <SectionHeader title="Buscar" />
         <div className="input-shell flex items-center gap-3 px-4 py-3">
           <Icon icon={Search} size={18} className="text-[var(--text-muted)]" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Nome, marca ou categoria"
+            placeholder="Buscar nome, marca ou categoria"
             aria-label="Buscar produtos"
             className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
           />
         </div>
-      </section>
-
-      <section>
-        <SectionHeader
-          title="Produtos"
-          right={<span className="t-caption">{filtered.length} {filtered.length === 1 ? 'item' : 'itens'}</span>}
-        />
 
         {filtered.length === 0 ? (
-          <Card tone="soft" padded={false} className="px-4 py-4">
-            <div className="t-title">Nada encontrado</div>
-            <p className="t-body-sm mt-1">
-              Nada encontrado para &ldquo;{query.trim()}&rdquo;. Tente outra palavra.
-            </p>
-          </Card>
-        ) : null}
-
-        <div className="space-y-3">
-          {filtered.map((product) => (
-            <button
-              key={product.id}
-              onClick={() => openModal({ kind: 'product', id: product.id })}
-              className="group block w-full text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
-            >
-              <Card tone="solid" padded={false} className="px-4 py-4">
-                <div className="flex items-start gap-4">
-                  <IconTile size="lg" icon={<span>{product.emoji}</span>} />
+          <p className="mt-4 t-body-sm text-center">
+            Nada encontrado para &ldquo;{query.trim()}&rdquo;.
+          </p>
+        ) : (
+          <ul className="mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+            {filtered.map((product) => (
+              <li key={product.id}>
+                <button
+                  onClick={() => openModal({ kind: 'product', id: product.id })}
+                  className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                    {product.emoji}
+                  </span>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h3 className="t-title truncate">{product.name}</h3>
-                        <p className="t-caption mt-0.5 truncate">
-                          {product.brand} · {product.category}
-                        </p>
-                      </div>
-                      <ScoreBadge score={product.score} className="shrink-0" />
-                    </div>
-                    <div className="mt-3 flex items-center justify-between gap-3 t-body-sm">
-                      <span className="truncate" style={{ color: SCORE_COLORS[product.score] }}>
-                        {product.tip}
-                      </span>
-                      {scannedProducts.includes(product.id) ? (
-                        <span className="t-caption shrink-0">já visto</span>
-                      ) : null}
-                    </div>
+                    <h3 className="t-title truncate">{product.name}</h3>
+                    <p className="mt-0.5 truncate t-caption" style={{ color: SCORE_COLORS[product.score] }}>
+                      {product.tip}
+                    </p>
                   </div>
-                </div>
-              </Card>
-            </button>
-          ))}
-        </div>
+                  <ScoreBadge score={product.score} className="h-9 w-9 shrink-0" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </PageShell>
   );
