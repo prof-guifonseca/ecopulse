@@ -59,7 +59,7 @@ export function BottomNav() {
               </span>
               <span
                 className={cn(
-                  'text-[0.66rem] font-medium leading-none',
+                  't-micro font-medium',
                   active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
                 )}
               >

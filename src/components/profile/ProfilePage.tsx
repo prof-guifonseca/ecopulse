@@ -65,10 +65,7 @@ export function ProfilePage() {
           <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
             <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
           </span>
-          <span
-            className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]"
-            style={{ background: 'var(--gradient-gold)' }}
-          >
+          <span className="gradient-gold absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]">
             <Icon icon={Pencil} size={12} strokeWidth={2.4} />
           </span>
         </button>

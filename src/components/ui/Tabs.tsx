@@ -44,10 +44,9 @@ export function Tabs<Value extends string>({ items, value, onChange, className, 
             <span
               aria-hidden
               className={cn(
-                'pointer-events-none absolute -bottom-px left-4 right-4 h-[2px] rounded-full transition-opacity duration-200',
+                'gradient-primary pointer-events-none absolute -bottom-px left-4 right-4 h-[2px] rounded-full transition-opacity duration-200',
                 active ? 'opacity-100' : 'opacity-0'
               )}
-              style={{ background: 'var(--gradient-primary)' }}
             />
           </button>
         );

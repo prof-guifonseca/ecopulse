@@ -65,10 +65,9 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
                   className={cn(
                     'flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold',
                     isTopThree
-                      ? 'text-[var(--on-reward)]'
+                      ? 'gradient-gold text-[var(--on-reward)]'
                       : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
                   )}
-                  style={isTopThree ? { background: 'var(--gradient-gold)' } : undefined}
                 >
                   {entry.rank}
                 </span>

@@ -85,8 +85,7 @@ export function StoryViewer({ index }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[500] flex justify-center bg-black"
-      style={{ animation: 'fadeIn 0.25s ease' }}
+      className="animate-fade-in fixed inset-0 z-[500] flex justify-center bg-black"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >

@@ -1,11 +1,11 @@
 import type { Product, Score } from '@/types';
 
 export const SCORE_COLORS: Record<Score, string> = {
-  A: 'var(--accent-green)',
-  B: 'var(--accent-cyan)',
-  C: 'var(--accent-gold)',
-  D: 'var(--accent-orange)',
-  E: 'var(--accent-red)',
+  A: 'var(--score-a)',
+  B: 'var(--score-b)',
+  C: 'var(--score-c)',
+  D: 'var(--score-d)',
+  E: 'var(--score-e)',
 };
 
 export const BREAKDOWN_LABELS: Record<string, string> = {

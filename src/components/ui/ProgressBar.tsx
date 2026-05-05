@@ -25,8 +25,8 @@ export function ProgressBar({ value, max = 100, size = 'md', className, ariaLabe
       )}
     >
       <div
-        className="h-full rounded-full transition-[width] duration-500 ease-out"
-        style={{ width: `${pct}%`, background: 'var(--gradient-primary)' }}
+        className="gradient-primary h-full rounded-full transition-[width] duration-500 ease-out"
+        style={{ width: `${pct}%` }}
       />
     </div>
   );

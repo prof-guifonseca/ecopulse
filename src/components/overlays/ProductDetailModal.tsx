@@ -46,8 +46,8 @@ export function ProductDetailModal({ id }: Props) {
     <ModalShell eyebrow="Produto" title={product.name}>
       <div className="flex flex-col items-center text-center">
         <div
-          className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[var(--on-primary)]"
-          style={{ background: color, animation: 'scoreReveal 0.5s cubic-bezier(.34,1.56,.64,1)' }}
+          className="t-mega animate-score-reveal flex h-20 w-20 items-center justify-center rounded-full text-[var(--on-primary)]"
+          style={{ background: color }}
         >
           {product.score}
         </div>

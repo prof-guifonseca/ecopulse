@@ -47,7 +47,7 @@ export function ShopItemModal({ id }: Props) {
         </div>
         <p className="t-body-sm mt-3 max-w-[32ch]">{item.desc}</p>
 
-        <div className="mt-5 inline-flex items-center gap-1.5 text-[1.6rem] font-semibold text-[var(--accent-gold)]">
+        <div className="t-headline mt-5 inline-flex items-center gap-1.5 text-[var(--accent-gold)]">
           <Icon icon={Coins} size={22} />
           {item.price}
         </div>

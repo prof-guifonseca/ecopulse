@@ -14,6 +14,7 @@ import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
+import { cn } from '@/lib/cn';
 
 const SCAN_ANIMATION_MS = 1600;
 
@@ -84,12 +85,10 @@ export function ScannerPage() {
         <div className="relative flex h-[220px] items-center justify-center">
           {/* Soft scan-line */}
           <div
-            className="pointer-events-none absolute inset-x-10 top-1/2 h-px"
-            style={{
-              background: 'var(--gradient-primary)',
-              animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
-              opacity: scanning ? 0.9 : 0.25,
-            }}
+            className={cn(
+              'gradient-primary pointer-events-none absolute inset-x-10 top-1/2 h-px',
+              scanning ? 'animate-scan-line opacity-90' : 'opacity-25'
+            )}
           />
           {/* Camera target */}
           <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-active)] bg-[var(--tint-green-3)] text-[var(--accent-green)] shadow-[var(--shadow-glow)]">

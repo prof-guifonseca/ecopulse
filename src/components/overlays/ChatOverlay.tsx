@@ -8,6 +8,7 @@ import { useSocialStore } from '@/store/socialStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
+import { cn } from '@/lib/cn';
 import type { ChatMessage } from '@/types';
 
 export function ChatListOverlay() {
@@ -15,14 +16,8 @@ export function ChatListOverlay() {
   const openChat = useUIStore((s) => s.openChat);
 
   return (
-    <div
-      className="fixed inset-0 z-[600] flex justify-center bg-[rgba(5,10,8,0.92)]"
-      style={{ animation: 'fadeIn 0.3s ease' }}
-    >
-      <div
-        className="flex h-full w-full max-w-[var(--shell-width)] flex-col"
-        style={{ background: 'var(--bg-primary)' }}
-      >
+    <div className="animate-fade-in fixed inset-0 z-[600] flex justify-center bg-[rgba(5,10,8,0.92)]">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
         <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
           <button
             onClick={close}
@@ -54,10 +49,7 @@ export function ChatListOverlay() {
                   <p className="t-body-sm truncate">{c.lastMsg}</p>
                 </div>
                 {c.unread > 0 && (
-                  <span
-                    className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[0.66rem] font-bold text-[var(--on-primary)]"
-                    style={{ background: 'var(--gradient-primary)' }}
-                  >
+                  <span className="gradient-primary t-micro flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 font-bold text-[var(--on-primary)]">
                     {c.unread}
                   </span>
                 )}
@@ -90,14 +82,8 @@ export function ChatConversationOverlay({ id }: { id: string }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[650] flex justify-center bg-[rgba(5,10,8,0.94)]"
-      style={{ animation: 'fadeIn 0.3s ease' }}
-    >
-      <div
-        className="flex h-full w-full max-w-[var(--shell-width)] flex-col"
-        style={{ background: 'var(--bg-primary)' }}
-      >
+    <div className="animate-fade-in fixed inset-0 z-[650] flex justify-center bg-[rgba(5,10,8,0.94)]">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
         <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
           <button
             onClick={close}
@@ -119,14 +105,15 @@ export function ChatConversationOverlay({ id }: { id: string }) {
           {messages.map((m, i) => (
             <div key={i} className={m.sent ? 'flex justify-end' : 'flex'}>
               <div
-                className="t-body max-w-[78%] rounded-[var(--radius-md)] px-4 py-3"
-                style={{
-                  background: m.sent ? 'var(--gradient-primary)' : 'var(--tint-2)',
-                  color: m.sent ? 'var(--on-primary)' : 'var(--text-primary)',
-                }}
+                className={cn(
+                  't-body max-w-[78%] rounded-[var(--radius-md)] px-4 py-3',
+                  m.sent
+                    ? 'gradient-primary text-[var(--on-primary)]'
+                    : 'bg-[var(--tint-2)] text-[var(--text-primary)]'
+                )}
               >
                 {m.text}
-                <div className="mt-1 text-[0.66rem] opacity-70">{m.time}</div>
+                <div className="t-micro mt-1 opacity-70">{m.time}</div>
               </div>
             </div>
           ))}
