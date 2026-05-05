@@ -9,8 +9,8 @@ import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 
-const DEFAULT_NAME = 'Suelen';
-const DEFAULT_AVATAR_BASE = 'base1';
+const DEFAULT_NAME = 'Arthur';
+const DEFAULT_AVATAR_BASE = 'base2';
 const DEFAULT_TRIBE = 'guardioes';
 
 export function OnboardingFlow() {
