@@ -12,16 +12,20 @@ import type { ScoreBreakdown } from '@/lib/scoring';
  * recent entries; older ones drop off the tail.
  */
 export interface ScanRecord {
-  /** Stable id (barcode for real scans, generated for demo seeds). */
+  /** Stable id — usually the simulated EAN-13 barcode. */
   id: string;
-  /** Source of the lookup so the UI can label and badge it. */
-  source: 'camera' | 'demo';
-  /** Barcode string when scanned via camera; null for demo entries. */
-  barcode: string | null;
+  /** Source of the entry so the UI can label and badge it. */
+  source: 'simulator' | 'seed';
+  /** Barcode string used to look the product up in the catalog. */
+  barcode: string;
+  /** Product id from src/data/products.ts. */
+  productId: string;
   name: string;
-  brand: string | null;
-  category: string | null;
-  imageUrl: string | null;
+  brand: string;
+  category: string;
+  emoji: string;
+  /** Optional Unsplash photo key from src/lib/unsplash.ts. */
+  photoKey?: string;
   score: Score;
   breakdown: ScoreBreakdown;
   tip: string;

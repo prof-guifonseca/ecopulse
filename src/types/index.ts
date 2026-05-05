@@ -51,10 +51,20 @@ export type MapPointType =
 
 export interface Product {
   id: string;
+  /** Fictional EAN-13 starting with 789 (BR prefix). Used by the scan simulator. */
+  barcode: string;
   name: string;
   brand: string;
   category: string;
   emoji: string;
+  /** Optional Unsplash photo key (see src/lib/unsplash.ts) for a richer card. */
+  photoKey?: string;
+  /** Packaging signals consumed by lib/scoring.ts when re-deriving a score. */
+  packagingTags: string[];
+  /** True when the manufacturer is Brazilian — tilts the origin proxy. */
+  isLocal: boolean;
+  /** 1–4 NOVA group when the product is a food; null otherwise. */
+  novaGroup: 1 | 2 | 3 | 4 | null;
   score: Score;
   breakdown: {
     carbono: number;
