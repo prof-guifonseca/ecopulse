@@ -179,18 +179,18 @@ export function ScannerPage() {
       {/* Recent scans (persisted, simulated) */}
       {history.length > 0 ? (
         <section>
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-4 flex items-baseline justify-between">
             <h2 className="t-title">Meus scans recentes</h2>
             <span className="t-caption">
               {history.length} item{history.length === 1 ? '' : 's'}
             </span>
           </div>
-          <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+          <ul className="divide-y divide-[var(--line-soft)]">
             {history.slice(0, 5).map((scan) => (
               <li key={`${scan.id}-${scan.scannedAt}`}>
                 <button
                   onClick={() => openModal({ kind: 'product', id: scan.id })}
-                  className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
                     {scan.emoji}
@@ -211,7 +211,7 @@ export function ScannerPage() {
 
       {/* Catalog browse */}
       <section>
-        <div className="mb-3 flex items-baseline justify-between">
+        <div className="mb-4 flex items-baseline justify-between">
           <h2 className="t-title">Catálogo</h2>
           <span className="t-caption">{PRODUCTS.length} produtos</span>
         </div>
@@ -231,12 +231,12 @@ export function ScannerPage() {
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)]">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button
                   onClick={() => openModal({ kind: 'product', id: product.id })}
-                  className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
                     {product.emoji}

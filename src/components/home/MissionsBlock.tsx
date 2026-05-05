@@ -18,12 +18,12 @@ export function MissionsBlock() {
 
   return (
     <section>
-      <div className="mb-3 flex items-baseline justify-between gap-3">
+      <div className="mb-4 flex items-baseline justify-between gap-3">
         <h2 className="t-title">Missões de hoje</h2>
         <span className="t-caption">{done}/{DAILY_MISSION_TARGET}</span>
       </div>
 
-      <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+      <ul className="divide-y divide-[var(--line-soft)]">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
           const MissionIcon = resolveIcon(mission.iconName);
@@ -32,8 +32,8 @@ export function MissionsBlock() {
             <li
               key={mission.id}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 transition-colors',
-                isDone && 'bg-[var(--tint-green-2)]'
+                'flex items-center gap-3 py-4 transition-colors',
+                isDone && 'opacity-90'
               )}
             >
               <span
@@ -63,15 +63,14 @@ export function MissionsBlock() {
         <Button
           variant="reward"
           size="md"
-          fullWidth
-          className="mt-3"
+          className="mt-5"
           onClick={tryClaimDailyBonus}
           leftIcon={<Icon icon={Sparkles} size={16} />}
         >
           Coletar bônus diário
         </Button>
       ) : (
-        <p className="mt-2 t-caption text-center">
+        <p className="mt-3 t-caption">
           {bonusClaimed ? 'Bônus de hoje coletado.' : `Complete os 3 e ganhe +25.`}
         </p>
       )}

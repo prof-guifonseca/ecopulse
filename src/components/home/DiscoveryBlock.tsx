@@ -36,7 +36,7 @@ export function DiscoveryBlock() {
 
   return (
     <section>
-      <div className="mb-3 flex items-baseline justify-between gap-3">
+      <div className="mb-4 flex items-baseline justify-between gap-3">
         <h2 className="t-title">Em destaque</h2>
       </div>
 
@@ -68,7 +68,7 @@ export function DiscoveryBlock() {
             {isDone ? 'Concluído' : isActive ? `${Math.round(completion)}% feito` : 'Pronto pra começar'}
           </span>
           <Button
-            variant={isDone ? 'secondary' : 'primary'}
+            variant={isDone ? 'ghost' : 'secondary'}
             size="sm"
             onClick={() => runChallenge(featured)}
             disabled={isDone}
@@ -79,7 +79,7 @@ export function DiscoveryBlock() {
       </Card>
 
       {/* Two upcycling cards */}
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <div className="mt-5 grid grid-cols-2 gap-3">
         {tutorials.map((tutorial) => (
           <button
             key={tutorial.id}

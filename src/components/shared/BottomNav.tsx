@@ -29,9 +29,9 @@ export function BottomNav() {
     <nav
       id="bottom-nav"
       role="tablist"
-      className="shrink-0 border-t border-[var(--line-soft)] bg-[var(--glass-bg)] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] pt-2 backdrop-blur-md"
+      className="shrink-0 border-t border-[var(--line-soft)] bg-[var(--bg-primary)] px-4 pb-[calc(env(safe-area-inset-bottom,0px)+10px)] pt-3 sm:px-8"
     >
-      <div className="relative flex items-center gap-1">
+      <div className="relative mx-auto flex max-w-[var(--content-width)] items-center gap-1">
         {/* Sliding ride indicator — a thin gradient bar above the active tab */}
         <span
           aria-hidden

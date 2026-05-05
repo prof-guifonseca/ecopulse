@@ -66,9 +66,9 @@ export function AppHeader() {
   return (
     <header
       id="app-header"
-      className="sticky top-0 z-40 px-3 pt-[calc(env(safe-area-inset-top,0px)+10px)]"
+      className="sticky top-0 z-40 bg-[var(--bg-primary)] px-5 pt-[calc(env(safe-area-inset-top,0px)+18px)] pb-3 sm:px-8"
     >
-      <div className="card-glass flex items-center justify-between gap-3 px-4 py-2.5">
+      <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-3">
         <div
           className="flex select-none items-center gap-2.5"
           onPointerDown={startLongPress}

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Coins, Flame } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
@@ -9,8 +9,6 @@ import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useHydrated } from '@/hooks/useHydrated';
-import { unsplashUrl } from '@/lib/unsplash';
-import { InlineStat } from './InlineStat';
 import { MissionsBlock } from './MissionsBlock';
 import { DiscoveryBlock } from './DiscoveryBlock';
 import { HomeSkeleton } from './HomeSkeleton';
@@ -30,37 +28,42 @@ export function HomePage() {
   if (!hydrated) return <HomeSkeleton />;
 
   const xpPct = xpToNext > 0 ? (xp / xpToNext) * 100 : 0;
-  const heroImage = unsplashUrl('urbanGarden', { w: 900, h: 720, q: 70 });
 
   return (
-    <PageShell spacing={5}>
-      {/* Editorial cover with imagery */}
-      <section
-        className="card-editorial -mx-1 px-6 pb-6 pt-7"
-        style={{ ['--bg-image' as string]: `url("${heroImage}")` }}
-      >
-        <header className="flex items-start justify-between gap-4">
+    <PageShell spacing={9}>
+      {/* Hero — sem caixa, sem foto. Tipografia + 1 botão. */}
+      <section className="pt-4 sm:pt-8">
+        <header className="flex items-start justify-between gap-6">
           <div className="min-w-0">
             <p className="t-eyebrow">Hoje</p>
-            <h1 className="t-display mt-1.5 leading-[0.92]" style={{ fontSize: '2.3rem' }}>
+            <h1
+              className="t-display mt-2 leading-[0.95]"
+              style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3rem)' }}
+            >
               Oi, <span className="t-italic-soft">{name}.</span>
             </h1>
+            <p className="mt-3 t-body text-[var(--text-secondary)]">
+              {streak > 0 ? `${streak} dias seguidos.` : 'Pronto pra começar.'}
+              {' '}
+              <span className="text-[var(--text-muted)]">·</span>{' '}
+              {tokens} tokens
+            </p>
           </div>
           <div
             className="impact-ring shrink-0"
             style={{
               ['--ring-pct' as string]: xpPct,
               ['--ring-color' as string]: 'var(--accent-green)',
-              ['--ring-size' as string]: '60px',
+              ['--ring-size' as string]: '72px',
             }}
           >
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="sm" />
+            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
           </div>
         </header>
 
-        <div className="mt-6 flex items-baseline justify-between gap-2 t-caption">
+        <div className="mt-8 flex items-baseline justify-between gap-2 t-caption">
           <span className="font-semibold text-[var(--text-primary)]">Nível {level}</span>
-          <span className="text-[var(--text-secondary)]">{xp}/{xpToNext} XP</span>
+          <span className="text-[var(--text-muted)]">{xp}/{xpToNext} XP</span>
         </div>
         <ProgressBar value={xpPct} size="sm" className="mt-2" />
 
@@ -69,23 +72,12 @@ export function HomePage() {
           href="/scanner"
           variant="primary"
           size="lg"
-          fullWidth
-          className="mt-5"
+          className="mt-8"
           rightIcon={<Icon icon={ArrowRight} size={16} />}
         >
           Abrir scanner
         </Button>
       </section>
-
-      {/* Stat ribbon — secondary stats live below the cover, never in it */}
-      <div className="flex items-center justify-center gap-2 -mt-2">
-        <span className="stat-ribbon">
-          <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
-        </span>
-        <span className="stat-ribbon">
-          <InlineStat icon={Coins} value={tokens} label="tokens" />
-        </span>
-      </div>
 
       <MissionsBlock />
 

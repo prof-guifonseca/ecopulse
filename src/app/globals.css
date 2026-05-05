@@ -62,8 +62,10 @@
   --radius-lg: 26px;
   --radius-shell: 32px;
 
-  /* ---------- Shell ---------- */
-  --shell-width: 430px;
+  /* ---------- Shell / canvas ---------- */
+  --shell-width: 430px;        /* legacy — modals + a few helpers still use this */
+  --canvas-width: 680px;       /* main reading column on desktop */
+  --content-width: 600px;      /* narrower content blocks (text-heavy) */
 }
 
 @theme inline {
@@ -199,27 +201,17 @@ body {
 
 @media (min-width: 640px) {
   body {
-    /* Desktop: center the device on a framed editorial canvas.
-       Two soft brand halos (green top-left, gold bottom-right) over a
-       slightly darker base so the shell reads as an object on a surface
-       instead of a column hugging the void. */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    /* Desktop: a single calm canvas. No framed device, no halos competing
+       with content. One very soft top halo for atmosphere, then flat
+       --bg-primary so the column reads as the document itself. */
     overflow: auto;
     background:
       radial-gradient(
-        circle at 18% 14%,
-        color-mix(in srgb, var(--accent-green) 14%, transparent),
-        transparent 48%
+        ellipse 80% 40% at 50% -10%,
+        color-mix(in srgb, var(--accent-green) 6%, transparent),
+        transparent 70%
       ),
-      radial-gradient(
-        circle at 82% 86%,
-        color-mix(in srgb, var(--accent-gold) 9%, transparent),
-        transparent 52%
-      ),
-      linear-gradient(180deg, #040806 0%, var(--bg-primary) 55%);
+      var(--bg-primary);
   }
 }
 
@@ -299,112 +291,44 @@ input, textarea, select {
 
 @layer components {
   /* =========================================================
-     Device shell — mobile content presented on a desktop stage
+     App column — a vertical reading column, no framing chrome
      ========================================================= */
   .device-shell {
     position: relative;
     background: var(--bg-primary);
   }
 
-  @media (min-width: 640px) {
-    .device-shell {
-      /* Gradient border via padding-box / border-box dual background:
-         the inner layer is the solid bg, the outer layer is a soft
-         top-down gradient that paints only into the 1px border slot. */
-      border: 1px solid transparent;
-      background:
-        linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.16),
-          rgba(255, 255, 255, 0.03) 40%,
-          rgba(0, 0, 0, 0.5)
-        ) border-box;
-      box-shadow:
-        0 60px 140px -30px rgba(0, 0, 0, 0.78),
-        0 38px 80px -30px rgba(0, 0, 0, 0.55),
-        0 0 80px -20px rgba(141, 219, 152, 0.10);
-    }
-
-    /* Subtle glass reflection on the top edge — adds 'real device' feel. */
-    .device-shell::before {
-      content: "";
-      position: absolute;
-      inset: 1px 1px auto 1px;
-      height: 90px;
-      border-radius: calc(var(--radius-shell) - 1px) calc(var(--radius-shell) - 1px) 0 0;
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.015) 40%,
-        transparent 100%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .device-shell > * {
-      position: relative;
-      z-index: 1;
-    }
-  }
-
-  /* Showcase label — a small whisper of "this is a demo, not a screenshot" */
-  .canvas-stage-label {
-    position: fixed;
-    right: max(1.5rem, env(safe-area-inset-right));
-    bottom: max(1.5rem, env(safe-area-inset-bottom));
-    font-family: var(--font-sans);
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 0;
-  }
-  @media (max-width: 639px) { .canvas-stage-label { display: none; } }
-
   /* =========================================================
-     Card primitives
+     Card primitives — sections, not boxes. Bordas/shadows leves
+     ou ausentes; o conteúdo respira pelo espaçamento, não pelo contorno.
      ========================================================= */
   .card {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
     background: var(--bg-secondary);
-    box-shadow: var(--shadow-card-val);
   }
 
   .card-soft {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
     background: var(--tint-1);
   }
 
   .card-glass {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    box-shadow: var(--shadow-card-val);
   }
 
   .card-hero {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
     background: linear-gradient(180deg, var(--bg-elevated), #101915);
-    /* A thin top highlight gives the same 'lifted' feel as the old radial
-       overlay without competing with the headline content underneath. */
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      var(--shadow-deep-glow-val);
+    /* Single soft glow only — no border, no heavy box-shadow. */
+    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
   }
 
   /* Editorial hero — a magazine cover. Photo slot via --bg-image,
@@ -413,11 +337,8 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
     background: linear-gradient(180deg, var(--bg-elevated), #0e1612);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      var(--shadow-deep-glow-val);
+    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
     isolation: isolate;
   }
   .card-editorial::before {
@@ -618,18 +539,15 @@ input, textarea, select {
     z-index: 1;
   }
 
-  /* Editorial scan frame: radial halo, dual rotating ring around target */
+  /* Editorial scan frame: radial halo, dual rotating ring around target.
+     No outer border — the gradient halo + rings define the scan zone. */
   .scan-frame {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 55%),
+      radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 60%),
       linear-gradient(180deg, var(--bg-elevated), #0e1612);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      var(--shadow-deep-glow-val);
   }
 
   /* Pulsing radial light behind the camera target */
