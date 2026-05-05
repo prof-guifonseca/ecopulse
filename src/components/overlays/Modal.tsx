@@ -92,10 +92,14 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
   return createPortal(
     <div
       className={cn(
-        'fixed inset-0 z-[999] flex justify-center bg-[rgba(3,8,5,0.6)] backdrop-blur-md',
+        'fixed inset-0 z-[999] flex justify-center bg-[rgba(3,8,5,0.62)]',
         variant === 'center' ? 'items-center' : 'items-end'
       )}
-      style={{ animation: 'fadeIn 0.22s ease' }}
+      style={{
+        animation: 'fadeIn 0.28s ease',
+        backdropFilter: 'blur(28px) saturate(1.2)',
+        WebkitBackdropFilter: 'blur(28px) saturate(1.2)',
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -119,6 +123,17 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
+        {/* Subtle green-tinted glow on the top edge of the bottom sheet */}
+        {variant === 'bottom' ? (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--accent-green) 40%, transparent) 50%, transparent 100%)',
+            }}
+          />
+        ) : null}
         {children}
       </div>
     </div>,

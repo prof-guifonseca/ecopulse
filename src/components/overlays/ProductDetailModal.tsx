@@ -7,11 +7,28 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconTile } from '@/components/ui/IconTile';
 import { ModalShell } from './ModalShell';
 import type { Product, Score } from '@/types';
+
+const CATEGORY_IMAGE: Record<string, UnsplashKey> = {
+  alimentos: 'freshProduce',
+  bebidas: 'bulkShopping',
+  cosméticos: 'ceramics',
+  cosmeticos: 'ceramics',
+  limpeza: 'refillStore',
+  vestuário: 'vintageFashion',
+  vestuario: 'vintageFashion',
+  moda: 'clothingRack',
+};
+
+function pickProductImage(category: string): UnsplashKey {
+  const key = category.toLowerCase();
+  return CATEGORY_IMAGE[key] ?? 'urbanGarden';
+}
 
 interface Props {
   id: string;
@@ -63,19 +80,40 @@ export function ProductDetailModal({ id }: Props) {
     closeModal();
   };
 
+  const heroImage = unsplashUrl(pickProductImage(view.category), { w: 800, h: 360, q: 70 });
+
   return (
     <ModalShell
       eyebrow={isFromHistory ? `Scan · ${view.barcode}` : `Catálogo · ${view.barcode}`}
       title={view.name}
     >
       <div className="flex flex-col items-center text-center">
+        {/* Editorial photo with score badge floating over it */}
         <div
-          className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[var(--on-primary)]"
-          style={{ background: color, animation: 'scoreReveal 0.5s cubic-bezier(.34,1.56,.64,1)' }}
+          className="relative -mx-5 mb-4 h-36 w-[calc(100%+2.5rem)] overflow-hidden"
+          style={{
+            backgroundImage: `url("${heroImage}")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
-          {view.score}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,18,14,0.30) 0%, rgba(10,18,14,0.70) 75%, var(--bg-secondary) 100%)',
+            }}
+          />
+          <div
+            className="absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[2rem] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-deep-glow)]"
+            style={{ background: color, animation: 'scoreReveal 0.5s cubic-bezier(.34,1.56,.64,1)' }}
+          >
+            {view.score}
+          </div>
         </div>
-        <p className="t-caption mt-2">
+
+        <p className="t-caption mt-8">
           {[view.brand, view.category].filter(Boolean).join(' · ') || 'Sem metadados'}
         </p>
 

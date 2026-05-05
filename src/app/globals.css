@@ -655,7 +655,7 @@ input, textarea, select {
   .scan-ring-inner {
     position: absolute;
     border-radius: 999px;
-    pointer-events: none;
+    pointer-events: none !important;
   }
   .scan-ring-outer {
     width: 180px;

@@ -46,19 +46,22 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [hydrated, onboarded, router, showToast]);
 
   return (
-    <div className="device-shell mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden sm:h-[calc(100dvh-3rem)] sm:max-h-[920px] sm:rounded-[var(--radius-shell)]">
-      <FauxStatusBar />
-      <AppHeader />
-      <main
-        className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 pt-1"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-      >
-        <div className="mx-auto max-w-[var(--shell-width)]">
-          {children}
-        </div>
-      </main>
-      <BottomNav />
-      <Overlays />
-    </div>
+    <>
+      <div className="device-shell mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden sm:h-[calc(100dvh-3rem)] sm:max-h-[920px] sm:rounded-[var(--radius-shell)]">
+        <FauxStatusBar />
+        <AppHeader />
+        <main
+          className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 pt-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          <div className="mx-auto max-w-[var(--shell-width)]">
+            {children}
+          </div>
+        </main>
+        <BottomNav />
+        <Overlays />
+      </div>
+      <span aria-hidden className="canvas-stage-label">EcoPulse · Investor Preview</span>
+    </>
   );
 }
