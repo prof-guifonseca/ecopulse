@@ -9,7 +9,6 @@ import { TutorialModal } from './TutorialModal';
 import { ShopItemModal } from './ShopItemModal';
 import { SkinPackModal } from './SkinPackModal';
 import { CommentsModal } from './CommentsModal';
-import { ChatListOverlay, ChatConversationOverlay } from './ChatOverlay';
 import { AvatarBuilder } from './AvatarBuilder';
 import { GreenMarketInfoModal } from './GreenMarketInfoModal';
 
@@ -18,8 +17,6 @@ import { GreenMarketInfoModal } from './GreenMarketInfoModal';
  */
 export function Overlays() {
   const modal = useUIStore((s) => s.modal);
-  const chatListOpen = useUIStore((s) => s.chatListOpen);
-  const chatId = useUIStore((s) => s.chatId);
   const avatarOpen = useUIStore((s) => s.avatarBuilderOpen);
 
   return (
@@ -33,8 +30,6 @@ export function Overlays() {
       {modal?.kind === 'skinPack' && <SkinPackModal id={modal.id} />}
       {modal?.kind === 'greenMarketInfo' && <GreenMarketInfoModal packId={modal.packId} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
-      {chatListOpen && <ChatListOverlay />}
-      {chatId && <ChatConversationOverlay id={chatId} />}
       {avatarOpen && <AvatarBuilder />}
     </>
   );

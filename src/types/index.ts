@@ -214,22 +214,6 @@ export interface AvatarOutfit {
 
 export type AvatarOutfits = Partial<Record<OutfitSlot, string | null>>;
 
-export interface ChatMessage {
-  from: string;
-  text: string;
-  time: string;
-  sent: boolean;
-}
-
-export interface ChatConversation {
-  id: string;
-  with: { name: string; avatar: string; level: number };
-  lastMsg: string;
-  lastTime: string;
-  unread: number;
-  messages: ChatMessage[];
-}
-
 export interface DailyMissionsProgress {
   scan: boolean;
   likes: number;
