@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 
+const SCAN_ANIMATION_MS = 1600;
+
 export function ScannerPage() {
   const [query, setQuery] = useState('');
   const [scanning, setScanning] = useState(false);
@@ -85,7 +87,7 @@ export function ScannerPage() {
 
       openModal({ kind: 'product', id: chosen.id });
       setScanning(false);
-    }, 1600);
+    }, SCAN_ANIMATION_MS);
   };
 
   return (

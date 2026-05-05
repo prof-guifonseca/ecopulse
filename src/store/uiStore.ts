@@ -16,10 +16,7 @@ export type ModalContent =
   | { kind: 'tutorial'; id: string }
   | { kind: 'shopItem'; id: string }
   | { kind: 'greenMarketInfo'; packId?: string }
-  | { kind: 'postComments'; id: string }
-  | { kind: 'createPost' }
-  | { kind: 'userProfile'; name: string }
-  | { kind: 'badge'; id: string };
+  | { kind: 'postComments'; id: string };
 
 interface UIState {
   toasts: Toast[];

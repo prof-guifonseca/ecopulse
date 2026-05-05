@@ -25,7 +25,7 @@ export function MapPointModal({ id }: Props) {
 
   if (!point) return null;
 
-  const PointIcon = resolveIcon(point.iconName as never);
+  const PointIcon = resolveIcon(point.iconName);
 
   const visit = () => {
     addVisited(id);

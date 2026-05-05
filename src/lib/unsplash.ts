@@ -14,7 +14,6 @@ export const UNSPLASH_PHOTOS = {
   // Urban gardens / vertical farming / homegrown vegetables
   urbanGarden: 'photo-1466692476868-aef1dfb1e735',
   vegetables: 'photo-1488459716781-31db52582fe9',
-  herbs: 'photo-1466692476868-aef1dfb1e735',
 
   // Upcycling / DIY / craft
   upcyclingCrafts: 'photo-1567361808960-dec9cb578182',
@@ -34,7 +33,6 @@ export const UNSPLASH_PHOTOS = {
   eWaste: 'photo-1606170033648-5d55a3edf314',
 
   // Plant-based food / cooking / market
-  marketBasket: 'photo-1542838132-92c53300491e',
   freshProduce: 'photo-1610348725531-843dff563e2c',
 
   // Cycling / sustainable mobility

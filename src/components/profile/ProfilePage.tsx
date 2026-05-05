@@ -250,7 +250,7 @@ function BadgesPanel({ owned }: { owned: string[] }) {
       <div className="grid grid-cols-3 gap-3">
         {BADGES.map((badge) => {
           const unlocked = owned.includes(badge.id);
-          const Lucide = resolveIcon(badge.iconName as never);
+          const Lucide = resolveIcon(badge.iconName);
           return (
             <div
               key={badge.id}
@@ -288,7 +288,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
           const isMine =
             (tribe.name === 'Guardiões Verdes' && currentTribe === 'guardioes') ||
             (tribe.name === 'EcoWarriors' && currentTribe === 'warriors');
-          const Lucide = resolveIcon(tribe.iconName as never);
+          const Lucide = resolveIcon(tribe.iconName);
           return (
             <div
               key={tribe.id}

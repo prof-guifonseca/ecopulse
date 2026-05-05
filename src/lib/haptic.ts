@@ -23,13 +23,3 @@ export function hapticSuccess(): void {
     }
   }
 }
-
-export function hapticWarn(): void {
-  if (canVibrate()) {
-    try {
-      navigator.vibrate([30, 30, 30]);
-    } catch {
-      /* ignore */
-    }
-  }
-}

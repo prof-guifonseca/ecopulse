@@ -60,7 +60,7 @@ export function MapPage() {
 
         {pins.map((point) => {
           const isVisited = visited.includes(point.id);
-          const Lucide = resolveIcon(point.iconName as never);
+          const Lucide = resolveIcon(point.iconName);
           return (
             <button
               key={point.id}
@@ -88,7 +88,7 @@ export function MapPage() {
         {FILTERS.map((currentFilter) => {
           const iconName =
             currentFilter === 'todos' ? 'mapPin' : MAP_TYPE_ICON[currentFilter as MapPointType];
-          const Lucide = resolveIcon(iconName as never);
+          const Lucide = resolveIcon(iconName);
           return (
             <Chip
               key={currentFilter}
@@ -127,7 +127,7 @@ export function MapPage() {
       {panel === 'places' ? (
         <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
           {pins.map((point) => {
-            const Lucide = resolveIcon(point.iconName as never);
+            const Lucide = resolveIcon(point.iconName);
             const isVisited = visited.includes(point.id);
             return (
               <li key={point.id}>

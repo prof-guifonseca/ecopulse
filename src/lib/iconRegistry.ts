@@ -58,7 +58,7 @@ export const ICON_REGISTRY = {
 
 export type IconName = keyof typeof ICON_REGISTRY;
 
-export function resolveIcon(name: IconName | undefined | null): LucideIcon | null {
+export function resolveIcon(name: string | undefined | null): LucideIcon | null {
   if (!name) return null;
-  return ICON_REGISTRY[name] ?? null;
+  return ICON_REGISTRY[name as IconName] ?? null;
 }

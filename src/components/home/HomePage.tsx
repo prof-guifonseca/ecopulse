@@ -20,6 +20,8 @@ import { missionChecks, tryClaimDailyBonus } from '@/lib/missions';
 import { cn } from '@/lib/cn';
 import { useHydrated } from '@/hooks/useHydrated';
 
+const DAILY_MISSION_TARGET = 3;
+
 export function HomePage() {
   const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
@@ -104,13 +106,13 @@ function MissionsBlock() {
     <section>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 className="t-title">Missões de hoje</h2>
-        <span className="t-caption">{done}/3</span>
+        <span className="t-caption">{done}/{DAILY_MISSION_TARGET}</span>
       </div>
 
       <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
-          const MissionIcon = resolveIcon(mission.iconName as never);
+          const MissionIcon = resolveIcon(mission.iconName);
 
           return (
             <li
@@ -145,7 +147,7 @@ function MissionsBlock() {
         })}
       </ul>
 
-      {done === 3 && !bonusClaimed ? (
+      {done === DAILY_MISSION_TARGET && !bonusClaimed ? (
         <Button
           variant="reward"
           size="md"
@@ -188,7 +190,7 @@ function DiscoveryBlock() {
     : isActive
     ? Math.min(100, ((progress[featured.id] ?? 0) / featured.duration) * 100)
     : 0;
-  const ChallengeIcon = resolveIcon(featured.iconName as never);
+  const ChallengeIcon = resolveIcon(featured.iconName);
 
   const handleChallenge = () => {
     if (isDone) return;
