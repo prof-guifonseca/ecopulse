@@ -43,7 +43,7 @@ export function DiscoveryBlock() {
       {/* Featured challenge */}
       <Card tone="solid" padded={false} className="px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-active bg-tint-green-2 text-[var(--accent-green)]">
             {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : null}
           </span>
           <div className="min-w-0 flex-1">

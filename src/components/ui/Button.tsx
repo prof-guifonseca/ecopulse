@@ -31,18 +31,18 @@ type AnchorOnlyProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Commo
 type Props = CommonProps & ButtonOnlyProps & Partial<AnchorOnlyProps>;
 
 const SIZE: Record<Size, string> = {
-  sm: 'h-9 px-4 text-[0.82rem]',
+  sm: 'h-9 px-4 text-sm',
   md: 'h-11 px-5 text-sm',
-  lg: 'h-12 px-6 text-[0.95rem]',
+  lg: 'h-12 px-6 text-base',
 };
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    'text-[var(--on-primary)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
+    'gradient-primary text-[var(--on-primary)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
   reward:
-    'text-[var(--on-reward)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
+    'gradient-gold text-[var(--on-reward)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
   secondary:
-    'border border-[var(--line-strong)] bg-[var(--tint-2)] text-[var(--text-primary)] hover:bg-[var(--tint-3)] active:scale-[0.98]',
+    'border-strong bg-tint-2 text-[var(--text-primary)] hover:bg-[var(--tint-3)] active:scale-[0.98]',
   ghost:
     'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--tint-2)] active:scale-[0.98]',
 };
@@ -64,15 +64,6 @@ export const Button = forwardRef<HTMLElement, Props>(function Button(
   },
   ref
 ) {
-  const isGradient = variant === 'primary' || variant === 'reward';
-  const mergedStyle = isGradient
-    ? {
-        background:
-          variant === 'reward' ? 'var(--gradient-gold)' : 'var(--gradient-primary)',
-        ...style,
-      }
-    : style;
-
   const Component: ElementType = as ?? 'button';
   const elementProps: Record<string, unknown> = { ...rest };
   if (Component === 'button') {
@@ -94,7 +85,7 @@ export const Button = forwardRef<HTMLElement, Props>(function Button(
         fullWidth && 'w-full',
         className
       )}
-      style={mergedStyle}
+      style={style}
       {...elementProps}
     >
       {loading ? (

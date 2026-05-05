@@ -19,14 +19,14 @@ export function ProgressBar({ value, max = 100, size = 'md', className, ariaLabe
       aria-valuemax={100}
       aria-label={ariaLabel}
       className={cn(
-        'overflow-hidden rounded-full bg-[var(--tint-3)]',
+        'overflow-hidden rounded-full bg-tint-3',
         size === 'sm' ? 'h-1.5' : 'h-2',
         className
       )}
     >
       <div
-        className="h-full rounded-full transition-[width] duration-500 ease-out"
-        style={{ width: `${pct}%`, background: 'var(--gradient-primary)' }}
+        className="gradient-primary h-full rounded-full transition-[width] duration-500 ease-out"
+        style={{ width: `${pct}%` }}
       />
     </div>
   );

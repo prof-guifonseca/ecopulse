@@ -27,10 +27,9 @@ export function Toasts() {
           role={t.type === 'reward' ? 'status' : 'alert'}
           aria-live={t.type === 'reward' ? 'assertive' : 'polite'}
           className={cn(
-            'card pointer-events-auto flex w-full max-w-[calc(var(--shell-width)-2rem)] items-center gap-3 px-4 py-3',
+            'card animate-slide-down pointer-events-auto flex w-full max-w-[calc(var(--shell-width)-2rem)] items-center gap-3 px-4 py-3',
             ACCENT_MAP[t.type]
           )}
-          style={{ animation: 'slideDown 0.3s ease' }}
         >
           <IconTile size="sm" tone={TONE_MAP[t.type]} icon={<Icon icon={ICON_MAP[t.type]} size={16} strokeWidth={2.4} />} />
           <span className="t-body flex-1">{t.message}</span>

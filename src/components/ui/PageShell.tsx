@@ -25,10 +25,7 @@ const SPACING: Record<NonNullable<Props['spacing']>, string> = {
  */
 export function PageShell({ children, className, spacing = 8 }: Props) {
   return (
-    <div
-      className={cn(SPACING[spacing], className)}
-      style={{ animation: 'fadeIn 0.35s ease' }}
-    >
+    <div className={cn('animate-fade-in', SPACING[spacing], className)}>
       {children}
     </div>
   );

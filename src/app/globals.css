@@ -17,6 +17,15 @@
   --accent-green: #8ddb98;
   --accent-gold: #e0c27a;
   --accent-red: #e38a84;
+  --accent-cyan: #7ec5d8;
+  --accent-orange: #e0a576;
+
+  /* Semantic score tokens (A=best → E=worst) */
+  --score-a: var(--accent-green);
+  --score-b: var(--accent-cyan);
+  --score-c: var(--accent-gold);
+  --score-d: var(--accent-orange);
+  --score-e: var(--accent-red);
 
   /* On-gradient text (for primary/reward buttons & chips) */
   --on-primary: #0a140e;
@@ -57,6 +66,7 @@
   --shadow-lifted-val: 0 28px 60px -16px rgba(0, 0, 0, 0.55);
 
   /* ---------- Radii ---------- */
+  --radius-xs: 10px;
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 26px;
@@ -66,6 +76,14 @@
   --shell-width: 430px;        /* legacy — modals + a few helpers still use this */
   --canvas-width: 680px;       /* main reading column on desktop */
   --content-width: 600px;      /* narrower content blocks (text-heavy) */
+
+  /* ---------- Scrim (modal backdrop) ---------- */
+  --scrim: rgba(3, 8, 5, 0.62);
+
+  /* ---------- Modal sizing ---------- */
+  --modal-max-h: 88dvh;
+  --modal-body-max-h: 72dvh;
+  --modal-drag-dismiss: 120px;
 }
 
 @theme inline {
@@ -456,6 +474,26 @@ input, textarea, select {
     color: var(--text-muted);
   }
 
+  /* Smallest UI atoms: counter pills, status chips, in-button badges */
+  .t-micro {
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* Editorial display for hero numbers (score letter, large prices) */
+  .t-mega {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    font-variation-settings: "SOFT" 50, "opsz" 144;
+  }
+
   /* Editorial italic flourish on Fraunces — apply to specific words via a span */
   .t-italic-soft {
     font-style: italic;
@@ -467,6 +505,24 @@ input, textarea, select {
      ========================================================= */
   .gradient-primary { background: var(--gradient-primary); }
   .gradient-gold { background: var(--gradient-gold); }
+
+  /* Token-aware borders (replace `border border-[var(--line-*)]`) */
+  .border-soft   { border: 1px solid var(--line-soft); }
+  .border-strong { border: 1px solid var(--line-strong); }
+  .border-active { border: 1px solid var(--line-active); }
+
+  /* Token-aware backgrounds (replace `bg-[var(--tint-*)]`) */
+  .bg-tint-1 { background: var(--tint-1); }
+  .bg-tint-2 { background: var(--tint-2); }
+  .bg-tint-3 { background: var(--tint-3); }
+  .bg-tint-4 { background: var(--tint-4); }
+  .bg-tint-green-1 { background: var(--tint-green-1); }
+  .bg-tint-green-2 { background: var(--tint-green-2); }
+  .bg-tint-green-3 { background: var(--tint-green-3); }
+  .bg-tint-green-4 { background: var(--tint-green-4); }
+
+  /* Modal backdrop */
+  .bg-scrim { background: var(--scrim); }
 
   /* Pills / chips */
   .command-pill {

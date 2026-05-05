@@ -20,12 +20,8 @@ export function CommunityPage() {
         <h1 className="t-display mt-1.5 leading-[0.95]">
           Quem caminha <span className="t-italic-soft">com você</span>
         </h1>
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] px-2.5 py-1 t-caption">
-          <span
-            aria-hidden
-            className="inline-block h-1.5 w-1.5 rounded-full"
-            style={{ background: 'var(--accent-gold)' }}
-          />
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-caption">
+          <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent-gold)]" />
           Feed simulado · prototype
         </p>
       </header>

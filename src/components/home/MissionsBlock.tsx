@@ -41,7 +41,7 @@ export function MissionsBlock() {
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
                   isDone
                     ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                    : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                    : 'border-soft text-[var(--text-secondary)]'
                 )}
               >
                 {isDone ? (

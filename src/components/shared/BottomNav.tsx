@@ -35,14 +35,13 @@ export function BottomNav() {
         {/* Sliding ride indicator — a thin gradient bar above the active tab */}
         <span
           aria-hidden
-          className="pointer-events-none absolute -top-2 h-[3px] rounded-full"
+          className="gradient-primary pointer-events-none absolute -top-2 h-[3px] rounded-full"
           style={{
             left: 0,
             width: `${100 / TABS.length}%`,
             transform: `translateX(${(indicatorVisible ? activeIndex : 0) * 100}%)`,
             transition: 'transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
             opacity: indicatorVisible ? 1 : 0,
-            background: 'var(--gradient-primary)',
             boxShadow: '0 0 12px rgba(141, 219, 152, 0.45)',
           }}
         />
@@ -65,14 +64,14 @@ export function BottomNav() {
               <span
                 className={cn(
                   'flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-300',
-                  active ? 'bg-[var(--tint-green-3)] scale-105' : 'bg-transparent scale-100'
+                  active ? 'bg-tint-green-3 scale-105' : 'bg-transparent scale-100'
                 )}
               >
                 <Icon icon={t.icon} size={20} strokeWidth={active ? 2.1 : 1.6} />
               </span>
               <span
                 className={cn(
-                  'text-[0.7rem] font-medium leading-none tracking-[0.01em] transition-colors duration-200',
+                  't-micro font-medium tracking-[0.01em] transition-colors duration-200',
                   active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
                 )}
               >

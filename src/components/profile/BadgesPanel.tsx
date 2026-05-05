@@ -17,7 +17,7 @@ export function BadgesPanel({ owned }: { owned: string[] }) {
             <div
               key={badge.id}
               className={cn(
-                'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-2 py-4 text-center transition-opacity',
+                'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-4 text-center transition-opacity',
                 !unlocked && 'opacity-35'
               )}
             >
@@ -25,8 +25,8 @@ export function BadgesPanel({ owned }: { owned: string[] }) {
                 className={cn(
                   'flex h-12 w-12 items-center justify-center rounded-full',
                   unlocked
-                    ? 'border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]'
-                    : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                    ? 'border-active bg-tint-green-2 text-[var(--accent-green)]'
+                    : 'border-soft text-[var(--text-secondary)]'
                 )}
               >
                 {Lucide ? <Icon icon={Lucide} size={20} /> : null}

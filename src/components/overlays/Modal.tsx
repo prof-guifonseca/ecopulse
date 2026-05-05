@@ -84,7 +84,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
     startY.current = null;
     setDragging(false);
     setDragY(0);
-    if (dy > 120) onClose();
+    if (dy > 120) onClose(); // matches --modal-drag-dismiss in globals.css
   };
 
   if (typeof document === 'undefined') return null;
@@ -92,14 +92,9 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
   return createPortal(
     <div
       className={cn(
-        'fixed inset-0 z-[999] flex justify-center bg-[rgba(3,8,5,0.62)]',
+        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-[28px] saturate-150',
         variant === 'center' ? 'items-center' : 'items-end'
       )}
-      style={{
-        animation: 'fadeIn 0.28s ease',
-        backdropFilter: 'blur(28px) saturate(1.2)',
-        WebkitBackdropFilter: 'blur(28px) saturate(1.2)',
-      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -110,12 +105,13 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         ref={surfaceRef}
         tabIndex={-1}
         className={cn(
-          'relative w-full max-w-[var(--shell-width)] border border-[var(--line-soft)] bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
-          variant === 'center' ? 'mx-4 rounded-[var(--radius-lg)]' : 'rounded-t-[var(--radius-lg)]'
+          'relative w-full max-w-[var(--shell-width)] border-soft bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
+          variant === 'center'
+            ? 'mx-4 rounded-[var(--radius-lg)] animate-fade-in'
+            : 'rounded-t-[var(--radius-lg)] animate-slide-up'
         )}
         style={{
-          animation: variant === 'center' ? 'fadeIn 0.25s ease' : 'slideUp 0.32s cubic-bezier(.22,1,.36,1)',
-          maxHeight: '88dvh',
+          maxHeight: 'var(--modal-max-h)',
           transform: variant === 'bottom' && dragY > 0 ? `translateY(${dragY}px)` : undefined,
           transition: dragging ? 'none' : 'transform 0.22s cubic-bezier(.22,1,.36,1)',
         }}

@@ -79,8 +79,7 @@ export function AppHeader() {
         >
           <span
             aria-hidden
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-            style={{ background: 'var(--gradient-primary)' }}
+            className="gradient-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
           >
             <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--on-primary)]" />
           </span>

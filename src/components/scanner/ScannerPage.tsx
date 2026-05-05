@@ -16,11 +16,12 @@ import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
+import { cn } from '@/lib/cn';
 
 /**
- * Scan ritual timing — feels deliberate, not rushed. Tuned with the scanLine
- * keyframe animation so the line completes one full pass before the result
- * resolves.
+ * Scan ritual timing — feels deliberate, not rushed. The result resolves
+ * before the scanLine keyframe loop ends (the line keeps looping behind
+ * the product modal until it closes).
  */
 const SCAN_RITUAL_MS = 1600;
 
@@ -114,7 +115,7 @@ export function ScannerPage() {
 
           {/* Reticle: a thin square that pulses while scanning */}
           <div
-            className="relative h-32 w-32 rounded-[var(--radius-lg)] border border-[var(--line-active)] bg-[var(--tint-green-3)]"
+            className="relative h-32 w-32 rounded-[var(--radius-lg)] border-active bg-tint-green-3"
             style={{
               boxShadow: scanning ? '0 0 0 3px var(--tint-green-2)' : 'var(--shadow-glow)',
               transition: 'box-shadow 0.3s ease',
@@ -130,16 +131,18 @@ export function ScannerPage() {
             <span className="absolute bottom-[-2px] right-[-2px] h-4 w-4 rounded-br-md border-b-2 border-r-2 border-[var(--accent-green)]" />
           </div>
 
-          {/* Scan line — runs only while the ritual is in flight */}
+          {/* Scan line — runs only while the ritual is in flight (1.4s here is
+              an intentional override of the 2.4s --animate-scan-line keyframe). */}
           <div
-            className="pointer-events-none absolute inset-x-12 top-1/2 h-[2px] origin-left"
+            className={cn(
+              'pointer-events-none absolute inset-x-12 top-1/2 h-[2px] origin-left transition-opacity duration-200',
+              scanning ? 'opacity-95' : 'opacity-0'
+            )}
             style={{
               background:
                 'linear-gradient(90deg, transparent, var(--accent-green) 35%, var(--accent-green) 65%, transparent)',
-              opacity: scanning ? 0.95 : 0,
               animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
               filter: 'blur(0.5px)',
-              transition: 'opacity 0.2s ease',
             }}
           />
         </div>
@@ -170,7 +173,7 @@ export function ScannerPage() {
       </div>
 
       {firstRun ? (
-        <p className="rounded-[var(--radius-md)] border border-[var(--line-active)] bg-[var(--tint-green-1)] px-4 py-3 t-body-sm text-[var(--accent-green)]">
+        <p className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
           Toque em Simular scan e a home libera.
         </p>
@@ -238,7 +241,7 @@ export function ScannerPage() {
                   onClick={() => openModal({ kind: 'product', id: product.id })}
                   className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
                     {product.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -250,7 +253,7 @@ export function ScannerPage() {
                       {product.brand} · {product.tip}
                     </p>
                   </div>
-                  <ScoreBadge score={product.score} className="h-9 w-9 shrink-0" />
+                  <ScoreBadge score={product.score} size="sm" className="shrink-0" />
                 </button>
               </li>
             ))}
@@ -264,3 +267,4 @@ export function ScannerPage() {
 // Re-export so the unused-import warning doesn't trigger if a future hook
 // rearranges the consumer; the symbol is referenced via ScanRecord above.
 export type { ScanRecord };
+
