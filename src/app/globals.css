@@ -164,23 +164,39 @@ body {
   font-size: 16px;
   line-height: 1.55;
   color: var(--text-primary);
-  background: var(--bg-primary);
+  /* Mobile: a single soft halo at the top, no extra ambient. The shell is
+     full-bleed at this size so 'environment' would be invisible anyway. */
+  background:
+    radial-gradient(circle at 50% -10%, rgba(141, 219, 152, 0.05), transparent 38%),
+    var(--bg-primary);
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
 }
 
-/* Subtle halo on top only */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background: radial-gradient(
-    circle at 50% -10%,
-    rgba(141, 219, 152, 0.05),
-    transparent 38%
-  );
+@media (min-width: 640px) {
+  body {
+    /* Desktop: center the device on a framed editorial canvas.
+       Two soft brand halos (green top-left, gold bottom-right) over a
+       slightly darker base so the shell reads as an object on a surface
+       instead of a column hugging the void. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: auto;
+    background:
+      radial-gradient(
+        circle at 18% 14%,
+        color-mix(in srgb, var(--accent-green) 9%, transparent),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 82% 86%,
+        color-mix(in srgb, var(--accent-gold) 6%, transparent),
+        transparent 50%
+      ),
+      linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -258,6 +274,34 @@ input, textarea, select {
 }
 
 @layer components {
+  /* =========================================================
+     Device shell — mobile content presented on a desktop stage
+     ========================================================= */
+  .device-shell {
+    position: relative;
+    background: var(--bg-primary);
+  }
+
+  @media (min-width: 640px) {
+    .device-shell {
+      /* Gradient border via padding-box / border-box dual background:
+         the inner layer is the solid bg, the outer layer is a soft
+         top-down gradient that paints only into the 1px border slot. */
+      border: 1px solid transparent;
+      background:
+        linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.10),
+          rgba(255, 255, 255, 0.02) 40%,
+          rgba(0, 0, 0, 0.4)
+        ) border-box;
+      box-shadow:
+        0 50px 110px -30px rgba(0, 0, 0, 0.7),
+        0 30px 60px -30px rgba(0, 0, 0, 0.5);
+    }
+  }
+
   /* =========================================================
      Card primitives
      ========================================================= */
