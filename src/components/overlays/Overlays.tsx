@@ -7,6 +7,7 @@ import { ProductDetailModal } from './ProductDetailModal';
 import { MapPointModal } from './MapPointModal';
 import { TutorialModal } from './TutorialModal';
 import { ShopItemModal } from './ShopItemModal';
+import { SkinPackModal } from './SkinPackModal';
 import { CommentsModal } from './CommentsModal';
 import { StoryViewer } from './StoryViewer';
 import { ChatListOverlay, ChatConversationOverlay } from './ChatOverlay';
@@ -31,6 +32,7 @@ export function Overlays() {
       {modal?.kind === 'mapPoint' && <MapPointModal id={modal.id} />}
       {modal?.kind === 'tutorial' && <TutorialModal id={modal.id} />}
       {modal?.kind === 'shopItem' && <ShopItemModal id={modal.id} />}
+      {modal?.kind === 'skinPack' && <SkinPackModal id={modal.id} />}
       {modal?.kind === 'greenMarketInfo' && <GreenMarketInfoModal packId={modal.packId} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
       {storyIndex !== null && <StoryViewer key={storyIndex} index={storyIndex} />}

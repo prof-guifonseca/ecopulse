@@ -25,6 +25,7 @@ export function HomePage() {
   const name = useUserStore((s) => s.name);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
+  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
   const level = useUserStore((s) => s.level);
@@ -46,7 +47,7 @@ export function HomePage() {
           </h1>
         </div>
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
-          <Avatar baseId={avatarBase} outfits={avatarOutfits} size="md" />
+          <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
         </div>
       </header>
 
