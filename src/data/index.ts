@@ -9,4 +9,3 @@ export { EVENTS } from './events';
 export { DAILY_MISSIONS } from './missions';
 export { AVATAR_BASES, AVATAR_OUTFITS } from './avatar';
 export { SKIN_PACKS } from './skins';
-export { TOKEN_PACKS, IMPACT_FUND_SNAPSHOT } from './greenMarket';

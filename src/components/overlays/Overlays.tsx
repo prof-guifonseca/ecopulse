@@ -10,7 +10,6 @@ import { ShopItemModal } from './ShopItemModal';
 import { SkinPackModal } from './SkinPackModal';
 import { CommentsModal } from './CommentsModal';
 import { AvatarBuilder } from './AvatarBuilder';
-import { GreenMarketInfoModal } from './GreenMarketInfoModal';
 
 /**
  * Single mount that renders any currently-active overlay based on UI store state.
@@ -28,7 +27,6 @@ export function Overlays() {
       {modal?.kind === 'tutorial' && <TutorialModal id={modal.id} />}
       {modal?.kind === 'shopItem' && <ShopItemModal id={modal.id} />}
       {modal?.kind === 'skinPack' && <SkinPackModal id={modal.id} />}
-      {modal?.kind === 'greenMarketInfo' && <GreenMarketInfoModal packId={modal.packId} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
       {avatarOpen && <AvatarBuilder />}
     </>

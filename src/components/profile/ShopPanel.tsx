@@ -1,11 +1,10 @@
 'use client';
 
-import { ChevronRight, Coins } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import {
   AVATAR_OUTFITS,
   SHOP_ITEMS,
   SKIN_PACKS,
-  TOKEN_PACKS,
 } from '@/data';
 import type { OutfitSlot, SkinUnlock } from '@/types';
 import { useGameStore } from '@/store/gameStore';
@@ -13,11 +12,8 @@ import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Chip } from '@/components/ui/Chip';
 import { unlockHint } from '@/lib/skinUnlocks';
-import { formatCurrencyCents } from '@/lib/format';
 import { cn } from '@/lib/cn';
 
 const SLOT_LABELS: Record<OutfitSlot, string> = {
@@ -69,17 +65,13 @@ export function ShopPanel({ tokens }: { tokens: number }) {
     <div className="space-y-6">
       {/* Carteira */}
       <Card tone="hero" padded={false} className="px-5 py-5">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="t-eyebrow">Carteira</p>
-            <div className="mt-1.5 flex items-baseline gap-2">
-              <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
-              <span className="t-body-sm">Eco-Tokens</span>
-            </div>
+        <div>
+          <p className="t-eyebrow">Carteira</p>
+          <div className="mt-1.5 flex items-baseline gap-2">
+            <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
+            <span className="t-body-sm">Eco-Tokens</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => openModal({ kind: 'greenMarketInfo' })}>
-            Como funciona
-          </Button>
+          <p className="mt-2 t-caption">Ganhos jogando. Sem compra.</p>
         </div>
       </Card>
 
@@ -172,34 +164,6 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               </li>
             );
           })}
-        </ul>
-      </section>
-
-      {/* Eco-Tokens — packs pagos */}
-      <section>
-        <h2 className="mb-3 t-title">Eco-Tokens</h2>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
-          {TOKEN_PACKS.map((pack) => (
-            <li key={pack.id}>
-              <button
-                onClick={() => openModal({ kind: 'greenMarketInfo', packId: pack.id })}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="t-title truncate">{pack.name}</h3>
-                    {pack.featured ? (
-                      <Chip asStatic active className="text-[var(--accent-gold)]">{pack.badge}</Chip>
-                    ) : null}
-                  </div>
-                  <p className="mt-0.5 t-caption">
-                    {pack.tokens} tokens · {formatCurrencyCents(pack.priceInCents)}
-                  </p>
-                </div>
-                <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />
-              </button>
-            </li>
-          ))}
         </ul>
       </section>
 

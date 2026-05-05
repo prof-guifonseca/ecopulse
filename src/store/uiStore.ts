@@ -16,7 +16,6 @@ export type ModalContent =
   | { kind: 'tutorial'; id: string }
   | { kind: 'shopItem'; id: string }
   | { kind: 'skinPack'; id: string }
-  | { kind: 'greenMarketInfo'; packId?: string }
   | { kind: 'postComments'; id: string };
 
 interface UIState {

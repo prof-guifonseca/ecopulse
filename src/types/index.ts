@@ -136,29 +136,6 @@ export interface ShopItem {
   type: ShopItemType;
 }
 
-export interface TokenPack {
-  id: string;
-  lookupKey: string;
-  name: string;
-  description: string;
-  tokens: number;
-  priceInCents: number;
-  currency: 'BRL';
-  fundSharePercent: number;
-  fundShareInCents: number;
-  badge: string;
-  featured?: boolean;
-}
-
-export interface ImpactFundSnapshot {
-  totalRaisedInCents: number;
-  totalCommittedInCents: number;
-  supportedOrgs: number;
-  coveredSdgs: number;
-  lastTransferAt: string;
-  verificationNote: string;
-}
-
 export interface EcoEvent {
   id: string;
   title: string;
