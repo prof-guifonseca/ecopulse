@@ -305,53 +305,6 @@ input, textarea, select {
   .card-accent-alert::before { background: linear-gradient(135deg, #e38a84, #b76a64); }
 
   /* =========================================================
-     Back-compat aliases — still used by GlassCard.tsx and Toasts.tsx
-     until they migrate in later stages. Kept thin and aligned
-     with the new card system.
-     ========================================================= */
-  .surface {
-    position: relative;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow-card-val);
-  }
-  .surface-panel { border-radius: var(--radius-lg); }
-  .surface-tile { border-radius: var(--radius-md); }
-  .surface-ghost {
-    border-radius: var(--radius-md);
-    background: var(--tint-1);
-    box-shadow: none;
-  }
-
-  .surface-accent-mint,
-  .surface-accent-cyan,
-  .surface-accent-amber,
-  .surface-accent-violet { position: relative; }
-
-  .surface-accent-mint::after,
-  .surface-accent-cyan::after,
-  .surface-accent-violet::after {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    pointer-events: none;
-  }
-  .surface-accent-amber::after {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: var(--gradient-gold);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    pointer-events: none;
-  }
-  .surface-accent-none { position: relative; }
-
-  /* =========================================================
      Typography scale
      Single source of truth. Components must NOT use text-[Nrem].
      ========================================================= */
@@ -400,8 +353,7 @@ input, textarea, select {
     color: var(--text-muted);
   }
 
-  .t-eyebrow,
-  .display-eyebrow {
+  .t-eyebrow {
     font-family: var(--font-display);
     font-size: 0.68rem;
     font-weight: 700;

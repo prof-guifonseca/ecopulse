@@ -122,7 +122,7 @@ export function ScannerPage() {
               size="xl"
               tone="brand"
               icon={<Icon icon={Camera} size={36} strokeWidth={1.6} />}
-              className="h-24 w-24 rounded-[24px]"
+              className="h-24 w-24 rounded-[var(--radius-lg)]"
             />
           </div>
 

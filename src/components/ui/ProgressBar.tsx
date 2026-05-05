@@ -14,7 +14,7 @@ interface Props {
 const BG: Record<Tone, string> = {
   brand: 'var(--gradient-primary)',
   reward: 'var(--gradient-gold)',
-  neutral: 'rgba(255,255,255,0.24)',
+  neutral: 'var(--tint-4)',
 };
 
 export function ProgressBar({ value, max = 100, tone = 'brand', size = 'md', className, ariaLabel }: Props) {
@@ -28,7 +28,7 @@ export function ProgressBar({ value, max = 100, tone = 'brand', size = 'md', cla
       aria-valuemax={100}
       aria-label={ariaLabel}
       className={cn(
-        'overflow-hidden rounded-full bg-white/[0.06]',
+        'overflow-hidden rounded-full bg-[var(--tint-3)]',
         size === 'sm' ? 'h-1.5' : 'h-2',
         className
       )}

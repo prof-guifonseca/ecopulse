@@ -107,7 +107,7 @@ export function MapPage() {
                 <button
                   key={point.id}
                   onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-                  className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 transition-transform duration-200 hover:scale-110 active:scale-95"
+                  className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line-strong)] transition-transform duration-200 hover:scale-110 active:scale-95"
                   style={{
                     left: `${point.x}%`,
                     top: `${point.y}%`,
@@ -192,7 +192,7 @@ export function MapPage() {
             {EVENTS.map((event) => (
               <Card key={event.id} tone="solid" padded={false} className="px-4 py-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-primary)]">
+                  <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-primary)]">
                     <span className="text-base font-semibold leading-none">{event.day}</span>
                     <span className="t-caption mt-0.5 leading-none">{event.month}</span>
                   </div>

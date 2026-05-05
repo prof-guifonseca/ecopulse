@@ -119,7 +119,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
           {messages.map((m, i) => (
             <div key={i} className={m.sent ? 'flex justify-end' : 'flex'}>
               <div
-                className="t-body max-w-[78%] rounded-[20px] px-4 py-3"
+                className="t-body max-w-[78%] rounded-[var(--radius-md)] px-4 py-3"
                 style={{
                   background: m.sent ? 'var(--gradient-primary)' : 'var(--tint-2)',
                   color: m.sent ? 'var(--on-primary)' : 'var(--text-primary)',

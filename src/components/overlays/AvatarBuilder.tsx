@@ -93,7 +93,7 @@ export function AvatarBuilder() {
         </header>
 
         <div className="flex flex-col items-center px-4 py-6">
-          <div className="rounded-[28px] border border-[var(--line-soft)] bg-[var(--tint-1)] p-6">
+          <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-6">
             <Avatar baseId={baseId} outfits={outfits} size="xl" />
           </div>
         </div>

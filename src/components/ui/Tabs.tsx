@@ -35,7 +35,9 @@ export function Tabs<Value extends string>({ items, value, onChange, className, 
             onClick={() => onChange(item.value)}
             className={cn(
               'relative flex-1 px-3 py-3 text-sm font-semibold transition-colors duration-200',
-              active ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
+              active
+                ? 'text-[var(--text-primary)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
             )}
           >
             {item.label}

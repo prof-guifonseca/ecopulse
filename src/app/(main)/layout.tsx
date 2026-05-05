@@ -36,7 +36,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [hydrated, onboarded, router, showToast]);
 
   return (
-    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden bg-[var(--bg-primary)] sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[32px] sm:border sm:border-[var(--line-soft)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.5)]">
+    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden bg-[var(--bg-primary)] sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[var(--radius-shell)] sm:border sm:border-[var(--line-soft)] sm:shadow-[var(--shadow-lifted)]">
       <AppHeader />
       <main
         className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-4 pt-1"
