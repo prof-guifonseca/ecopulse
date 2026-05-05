@@ -6,7 +6,7 @@
   /* ---------- Surfaces ---------- */
   --bg-primary: #0a120e;     /* app canvas */
   --bg-secondary: #111b16;   /* default surface */
-  --bg-elevated: #182a21;    /* hero / elevated surface */
+  --bg-elevated: #192d23;    /* hero / elevated surface — slightly more saturated */
 
   /* ---------- Text ---------- */
   --text-primary: #f2f4ef;
@@ -46,13 +46,15 @@
   --glass-blur: blur(20px);
 
   /* ---------- Gradients ---------- */
-  --gradient-primary: linear-gradient(135deg, #6fc581 0%, #9fe0ad 100%);
-  --gradient-gold: linear-gradient(135deg, #e9cd86 0%, #c9995b 100%);
+  --gradient-primary: linear-gradient(135deg, #4ea76a 0%, #8fd9a3 100%);
+  --gradient-gold: linear-gradient(135deg, #f0d493 0%, #c9995b 100%);
+  --gradient-canvas: linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
 
   /* ---------- Elevation ---------- */
-  --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.28);
-  --shadow-glow-val: 0 12px 28px rgba(141, 219, 152, 0.14);
-  --shadow-lifted-val: 0 16px 40px rgba(0, 0, 0, 0.42);
+  --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.32);
+  --shadow-glow-val: 0 20px 60px -20px rgba(141, 219, 152, 0.22);
+  --shadow-deep-glow-val: 0 24px 60px -18px rgba(0, 0, 0, 0.55), 0 12px 32px -16px rgba(141, 219, 152, 0.30);
+  --shadow-lifted-val: 0 28px 60px -16px rgba(0, 0, 0, 0.55);
 
   /* ---------- Radii ---------- */
   --radius-sm: 12px;
@@ -81,6 +83,7 @@
   --radius-lg: var(--radius-lg);
   --shadow-card: var(--shadow-card-val);
   --shadow-glow: var(--shadow-glow-val);
+  --shadow-deep-glow: var(--shadow-deep-glow-val);
   --shadow-lifted: var(--shadow-lifted-val);
   --animate-fade-in: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-slide-up: slideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1);
@@ -138,6 +141,16 @@
   0% { transform: scale(1); filter: brightness(1); }
   35% { transform: scale(1.18); filter: brightness(1.4); }
   100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes ringSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scanHaloPulse {
+  0%, 100% { opacity: 0.55; transform: translate(50%, -50%) scale(1); }
+  50% { opacity: 0.95; transform: translate(50%, -50%) scale(1.08); }
 }
 
 @keyframes confettiFall {
@@ -198,15 +211,15 @@ body {
     background:
       radial-gradient(
         circle at 18% 14%,
-        color-mix(in srgb, var(--accent-green) 9%, transparent),
-        transparent 45%
+        color-mix(in srgb, var(--accent-green) 14%, transparent),
+        transparent 48%
       ),
       radial-gradient(
         circle at 82% 86%,
-        color-mix(in srgb, var(--accent-gold) 6%, transparent),
-        transparent 50%
+        color-mix(in srgb, var(--accent-gold) 9%, transparent),
+        transparent 52%
       ),
-      linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
+      linear-gradient(180deg, #040806 0%, var(--bg-primary) 55%);
   }
 }
 
@@ -303,15 +316,55 @@ input, textarea, select {
         linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
         linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.10),
-          rgba(255, 255, 255, 0.02) 40%,
-          rgba(0, 0, 0, 0.4)
+          rgba(255, 255, 255, 0.16),
+          rgba(255, 255, 255, 0.03) 40%,
+          rgba(0, 0, 0, 0.5)
         ) border-box;
       box-shadow:
-        0 50px 110px -30px rgba(0, 0, 0, 0.7),
-        0 30px 60px -30px rgba(0, 0, 0, 0.5);
+        0 60px 140px -30px rgba(0, 0, 0, 0.78),
+        0 38px 80px -30px rgba(0, 0, 0, 0.55),
+        0 0 80px -20px rgba(141, 219, 152, 0.10);
+    }
+
+    /* Subtle glass reflection on the top edge — adds 'real device' feel. */
+    .device-shell::before {
+      content: "";
+      position: absolute;
+      inset: 1px 1px auto 1px;
+      height: 90px;
+      border-radius: calc(var(--radius-shell) - 1px) calc(var(--radius-shell) - 1px) 0 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.015) 40%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .device-shell > * {
+      position: relative;
+      z-index: 1;
     }
   }
+
+  /* Showcase label — a small whisper of "this is a demo, not a screenshot" */
+  .canvas-stage-label {
+    position: fixed;
+    right: max(1.5rem, env(safe-area-inset-right));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @media (max-width: 639px) { .canvas-stage-label { display: none; } }
 
   /* =========================================================
      Card primitives
@@ -350,9 +403,47 @@ input, textarea, select {
     /* A thin top highlight gives the same 'lifted' feel as the old radial
        overlay without competing with the headline content underneath. */
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
-      var(--shadow-lifted-val);
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      var(--shadow-deep-glow-val);
   }
+
+  /* Editorial hero — a magazine cover. Photo slot via --bg-image,
+     overlay keeps text readable, content sits on top. */
+  .card-editorial {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, var(--bg-elevated), #0e1612);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      var(--shadow-deep-glow-val);
+    isolation: isolate;
+  }
+  .card-editorial::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg-image, none);
+    background-size: cover;
+    background-position: center;
+    opacity: var(--bg-image-opacity, 0.42);
+    z-index: 0;
+    transition: opacity 0.6s ease;
+  }
+  .card-editorial::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(10, 18, 14, 0.20) 0%,
+        rgba(10, 18, 14, 0.55) 55%,
+        rgba(10, 18, 14, 0.88) 100%
+      );
+    z-index: 0;
+  }
+  .card-editorial > * { position: relative; z-index: 1; }
 
   /* Slim 2px top accent bar — never a full-card wash */
   .card-accent-brand::before,
@@ -527,15 +618,83 @@ input, textarea, select {
     z-index: 1;
   }
 
-  /* Editorial scan frame: one soft radial, no concentric clutter */
+  /* Editorial scan frame: radial halo, dual rotating ring around target */
   .scan-frame {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 50% 0%, var(--tint-green-2), transparent 55%),
+      radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 55%),
       linear-gradient(180deg, var(--bg-elevated), #0e1612);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      var(--shadow-deep-glow-val);
+  }
+
+  /* Pulsing radial light behind the camera target */
+  .scan-target-halo {
+    position: absolute;
+    inset: 50% 50% auto auto;
+    width: 220px;
+    height: 220px;
+    transform: translate(50%, -50%);
+    border-radius: 999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-green) 22%, transparent) 0%,
+      transparent 65%
+    );
+    filter: blur(8px);
+    pointer-events: none;
+    animation: scanHaloPulse 3s ease-in-out infinite;
+  }
+
+  /* Outer rotating ring (slow), inner faster — when scanning.
+     Anchored to the reticle center via top/left + the modern `translate`
+     property, which composes independently with the `transform: rotate()`
+     animation (so the spin doesn't fight the centering). */
+  .scan-ring-outer,
+  .scan-ring-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* `translate` is a Tailwind v4 utility too, so we use !important here
+       to defeat the preflight reset that would otherwise zero it out. */
+    translate: -50% -50% !important;
+    border-radius: 999px;
+    pointer-events: none !important;
+  }
+  .scan-ring-outer {
+    width: 180px;
+    height: 180px;
+    border: 1px dashed color-mix(in srgb, var(--accent-green) 35%, transparent);
+    animation: ringSpin 14s linear infinite;
+  }
+  .scan-ring-inner {
+    width: 140px;
+    height: 140px;
+    border: 1px solid color-mix(in srgb, var(--accent-green) 28%, transparent);
+    border-top-color: color-mix(in srgb, var(--accent-green) 70%, transparent);
+    animation: ringSpin 4s linear infinite reverse;
+  }
+  .scan-frame[data-scanning="true"] .scan-ring-outer { animation-duration: 6s; }
+  .scan-frame[data-scanning="true"] .scan-ring-inner { animation-duration: 1.6s; }
+  .scan-frame[data-scanning="true"] .scan-target-halo {
+    animation-duration: 1.2s;
+  }
+
+  /* Stat ribbon — a thin pill row for secondary stats below hero */
+  .stat-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft);
+    background: var(--tint-1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .confetti-piece {
