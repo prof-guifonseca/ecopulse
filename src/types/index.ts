@@ -3,7 +3,42 @@
 export type Score = 'A' | 'B' | 'C' | 'D' | 'E';
 export type BadgeTier = 'bronze' | 'silver' | 'gold' | 'epic';
 export type OutfitTier = 'common' | 'rare' | 'epic';
-export type OutfitSlot = 'hat' | 'glasses' | 'shirt' | 'accessory' | 'background';
+export type OutfitSlot =
+  | 'hat'
+  | 'glasses'
+  | 'shirt'
+  | 'accessory'
+  | 'background'
+  | 'weapon'
+  | 'hairstyle';
+
+// ----- SkinPack (full character look) -----
+export type SkinTheme = 'anime' | 'samurai' | 'ninja' | 'fantasy' | 'cyber' | 'explorer';
+export type SkinTier = 'starter' | 'rare' | 'epic' | 'legendary';
+
+export type SkinUnlock =
+  | { kind: 'level'; value: number }
+  | { kind: 'badge'; id: string }
+  | {
+      kind: 'count';
+      metric: 'scans' | 'visits' | 'challenges' | 'tutorials';
+      value: number;
+    }
+  | { kind: 'paid' };
+
+export interface SkinPack {
+  id: string;
+  name: string;
+  theme: SkinTheme;
+  tagline: string;
+  tier: SkinTier;
+  /** Earnability criterion. 'paid' means the only path is buying with tokens. */
+  unlock: SkinUnlock;
+  /** Tokens to buy as a shortcut. Always present so impatient students can pay. */
+  priceTokens: number;
+  /** Identifier of the SVG component in src/components/skins/. */
+  artId: string;
+}
 export type ChallengeType = 'individual' | 'cooperativo';
 export type ShopItemType = 'garden' | 'frame' | 'boost' | 'donation';
 export type MapPointType =
