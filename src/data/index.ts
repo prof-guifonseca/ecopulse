@@ -4,8 +4,6 @@ export { TUTORIALS } from './tutorials';
 export { CHALLENGES } from './challenges';
 export { FEED_POSTS } from './feedPosts';
 export { BADGES } from './badges';
-export { LEADERBOARD } from './leaderboard';
-export { TRIBES } from './tribes';
 export { SHOP_ITEMS } from './shopItems';
 export { EVENTS } from './events';
 export { DAILY_MISSIONS } from './missions';

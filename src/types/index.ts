@@ -127,23 +127,6 @@ export interface Badge {
   tier: BadgeTier;
 }
 
-export interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  avatar: string;
-  xp: number;
-  tribe: string;
-}
-
-export interface Tribe {
-  id: string;
-  name: string;
-  iconName: string;
-  members: number;
-  weeklyXP: number;
-  rank: number;
-}
-
 export interface ShopItem {
   id: string;
   name: string;
