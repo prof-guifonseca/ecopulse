@@ -130,7 +130,14 @@
 }
 
 @keyframes confettiFall {
-  to {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: var(--peak-opacity, 1);
+  }
+  18% {
+    opacity: var(--peak-opacity, 1);
+  }
+  100% {
     transform: translateY(120vh) translateX(var(--drift, 0px)) rotate(var(--spin, 360deg));
     opacity: 0;
   }
@@ -490,7 +497,11 @@ input, textarea, select {
     width: 10px;
     height: 14px;
     border-radius: 2px;
-    animation: confettiFall var(--fall-duration, 2.5s) cubic-bezier(0.3, 0.1, 0.7, 1) var(--delay, 0s) forwards;
+    /* cubic-bezier(0.4, 0.05, 0.55, 0.95) is a softer ease-out — slow start,
+       gentle settle, no whip at the end. Pieces can hit terminal velocity
+       sooner without the "yanked" feel of cubic-bezier(0.3, 0.1, 0.7, 1). */
+    animation: confettiFall var(--fall-duration, 3s)
+      cubic-bezier(0.4, 0.05, 0.55, 0.95) var(--delay, 0s) forwards;
   }
 
   .shimmer-bg {
