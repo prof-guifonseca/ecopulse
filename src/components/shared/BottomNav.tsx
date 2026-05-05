@@ -58,7 +58,7 @@ export function BottomNav() {
               aria-selected={active}
               aria-label={t.label}
               className={cn(
-                'group flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 py-2 transition-colors duration-200',
+                'group relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 pb-1 pt-2 transition-colors duration-200',
                 active ? 'text-[var(--accent-green)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
               )}
             >
@@ -72,7 +72,7 @@ export function BottomNav() {
               </span>
               <span
                 className={cn(
-                  'text-[0.66rem] font-medium leading-none transition-colors duration-200',
+                  'text-[0.7rem] font-medium leading-none tracking-[0.01em] transition-colors duration-200',
                   active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
                 )}
               >
