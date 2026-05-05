@@ -110,18 +110,14 @@ export function StoryViewer({ index }: Props) {
     >
       <div className="relative flex h-full w-full max-w-[var(--shell-width)] flex-col">
         {/* Background photo */}
-        {story.imageKey ? (
-          <Image
-            src={unsplashUrl(story.imageKey as UnsplashKey, { w: 900, h: 1600, q: 80 })}
-            alt=""
-            fill
-            sizes="(max-width: 430px) 100vw, 430px"
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,#182a21,#0a120e)]" />
-        )}
+        <Image
+          src={unsplashUrl(story.imageKey as UnsplashKey, { w: 900, h: 1600, q: 80 })}
+          alt=""
+          fill
+          sizes="(max-width: 430px) 100vw, 430px"
+          className="object-cover"
+          priority
+        />
 
         {/* Cinematic gradient overlay for legibility */}
         <div

@@ -40,7 +40,6 @@ type TabValue = (typeof PROFILE_TABS)[number]['value'];
 export function ProfilePage() {
   const [tab, setTab] = useState<TabValue>('impact');
   const name = useUserStore((s) => s.name);
-  const avatar = useUserStore((s) => s.avatar);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
   const level = useUserStore((s) => s.level);
@@ -74,7 +73,7 @@ export function ProfilePage() {
             }}
           />
           <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
+            <Avatar baseId={avatarBase} outfits={avatarOutfits} size="md" />
           </span>
           <span
             className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]"
@@ -267,7 +266,7 @@ function BadgesPanel({ owned }: { owned: string[] }) {
                     : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
                 )}
               >
-                {Lucide ? <Icon icon={Lucide} size={20} /> : <span>{badge.emoji}</span>}
+                {Lucide ? <Icon icon={Lucide} size={20} /> : null}
               </span>
               <div className="t-caption font-semibold leading-tight text-[var(--text-primary)]">
                 {badge.name}
@@ -307,7 +306,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
                     : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
                 )}
               >
-                {Lucide ? <Icon icon={Lucide} size={18} /> : <span>{tribe.emoji}</span>}
+                {Lucide ? <Icon icon={Lucide} size={18} /> : null}
               </span>
               <h3 className="t-title leading-tight">{tribe.name}</h3>
               <p className="t-caption">

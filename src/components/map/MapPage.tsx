@@ -60,7 +60,7 @@ export function MapPage() {
 
         {pins.map((point) => {
           const isVisited = visited.includes(point.id);
-          const Lucide = resolveIcon(point.iconName as never);
+          const Lucide = resolveIcon(MAP_TYPE_ICON[point.type] as never) ?? MapPin;
           return (
             <button
               key={point.id}
@@ -77,7 +77,7 @@ export function MapPage() {
               }}
               aria-label={point.name}
             >
-              {Lucide ? <Icon icon={Lucide} size={16} /> : <Icon icon={MapPin} size={16} />}
+              <Icon icon={Lucide} size={16} />
             </button>
           );
         })}
@@ -127,7 +127,7 @@ export function MapPage() {
       {panel === 'places' ? (
         <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
           {pins.map((point) => {
-            const Lucide = resolveIcon(point.iconName as never);
+            const Lucide = resolveIcon(MAP_TYPE_ICON[point.type] as never) ?? MapPin;
             const isVisited = visited.includes(point.id);
             return (
               <li key={point.id}>
@@ -143,7 +143,7 @@ export function MapPage() {
                         : 'border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-secondary)]'
                     )}
                   >
-                    {Lucide ? <Icon icon={Lucide} size={16} /> : <span>{point.emoji}</span>}
+                    <Icon icon={Lucide} size={16} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{point.name}</h3>

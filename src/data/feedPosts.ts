@@ -10,7 +10,6 @@ export const FEED_POSTS: FeedPost[] = [
     likes: 48,
     comments: 7,
     liked: false,
-    gradient: 'linear-gradient(135deg,#2d6a4f,#40916c)',
     imageKey: 'upcyclingCrafts',
     commentList: [
       { user: 'Pedro L.', avatar: '🧑‍💻', text: 'Ficou demais. Vou tentar.', time: '1h' },
@@ -27,7 +26,6 @@ export const FEED_POSTS: FeedPost[] = [
     likes: 32,
     comments: 3,
     liked: false,
-    gradient: 'linear-gradient(135deg,#3a86ff,#8338ec)',
     imageKey: 'recyclingBins',
     commentList: [
       { user: 'Camila T.', avatar: '👩‍🔬', text: 'Esse ponto é ótimo.', time: '4h' },
@@ -43,7 +41,6 @@ export const FEED_POSTS: FeedPost[] = [
     likes: 127,
     comments: 24,
     liked: false,
-    gradient: 'linear-gradient(135deg,#006d77,#83c5be)',
     imageKey: 'urbanGarden',
     commentList: [
       { user: 'Lucas A.', avatar: '🧑‍🚀', text: 'Quanto tempo levou?', time: '20h' },
@@ -60,7 +57,6 @@ export const FEED_POSTS: FeedPost[] = [
     likes: 21,
     comments: 5,
     liked: false,
-    gradient: 'linear-gradient(135deg,#e76f51,#f4a261)',
     imageKey: 'bulkShopping',
     commentList: [
       { user: 'Marina S.', avatar: '👩‍🎨', text: 'Esse empório é o melhor.', time: '22h' },
@@ -76,7 +72,6 @@ export const FEED_POSTS: FeedPost[] = [
     likes: 89,
     comments: 15,
     liked: false,
-    gradient: 'linear-gradient(135deg,#7b2cbf,#c77dff)',
     imageKey: 'composting',
     commentList: [
       { user: 'Pedro L.', avatar: '🧑‍💻', text: 'Como começou?', time: '1d' },

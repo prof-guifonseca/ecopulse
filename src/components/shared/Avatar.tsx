@@ -9,7 +9,6 @@ const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120 };
 interface Props {
   baseId?: string | null;
   outfits?: AvatarOutfits;
-  emoji?: string;
   size?: Size;
   className?: string;
 }
@@ -19,11 +18,10 @@ interface Props {
  * (no harsh black eyes, no smile). Outfit elements layer on top using
  * brand-aligned palettes — no rainbow, no neon.
  */
-export function Avatar({ baseId, outfits, emoji, size = 'md', className }: Props) {
+export function Avatar({ baseId, outfits, size = 'md', className }: Props) {
   const sz = SIZE_MAP[size];
 
   if (!baseId) {
-    const fallback = emoji ?? '🌿';
     return (
       <div
         className={className}
@@ -32,14 +30,8 @@ export function Avatar({ baseId, outfits, emoji, size = 'md', className }: Props
           height: sz,
           borderRadius: '50%',
           background: 'var(--bg-secondary)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: Math.round(sz * 0.55),
         }}
-      >
-        {fallback}
-      </div>
+      />
     );
   }
 

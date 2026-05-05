@@ -41,7 +41,7 @@ export function unlockBadge(id: string) {
   const ui = useUIStore.getState();
   if (game.unlockBadge(id)) {
     const b = BADGES.find((x) => x.id === id);
-    if (b) ui.showToast(`Conquista: ${b.name} ${b.emoji}`, 'reward');
+    if (b) ui.showToast(`Conquista: ${b.name}`, 'reward');
     ui.fireConfetti();
     hapticSuccess();
   }
