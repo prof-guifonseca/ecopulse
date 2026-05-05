@@ -11,6 +11,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
+import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { unlockHint } from '@/lib/skinUnlocks';
@@ -61,7 +62,10 @@ export function ShopPanel({ tokens }: { tokens: number }) {
         <div>
           <p className="t-eyebrow">Carteira</p>
           <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
+            <AnimatedNumber
+              value={tokens}
+              className="t-display leading-[1] text-[var(--accent-green)]"
+            />
             <span className="t-body-sm">Eco-Tokens</span>
           </div>
           <p className="mt-2 t-caption">Ganhos jogando. Sem compra.</p>
