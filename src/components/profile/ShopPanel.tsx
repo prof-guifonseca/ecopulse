@@ -1,23 +1,21 @@
 'use client';
 
-import { ChevronRight, Coins } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import {
   AVATAR_OUTFITS,
   SHOP_ITEMS,
   SKIN_PACKS,
-  TOKEN_PACKS,
 } from '@/data';
-import type { OutfitSlot, SkinUnlock } from '@/types';
+import type { OutfitSlot } from '@/types';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
+import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Chip } from '@/components/ui/Chip';
 import { unlockHint } from '@/lib/skinUnlocks';
-import { formatCurrencyCents } from '@/lib/format';
+import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
 
 const SLOT_LABELS: Record<OutfitSlot, string> = {
@@ -30,32 +28,6 @@ const SLOT_LABELS: Record<OutfitSlot, string> = {
   hairstyle: 'cabelo',
 };
 
-/** Mirrors checkSkinUnlocks logic for the locked-state visual cue. */
-function unlockMet(unlock: SkinUnlock): boolean {
-  const user = useUserStore.getState();
-  const game = useGameStore.getState();
-  switch (unlock.kind) {
-    case 'paid':
-      return false;
-    case 'level':
-      return user.level >= unlock.value;
-    case 'badge':
-      return game.badges.includes(unlock.id);
-    case 'count':
-      switch (unlock.metric) {
-        case 'scans':
-          return game.scannedProducts.length >= unlock.value;
-        case 'visits':
-          return game.visitedPoints.length >= unlock.value;
-        case 'challenges':
-          return game.completedChallenges.length >= unlock.value;
-        case 'tutorials':
-          return game.completedTutorials.length >= unlock.value;
-      }
-      return false;
-  }
-}
-
 export function ShopPanel({ tokens }: { tokens: number }) {
   const openModal = useUIStore((s) => s.openModal);
   const openAvatarBuilder = useUIStore((s) => s.openAvatarBuilder);
@@ -64,22 +36,39 @@ export function ShopPanel({ tokens }: { tokens: number }) {
   const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
   const ownedOutfits = useUserStore((s) => s.ownedOutfits);
   const outfitsEquipped = useUserStore((s) => s.avatarOutfits);
+  // Subscribed slices the unlock rule depends on — needed so the locked
+  // visual cue re-evaluates when these change.
+  const level = useUserStore((s) => s.level);
+  const badges = useGameStore((s) => s.badges);
+  const scannedCount = useGameStore((s) => s.scannedProducts.length);
+  const visitedCount = useGameStore((s) => s.visitedPoints.length);
+  const completedChallengesCount = useGameStore((s) => s.completedChallenges.length);
+  const completedTutorialsCount = useGameStore((s) => s.completedTutorials.length);
+  const ruleSnapshot = {
+    level,
+    tokens,
+    badges,
+    ownedSkinPacks,
+    scannedProductsCount: scannedCount,
+    visitedPointsCount: visitedCount,
+    completedChallengesCount,
+    completedTutorialsCount,
+  };
 
   return (
     <div className="space-y-6">
       {/* Carteira */}
       <Card tone="hero" padded={false} className="px-5 py-5">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="t-eyebrow">Carteira</p>
-            <div className="mt-1.5 flex items-baseline gap-2">
-              <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
-              <span className="t-body-sm">Eco-Tokens</span>
-            </div>
+        <div>
+          <p className="t-eyebrow">Carteira</p>
+          <div className="mt-1.5 flex items-baseline gap-2">
+            <AnimatedNumber
+              value={tokens}
+              className="t-display leading-[1] text-[var(--accent-green)]"
+            />
+            <span className="t-body-sm">Eco-Tokens</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => openModal({ kind: 'greenMarketInfo' })}>
-            Como funciona
-          </Button>
+          <p className="mt-2 t-caption">Ganhos jogando. Sem compra.</p>
         </div>
       </Card>
 
@@ -93,7 +82,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           {SKIN_PACKS.map((skin) => {
             const owned = ownedSkinPacks.includes(skin.id);
             const equipped = equippedSkinPack === skin.id;
-            const meets = unlockMet(skin.unlock);
+            const meets = meetsSkinUnlock(skin.unlock, ruleSnapshot);
             const locked = !owned && !meets && skin.unlock.kind !== 'paid';
             return (
               <button
@@ -172,34 +161,6 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               </li>
             );
           })}
-        </ul>
-      </section>
-
-      {/* Eco-Tokens — packs pagos */}
-      <section>
-        <h2 className="mb-3 t-title">Eco-Tokens</h2>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
-          {TOKEN_PACKS.map((pack) => (
-            <li key={pack.id}>
-              <button
-                onClick={() => openModal({ kind: 'greenMarketInfo', packId: pack.id })}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="t-title truncate">{pack.name}</h3>
-                    {pack.featured ? (
-                      <Chip asStatic active className="text-[var(--accent-gold)]">{pack.badge}</Chip>
-                    ) : null}
-                  </div>
-                  <p className="mt-0.5 t-caption">
-                    {pack.tokens} tokens · {formatCurrencyCents(pack.priceInCents)}
-                  </p>
-                </div>
-                <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />
-              </button>
-            </li>
-          ))}
         </ul>
       </section>
 

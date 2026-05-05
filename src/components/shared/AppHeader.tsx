@@ -1,11 +1,13 @@
 'use client';
 
+import { useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { Coins, Flame, Heart, MapPin, Package, Leaf, type LucideIcon } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 import { useSocialStore } from '@/store/socialStore';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
+import { clearDemoSeed } from '@/lib/demoSeed';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 
@@ -44,13 +46,37 @@ export function AppHeader() {
     summaryText = `${tokensToday}`;
   }
 
+  // Long-press the logo (1.2s) to wipe the demo state and re-seed.
+  // Hidden affordance — only useful for the person showing the demo.
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startLongPress = () => {
+    longPressTimer.current = setTimeout(() => {
+      if (confirm('Reiniciar demo? Apaga estado salvo e recarrega Arthur do zero.')) {
+        clearDemoSeed();
+      }
+    }, 1200);
+  };
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
   return (
     <header
       id="app-header"
-      className="sticky top-0 z-40 px-3 pt-[calc(env(safe-area-inset-top,0px)+10px)]"
+      className="sticky top-0 z-40 bg-[var(--bg-primary)] px-5 pt-[calc(env(safe-area-inset-top,0px)+18px)] pb-3 sm:px-8"
     >
-      <div className="card-glass flex items-center justify-between gap-3 px-4 py-2.5">
-        <div className="flex items-center gap-2.5">
+      <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-3">
+        <div
+          className="flex select-none items-center gap-2.5"
+          onPointerDown={startLongPress}
+          onPointerUp={cancelLongPress}
+          onPointerLeave={cancelLongPress}
+          onPointerCancel={cancelLongPress}
+          title="Pressione 1.2s para reiniciar a demo"
+        >
           <span
             aria-hidden
             className="gradient-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"

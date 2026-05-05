@@ -7,6 +7,7 @@ export const BADGES: Badge[] = [
   { id: 'map-explorer', name: 'Explorador', iconName: 'mapPin', desc: 'Visitou 3 pontos no mapa', tier: 'silver' },
   { id: 'social-star', name: 'Influencer Eco', iconName: 'star', desc: 'Publicou no feed social', tier: 'bronze' },
   { id: 'challenge-1', name: 'Desafiante', iconName: 'trophy', desc: 'Completou seu primeiro desafio', tier: 'silver' },
+  { id: 'scanner-5', name: 'Scanner', iconName: 'package', desc: 'Escaneou 5 produtos', tier: 'silver' },
   { id: 'scanner-10', name: 'Scanner Pro', iconName: 'package', desc: 'Escaneou 10 produtos', tier: 'gold' },
   { id: 'token-100', name: 'Colecionador', iconName: 'coins', desc: 'Acumulou 100+ Eco-Tokens', tier: 'silver' },
   { id: 'tribe-member', name: 'Tribo Unida', iconName: 'users', desc: 'Entrou em uma tribo', tier: 'bronze' },

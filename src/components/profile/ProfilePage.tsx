@@ -15,13 +15,11 @@ import { Stat } from '@/components/ui/Stat';
 import { ImpactPanel } from './ImpactPanel';
 import { ShopPanel } from './ShopPanel';
 import { BadgesPanel } from './BadgesPanel';
-import { TribesPanel } from './TribesPanel';
 
 const PROFILE_TABS = [
   { value: 'impact' as const, label: 'Impacto' },
   { value: 'shop' as const, label: 'Loja' },
   { value: 'badges' as const, label: 'Badges' },
-  { value: 'tribos' as const, label: 'Tribos' },
 ];
 
 type TabValue = (typeof PROFILE_TABS)[number]['value'];
@@ -97,7 +95,6 @@ export function ProfilePage() {
       {tab === 'impact' && <ImpactPanel scannedCount={scannedCount} />}
       {tab === 'shop' && <ShopPanel tokens={tokens} />}
       {tab === 'badges' && <BadgesPanel owned={badges} />}
-      {tab === 'tribos' && <TribesPanel currentTribe={tribe} />}
     </PageShell>
   );
 }

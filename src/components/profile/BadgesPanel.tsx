@@ -9,7 +9,7 @@ export function BadgesPanel({ owned }: { owned: string[] }) {
       <p className="t-caption">
         {owned.length}/{BADGES.length} desbloqueados
       </p>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="stagger grid grid-cols-3 gap-3">
         {BADGES.map((badge) => {
           const unlocked = owned.includes(badge.id);
           const Lucide = resolveIcon(badge.iconName);

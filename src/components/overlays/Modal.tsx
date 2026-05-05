@@ -10,13 +10,56 @@ interface Props {
   variant?: 'bottom' | 'center';
 }
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function Modal({ onClose, children, variant = 'bottom' }: Props) {
+  const surfaceRef = useRef<HTMLDivElement | null>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+
+  // Focus trap + return focus to opener on close.
   useEffect(() => {
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+
+    // Move initial focus into the modal on next paint.
+    const t = setTimeout(() => {
+      const surface = surfaceRef.current;
+      if (!surface) return;
+      const first = surface.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+      (first ?? surface).focus();
+    }, 0);
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const surface = surfaceRef.current;
+      if (!surface) return;
+      const focusables = Array.from(surface.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+        (el) => !el.hasAttribute('disabled') && el.offsetParent !== null
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('keydown', onKey);
+      // Restore focus to whatever was focused before the modal opened.
+      previouslyFocusedRef.current?.focus?.();
+    };
   }, [onClose]);
 
   const startY = useRef<number | null>(null);
@@ -49,7 +92,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
   return createPortal(
     <div
       className={cn(
-        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-md',
+        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-[28px] saturate-150',
         variant === 'center' ? 'items-center' : 'items-end'
       )}
       onClick={(e) => {
@@ -59,9 +102,13 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
       aria-modal="true"
     >
       <div
+        ref={surfaceRef}
+        tabIndex={-1}
         className={cn(
-          'relative w-full max-w-[var(--shell-width)] border-soft bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)]',
-          variant === 'center' ? 'mx-4 rounded-[var(--radius-lg)] animate-fade-in' : 'rounded-t-[var(--radius-lg)] animate-slide-up'
+          'relative w-full max-w-[var(--shell-width)] border-soft bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
+          variant === 'center'
+            ? 'mx-4 rounded-[var(--radius-lg)] animate-fade-in'
+            : 'rounded-t-[var(--radius-lg)] animate-slide-up'
         )}
         style={{
           maxHeight: 'var(--modal-max-h)',
@@ -72,6 +119,17 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
+        {/* Subtle green-tinted glow on the top edge of the bottom sheet */}
+        {variant === 'bottom' ? (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--accent-green) 40%, transparent) 50%, transparent 100%)',
+            }}
+          />
+        ) : null}
         {children}
       </div>
     </div>,

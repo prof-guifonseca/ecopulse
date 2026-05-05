@@ -7,11 +7,9 @@ import { createSafeJSONStorage, readLegacyState } from './storage';
 interface SocialState {
   likedPosts: string[];
   following: string[];
-  chatSentFirst: boolean;
 
   toggleLike: (postId: string) => boolean; // returns new liked state
   follow: (name: string) => void;
-  markChatSent: () => void;
 }
 
 export const useSocialStore = create<SocialState>()(
@@ -19,7 +17,6 @@ export const useSocialStore = create<SocialState>()(
     (set, get) => ({
       likedPosts: [],
       following: [],
-      chatSentFirst: false,
 
       toggleLike: (postId) => {
         const liked = get().likedPosts.includes(postId);
@@ -33,8 +30,6 @@ export const useSocialStore = create<SocialState>()(
 
       follow: (name) =>
         set((s) => (s.following.includes(name) ? s : { following: [...s.following, name] })),
-
-      markChatSent: () => set({ chatSentFirst: true }),
     }),
     {
       name: 'ecopulse:social',
@@ -47,7 +42,6 @@ export const useSocialStore = create<SocialState>()(
             ...(state as SocialState),
             likedPosts: legacy.likedPosts ?? [],
             following: legacy.following ?? [],
-            chatSentFirst: legacy.chatSentFirst ?? false,
           } as SocialState;
         }
         return state as SocialState;

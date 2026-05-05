@@ -50,7 +50,6 @@ export interface LegacyState {
   avatarBase?: string | null;
   avatarOutfits?: Record<string, string | null>;
   ownedOutfits?: string[];
-  chatSentFirst?: boolean;
 }
 
 export function createSafeJSONStorage<S>(

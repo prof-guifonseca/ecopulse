@@ -6,12 +6,12 @@
   /* ---------- Surfaces ---------- */
   --bg-primary: #0a120e;     /* app canvas */
   --bg-secondary: #111b16;   /* default surface */
-  --bg-elevated: #182a21;    /* hero / elevated surface */
+  --bg-elevated: #192d23;    /* hero / elevated surface — slightly more saturated */
 
   /* ---------- Text ---------- */
   --text-primary: #f2f4ef;
-  --text-secondary: #aab3a7;
-  --text-muted: #6f7b72;
+  --text-secondary: #b3bcaf;  /* bumped from #aab3a7 — comfortably WCAG AA on bg-primary */
+  --text-muted: #8a948c;      /* bumped from #6f7b72 — was 4.49 (AA fail for body); now ≈6.5 */
 
   /* ---------- Brand ---------- */
   --accent-green: #8ddb98;
@@ -55,13 +55,15 @@
   --glass-blur: blur(20px);
 
   /* ---------- Gradients ---------- */
-  --gradient-primary: linear-gradient(135deg, #6fc581 0%, #9fe0ad 100%);
-  --gradient-gold: linear-gradient(135deg, #e9cd86 0%, #c9995b 100%);
+  --gradient-primary: linear-gradient(135deg, #4ea76a 0%, #8fd9a3 100%);
+  --gradient-gold: linear-gradient(135deg, #f0d493 0%, #c9995b 100%);
+  --gradient-canvas: linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
 
   /* ---------- Elevation ---------- */
-  --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.28);
-  --shadow-glow-val: 0 12px 28px rgba(141, 219, 152, 0.14);
-  --shadow-lifted-val: 0 16px 40px rgba(0, 0, 0, 0.42);
+  --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.32);
+  --shadow-glow-val: 0 20px 60px -20px rgba(141, 219, 152, 0.22);
+  --shadow-deep-glow-val: 0 24px 60px -18px rgba(0, 0, 0, 0.55), 0 12px 32px -16px rgba(141, 219, 152, 0.30);
+  --shadow-lifted-val: 0 28px 60px -16px rgba(0, 0, 0, 0.55);
 
   /* ---------- Radii ---------- */
   --radius-xs: 10px;
@@ -70,11 +72,13 @@
   --radius-lg: 26px;
   --radius-shell: 32px;
 
-  /* ---------- Shell ---------- */
-  --shell-width: 430px;
+  /* ---------- Shell / canvas ---------- */
+  --shell-width: 430px;        /* legacy — modals + a few helpers still use this */
+  --canvas-width: 680px;       /* main reading column on desktop */
+  --content-width: 600px;      /* narrower content blocks (text-heavy) */
 
   /* ---------- Scrim (modal backdrop) ---------- */
-  --scrim: rgba(3, 8, 5, 0.6);
+  --scrim: rgba(3, 8, 5, 0.62);
 
   /* ---------- Modal sizing ---------- */
   --modal-max-h: 88dvh;
@@ -99,6 +103,7 @@
   --radius-lg: var(--radius-lg);
   --shadow-card: var(--shadow-card-val);
   --shadow-glow: var(--shadow-glow-val);
+  --shadow-deep-glow: var(--shadow-deep-glow-val);
   --shadow-lifted: var(--shadow-lifted-val);
   --animate-fade-in: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-slide-up: slideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1);
@@ -107,6 +112,8 @@
   --animate-shimmer: shimmer 2.6s linear infinite;
   --animate-score-reveal: scoreReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-pin-pulse: pinPulse 1.7s ease-in-out infinite;
+  --animate-stagger-enter: staggerEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-token-pulse: tokenPulse 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes fadeIn {
@@ -143,6 +150,27 @@
 @keyframes pinPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(141, 219, 152, 0.35); }
   50% { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(141, 219, 152, 0); }
+}
+
+@keyframes staggerEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tokenPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.18); filter: brightness(1.4); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes ringSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scanHaloPulse {
+  0%, 100% { opacity: 0.55; transform: translate(50%, -50%) scale(1); }
+  50% { opacity: 0.95; transform: translate(50%, -50%) scale(1.08); }
 }
 
 @keyframes confettiFall {
@@ -191,27 +219,17 @@ body {
 
 @media (min-width: 640px) {
   body {
-    /* Desktop: center the device on a framed editorial canvas.
-       Two soft brand halos (green top-left, gold bottom-right) over a
-       slightly darker base so the shell reads as an object on a surface
-       instead of a column hugging the void. */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    /* Desktop: a single calm canvas. No framed device, no halos competing
+       with content. One very soft top halo for atmosphere, then flat
+       --bg-primary so the column reads as the document itself. */
     overflow: auto;
     background:
       radial-gradient(
-        circle at 18% 14%,
-        color-mix(in srgb, var(--accent-green) 9%, transparent),
-        transparent 45%
+        ellipse 80% 40% at 50% -10%,
+        color-mix(in srgb, var(--accent-green) 6%, transparent),
+        transparent 70%
       ),
-      radial-gradient(
-        circle at 82% 86%,
-        color-mix(in srgb, var(--accent-gold) 6%, transparent),
-        transparent 50%
-      ),
-      linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
+      var(--bg-primary);
   }
 }
 
@@ -291,73 +309,80 @@ input, textarea, select {
 
 @layer components {
   /* =========================================================
-     Device shell — mobile content presented on a desktop stage
+     App column — a vertical reading column, no framing chrome
      ========================================================= */
   .device-shell {
     position: relative;
     background: var(--bg-primary);
   }
 
-  @media (min-width: 640px) {
-    .device-shell {
-      /* Gradient border via padding-box / border-box dual background:
-         the inner layer is the solid bg, the outer layer is a soft
-         top-down gradient that paints only into the 1px border slot. */
-      border: 1px solid transparent;
-      background:
-        linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.10),
-          rgba(255, 255, 255, 0.02) 40%,
-          rgba(0, 0, 0, 0.4)
-        ) border-box;
-      box-shadow:
-        0 50px 110px -30px rgba(0, 0, 0, 0.7),
-        0 30px 60px -30px rgba(0, 0, 0, 0.5);
-    }
-  }
-
   /* =========================================================
-     Card primitives
+     Card primitives — sections, not boxes. Bordas/shadows leves
+     ou ausentes; o conteúdo respira pelo espaçamento, não pelo contorno.
      ========================================================= */
   .card {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
     background: var(--bg-secondary);
-    box-shadow: var(--shadow-card-val);
   }
 
   .card-soft {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
     background: var(--tint-1);
   }
 
   .card-glass {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    box-shadow: var(--shadow-card-val);
   }
 
   .card-hero {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
     background: linear-gradient(180deg, var(--bg-elevated), #101915);
-    /* A thin top highlight gives the same 'lifted' feel as the old radial
-       overlay without competing with the headline content underneath. */
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
-      var(--shadow-lifted-val);
+    /* Single soft glow only — no border, no heavy box-shadow. */
+    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
   }
+
+  /* Editorial hero — a magazine cover. Photo slot via --bg-image,
+     overlay keeps text readable, content sits on top. */
+  .card-editorial {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, var(--bg-elevated), #0e1612);
+    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
+    isolation: isolate;
+  }
+  .card-editorial::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg-image, none);
+    background-size: cover;
+    background-position: center;
+    opacity: var(--bg-image-opacity, 0.42);
+    z-index: 0;
+    transition: opacity 0.6s ease;
+  }
+  .card-editorial::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(10, 18, 14, 0.20) 0%,
+        rgba(10, 18, 14, 0.55) 55%,
+        rgba(10, 18, 14, 0.88) 100%
+      );
+    z-index: 0;
+  }
+  .card-editorial > * { position: relative; z-index: 1; }
 
   /* Slim 2px top accent bar — never a full-card wash */
   .card-accent-brand::before,
@@ -570,15 +595,80 @@ input, textarea, select {
     z-index: 1;
   }
 
-  /* Editorial scan frame: one soft radial, no concentric clutter */
+  /* Editorial scan frame: radial halo, dual rotating ring around target.
+     No outer border — the gradient halo + rings define the scan zone. */
   .scan-frame {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 50% 0%, var(--tint-green-2), transparent 55%),
+      radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 60%),
       linear-gradient(180deg, var(--bg-elevated), #0e1612);
+  }
+
+  /* Pulsing radial light behind the camera target */
+  .scan-target-halo {
+    position: absolute;
+    inset: 50% 50% auto auto;
+    width: 220px;
+    height: 220px;
+    transform: translate(50%, -50%);
+    border-radius: 999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-green) 22%, transparent) 0%,
+      transparent 65%
+    );
+    filter: blur(8px);
+    pointer-events: none;
+    animation: scanHaloPulse 3s ease-in-out infinite;
+  }
+
+  /* Outer rotating ring (slow), inner faster — when scanning.
+     Anchored to the reticle center via top/left + the modern `translate`
+     property, which composes independently with the `transform: rotate()`
+     animation (so the spin doesn't fight the centering). */
+  .scan-ring-outer,
+  .scan-ring-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* `translate` is a Tailwind v4 utility too, so we use !important here
+       to defeat the preflight reset that would otherwise zero it out. */
+    translate: -50% -50% !important;
+    border-radius: 999px;
+    pointer-events: none !important;
+  }
+  .scan-ring-outer {
+    width: 180px;
+    height: 180px;
+    border: 1px dashed color-mix(in srgb, var(--accent-green) 35%, transparent);
+    animation: ringSpin 14s linear infinite;
+  }
+  .scan-ring-inner {
+    width: 140px;
+    height: 140px;
+    border: 1px solid color-mix(in srgb, var(--accent-green) 28%, transparent);
+    border-top-color: color-mix(in srgb, var(--accent-green) 70%, transparent);
+    animation: ringSpin 4s linear infinite reverse;
+  }
+  .scan-frame[data-scanning="true"] .scan-ring-outer { animation-duration: 6s; }
+  .scan-frame[data-scanning="true"] .scan-ring-inner { animation-duration: 1.6s; }
+  .scan-frame[data-scanning="true"] .scan-target-halo {
+    animation-duration: 1.2s;
+  }
+
+  /* Stat ribbon — a thin pill row for secondary stats below hero */
+  .stat-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft);
+    background: var(--tint-1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .confetti-piece {
@@ -604,5 +694,28 @@ input, textarea, select {
     background-size: 200% 100%;
     animation: shimmer 2.5s infinite;
   }
+
+  /* =========================================================
+     Stagger utility — apply to a container; each direct child
+     animates in with an incremental delay. Up to 10 children
+     get a unique delay; further children inherit the last step.
+     The reduced-motion media query above collapses the animation.
+     ========================================================= */
+  .stagger > * {
+    animation: var(--animate-stagger-enter);
+    animation-delay: calc(var(--stagger-step, 35ms) * var(--stagger-index, 0));
+    opacity: 0;
+  }
+  .stagger > *:nth-child(1) { --stagger-index: 0; }
+  .stagger > *:nth-child(2) { --stagger-index: 1; }
+  .stagger > *:nth-child(3) { --stagger-index: 2; }
+  .stagger > *:nth-child(4) { --stagger-index: 3; }
+  .stagger > *:nth-child(5) { --stagger-index: 4; }
+  .stagger > *:nth-child(6) { --stagger-index: 5; }
+  .stagger > *:nth-child(7) { --stagger-index: 6; }
+  .stagger > *:nth-child(8) { --stagger-index: 7; }
+  .stagger > *:nth-child(9) { --stagger-index: 8; }
+  .stagger > *:nth-child(10) { --stagger-index: 9; }
+  .stagger > *:nth-child(n+11) { --stagger-index: 10; }
 
 }

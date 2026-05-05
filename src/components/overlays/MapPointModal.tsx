@@ -1,6 +1,6 @@
 'use client';
 
-import { Clock, MapPin, Ruler } from 'lucide-react';
+import { CheckCircle2, Clock, MapPin, Phone, Ruler } from 'lucide-react';
 import { MAP_POINTS, MAP_DETAIL_LABELS, MAP_TYPE_ICON } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconTile } from '@/components/ui/IconTile';
 import { resolveIcon } from '@/lib/iconRegistry';
+import { distanceFromCenter } from '@/lib/map/londrina';
 import { ModalShell } from './ModalShell';
 import type { LucideIcon } from 'lucide-react';
 
@@ -54,7 +55,17 @@ export function MapPointModal({ id }: Props) {
         <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           <Row icon={MapPin} label="Endereço" value={point.address} />
           <Row icon={Clock} label="Horário" value={point.hours} />
-          <Row icon={Ruler} label="Distância" value={point.distance} />
+          <Row
+            icon={Ruler}
+            label="Distância"
+            value={distanceFromCenter({ lat: point.lat, lng: point.lng })}
+          />
+          {point.phone ? <Row icon={Phone} label="Telefone" value={point.phone} /> : null}
+          <Row
+            icon={CheckCircle2}
+            label="Verificado"
+            value={`há ${point.lastVerifiedDays} dia${point.lastVerifiedDays === 1 ? '' : 's'}`}
+          />
         </div>
 
         <Button

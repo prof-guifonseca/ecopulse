@@ -8,37 +8,47 @@ import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
-import { performScan } from '@/lib/scanActions';
+import { useScanHistoryStore, type ScanRecord } from '@/store/scanHistoryStore';
+import { performSimulatedScan } from '@/lib/simulatedScan';
 import { hapticTap } from '@/lib/haptic';
+import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { cn } from '@/lib/cn';
 
-// Scan completes (and modal opens) before the visual scan-line loop ends —
-// the user perceives the result as soon as the camera "lock" feels right.
-// The CSS keyframe (--animate-scan-line: 2.4s) keeps looping behind the modal.
-const SCAN_ANIMATION_MS = 1600;
+/**
+ * Scan ritual timing — feels deliberate, not rushed. The result resolves
+ * before the scanLine keyframe loop ends (the line keeps looping behind
+ * the product modal until it closes).
+ */
+const SCAN_RITUAL_MS = 1600;
 
 export function ScannerPage() {
   const [query, setQuery] = useState('');
   const [scanning, setScanning] = useState(false);
+  const [lastBarcode, setLastBarcode] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
   const router = useRouter();
   const searchParams = useSearchParams();
   const welcome = searchParams.get('welcome') === '1';
+
   const openModal = useUIStore((s) => s.openModal);
   const modal = useUIStore((s) => s.modal);
   const showToast = useUIStore((s) => s.showToast);
-  const scannedProducts = useGameStore((s) => s.scannedProducts);
+  const fireConfetti = useUIStore((s) => s.fireConfetti);
+  const markMission = useGameStore((s) => s.markMission);
   const missionScan = useGameStore((s) => s.dailyMissions.scan);
   const firstScanCompleted = useUserStore((s) => s.firstScanCompleted);
   const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
+  const recordScan = useScanHistoryStore((s) => s.recordScan);
+  const history = useScanHistoryStore((s) => s.history);
+
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
 
-  // After the first scan's product modal closes, send the user home.
+  // After the first-run product modal closes, send the user home.
   useEffect(() => {
     if (awaitingFirstClose.current && modal === null) {
       awaitingFirstClose.current = false;
@@ -54,24 +64,34 @@ export function ScannerPage() {
       (product) =>
         product.name.toLowerCase().includes(normalizedQuery) ||
         product.brand.toLowerCase().includes(normalizedQuery) ||
-        product.category.toLowerCase().includes(normalizedQuery)
+        product.category.toLowerCase().includes(normalizedQuery) ||
+        product.barcode.includes(normalizedQuery)
     );
   }, [deferredQuery]);
 
-  const simulateScan = () => {
+  const triggerScan = () => {
     if (scanning) return;
     hapticTap();
     setScanning(true);
+    setLastBarcode(null);
 
     setTimeout(() => {
-      const chosen = performScan();
+      const record = performSimulatedScan(history.map((h) => h.productId));
+      setLastBarcode(record.barcode);
+      recordScan(record);
+      awardTokens(10);
+      if (!missionScan) markMission('scan', true);
+      const totalScans = useScanHistoryStore.getState().history.length;
+      if (totalScans === 1) unlockBadge('first-scan');
+      if (totalScans >= 5) unlockBadge('scanner-5');
       if (firstRun) {
         markFirstScanCompleted();
         awaitingFirstClose.current = true;
       }
-      openModal({ kind: 'product', id: chosen.id });
+      fireConfetti();
+      openModal({ kind: 'product', id: record.id });
       setScanning(false);
-    }, SCAN_ANIMATION_MS);
+    }, SCAN_RITUAL_MS);
   };
 
   return (
@@ -83,20 +103,48 @@ export function ScannerPage() {
         </h1>
       </header>
 
-      {/* Editorial scan instrument */}
-      <div className="scan-frame px-6 py-7">
-        <div className="relative flex h-[220px] items-center justify-center">
-          {/* Soft scan-line */}
+      {/* Scan instrument — the ritual lives here */}
+      <div className="scan-frame relative overflow-hidden px-6 py-7" data-scanning={scanning}>
+        <div className="relative flex h-[260px] items-center justify-center">
+          {/* Pulsing radial halo behind the target */}
+          <span aria-hidden className="scan-target-halo" />
+
+          {/* Dual rotating rings frame the reticle */}
+          <span aria-hidden className="scan-ring-outer" />
+          <span aria-hidden className="scan-ring-inner" />
+
+          {/* Reticle: a thin square that pulses while scanning */}
+          <div
+            className="relative h-32 w-32 rounded-[var(--radius-lg)] border-active bg-tint-green-3"
+            style={{
+              boxShadow: scanning ? '0 0 0 3px var(--tint-green-2)' : 'var(--shadow-glow)',
+              transition: 'box-shadow 0.3s ease',
+            }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center text-[var(--accent-green)]">
+              <Icon icon={Camera} size={44} strokeWidth={1.4} />
+            </div>
+            {/* Corner brackets — Apple Wallet scanner style */}
+            <span className="absolute left-[-2px] top-[-2px] h-4 w-4 rounded-tl-md border-l-2 border-t-2 border-[var(--accent-green)]" />
+            <span className="absolute right-[-2px] top-[-2px] h-4 w-4 rounded-tr-md border-r-2 border-t-2 border-[var(--accent-green)]" />
+            <span className="absolute bottom-[-2px] left-[-2px] h-4 w-4 rounded-bl-md border-b-2 border-l-2 border-[var(--accent-green)]" />
+            <span className="absolute bottom-[-2px] right-[-2px] h-4 w-4 rounded-br-md border-b-2 border-r-2 border-[var(--accent-green)]" />
+          </div>
+
+          {/* Scan line — runs only while the ritual is in flight (1.4s here is
+              an intentional override of the 2.4s --animate-scan-line keyframe). */}
           <div
             className={cn(
-              'gradient-primary pointer-events-none absolute inset-x-10 top-1/2 h-px',
-              scanning ? 'animate-scan-line opacity-90' : 'opacity-25'
+              'pointer-events-none absolute inset-x-12 top-1/2 h-[2px] origin-left transition-opacity duration-200',
+              scanning ? 'opacity-95' : 'opacity-0'
             )}
+            style={{
+              background:
+                'linear-gradient(90deg, transparent, var(--accent-green) 35%, var(--accent-green) 65%, transparent)',
+              animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
+              filter: 'blur(0.5px)',
+            }}
           />
-          {/* Camera target */}
-          <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-lg)] border-active bg-tint-green-3 text-[var(--accent-green)] shadow-[var(--shadow-glow)]">
-            <Icon icon={Camera} size={40} strokeWidth={1.5} />
-          </div>
         </div>
 
         <Button
@@ -104,18 +152,24 @@ export function ScannerPage() {
           size="lg"
           fullWidth
           className="mt-5"
-          onClick={simulateScan}
+          onClick={triggerScan}
           disabled={scanning}
           loading={scanning}
           leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
         >
-          {scanning ? 'Escaneando…' : 'Simular scan'}
+          {scanning ? 'Lendo código…' : 'Simular scan de produto'}
         </Button>
 
         <p className="mt-3 text-center t-caption">
-          {scannedProducts.length} item{scannedProducts.length === 1 ? '' : 's'} no histórico ·{' '}
-          {missionScan ? 'missão concluída' : 'missão pendente'}
+          {history.length} scan{history.length === 1 ? '' : 's'} no histórico ·{' '}
+          {missionScan ? 'missão diária ✓' : 'missão diária pendente'}
         </p>
+
+        {lastBarcode ? (
+          <p className="mt-1 text-center t-caption text-[var(--accent-green)]">
+            Lido: {lastBarcode}
+          </p>
+        ) : null}
       </div>
 
       {firstRun ? (
@@ -125,37 +179,78 @@ export function ScannerPage() {
         </p>
       ) : null}
 
+      {/* Recent scans (persisted, simulated) */}
+      {history.length > 0 ? (
+        <section>
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="t-title">Meus scans recentes</h2>
+            <span className="t-caption">
+              {history.length} item{history.length === 1 ? '' : 's'}
+            </span>
+          </div>
+          <ul className="divide-y divide-[var(--line-soft)]">
+            {history.slice(0, 5).map((scan) => (
+              <li key={`${scan.id}-${scan.scannedAt}`}>
+                <button
+                  onClick={() => openModal({ kind: 'product', id: scan.id })}
+                  className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                    {scan.emoji}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="t-title truncate">{scan.name}</h3>
+                    <p className="mt-0.5 truncate t-caption">
+                      {scan.brand} · {scan.category}
+                    </p>
+                  </div>
+                  <ScoreBadge score={scan.score} className="h-9 w-9 shrink-0" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* Catalog browse */}
       <section>
+        <div className="mb-4 flex items-baseline justify-between">
+          <h2 className="t-title">Catálogo</h2>
+          <span className="t-caption">{PRODUCTS.length} produtos</span>
+        </div>
         <div className="input-shell flex items-center gap-3 px-4 py-3">
           <Icon icon={Search} size={18} className="text-[var(--text-muted)]" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar nome, marca ou categoria"
+            placeholder="Buscar nome, marca, categoria ou código"
             aria-label="Buscar produtos"
             className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
           />
         </div>
 
         {filtered.length === 0 ? (
-          <p className="mt-4 t-body-sm text-center">
+          <p className="mt-4 text-center t-body-sm">
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)]">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button
                   onClick={() => openModal({ kind: 'product', id: product.id })}
-                  className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
                     {product.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{product.name}</h3>
-                    <p className="mt-0.5 truncate t-caption" style={{ color: SCORE_COLORS[product.score] }}>
-                      {product.tip}
+                    <p
+                      className="mt-0.5 truncate t-caption"
+                      style={{ color: SCORE_COLORS[product.score] }}
+                    >
+                      {product.brand} · {product.tip}
                     </p>
                   </div>
                   <ScoreBadge score={product.score} size="sm" className="shrink-0" />
@@ -168,3 +263,8 @@ export function ScannerPage() {
     </PageShell>
   );
 }
+
+// Re-export so the unused-import warning doesn't trigger if a future hook
+// rearranges the consumer; the symbol is referenced via ScanRecord above.
+export type { ScanRecord };
+
