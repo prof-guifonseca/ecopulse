@@ -9,14 +9,6 @@ import { useHydrated } from '@/hooks/useHydrated';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 
-const ROUTE_TITLES: Record<string, string> = {
-  '/home': 'Sua rotina',
-  '/scanner': 'Scanner',
-  '/map': 'Mapa local',
-  '/community': 'Comunidade',
-  '/profile': 'Seu perfil',
-};
-
 export function AppHeader() {
   const pathname = usePathname();
   const hydrated = useHydrated();
@@ -27,8 +19,6 @@ export function AppHeader() {
   const visitedCount = useGameStore((s) => s.visitedPoints.length);
   const likedPosts = useSocialStore((s) => s.likedPosts.length);
 
-  const title = ROUTE_TITLES[pathname] ?? 'EcoPulse';
-
   let summaryIcon: LucideIcon = Coins;
   let summaryText = '';
 
@@ -36,7 +26,7 @@ export function AppHeader() {
     summaryText = '···';
   } else if (pathname === '/home') {
     summaryIcon = Flame;
-    summaryText = `${streak} dias`;
+    summaryText = `${streak}d`;
   } else if (pathname === '/scanner') {
     summaryIcon = Package;
     summaryText = `${scannedCount}`;
@@ -48,10 +38,10 @@ export function AppHeader() {
     summaryText = `${likedPosts}`;
   } else if (pathname === '/profile') {
     summaryIcon = Coins;
-    summaryText = `Nv ${level} · ${tokensToday}`;
+    summaryText = `Nv ${level}`;
   } else {
     summaryIcon = Coins;
-    summaryText = `${tokensToday} hoje`;
+    summaryText = `${tokensToday}`;
   }
 
   return (
@@ -59,19 +49,16 @@ export function AppHeader() {
       id="app-header"
       className="sticky top-0 z-40 px-3 pt-[calc(env(safe-area-inset-top,0px)+10px)]"
     >
-      <div className="card-glass flex items-center justify-between gap-3 px-4 py-3">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="card-glass flex items-center justify-between gap-3 px-4 py-2.5">
+        <div className="flex items-center gap-2.5">
           <span
             aria-hidden
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
             style={{ background: 'var(--gradient-primary)' }}
           >
-            <Icon icon={Leaf} size={18} strokeWidth={2.2} className="text-[var(--on-primary)]" />
+            <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--on-primary)]" />
           </span>
-          <div className="min-w-0">
-            <div className="t-eyebrow leading-none">EcoPulse</div>
-            <div className="mt-1 t-title leading-none">{title}</div>
-          </div>
+          <span className="t-eyebrow">EcoPulse</span>
         </div>
         <Chip asStatic active leftIcon={<Icon icon={summaryIcon} size={14} className="text-[var(--accent-green)]" />}>
           {summaryText}

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Leaf } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
 import { Avatar } from '@/components/shared/Avatar';
@@ -40,35 +40,33 @@ export function OnboardingFlow() {
 
   return (
     <div
-      className="mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col items-center justify-between bg-[var(--bg-primary)] px-6 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-[calc(env(safe-area-inset-top,0px)+28px)]"
-      style={{ animation: 'fadeIn 0.4s ease' }}
+      className="relative mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col justify-between overflow-hidden bg-[var(--bg-primary)] px-6 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-[calc(env(safe-area-inset-top,0px)+28px)]"
     >
-      <header className="flex w-full items-center gap-2">
-        <span
-          aria-hidden
-          className="flex h-8 w-8 items-center justify-center rounded-xl"
-          style={{ background: 'var(--gradient-primary)' }}
-        >
-          <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--on-primary)]" />
-        </span>
-        <span className="t-eyebrow">EcoPulse</span>
+      {/* Soft brand halo, centered */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--accent-green) 14%, transparent) 0%, transparent 55%)',
+        }}
+      />
+
+      <header className="relative">
+        <p className="t-eyebrow">EcoPulse</p>
       </header>
 
-      <main className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
-        <div
-          className="flex h-44 w-44 items-center justify-center rounded-full border border-[var(--line-soft)]"
-          style={{
-            background:
-              'radial-gradient(circle at 50% 30%, var(--tint-green-2), transparent 65%), var(--bg-secondary)',
-          }}
-        >
+      <main className="relative flex flex-1 flex-col items-start justify-center gap-7" style={{ animation: 'fadeIn 0.55s ease' }}>
+        <div className="flex h-36 w-36 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
           <Avatar baseId={DEFAULT_AVATAR_BASE} size="xl" />
         </div>
 
         <div className="space-y-3">
-          <h1 className="t-display">Olá, {DEFAULT_NAME}.</h1>
-          <p className="t-body-sm max-w-[28ch] text-[var(--text-secondary)]">
-            Hábitos sustentáveis com impacto real. Bora começar?
+          <h1 className="t-display leading-[0.95]">
+            Olá, <span className="t-italic-soft">{DEFAULT_NAME}.</span>
+          </h1>
+          <p className="t-body max-w-[24ch] text-[var(--text-secondary)]">
+            Hábitos sustentáveis com impacto real. Sem ruído.
           </p>
         </div>
       </main>
@@ -79,6 +77,7 @@ export function OnboardingFlow() {
         fullWidth
         onClick={start}
         rightIcon={<Icon icon={ArrowRight} size={16} />}
+        className="relative"
       >
         Começar
       </Button>
