@@ -3,7 +3,8 @@
 import { useMemo } from 'react';
 import { useUIStore } from '@/store/uiStore';
 
-const COLORS = ['#00C896', '#00B4D8', '#FFD166', '#FF6B6B', '#A78BFA', '#FFA94D'];
+// Brand-aligned palette: greens, golds, soft mint — no random rainbow.
+const COLORS = ['#8ddb98', '#6fc581', '#9fe0ad', '#e0c27a', '#e9cd86', '#c9995b'];
 
 interface Piece {
   id: string;

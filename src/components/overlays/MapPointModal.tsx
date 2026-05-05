@@ -7,6 +7,8 @@ import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { IconTile } from '@/components/ui/IconTile';
+import { resolveIcon } from '@/lib/iconRegistry';
 import { ModalShell } from './ModalShell';
 import type { LucideIcon } from 'lucide-react';
 
@@ -22,6 +24,8 @@ export function MapPointModal({ id }: Props) {
   const showToast = useUIStore((s) => s.showToast);
 
   if (!point) return null;
+
+  const PointIcon = resolveIcon(point.iconName as never);
 
   const visit = () => {
     addVisited(id);
@@ -41,15 +45,13 @@ export function MapPointModal({ id }: Props) {
     <ModalShell eyebrow={MAP_DETAIL_LABELS[point.type]} title={point.name}>
       <div>
         <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-white/[0.04] text-3xl">
-            {point.emoji}
-          </div>
+          <IconTile size="lg" tone="brand" icon={PointIcon ? <Icon icon={PointIcon} size={24} /> : <span>{point.emoji}</span>} />
           <div className="min-w-0 flex-1">
-            <div className="text-[0.78rem] text-text-muted">{point.address}</div>
+            <div className="t-caption">{point.address}</div>
           </div>
         </div>
 
-        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02]">
+        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
           <Row icon={MapPin} label="Endereço" value={point.address} />
           <Row icon={Clock} label="Horário" value={point.hours} />
           <Row icon={Ruler} label="Distância" value={point.distance} />
@@ -66,9 +68,7 @@ export function MapPointModal({ id }: Props) {
         >
           {visited ? 'Já visitado' : 'Marcar como visitado'}
         </Button>
-        {!visited ? (
-          <p className="mt-2 text-center text-[0.78rem] text-text-muted">+10 Eco-Tokens</p>
-        ) : null}
+        {!visited ? <p className="t-caption mt-2 text-center">+10 Eco-Tokens</p> : null}
       </div>
     </ModalShell>
   );
@@ -77,11 +77,11 @@ export function MapPointModal({ id }: Props) {
 function Row({ icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-3">
-      <span className="inline-flex items-center gap-2 text-text-muted">
+      <span className="inline-flex items-center gap-2 text-[var(--text-muted)]">
         <Icon icon={icon} size={14} />
-        <span className="text-[0.78rem]">{label}</span>
+        <span className="t-caption">{label}</span>
       </span>
-      <span className="truncate text-right text-[0.88rem] font-medium text-text-primary">{value}</span>
+      <span className="t-body truncate text-right font-medium">{value}</span>
     </div>
   );
 }

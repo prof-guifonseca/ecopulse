@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { X } from 'lucide-react';
 import { STORIES } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens } from '@/lib/gameActions';
+import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 
 interface Props {
@@ -70,12 +72,15 @@ export function StoryViewer({ index }: Props) {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[linear-gradient(180deg,#09110d_0%,#111914_100%)]">
+      <div
+        className="flex h-full w-full max-w-[var(--shell-width)] flex-col"
+        style={{ background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)' }}
+      >
         <div className="flex gap-1 px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)]">
           {STORIES.map((_, i) => {
             const fill = i < index ? 100 : i === index ? progress : 0;
             return (
-              <div key={i} className="h-[3px] flex-1 overflow-hidden rounded bg-white/18">
+              <div key={i} className="h-[3px] flex-1 overflow-hidden rounded bg-[var(--tint-3)]">
                 <div className="h-full bg-white transition-[width]" style={{ width: `${fill}%` }} />
               </div>
             );
@@ -86,29 +91,29 @@ export function StoryViewer({ index }: Props) {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">{story.avatar}</span>
             <div>
-              <div className="text-sm font-semibold text-text-primary">{story.user}</div>
-              <div className="text-xs text-text-secondary">Agora na comunidade</div>
+              <div className="t-title">{story.user}</div>
+              <div className="t-caption">Agora na comunidade</div>
             </div>
           </div>
           <button
             onClick={close}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--tint-3)] text-[var(--text-primary)]"
             aria-label="Fechar story"
           >
-            ✕
+            <Icon icon={X} size={18} />
           </button>
         </div>
 
         <div className="flex flex-1 flex-col justify-center px-6 text-center">
-          <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-white/8 bg-white/6 text-5xl shadow-[0_18px_36px_rgba(145,216,159,0.12)]">
+          <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)] text-5xl shadow-[var(--shadow-glow)]">
             {story.emoji}
           </div>
-          <p className="mt-6 text-xl font-semibold leading-8 text-text-primary">{story.text}</p>
+          <p className="t-display mt-6">{story.text}</p>
         </div>
 
         {story.poll && (
           <div className="px-5 pb-[calc(env(safe-area-inset-bottom,0px)+24px)]">
-            <p className="mb-3 text-center text-sm text-text-secondary">{story.poll.q}</p>
+            <p className="t-body-sm mb-3 text-center">{story.poll.q}</p>
             <div className="flex flex-col gap-2">
               {story.poll.opts.map((opt, i) => {
                 const pct = story.poll!.pcts[i];
@@ -117,18 +122,18 @@ export function StoryViewer({ index }: Props) {
                     key={i}
                     onClick={vote}
                     className={cn(
-                      'relative overflow-hidden rounded-[20px] border bg-white/5 px-4 py-3 text-sm font-medium transition-transform active:scale-[0.97]',
-                      voted ? 'border-accent-green/30' : 'border-white/8'
+                      'relative overflow-hidden rounded-[var(--radius-md)] border bg-[var(--tint-1)] px-4 py-3 t-body font-medium transition-transform active:scale-[0.97]',
+                      voted ? 'border-[var(--line-active)]' : 'border-[var(--line-soft)]'
                     )}
                   >
                     {voted && (
                       <span
-                        className="absolute inset-0 bg-accent-green/12 transition-[width] duration-500"
+                        className="absolute inset-0 bg-[var(--tint-green-2)] transition-[width] duration-500"
                         style={{ width: `${pct}%` }}
                       />
                     )}
                     <span className="relative">{opt}</span>
-                    {voted && <span className="relative float-right font-bold text-accent-green">{pct}%</span>}
+                    {voted && <span className="relative float-right font-bold text-[var(--accent-green)]">{pct}%</span>}
                   </button>
                 );
               })}

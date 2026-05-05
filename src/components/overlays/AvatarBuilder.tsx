@@ -10,7 +10,7 @@ import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Tabs } from '@/components/ui/Tabs';
-import { cn } from '@/lib/cn';
+import { SelectableTile } from '@/components/ui/SelectableTile';
 import type { OutfitSlot } from '@/types';
 
 const SLOT_LABELS: Record<OutfitSlot, string> = {
@@ -75,20 +75,17 @@ export function AvatarBuilder() {
         className="flex h-full w-full max-w-[var(--shell-width)] flex-col"
         style={{ background: 'var(--bg-primary)' }}
       >
-        <header
-          className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4"
-          style={{ background: 'rgba(10,18,13,0.94)', backdropFilter: 'blur(14px)' }}
-        >
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
           <button
             onClick={close}
             aria-label="Fechar"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-white/6 hover:text-text-primary"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--tint-3)] hover:text-[var(--text-primary)]"
           >
             <Icon icon={X} size={18} />
           </button>
           <div className="flex-1 text-center">
-            <div className="display-eyebrow">Avatar</div>
-            <h2 className="text-[1rem] font-semibold leading-tight text-text-primary">Personalizar</h2>
+            <div className="t-eyebrow">Avatar</div>
+            <h2 className="t-title">Personalizar</h2>
           </div>
           <Button variant="ghost" size="sm" onClick={save}>
             Salvar
@@ -96,10 +93,7 @@ export function AvatarBuilder() {
         </header>
 
         <div className="flex flex-col items-center px-4 py-6">
-          <div
-            className="rounded-[28px] border border-[var(--line-soft)] p-6"
-            style={{ background: 'rgba(255,255,255,0.03)' }}
-          >
+          <div className="rounded-[28px] border border-[var(--line-soft)] bg-[var(--tint-1)] p-6">
             <Avatar baseId={baseId} outfits={outfits} size="xl" />
           </div>
         </div>
@@ -114,19 +108,15 @@ export function AvatarBuilder() {
               {AVATAR_BASES.map((b) => {
                 const active = baseId === b.id;
                 return (
-                  <button
+                  <SelectableTile
                     key={b.id}
+                    selected={active}
+                    align="column"
                     onClick={() => setBaseId(b.id)}
-                    className={cn(
-                      'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border p-3 transition-colors',
-                      active
-                        ? 'border-[rgba(141,219,152,0.55)] bg-[rgba(141,219,152,0.08)]'
-                        : 'border-[var(--line-soft)] bg-white/[0.02] hover:bg-white/[0.04]'
-                    )}
                   >
                     <Avatar baseId={b.id} size="md" />
-                    <span className="text-[0.78rem] font-semibold text-text-primary">{b.name}</span>
-                  </button>
+                    <span className="t-caption font-semibold text-[var(--text-primary)]">{b.name}</span>
+                  </SelectableTile>
                 );
               })}
             </div>
@@ -143,37 +133,34 @@ export function AvatarBuilder() {
                   }
                 };
                 return (
-                  <button
+                  <SelectableTile
                     key={o.id}
+                    selected={equipped}
+                    align="column"
                     onClick={act}
-                    className={cn(
-                      'relative flex flex-col items-center gap-2 rounded-[var(--radius-md)] border p-4 transition-colors',
-                      equipped
-                        ? 'border-[rgba(141,219,152,0.55)] bg-[rgba(141,219,152,0.08)]'
-                        : 'border-[var(--line-soft)] bg-white/[0.02] hover:bg-white/[0.04]'
-                    )}
+                    className="relative"
                   >
                     {equipped ? (
                       <span
-                        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full"
-                        style={{ background: 'var(--gradient-primary)', color: '#0a140e' }}
+                        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]"
+                        style={{ background: 'var(--gradient-primary)' }}
                       >
                         <Icon icon={Check} size={12} strokeWidth={2.4} />
                       </span>
                     ) : null}
                     <span className="text-4xl leading-none">{o.emoji}</span>
-                    <span className="text-[0.85rem] font-semibold text-text-primary">{o.name}</span>
+                    <span className="t-title">{o.name}</span>
                     {owned ? (
-                      <span className="text-[0.72rem] text-text-muted">
+                      <span className="t-caption">
                         {equipped ? 'Equipado' : 'Toque para equipar'}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[0.78rem] font-semibold text-accent-gold">
+                      <span className="inline-flex items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
                         <Icon icon={Coins} size={12} />
                         {o.price}
                       </span>
                     )}
-                  </button>
+                  </SelectableTile>
                 );
               })}
             </div>

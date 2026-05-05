@@ -7,6 +7,7 @@ import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { Chip } from '@/components/ui/Chip';
 import { ModalShell } from './ModalShell';
 
 interface Props {
@@ -40,11 +41,11 @@ export function TutorialModal({ id }: Props) {
           className="relative flex min-h-[120px] items-center justify-center overflow-hidden rounded-[var(--radius-md)]"
           style={{ background: tutorial.gradient }}
         >
-          <div className="absolute inset-0 bg-black/25" aria-hidden />
+          <div className="absolute inset-0 bg-black/20" aria-hidden />
           <div className="relative text-5xl drop-shadow-md">{tutorial.emoji}</div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-[0.8rem] text-text-muted">
+        <div className="mt-4 flex flex-wrap items-center gap-3 t-caption">
           <span className="inline-flex items-center gap-1">
             Nível: {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))}
           </span>
@@ -56,42 +57,37 @@ export function TutorialModal({ id }: Props) {
         </div>
 
         <div className="mt-5">
-          <div className="display-eyebrow mb-2">Materiais</div>
+          <div className="t-eyebrow mb-2">Materiais</div>
           <div className="flex flex-wrap gap-1.5">
             {tutorial.materials.map((m) => (
-              <span
-                key={m}
-                className="rounded-full border border-[var(--line-soft)] bg-white/[0.03] px-2.5 py-1 text-[0.78rem] text-text-secondary"
-              >
-                {m}
-              </span>
+              <Chip key={m} asStatic>{m}</Chip>
             ))}
           </div>
         </div>
 
         <div className="mt-5">
-          <div className="display-eyebrow mb-2">Passos</div>
+          <div className="t-eyebrow mb-2">Passos</div>
           <div className="space-y-2">
             {tutorial.steps.map((step, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02] px-3 py-2.5 text-[0.85rem]"
+                className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-3 py-2.5 t-body-sm"
               >
                 <span
-                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.72rem] font-bold text-[#0a140e]"
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.72rem] font-bold text-[var(--on-primary)]"
                   style={{ background: 'var(--gradient-primary)' }}
                 >
                   {i + 1}
                 </span>
-                <span className="leading-5 text-text-secondary">{step}</span>
+                <span className="text-[var(--text-secondary)]">{step}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-[var(--radius-md)] border border-[rgba(224,194,122,0.25)] bg-[rgba(224,194,122,0.06)] px-4 py-3 text-[0.85rem] text-text-secondary">
-          <Icon icon={Coins} size={14} className="text-accent-gold" />
-          Recompensa: <strong className="text-accent-gold">{tutorial.tokens} Eco-Tokens</strong>
+        <div className="mt-5 flex items-center gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 t-body-sm">
+          <Icon icon={Coins} size={14} className="text-[var(--accent-gold)]" />
+          Recompensa: <strong className="text-[var(--accent-gold)]">{tutorial.tokens} Eco-Tokens</strong>
         </div>
 
         <Button
