@@ -1,14 +1,29 @@
 import type { AvatarBase, AvatarOutfit } from '@/types';
 
+/**
+ * Editorial palette: each base is a sober, sustainable-lifestyle tone.
+ * No primary rainbow. Skin tones span warm neutrals; hair is muted earth.
+ */
 export const AVATAR_BASES: AvatarBase[] = [
-  { id: 'base1', name: 'Eco Explorer', color: '#52b788', skin: '#F4C7A3', hair: '#5B3A1A' },
-  { id: 'base2', name: 'Urban Green', color: '#00B4D8', skin: '#D4A76A', hair: '#2C1810' },
-  { id: 'base3', name: 'Nature Kid', color: '#FFD166', skin: '#E8B88A', hair: '#8B4513' },
-  { id: 'base4', name: 'Ocean Soul', color: '#3a86ff', skin: '#C68E5B', hair: '#1A1A2E' },
-  { id: 'base5', name: 'Fire Spirit', color: '#FF6B6B', skin: '#F5D5B8', hair: '#D4380D' },
-  { id: 'base6', name: 'Forest Sage', color: '#A78BFA', skin: '#8D5524', hair: '#0D0D0D' },
+  // Eco green
+  { id: 'base1', name: 'Folha', color: '#8ddb98', skin: '#f0d2b3', hair: '#3a2a18' },
+  // Deep moss
+  { id: 'base2', name: 'Musgo', color: '#5fb36f', skin: '#d4a986', hair: '#2c1810' },
+  // Warm gold
+  { id: 'base3', name: 'Cobre', color: '#e0c27a', skin: '#e8b88a', hair: '#7a4318' },
+  // Slate / cool
+  { id: 'base4', name: 'Bruma', color: '#9fc5b6', skin: '#cf9f7c', hair: '#1a1a1a' },
+  // Clay / terracotta
+  { id: 'base5', name: 'Argila', color: '#c2876f', skin: '#f0d2b3', hair: '#4a2a18' },
+  // Charcoal
+  { id: 'base6', name: 'Carvão', color: '#5a6b62', skin: '#a37456', hair: '#0a0a0a' },
 ];
 
+/**
+ * Outfits keep the same gameplay slots; visual styling restrained
+ * to the editorial palette. Hat colors, glasses tints and shirts
+ * coordinate with the brand greens / golds / earths.
+ */
 export const AVATAR_OUTFITS: AvatarOutfit[] = [
   { id: 'hat1', name: 'Chapéu de Folhas', slot: 'hat', price: 40, emoji: '🍃', tier: 'common' },
   { id: 'hat2', name: 'Coroa de Flores', slot: 'hat', price: 80, emoji: '🌸', tier: 'rare' },
