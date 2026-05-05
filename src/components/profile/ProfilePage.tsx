@@ -245,25 +245,31 @@ function ShopPanel() {
 
   return (
     <div className="space-y-6">
-      <Card tone="solid" accent="reward" padded={false} className="px-5 py-5">
-        <div className="grid grid-cols-3 gap-2">
-          <Tile size="sm" label="Seu saldo" value={tokens} icon={<Icon icon={Coins} size={13} />} />
-          <Tile size="sm" label="Fundo" value="20%" />
-          <Tile size="sm" label="Status" value="Em breve" />
+      {/* Wallet hero — single emphatic balance, secondary action only */}
+      <Card tone="hero" padded={false} className="px-5 py-6">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <p className="t-eyebrow">Sua carteira</p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="t-display leading-[1] text-[var(--accent-green)]">{tokens}</span>
+              <span className="t-body-sm">Eco-Tokens</span>
+            </div>
+            <p className="t-caption mt-2 max-w-[28ch]">
+              20% do que entra em packs vai pro Fundo EcoPulse.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => openModal({ kind: 'greenMarketInfo' })}
+          >
+            Como funciona
+          </Button>
         </div>
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="mt-5"
-          onClick={() => openModal({ kind: 'greenMarketInfo' })}
-        >
-          Como funciona
-        </Button>
       </Card>
 
       <section>
-        <SectionHeader title="Packs de Eco-Tokens" />
+        <SectionHeader title="Packs de apoio" />
         <div className="space-y-3">
           {TOKEN_PACKS.map((pack) => (
             <Card
@@ -273,6 +279,9 @@ function ShopPanel() {
               padded={false}
               className="px-5 py-5"
             >
+              {pack.featured ? (
+                <p className="t-eyebrow mb-2 text-[var(--accent-gold)]">Mais escolhido</p>
+              ) : null}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="t-title">{pack.name}</div>
@@ -286,13 +295,13 @@ function ShopPanel() {
                 <Tile size="sm" label="Fundo" value={formatCurrency(pack.fundShareInCents)} />
               </div>
               <Button
-                variant={pack.featured ? 'reward' : 'primary'}
+                variant={pack.featured ? 'reward' : 'secondary'}
                 size="md"
                 fullWidth
                 className="mt-4"
                 onClick={() => openModal({ kind: 'greenMarketInfo', packId: pack.id })}
               >
-                Ver detalhes
+                Saiba mais
               </Button>
             </Card>
           ))}
@@ -300,7 +309,7 @@ function ShopPanel() {
       </section>
 
       <section>
-        <SectionHeader title="Itens disponíveis" />
+        <SectionHeader title="Itens" />
         <div className="grid grid-cols-2 gap-3">
           {SHOP_ITEMS.map((item) => {
             const isOwned = owned.includes(item.id);
