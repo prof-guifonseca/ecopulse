@@ -113,7 +113,7 @@ export function MapPage() {
       </div>
 
       {panel === 'places' ? (
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="stagger divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
           {pins.map((point) => {
             const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
             const isVisited = visited.includes(point.id);

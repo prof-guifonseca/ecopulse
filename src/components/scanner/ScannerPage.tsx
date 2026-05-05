@@ -222,7 +222,7 @@ export function ScannerPage() {
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button

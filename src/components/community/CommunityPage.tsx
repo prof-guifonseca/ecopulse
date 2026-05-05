@@ -30,7 +30,7 @@ export function CommunityPage() {
         </p>
       </header>
 
-      <div className="space-y-5">
+      <div className="stagger space-y-5">
         {FEED_POSTS.map((post) => (
           <FeedPostCard
             key={post.id}
