@@ -36,6 +36,7 @@ export function ScannerPage() {
   const openModal = useUIStore((s) => s.openModal);
   const modal = useUIStore((s) => s.modal);
   const showToast = useUIStore((s) => s.showToast);
+  const fireConfetti = useUIStore((s) => s.fireConfetti);
   const markMission = useGameStore((s) => s.markMission);
   const missionScan = useGameStore((s) => s.dailyMissions.scan);
   const firstScanCompleted = useUserStore((s) => s.firstScanCompleted);
@@ -86,6 +87,7 @@ export function ScannerPage() {
         markFirstScanCompleted();
         awaitingFirstClose.current = true;
       }
+      fireConfetti();
       openModal({ kind: 'product', id: record.id });
       setScanning(false);
     }, SCAN_RITUAL_MS);
@@ -101,8 +103,15 @@ export function ScannerPage() {
       </header>
 
       {/* Scan instrument — the ritual lives here */}
-      <div className="scan-frame relative overflow-hidden px-6 py-7">
-        <div className="relative flex h-[220px] items-center justify-center">
+      <div className="scan-frame relative overflow-hidden px-6 py-7" data-scanning={scanning}>
+        <div className="relative flex h-[260px] items-center justify-center">
+          {/* Pulsing radial halo behind the target */}
+          <span aria-hidden className="scan-target-halo" />
+
+          {/* Dual rotating rings frame the reticle */}
+          <span aria-hidden className="scan-ring-outer" />
+          <span aria-hidden className="scan-ring-inner" />
+
           {/* Reticle: a thin square that pulses while scanning */}
           <div
             className="relative h-32 w-32 rounded-[var(--radius-lg)] border border-[var(--line-active)] bg-[var(--tint-green-3)]"
