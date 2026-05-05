@@ -52,6 +52,8 @@ const SLOT_LABELS: Record<OutfitSlot, string> = {
   shirt: 'Camisa',
   accessory: 'Acessório',
   background: 'Fundo',
+  weapon: 'Arma',
+  hairstyle: 'Cabelo',
 };
 
 const TAB_ITEMS = [

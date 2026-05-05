@@ -5,10 +5,11 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { BADGES } from '@/data';
 import { hapticSuccess, hapticTap } from '@/lib/haptic';
+import { checkSkinUnlocks } from '@/lib/skinUnlocks';
 
 /**
  * Awards tokens + XP in one atomic action, handles level-up toasts,
- * confetti, and the token-100 badge auto-unlock.
+ * confetti, the token-100 badge auto-unlock, and skin progression checks.
  */
 export function awardTokens(amount: number) {
   const user = useUserStore.getState();
@@ -34,6 +35,9 @@ export function awardTokens(amount: number) {
   if (level >= 8 && !useGameStore.getState().badges.includes('tree-grown')) {
     unlockBadge('tree-grown');
   }
+
+  // Re-evaluate SkinPack progression (level / count metrics may have moved).
+  checkSkinUnlocks();
 }
 
 export function unlockBadge(id: string) {
@@ -44,5 +48,7 @@ export function unlockBadge(id: string) {
     if (b) ui.showToast(`Conquista: ${b.name}`, 'reward');
     ui.fireConfetti();
     hapticSuccess();
+    // A new badge may satisfy a SkinPack unlock criterion.
+    checkSkinUnlocks();
   }
 }
