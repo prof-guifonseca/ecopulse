@@ -1,18 +1,22 @@
 import type { Metadata, Viewport } from 'next';
-import { Manrope, Oxanium } from 'next/font/google';
+import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 
-const manrope = Manrope({
+// Editorial display — Fraunces variable font (wght axis only by default keeps
+// the bundle small; SOFT/opsz are still controllable via font-variation-settings
+// at usage sites since the variable font itself contains those axes).
+const fraunces = Fraunces({
   subsets: ['latin'],
-  variable: '--font-manrope',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-display',
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
-const oxanium = Oxanium({
+// Body — Inter handles tight UI text and longer captions equally well.
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-oxanium',
-  weight: ['500', '600', '700', '800'],
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -44,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="pt-BR"
       data-scroll-behavior="smooth"
-      className={`${manrope.variable} ${oxanium.variable} antialiased`}
+      className={`${fraunces.variable} ${inter.variable} antialiased`}
     >
       <body>{children}</body>
     </html>
