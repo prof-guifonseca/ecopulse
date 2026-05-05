@@ -22,7 +22,6 @@ export type ModalContent =
 interface UIState {
   toasts: Toast[];
   modal: ModalContent | null;
-  storyIndex: number | null;
   chatId: string | null;
   chatListOpen: boolean;
   avatarBuilderOpen: boolean;
@@ -32,8 +31,6 @@ interface UIState {
   dismissToast: (id: number) => void;
   openModal: (c: ModalContent) => void;
   closeModal: () => void;
-  openStory: (i: number) => void;
-  closeStory: () => void;
   openChat: (id: string) => void;
   closeChat: () => void;
   openChatList: () => void;
@@ -48,7 +45,6 @@ let toastCounter = 0;
 export const useUIStore = create<UIState>()((set, get) => ({
   toasts: [],
   modal: null,
-  storyIndex: null,
   chatId: null,
   chatListOpen: false,
   avatarBuilderOpen: false,
@@ -62,8 +58,6 @@ export const useUIStore = create<UIState>()((set, get) => ({
   dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
   openModal: (c) => set({ modal: c }),
   closeModal: () => set({ modal: null }),
-  openStory: (i) => set({ storyIndex: i }),
-  closeStory: () => set({ storyIndex: null }),
   openChat: (id) => set({ chatId: id, chatListOpen: false }),
   closeChat: () => set({ chatId: null }),
   openChatList: () => set({ chatListOpen: true }),

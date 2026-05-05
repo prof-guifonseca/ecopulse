@@ -5,23 +5,10 @@ import { Skeleton } from '@/components/shared/Skeleton';
 export function CommunitySkeleton() {
   return (
     <PageShell spacing={5}>
-      <header className="flex items-start justify-between gap-3 pt-2" aria-busy="true" aria-live="polite">
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-20" />
-          <Skeleton className="h-9 w-56" />
-        </div>
-        <Skeleton className="h-10 w-10 rounded-full" />
+      <header className="pt-2 space-y-2" aria-busy="true" aria-live="polite">
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-9 w-56" />
       </header>
-      <section aria-label="Carregando stories">
-        <div className="-mx-3 flex gap-3 overflow-hidden px-3 pb-1">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex w-[78px] shrink-0 flex-col items-center gap-1.5">
-              <Skeleton className="h-[78px] w-[78px] rounded-full" />
-              <Skeleton className="h-3 w-12" />
-            </div>
-          ))}
-        </div>
-      </section>
       <div className="space-y-5">
         {Array.from({ length: 2 }).map((_, i) => (
           <Card key={i} tone="solid" padded={false} className="overflow-hidden">

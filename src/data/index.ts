@@ -3,7 +3,6 @@ export { MAP_POINTS, MAP_TYPE_LABELS, MAP_DETAIL_LABELS, MAP_TYPE_ICON } from '.
 export { TUTORIALS } from './tutorials';
 export { CHALLENGES } from './challenges';
 export { FEED_POSTS } from './feedPosts';
-export { STORIES } from './stories';
 export { BADGES } from './badges';
 export { LEADERBOARD } from './leaderboard';
 export { TRIBES } from './tribes';

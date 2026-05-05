@@ -119,21 +119,6 @@ export interface FeedPost {
   commentList: FeedComment[];
 }
 
-export interface StoryPoll {
-  q: string;
-  opts: string[];
-  pcts: number[];
-}
-
-export interface Story {
-  user: string;
-  avatar: string;
-  text: string;
-  /** Curated Unsplash photo key for full-bleed background */
-  imageKey: string;
-  poll?: StoryPoll;
-}
-
 export interface Badge {
   id: string;
   name: string;
