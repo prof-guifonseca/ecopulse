@@ -4,6 +4,11 @@ import { NinjaEcoArt } from './NinjaEcoArt';
 import { MagoDaFlorestaArt } from './MagoDaFlorestaArt';
 import { CyberRecicladorArt } from './CyberRecicladorArt';
 import { AventureiroArt } from './AventureiroArt';
+import { PirataReciclaArt } from './PirataReciclaArt';
+import { CientistaEcoArt } from './CientistaEcoArt';
+import { CiclistaVerdeArt } from './CiclistaVerdeArt';
+import { CapoeiristaArt } from './CapoeiristaArt';
+import { GuardiaoDaFlorestaArt } from './GuardiaoDaFlorestaArt';
 
 export const SKIN_ART_REGISTRY = {
   akashi: AkashiArt,
@@ -12,6 +17,11 @@ export const SKIN_ART_REGISTRY = {
   'mago-da-floresta': MagoDaFlorestaArt,
   'cyber-reciclador': CyberRecicladorArt,
   aventureiro: AventureiroArt,
+  'pirata-recicla': PirataReciclaArt,
+  'cientista-eco': CientistaEcoArt,
+  'ciclista-verde': CiclistaVerdeArt,
+  capoeirista: CapoeiristaArt,
+  'guardiao-da-floresta': GuardiaoDaFlorestaArt,
 } as const;
 
 export type SkinArtId = keyof typeof SKIN_ART_REGISTRY;
