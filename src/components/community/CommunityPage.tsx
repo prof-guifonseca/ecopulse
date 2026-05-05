@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Heart, MessageCircle, MessageSquare, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, MessageSquare } from 'lucide-react';
 import { FEED_POSTS, STORIES } from '@/data';
 import { useSocialStore } from '@/store/socialStore';
 import { useGameStore } from '@/store/gameStore';
@@ -10,7 +10,6 @@ import { useHydrated } from '@/hooks/useHydrated';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { PageShell } from '@/components/ui/PageShell';
@@ -27,30 +26,26 @@ export function CommunityPage() {
   if (!hydrated) return <CommunitySkeleton />;
 
   return (
-    <PageShell>
-      <header className="flex items-end justify-between gap-3">
+    <PageShell spacing={5}>
+      <header className="flex items-start justify-between gap-3 pt-2">
         <div>
           <p className="t-eyebrow">Comunidade</p>
-          <h1 className="t-display mt-1.5 leading-[1]">
+          <h1 className="t-display mt-1.5 leading-[0.95]">
             Quem caminha <span className="t-italic-soft">com você</span>
           </h1>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
+        <button
           onClick={openChatList}
-          leftIcon={<Icon icon={MessageSquare} size={14} />}
+          aria-label="Abrir mensagens"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
         >
-          Mensagens
-        </Button>
+          <Icon icon={MessageSquare} size={16} />
+        </button>
       </header>
 
-      <StoriesRail
-        onOpen={openStory}
-        unreadCount={unreadHint}
-      />
+      <StoriesRail onOpen={openStory} unreadCount={unreadHint} />
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {FEED_POSTS.map((post) => (
           <FeedPostCard
             key={post.id}
@@ -75,20 +70,16 @@ function StoriesRail({
       <div className="-mx-3 flex gap-3 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STORIES.map((story, index) => {
           const unread = index < unreadCount;
-
           return (
             <button
               key={story.user}
               onClick={() => onOpen(index)}
-              className="group flex w-[88px] shrink-0 flex-col items-center gap-1.5"
+              className="group flex w-[78px] shrink-0 flex-col items-center gap-1.5"
               aria-label={`Story de ${story.user}`}
             >
               <span
                 className={cn(
-                  'relative flex h-[88px] w-[88px] items-center justify-center rounded-full p-[3px] transition-transform duration-200 group-active:scale-95',
-                  // Solid soft-green ring for unread, neutral line for seen.
-                  // The previous conic gradient (green↔gold↔green) made 5+
-                  // adjacent stories feel busy without adding meaning.
+                  'relative flex h-[78px] w-[78px] items-center justify-center rounded-full p-[2px] transition-transform duration-200 group-active:scale-95',
                   unread
                     ? 'bg-[color:color-mix(in_srgb,var(--accent-green)_55%,transparent)]'
                     : 'bg-[var(--line-soft)]'
@@ -97,22 +88,20 @@ function StoriesRail({
                 <span className="relative h-full w-full overflow-hidden rounded-full border-2 border-[var(--bg-primary)]">
                   {story.imageKey ? (
                     <Image
-                      src={unsplashUrl(story.imageKey as UnsplashKey, { w: 220, h: 220 })}
+                      src={unsplashUrl(story.imageKey as UnsplashKey, { w: 200, h: 200 })}
                       alt={story.user}
                       fill
-                      sizes="88px"
+                      sizes="78px"
                       className="object-cover"
                     />
                   ) : (
-                    <span className="flex h-full w-full items-center justify-center bg-[var(--tint-2)] text-3xl">
+                    <span className="flex h-full w-full items-center justify-center bg-[var(--tint-2)] text-2xl">
                       {story.avatar}
                     </span>
                   )}
                 </span>
               </span>
-              <span className="t-caption max-w-[80px] truncate text-[var(--text-secondary)]">
-                {story.user}
-              </span>
+              <span className="t-caption max-w-[72px] truncate">{story.user}</span>
             </button>
           );
         })}
@@ -156,12 +145,12 @@ function FeedPostCard({
 
   return (
     <Card tone="solid" padded={false} className="overflow-hidden">
-      {/* Image-dominant hero */}
+      {/* Photo only — caption sits below in clean text, not floating overlay */}
       <div className="relative aspect-[4/5] w-full overflow-hidden">
         {post.imageKey ? (
           <Image
             src={unsplashUrl(post.imageKey as UnsplashKey, { w: 900, h: 1125 })}
-            alt=""
+            alt={post.caption}
             fill
             sizes="(max-width: 430px) 100vw, 430px"
             className="object-cover"
@@ -169,13 +158,9 @@ function FeedPostCard({
         ) : (
           <div className="absolute inset-0" style={{ background: post.gradient }} />
         )}
-
-        {/* Top fade for header legibility */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/55 to-transparent" />
-
-        {/* Floating user header */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/55 to-transparent" />
         <div className="absolute left-4 top-4 right-4 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/35 text-xl backdrop-blur-md">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/40 text-lg backdrop-blur-md">
             {post.user.avatar}
           </div>
           <div className="min-w-0 flex-1">
@@ -185,102 +170,75 @@ function FeedPostCard({
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom: caption + tags */}
-        <div className="absolute inset-x-0 bottom-0 p-4 pb-5">
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-          <div className="relative">
-            <p className="t-headline mb-2 max-w-[24ch] text-white drop-shadow-md">{post.caption}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {post.hashtags.map((tag) => (
-                <span
-                  key={tag}
-                  className="t-caption inline-flex items-center rounded-full border border-white/25 bg-black/35 px-2.5 py-1 font-medium text-white backdrop-blur-md"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+      <div className="px-4 py-4 space-y-3">
+        <p className="t-body">{post.caption}</p>
+
+        <div className="flex items-center gap-2">
+          <Chip
+            active={liked}
+            onClick={handleLike}
+            leftIcon={<Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />}
+            className={cn(liked && 'text-[var(--accent-red)]')}
+          >
+            {likeCount}
+          </Chip>
+          <Chip onClick={onOpenComments} leftIcon={<Icon icon={MessageCircle} size={14} />}>
+            {post.comments}
+          </Chip>
         </div>
-      </div>
 
-      {/* Engagement strip */}
-      <div className="flex items-center gap-2 px-4 pt-3">
-        <Chip
-          active={liked}
-          onClick={handleLike}
-          leftIcon={<Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />}
-          className={cn(liked && 'text-[var(--accent-red)]')}
-        >
-          {likeCount}
-        </Chip>
-        <Chip onClick={onOpenComments} leftIcon={<Icon icon={MessageCircle} size={14} />}>
-          {post.comments}
-        </Chip>
-        <span className="ml-auto t-caption inline-flex items-center gap-1 text-[var(--accent-green)]">
-          <Icon icon={Sparkles} size={12} />
-          +1 ao curtir
-        </span>
-      </div>
-
-      {/* Inline first comment preview */}
-      {firstComment ? (
-        <button
-          onClick={onOpenComments}
-          className="mt-2 block w-full text-left transition-colors hover:bg-[var(--tint-1)]"
-        >
-          <div className="px-4 py-3">
+        {firstComment ? (
+          <button
+            onClick={onOpenComments}
+            className="-mx-1 block w-full text-left rounded-md px-1 py-1 transition-colors hover:bg-[var(--tint-1)]"
+          >
             <p className="t-body-sm">
               <span className="font-semibold text-[var(--text-primary)]">{firstComment.user}</span>{' '}
               <span className="text-[var(--text-secondary)]">{firstComment.text}</span>
             </p>
             {post.comments > 1 ? (
-              <p className="t-caption mt-1">Ver todos os {post.comments} comentários →</p>
+              <p className="t-caption mt-0.5">Ver todos os {post.comments} comentários →</p>
             ) : null}
-          </div>
-        </button>
-      ) : (
-        <div className="px-4 pb-4" />
-      )}
+          </button>
+        ) : null}
+      </div>
     </Card>
   );
 }
 
 function CommunitySkeleton() {
   return (
-    <PageShell>
-      <header className="flex items-end justify-between gap-3" aria-busy="true" aria-live="polite">
-        <div className="space-y-3">
-          <Skeleton className="h-3 w-24" />
+    <PageShell spacing={5}>
+      <header className="flex items-start justify-between gap-3 pt-2" aria-busy="true" aria-live="polite">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-20" />
           <Skeleton className="h-9 w-56" />
         </div>
-        <Skeleton className="h-9 w-32 rounded-full" />
+        <Skeleton className="h-10 w-10 rounded-full" />
       </header>
-
       <section aria-label="Carregando stories">
         <div className="-mx-3 flex gap-3 overflow-hidden px-3 pb-1">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex w-[88px] shrink-0 flex-col items-center gap-1.5">
-              <Skeleton className="h-[88px] w-[88px] rounded-full" />
-              <Skeleton className="h-3 w-14" />
+            <div key={i} className="flex w-[78px] shrink-0 flex-col items-center gap-1.5">
+              <Skeleton className="h-[78px] w-[78px] rounded-full" />
+              <Skeleton className="h-3 w-12" />
             </div>
           ))}
         </div>
       </section>
-
-      <div className="space-y-6">
+      <div className="space-y-5">
         {Array.from({ length: 2 }).map((_, i) => (
           <Card key={i} tone="solid" padded={false} className="overflow-hidden">
             <Skeleton className="aspect-[4/5] w-full rounded-none" />
-            <div className="flex items-center gap-2 px-4 pt-3">
-              <Skeleton className="h-8 w-14 rounded-full" />
-              <Skeleton className="h-8 w-12 rounded-full" />
-              <Skeleton className="ml-auto h-3 w-20" />
-            </div>
-            <div className="space-y-2 px-4 py-3">
-              <Skeleton className="h-3 w-2/3" />
-              <Skeleton className="h-3 w-1/3" />
+            <div className="space-y-2 px-4 py-4">
+              <Skeleton className="h-3 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+              <div className="flex gap-2 pt-1">
+                <Skeleton className="h-8 w-14 rounded-full" />
+                <Skeleton className="h-8 w-12 rounded-full" />
+              </div>
             </div>
           </Card>
         ))}
