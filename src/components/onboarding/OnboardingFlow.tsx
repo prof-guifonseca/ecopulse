@@ -55,7 +55,7 @@ export function OnboardingFlow() {
       </header>
 
       <main className="animate-fade-in relative flex flex-1 flex-col items-start justify-center gap-7">
-        <div className="flex h-36 w-36 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <div className="flex h-36 w-36 items-center justify-center rounded-full border-soft bg-tint-1">
           <Avatar baseId={DEFAULT_AVATAR_BASE} size="xl" />
         </div>
 

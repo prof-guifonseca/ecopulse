@@ -51,7 +51,7 @@ export function MapPointModal({ id }: Props) {
           </div>
         </div>
 
-        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           <Row icon={MapPin} label="Endereço" value={point.address} />
           <Row icon={Clock} label="Horário" value={point.hours} />
           <Row icon={Ruler} label="Distância" value={point.distance} />

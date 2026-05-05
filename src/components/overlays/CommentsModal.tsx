@@ -19,7 +19,7 @@ export function CommentsModal({ id }: Props) {
         {post.commentList.map((c, i) => (
           <div
             key={i}
-            className="flex gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-3 py-3"
+            className="flex gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-3"
           >
             <span className="text-xl leading-none">{c.avatar}</span>
             <div className="min-w-0 flex-1">

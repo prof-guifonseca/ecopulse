@@ -23,7 +23,7 @@ export function ImpactPanel({ scannedCount }: { scannedCount: number }) {
 
       <button
         onClick={() => openModal({ kind: 'greenMarketInfo' })}
-        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-4 text-left transition-colors hover:bg-[var(--tint-2)]"
+        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-4 text-left transition-colors hover:bg-[var(--tint-2)]"
       >
         <div className="min-w-0">
           <p className="t-eyebrow">Fundo EcoPulse</p>

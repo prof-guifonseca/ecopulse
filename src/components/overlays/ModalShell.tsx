@@ -48,7 +48,7 @@ export function ModalShell({
           type="button"
           onClick={close}
           aria-label="Fechar"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-soft bg-tint-2 text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
         >
           <Icon icon={X} size={18} />
         </button>

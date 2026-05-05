@@ -91,7 +91,7 @@ export function ScannerPage() {
             )}
           />
           {/* Camera target */}
-          <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-active)] bg-[var(--tint-green-3)] text-[var(--accent-green)] shadow-[var(--shadow-glow)]">
+          <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-lg)] border-active bg-tint-green-3 text-[var(--accent-green)] shadow-[var(--shadow-glow)]">
             <Icon icon={Camera} size={40} strokeWidth={1.5} />
           </div>
         </div>
@@ -116,7 +116,7 @@ export function ScannerPage() {
       </div>
 
       {firstRun ? (
-        <p className="rounded-[var(--radius-md)] border border-[var(--line-active)] bg-[var(--tint-green-1)] px-4 py-3 t-body-sm text-[var(--accent-green)]">
+        <p className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
           Toque em Simular scan e a home libera.
         </p>
@@ -139,14 +139,14 @@ export function ScannerPage() {
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+          <ul className="mt-4 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button
                   onClick={() => openModal({ kind: 'product', id: product.id })}
                   className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
                     {product.emoji}
                   </span>
                   <div className="min-w-0 flex-1">

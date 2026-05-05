@@ -55,7 +55,7 @@ export function SkinPackModal({ id }: Props) {
     <ModalShell eyebrow="Personagem" title={skin.name}>
       <div className="space-y-5">
         {/* Hero illustration */}
-        <div className="flex h-44 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <div className="flex h-44 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
           <SkinPackArt id={skin.id} size="xl" />
         </div>
 
@@ -66,15 +66,15 @@ export function SkinPackModal({ id }: Props) {
 
         {/* Status / unlock hint */}
         {equipped ? (
-          <div className="rounded-[var(--radius-md)] border border-[var(--line-active)] bg-[var(--tint-green-2)] px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-2 px-4 py-3 t-body-sm text-[var(--accent-green)]">
             ✓ Equipado agora
           </div>
         ) : owned ? (
-          <div className="rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-3 t-body-sm">
+          <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
             Você já desbloqueou. Toque pra equipar.
           </div>
         ) : locked ? (
-          <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-3 t-body-sm">
+          <div className="flex items-start gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
             <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--text-muted)]" />
             <div>
               <p className="font-semibold text-[var(--text-primary)]">Bloqueada</p>
@@ -82,7 +82,7 @@ export function SkinPackModal({ id }: Props) {
             </div>
           </div>
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-[var(--line-active)] bg-[var(--tint-green-1)] px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
             Critério atingido. Pronto para comprar.
           </div>
         )}

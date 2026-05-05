@@ -48,7 +48,7 @@ export function BottomNav() {
               <span
                 className={cn(
                   'flex h-8 w-8 items-center justify-center rounded-xl transition-colors duration-200',
-                  active ? 'bg-[var(--tint-green-3)]' : 'bg-transparent'
+                  active ? 'bg-tint-green-3' : 'bg-transparent'
                 )}
               >
                 <Icon

@@ -41,8 +41,8 @@ function PickerTile({
       className={cn(
         'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
         selected
-          ? 'border-[var(--line-active)] bg-[var(--tint-green-2)] shadow-[var(--shadow-glow)]'
-          : 'border-[var(--line-soft)] bg-[var(--tint-1)] hover:border-[var(--line-strong)]',
+          ? 'border-[var(--line-active)] bg-tint-green-2 shadow-[var(--shadow-glow)]'
+          : 'border-[var(--line-soft)] bg-tint-1 hover:border-[var(--line-strong)]',
         disabled && 'cursor-not-allowed opacity-50',
         className
       )}
@@ -152,7 +152,7 @@ export function AvatarBuilder() {
 
         {/* Live preview */}
         <div className="flex flex-col items-center px-4 py-6">
-          <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-6">
+          <div className="rounded-[var(--radius-lg)] border-soft bg-tint-1 p-6">
             <Avatar
               baseId={baseId}
               outfits={outfits}
@@ -186,7 +186,7 @@ export function AvatarBuilder() {
                 selected={composite}
                 onClick={() => handleSelectSkin(null)}
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border-soft bg-tint-2">
                   <Avatar baseId={baseId} outfits={outfits} size="sm" />
                 </div>
                 <span className="t-title">Modo Livre</span>
@@ -226,7 +226,7 @@ export function AvatarBuilder() {
             </div>
           ) : !composite ? (
             // Other tabs are visible but disabled when a SkinPack is equipped.
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-6 text-center">
+            <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-6 text-center">
               <p className="t-body-sm">
                 Você está usando um personagem completo. Peças soltas ficam ocultas até você
                 voltar ao Modo Livre.

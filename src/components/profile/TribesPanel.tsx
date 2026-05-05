@@ -19,16 +19,16 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
               className={cn(
                 'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border px-3 py-4 text-center',
                 isMine
-                  ? 'border-[var(--line-active)] bg-[var(--tint-green-2)]'
-                  : 'border-[var(--line-soft)] bg-[var(--tint-1)]'
+                  ? 'border-[var(--line-active)] bg-tint-green-2'
+                  : 'border-[var(--line-soft)] bg-tint-1'
               )}
             >
               <span
                 className={cn(
                   'flex h-10 w-10 items-center justify-center rounded-full',
                   isMine
-                    ? 'border border-[var(--line-active)] bg-[var(--bg-primary)] text-[var(--accent-green)]'
-                    : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                    ? 'border-active bg-[var(--bg-primary)] text-[var(--accent-green)]'
+                    : 'border-soft text-[var(--text-secondary)]'
                 )}
               >
                 {Lucide ? <Icon icon={Lucide} size={18} /> : null}
@@ -49,7 +49,7 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
 
       <section>
         <h2 className="mb-3 t-title">Ranking da semana</h2>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           {LEADERBOARD.slice(0, 10).map((entry) => {
             const isMe = entry.name === 'Você';
             const isTopThree = entry.rank <= 3;
@@ -58,7 +58,7 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
                 key={entry.rank}
                 className={cn(
                   'flex items-center gap-3 px-4 py-2.5',
-                  isMe && 'bg-[var(--tint-green-2)]'
+                  isMe && 'bg-tint-green-2'
                 )}
               >
                 <span
@@ -66,7 +66,7 @@ export function TribesPanel({ currentTribe }: { currentTribe: string }) {
                     'flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold',
                     isTopThree
                       ? 'gradient-gold text-[var(--on-reward)]'
-                      : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                      : 'border-soft text-[var(--text-secondary)]'
                   )}
                 >
                   {entry.rank}

@@ -17,8 +17,8 @@ interface Props {
 }
 
 const TONE_CLASSES: Record<Tone, string> = {
-  default: 'border-[var(--line-soft)] bg-[var(--tint-1)]',
-  brand: 'border-[var(--line-active)] bg-[var(--tint-green-1)]',
+  default: 'border-[var(--line-soft)] bg-tint-1',
+  brand: 'border-[var(--line-active)] bg-tint-green-1',
   reward: 'border-[color:color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)]',
 };
 

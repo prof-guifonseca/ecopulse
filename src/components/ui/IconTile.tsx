@@ -18,8 +18,8 @@ const SIZE_CLASSES: Record<Size, string> = {
 };
 
 const TONE_CLASSES: Record<Tone, string> = {
-  default: 'border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-primary)]',
-  brand: 'border border-[var(--line-active)] bg-[var(--tint-green-3)] text-[var(--accent-green)]',
+  default: 'border-soft bg-tint-2 text-[var(--text-primary)]',
+  brand: 'border-active bg-tint-green-3 text-[var(--accent-green)]',
   reward: 'border border-[color:color-mix(in_srgb,var(--accent-gold)_36%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_12%,transparent)] text-[var(--accent-gold)]',
 };
 

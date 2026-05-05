@@ -38,7 +38,7 @@ export function ChatListOverlay() {
                 onClick={() => openChat(c.id)}
                 className="flex w-full items-center gap-3 rounded-[var(--radius-md)] px-3 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[var(--line-soft)] bg-[var(--tint-2)] text-2xl">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-soft bg-tint-2 text-2xl">
                   {c.with.avatar}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -92,7 +92,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
           >
             <Icon icon={ArrowLeft} size={18} />
           </button>
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[var(--line-soft)] bg-[var(--tint-2)] text-2xl">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-soft bg-tint-2 text-2xl">
             {conv.with.avatar}
           </span>
           <div className="min-w-0">
@@ -109,7 +109,7 @@ export function ChatConversationOverlay({ id }: { id: string }) {
                   't-body max-w-[78%] rounded-[var(--radius-md)] px-4 py-3',
                   m.sent
                     ? 'gradient-primary text-[var(--on-primary)]'
-                    : 'bg-[var(--tint-2)] text-[var(--text-primary)]'
+                    : 'bg-tint-2 text-[var(--text-primary)]'
                 )}
               >
                 {m.text}

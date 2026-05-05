@@ -31,7 +31,7 @@ export function CommunityPage() {
         <button
           onClick={openChatList}
           aria-label="Abrir mensagens"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-soft bg-tint-1 text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
         >
           <Icon icon={MessageSquare} size={16} />
         </button>

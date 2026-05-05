@@ -65,7 +65,7 @@ export function MapPage() {
             <button
               key={point.id}
               onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-              className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line-strong)] backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95"
+              className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-strong backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95"
               style={{
                 left: `${point.x}%`,
                 top: `${point.y}%`,
@@ -104,7 +104,7 @@ export function MapPage() {
       </div>
 
       {/* Lightweight panel toggle (Locais ⇄ Agenda) */}
-      <div className="flex gap-1 rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] p-1">
+      <div className="flex gap-1 rounded-full border-soft bg-tint-1 p-1">
         {([
           { v: 'places' as const, label: `Locais (${pins.length})` },
           { v: 'events' as const, label: `Agenda (${EVENTS.length})` },
@@ -125,7 +125,7 @@ export function MapPage() {
       </div>
 
       {panel === 'places' ? (
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           {pins.map((point) => {
             const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
             const isVisited = visited.includes(point.id);
@@ -139,8 +139,8 @@ export function MapPage() {
                     className={cn(
                       'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                       isVisited
-                        ? 'border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]'
-                        : 'border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-secondary)]'
+                        ? 'border-active bg-tint-green-2 text-[var(--accent-green)]'
+                        : 'border-soft bg-tint-2 text-[var(--text-secondary)]'
                     )}
                   >
                     <Icon icon={Lucide} size={16} />
@@ -156,10 +156,10 @@ export function MapPage() {
           })}
         </ul>
       ) : (
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           {EVENTS.map((event) => (
             <li key={event.id} className="flex items-center gap-4 px-4 py-3">
-              <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)] bg-[var(--tint-2)]">
+              <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
                 <span className="text-sm font-semibold leading-none text-[var(--text-primary)]">{event.day}</span>
                 <span className="t-caption mt-0.5 leading-none">{event.month}</span>
               </div>

@@ -41,7 +41,7 @@ export function HomePage() {
             Oi, <span className="t-italic-soft">{name}.</span>
           </h1>
         </div>
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-soft bg-tint-1">
           <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
         </div>
       </header>

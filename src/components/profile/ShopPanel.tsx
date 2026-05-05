@@ -99,7 +99,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <button
                 key={skin.id}
                 onClick={() => openModal({ kind: 'skinPack', id: skin.id })}
-                className="group flex w-[140px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-[var(--tint-1)] text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
+                className="group flex w-[140px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
                 style={{
                   borderColor: equipped ? 'var(--line-active)' : 'var(--line-soft)',
                   backgroundColor: equipped ? 'var(--tint-green-2)' : undefined,
@@ -139,7 +139,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           <h2 className="t-title">Acessórios</h2>
           <span className="t-caption">Modo livre</span>
         </div>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           {AVATAR_OUTFITS.map((item) => {
             const owned = ownedOutfits.includes(item.id);
             const equippedHere = outfitsEquipped[item.slot] === item.id;
@@ -149,7 +149,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   onClick={openAvatarBuilder}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)] bg-[var(--tint-2)] text-lg">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2 text-lg">
                     {item.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -178,7 +178,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
       {/* Eco-Tokens — packs pagos */}
       <section>
         <h2 className="mb-3 t-title">Eco-Tokens</h2>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
           {TOKEN_PACKS.map((pack) => (
             <li key={pack.id}>
               <button

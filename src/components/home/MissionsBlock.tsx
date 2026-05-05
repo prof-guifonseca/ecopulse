@@ -23,7 +23,7 @@ export function MissionsBlock() {
         <span className="t-caption">{done}/{DAILY_MISSION_TARGET}</span>
       </div>
 
-      <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)]">
+      <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
           const MissionIcon = resolveIcon(mission.iconName);
@@ -33,7 +33,7 @@ export function MissionsBlock() {
               key={mission.id}
               className={cn(
                 'flex items-center gap-3 px-4 py-3 transition-colors',
-                isDone && 'bg-[var(--tint-green-2)]'
+                isDone && 'bg-tint-green-2'
               )}
             >
               <span
@@ -41,7 +41,7 @@ export function MissionsBlock() {
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
                   isDone
                     ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                    : 'border border-[var(--line-soft)] text-[var(--text-secondary)]'
+                    : 'border-soft text-[var(--text-secondary)]'
                 )}
               >
                 {isDone ? (

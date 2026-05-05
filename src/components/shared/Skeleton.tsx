@@ -9,7 +9,7 @@ export function Skeleton({ className }: Props) {
     <div
       aria-hidden
       className={cn(
-        'shimmer-bg rounded-[var(--radius-md)] bg-[var(--tint-2)]',
+        'shimmer-bg rounded-[var(--radius-md)] bg-tint-2',
         className
       )}
     />

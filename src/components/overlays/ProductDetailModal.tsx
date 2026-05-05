@@ -93,7 +93,7 @@ function BreakdownRow({ label, value, color }: { label: string; value: number; c
         <span className="font-semibold text-[var(--text-secondary)]">{label}</span>
         <span>{value}/100</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--tint-3)]">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-tint-3">
         <div
           className="h-full rounded-full transition-[width] duration-700"
           style={{ width: `${value}%`, background: color }}
@@ -113,7 +113,7 @@ function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id
             key={a.id}
             type="button"
             onClick={() => openItem(a.id)}
-            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
+            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 p-3 text-left transition-colors hover:border-[var(--line-strong)]"
           >
             <IconTile size="md" icon={<span>{a.emoji}</span>} />
             <div className="min-w-0 flex-1">

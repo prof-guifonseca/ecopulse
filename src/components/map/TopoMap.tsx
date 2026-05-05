@@ -15,7 +15,7 @@ export function TopoMap({ children }: { children?: React.ReactNode }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)]"
+      className="relative overflow-hidden rounded-[var(--radius-md)] border-soft"
       style={{
         aspectRatio: '1 / 1',
         background:
