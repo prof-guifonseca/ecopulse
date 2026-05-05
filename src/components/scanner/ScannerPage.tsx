@@ -15,7 +15,9 @@ import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Stat } from '@/components/ui/Stat';
+import { Tile } from '@/components/ui/Tile';
+import { IconTile } from '@/components/ui/IconTile';
+import { PageShell } from '@/components/ui/PageShell';
 
 export function ScannerPage() {
   const [query, setQuery] = useState('');
@@ -41,7 +43,7 @@ export function ScannerPage() {
   useEffect(() => {
     if (awaitingFirstClose.current && modal === null) {
       awaitingFirstClose.current = false;
-      showToast('🏠 Home liberada', 'reward');
+      showToast('Home liberada', 'reward');
       router.push('/home');
     }
   }, [modal, router, showToast]);
@@ -92,20 +94,13 @@ export function ScannerPage() {
   };
 
   return (
-    <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <PageShell>
       {firstRun ? (
         <Card tone="soft" padded={false} className="flex items-start gap-3 px-4 py-4">
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] text-[#0a140e]"
-            style={{ background: 'var(--gradient-primary)' }}
-          >
-            <Icon icon={Sparkles} size={18} strokeWidth={2.2} />
-          </div>
+          <IconTile size="md" tone="brand" icon={<Icon icon={Sparkles} size={18} strokeWidth={2.2} />} />
           <div className="min-w-0">
-            <div className="text-[0.95rem] font-semibold text-text-primary">Primeiro scan libera a home</div>
-            <p className="mt-1 text-[0.82rem] leading-5 text-text-muted">
-              Toque em Simular scan — você vê como funciona em 2 segundos.
-            </p>
+            <div className="t-title">Primeiro scan libera a home</div>
+            <p className="t-body-sm mt-1">Toque em Simular scan — você vê como funciona em 2 segundos.</p>
           </div>
         </Card>
       ) : null}
@@ -115,28 +110,28 @@ export function ScannerPage() {
 
         <div className="scan-frame px-5 py-6">
           <div className="relative flex min-h-[240px] items-center justify-center py-4">
-            <div className="absolute h-[220px] w-[220px] rounded-full bg-[radial-gradient(circle,rgba(141,219,152,0.16),transparent_62%)] blur-2xl" />
-            <div className="absolute h-[190px] w-[190px] rounded-full border border-white/6" />
-            <div className="absolute h-[140px] w-[140px] rounded-full border border-[rgba(141,219,152,0.28)]" />
             <div
               className="pointer-events-none absolute inset-x-10 top-1/2 h-px"
               style={{
                 background: 'var(--gradient-primary)',
-                animation: scanning ? 'scanLine 1.2s linear infinite' : 'none',
-                opacity: scanning ? 1 : 0.35,
+                animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
+                opacity: scanning ? 0.9 : 0.25,
               }}
             />
-            <div className="flex h-24 w-24 items-center justify-center rounded-[24px] border border-[var(--line-soft)] bg-white/4 text-accent-green shadow-[0_18px_36px_rgba(141,219,152,0.12)]">
-              <Icon icon={Camera} size={40} strokeWidth={1.6} />
-            </div>
+            <IconTile
+              size="xl"
+              tone="brand"
+              icon={<Icon icon={Camera} size={36} strokeWidth={1.6} />}
+              className="h-24 w-24 rounded-[var(--radius-lg)]"
+            />
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <Stat label="Histórico" value={`${scannedProducts.length} itens`} align="start" />
-            <Stat label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} align="start" />
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Tile size="sm" align="start" label="Histórico" value={`${scannedProducts.length} itens`} />
+            <Tile size="sm" align="start" label="Missão" value={missionScan ? 'Concluída' : 'Pendente'} />
           </div>
 
-          <p className="mt-4 text-[0.85rem] leading-5 text-text-muted">
+          <p className="t-body-sm mt-4">
             {scanning
               ? 'Analisando o item agora…'
               : scannedProducts.length === 0
@@ -161,13 +156,13 @@ export function ScannerPage() {
       <section>
         <SectionHeader title="Buscar" />
         <div className="input-shell flex items-center gap-3 px-4 py-3">
-          <Icon icon={Search} size={18} className="text-text-muted" />
+          <Icon icon={Search} size={18} className="text-[var(--text-muted)]" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Nome, marca ou categoria"
             aria-label="Buscar produtos"
-            className="w-full bg-transparent text-[0.95rem] outline-none placeholder:text-text-muted"
+            className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
           />
         </div>
       </section>
@@ -175,13 +170,13 @@ export function ScannerPage() {
       <section>
         <SectionHeader
           title="Produtos"
-          right={<span className="text-[0.78rem] text-text-muted">{filtered.length} {filtered.length === 1 ? 'item' : 'itens'}</span>}
+          right={<span className="t-caption">{filtered.length} {filtered.length === 1 ? 'item' : 'itens'}</span>}
         />
 
         {filtered.length === 0 ? (
           <Card tone="soft" padded={false} className="px-4 py-4">
-            <div className="text-[0.88rem] font-semibold text-text-primary">Nada encontrado</div>
-            <p className="mt-1 text-[0.8rem] leading-5 text-text-muted">
+            <div className="t-title">Nada encontrado</div>
+            <p className="t-body-sm mt-1">
               Nada encontrado para &ldquo;{query.trim()}&rdquo;. Tente outra palavra.
             </p>
           </Card>
@@ -196,25 +191,23 @@ export function ScannerPage() {
             >
               <Card tone="solid" padded={false} className="px-4 py-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px] border border-[var(--line-soft)] bg-white/4 text-3xl">
-                    {product.emoji}
-                  </div>
+                  <IconTile size="lg" icon={<span>{product.emoji}</span>} />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="truncate text-[0.98rem] font-semibold leading-tight text-text-primary">{product.name}</h3>
-                        <p className="mt-0.5 truncate text-[0.8rem] text-text-muted">
+                        <h3 className="t-title truncate">{product.name}</h3>
+                        <p className="t-caption mt-0.5 truncate">
                           {product.brand} · {product.category}
                         </p>
                       </div>
                       <ScoreBadge score={product.score} className="shrink-0" />
                     </div>
-                    <div className="mt-3 flex items-center justify-between gap-3 text-[0.82rem]">
+                    <div className="mt-3 flex items-center justify-between gap-3 t-body-sm">
                       <span className="truncate" style={{ color: SCORE_COLORS[product.score] }}>
                         {product.tip}
                       </span>
                       {scannedProducts.includes(product.id) ? (
-                        <span className="shrink-0 text-[0.72rem] text-text-muted">já visto</span>
+                        <span className="t-caption shrink-0">já visto</span>
                       ) : null}
                     </div>
                   </div>
@@ -224,6 +217,6 @@ export function ScannerPage() {
           ))}
         </div>
       </section>
-    </div>
+    </PageShell>
   );
 }

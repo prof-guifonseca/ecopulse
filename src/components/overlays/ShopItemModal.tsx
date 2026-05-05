@@ -42,16 +42,16 @@ export function ShopItemModal({ id }: Props) {
   return (
     <ModalShell eyebrow="Loja" title={item.name}>
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full border border-[var(--line-soft)] bg-white/[0.04] text-5xl">
+        <div className="flex h-24 w-24 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)] text-5xl">
           {item.emoji}
         </div>
-        <p className="mt-3 max-w-[32ch] text-[0.88rem] leading-5 text-text-muted">{item.desc}</p>
+        <p className="t-body-sm mt-3 max-w-[32ch]">{item.desc}</p>
 
-        <div className="mt-5 inline-flex items-center gap-1.5 text-[1.6rem] font-semibold text-accent-gold">
+        <div className="mt-5 inline-flex items-center gap-1.5 text-[1.6rem] font-semibold text-[var(--accent-gold)]">
           <Icon icon={Coins} size={22} />
           {item.price}
         </div>
-        <p className="mt-1 text-[0.78rem] text-text-muted">Você tem {tokens} Eco-Tokens</p>
+        <p className="t-caption mt-1">Você tem {tokens} Eco-Tokens</p>
 
         <Button
           variant="reward"

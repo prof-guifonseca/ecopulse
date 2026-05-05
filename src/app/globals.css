@@ -3,48 +3,64 @@
 :root {
   color-scheme: dark;
 
-  /* Backgrounds — darker, flatter, fewer layers */
-  --bg-primary: #0a120e;
-  --bg-secondary: #111b16;
-  --bg-tertiary: #17231d;
-  --bg-card: #17231d;
-  --bg-card-strong: #1c2a23;
+  /* ---------- Surfaces ---------- */
+  --bg-primary: #0a120e;     /* app canvas */
+  --bg-secondary: #111b16;   /* default surface */
+  --bg-elevated: #182a21;    /* hero / elevated surface */
 
-  /* Text */
+  /* ---------- Text ---------- */
   --text-primary: #f2f4ef;
   --text-secondary: #aab3a7;
   --text-muted: #6f7b72;
 
-  /* Semantic accents (only three active) */
+  /* ---------- Brand ---------- */
   --accent-green: #8ddb98;
-  --accent-green-deep: #5fb36f;
   --accent-gold: #e0c27a;
   --accent-red: #e38a84;
 
-  /* Lines */
+  /* On-gradient text (for primary/reward buttons & chips) */
+  --on-primary: #0a140e;
+  --on-reward: #1a130a;
+
+  /* ---------- Tints (white) ---------- */
+  /* Use exclusively for subtle inset surfaces. */
+  --tint-1: rgba(255, 255, 255, 0.02);
+  --tint-2: rgba(255, 255, 255, 0.04);
+  --tint-3: rgba(255, 255, 255, 0.06);
+  --tint-4: rgba(255, 255, 255, 0.10);
+
+  /* ---------- Tints (brand) ---------- */
+  --tint-green-1: color-mix(in srgb, var(--accent-green) 4%, transparent);
+  --tint-green-2: color-mix(in srgb, var(--accent-green) 8%, transparent);
+  --tint-green-3: color-mix(in srgb, var(--accent-green) 16%, transparent);
+  --tint-green-4: color-mix(in srgb, var(--accent-green) 32%, transparent);
+
+  /* ---------- Lines ---------- */
   --line-soft: rgba(255, 255, 255, 0.06);
   --line-strong: rgba(255, 255, 255, 0.12);
+  --line-active: color-mix(in srgb, var(--accent-green) 32%, transparent);
 
-  /* Glass (used only on header, nav, modals) */
-  --glass-bg: rgba(15, 23, 19, 0.82);
+  /* ---------- Glass (header, nav, modals) ---------- */
+  --glass-bg: rgba(15, 23, 19, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-blur: blur(20px);
 
-  /* Gradients — only two */
+  /* ---------- Gradients ---------- */
   --gradient-primary: linear-gradient(135deg, #6fc581 0%, #9fe0ad 100%);
   --gradient-gold: linear-gradient(135deg, #e9cd86 0%, #c9995b 100%);
 
-  /* Elevation */
+  /* ---------- Elevation ---------- */
   --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.28);
   --shadow-glow-val: 0 12px 28px rgba(141, 219, 152, 0.14);
   --shadow-lifted-val: 0 16px 40px rgba(0, 0, 0, 0.42);
 
-  /* Radii */
+  /* ---------- Radii ---------- */
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 26px;
+  --radius-shell: 32px;
 
-  /* Shell */
+  /* ---------- Shell ---------- */
   --nav-height: 74px;
   --header-height: 64px;
   --shell-width: 430px;
@@ -53,8 +69,7 @@
 @theme inline {
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
-  --color-bg-tertiary: var(--bg-tertiary);
-  --color-bg-card: var(--bg-card);
+  --color-bg-elevated: var(--bg-elevated);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -72,13 +87,9 @@
   --animate-fade-in: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-slide-up: slideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-slide-down: slideDown 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-  --animate-scan-line: scanLine 1.6s linear infinite;
-  --animate-pulse-ring: pulseRing 2s ease-out infinite;
-  --animate-heart-beat: heartBeat 0.6s ease;
+  --animate-scan-line: scanLine 2.4s linear infinite;
   --animate-shimmer: shimmer 2.6s linear infinite;
   --animate-score-reveal: scoreReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  --animate-float: float 5s ease-in-out infinite;
-  --animate-fab-pulse: fabPulse 2s ease-in-out infinite;
   --animate-pin-pulse: pinPulse 1.7s ease-in-out infinite;
 }
 
@@ -98,20 +109,9 @@
 }
 
 @keyframes scanLine {
-  0% { transform: translateY(-140px); opacity: 0; }
-  25% { opacity: 0.7; }
-  100% { transform: translateY(140px); opacity: 0; }
-}
-
-@keyframes pulseRing {
-  0% { transform: scale(0.82); opacity: 0.8; }
-  100% { transform: scale(1.42); opacity: 0; }
-}
-
-@keyframes heartBeat {
-  0%, 100% { transform: scale(1); }
-  30% { transform: scale(1.16); }
-  60% { transform: scale(0.96); }
+  0% { transform: translateY(-120px); opacity: 0; }
+  20% { opacity: 0.55; }
+  100% { transform: translateY(120px); opacity: 0; }
 }
 
 @keyframes shimmer {
@@ -122,16 +122,6 @@
 @keyframes scoreReveal {
   0% { transform: translateY(8px) scale(0.92); opacity: 0; }
   100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes fabPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(141, 219, 152, 0.32); }
-  55% { box-shadow: 0 0 0 18px rgba(141, 219, 152, 0); }
 }
 
 @keyframes pinPulse {
@@ -172,7 +162,7 @@ body {
   overflow: hidden;
 }
 
-/* Subtle halo on top only — no more layered radials / fake borders */
+/* Subtle halo on top only */
 body::before {
   content: "";
   position: fixed;
@@ -181,7 +171,7 @@ body::before {
   z-index: -1;
   background: radial-gradient(
     circle at 50% -10%,
-    rgba(141, 219, 152, 0.06),
+    rgba(141, 219, 152, 0.05),
     transparent 38%
   );
 }
@@ -223,7 +213,7 @@ input, textarea, select {
 }
 
 ::selection {
-  background: rgba(141, 219, 152, 0.24);
+  background: var(--tint-green-3);
   color: var(--text-primary);
 }
 
@@ -260,7 +250,9 @@ input, textarea, select {
 }
 
 @layer components {
-  /* ----- New card primitives ----- */
+  /* =========================================================
+     Card primitives
+     ========================================================= */
   .card {
     position: relative;
     border-radius: var(--radius-md);
@@ -273,7 +265,7 @@ input, textarea, select {
     position: relative;
     border-radius: var(--radius-md);
     border: 1px solid var(--line-soft);
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--tint-1);
   }
 
   .card-glass {
@@ -292,12 +284,12 @@ input, textarea, select {
     border-radius: var(--radius-lg);
     border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 0% 0%, rgba(141, 219, 152, 0.1), transparent 52%),
-      linear-gradient(180deg, #182a21, #101915);
+      radial-gradient(circle at 0% 0%, var(--tint-green-2), transparent 52%),
+      linear-gradient(180deg, var(--bg-elevated), #101915);
     box-shadow: var(--shadow-lifted-val);
   }
 
-  /* Accent — a slim 2px top bar + subtle halo, never whole-card wash */
+  /* Slim 2px top accent bar — never a full-card wash */
   .card-accent-brand::before,
   .card-accent-reward::before,
   .card-accent-alert::before {
@@ -312,69 +304,56 @@ input, textarea, select {
   .card-accent-reward::before { background: var(--gradient-gold); }
   .card-accent-alert::before { background: linear-gradient(135deg, #e38a84, #b76a64); }
 
-  /* ----- Back-compat aliases — redirect legacy classes to new look ----- */
-  .glass,
-  .surface {
-    position: relative;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow-card-val);
-  }
-  .surface-panel { border-radius: var(--radius-lg); }
-  .surface-hud {
-    border-radius: var(--radius-lg);
-    background:
-      radial-gradient(circle at 0% 0%, rgba(141, 219, 152, 0.08), transparent 48%),
-      linear-gradient(180deg, #182a21, #101915);
-  }
-  .surface-tile { border-radius: var(--radius-md); }
-  .surface-ghost {
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.025);
-    box-shadow: none;
+  /* =========================================================
+     Typography scale
+     Single source of truth. Components must NOT use text-[Nrem].
+     ========================================================= */
+  .t-display {
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
   }
 
-  /* Accent utilities from old system collapse to a single brand accent line */
-  .surface-accent-mint,
-  .surface-accent-cyan,
-  .surface-accent-amber,
-  .surface-accent-violet {
-    position: relative;
-  }
-  .surface-accent-mint::after,
-  .surface-accent-cyan::after,
-  .surface-accent-violet::after {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    pointer-events: none;
-  }
-  .surface-accent-amber::after {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: var(--gradient-gold);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    pointer-events: none;
-  }
-  .surface-accent-none { position: relative; }
-
-  .glass-card {
-    border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow-card-val);
-    overflow: hidden;
-    position: relative;
+  .t-headline {
+    font-size: 1.18rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
   }
 
-  /* ----- Typography utilities ----- */
-  .display-eyebrow {
+  .t-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .t-body {
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+
+  .t-body-sm {
+    font-size: 0.82rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .t-caption {
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .t-eyebrow {
     font-family: var(--font-display);
     font-size: 0.68rem;
     font-weight: 700;
@@ -383,20 +362,17 @@ input, textarea, select {
     color: var(--text-muted);
   }
 
-  .hud-label {
-    font-size: 0.72rem;
+  .t-label {
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--text-muted);
   }
 
-  .hud-divider {
-    height: 1px;
-    width: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  }
-
+  /* =========================================================
+     Utilities
+     ========================================================= */
   .gradient-text {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
@@ -408,14 +384,14 @@ input, textarea, select {
   .gradient-primary { background: var(--gradient-primary); }
   .gradient-gold { background: var(--gradient-gold); }
 
-  /* ----- Pills / chips ----- */
+  /* Pills / chips */
   .command-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     border-radius: 999px;
     border: 1px solid var(--line-soft);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--tint-2);
     padding: 0.42rem 0.78rem;
     font-size: 0.78rem;
     font-weight: 600;
@@ -430,26 +406,26 @@ input, textarea, select {
   }
 
   .command-pill[data-active="true"] {
-    border-color: rgba(141, 219, 152, 0.4);
-    background: rgba(141, 219, 152, 0.12);
+    border-color: var(--line-active);
+    background: var(--tint-green-3);
     color: var(--text-primary);
-    box-shadow: 0 6px 16px rgba(141, 219, 152, 0.1);
+    box-shadow: var(--shadow-glow-val);
   }
 
-  /* ----- Form shell ----- */
+  /* Form shell */
   .input-shell {
     border-radius: var(--radius-md);
     border: 1px solid var(--line-soft);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--tint-1);
     transition: border-color 0.18s ease, background-color 0.18s ease;
   }
 
   .input-shell:focus-within {
-    border-color: rgba(141, 219, 152, 0.32);
-    background: rgba(141, 219, 152, 0.05);
+    border-color: var(--line-active);
+    background: var(--tint-green-1);
   }
 
-  /* ----- Specialty ----- */
+  /* Specialty: progress ring (used in profile impact) */
   .impact-ring {
     position: relative;
     width: var(--ring-size, 72px);
@@ -458,7 +434,7 @@ input, textarea, select {
     background:
       conic-gradient(
         var(--ring-color, var(--accent-green)) calc(var(--ring-pct, 0) * 1%),
-        rgba(255, 255, 255, 0.06) 0
+        var(--tint-3) 0
       );
     display: flex;
     align-items: center;
@@ -470,7 +446,7 @@ input, textarea, select {
     position: absolute;
     inset: 6px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--line-soft);
     background: var(--bg-primary);
   }
 
@@ -479,39 +455,15 @@ input, textarea, select {
     z-index: 1;
   }
 
+  /* Editorial scan frame: one soft radial, no concentric clutter */
   .scan-frame {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 50% 10%, rgba(141, 219, 152, 0.1), transparent 42%),
-      linear-gradient(180deg, #182a21, #0e1612);
-  }
-
-  .scan-frame::before,
-  .scan-frame::after {
-    content: "";
-    position: absolute;
-    width: 42px;
-    height: 42px;
-    border: 1.5px solid rgba(141, 219, 152, 0.4);
-  }
-
-  .scan-frame::before {
-    top: 16px;
-    left: 16px;
-    border-right: none;
-    border-bottom: none;
-    border-top-left-radius: 8px;
-  }
-
-  .scan-frame::after {
-    right: 16px;
-    bottom: 16px;
-    border-left: none;
-    border-top: none;
-    border-bottom-right-radius: 8px;
+      radial-gradient(circle at 50% 0%, var(--tint-green-2), transparent 55%),
+      linear-gradient(180deg, var(--bg-elevated), #0e1612);
   }
 
   .confetti-piece {

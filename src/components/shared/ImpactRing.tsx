@@ -21,7 +21,7 @@ export function ImpactRing({ pct, color = 'var(--accent-green)', size = 72, labe
       >
         <span className="text-sm font-semibold">{value}</span>
       </div>
-      <span className="text-center text-[0.72rem] font-medium text-text-secondary">{label}</span>
+      <span className="t-caption text-center text-[var(--text-secondary)]">{label}</span>
     </div>
   );
 }

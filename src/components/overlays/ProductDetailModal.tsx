@@ -8,6 +8,7 @@ import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { IconTile } from '@/components/ui/IconTile';
 import { ModalShell } from './ModalShell';
 import type { Product } from '@/types';
 
@@ -45,12 +46,12 @@ export function ProductDetailModal({ id }: Props) {
     <ModalShell eyebrow="Produto" title={product.name}>
       <div className="flex flex-col items-center text-center">
         <div
-          className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[#0a140e]"
+          className="flex h-20 w-20 items-center justify-center rounded-full text-[2rem] font-extrabold text-[var(--on-primary)]"
           style={{ background: color, animation: 'scoreReveal 0.5s cubic-bezier(.34,1.56,.64,1)' }}
         >
           {product.score}
         </div>
-        <p className="mt-2 text-[0.82rem] text-text-muted">
+        <p className="t-caption mt-2">
           {product.brand} · {product.category}
         </p>
 
@@ -60,8 +61,8 @@ export function ProductDetailModal({ id }: Props) {
           ))}
         </div>
 
-        <div className="mt-5 flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-[rgba(224,194,122,0.25)] bg-[rgba(224,194,122,0.07)] px-4 py-3 text-left text-[0.85rem] leading-5 text-text-secondary">
-          <Icon icon={Lightbulb} size={16} className="mt-0.5 text-accent-gold" />
+        <div className="mt-5 flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 text-left t-body-sm">
+          <Icon icon={Lightbulb} size={16} className="mt-0.5 text-[var(--accent-gold)]" />
           <span>{product.tip}</span>
         </div>
 
@@ -88,11 +89,11 @@ export function ProductDetailModal({ id }: Props) {
 function BreakdownRow({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-between text-[0.78rem]">
-        <span className="font-semibold text-text-secondary">{label}</span>
-        <span className="text-text-muted">{value}/100</span>
+      <div className="mb-1.5 flex items-center justify-between t-caption">
+        <span className="font-semibold text-[var(--text-secondary)]">{label}</span>
+        <span>{value}/100</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--tint-3)]">
         <div
           className="h-full rounded-full transition-[width] duration-700"
           style={{ width: `${value}%`, background: color }}
@@ -105,22 +106,22 @@ function BreakdownRow({ label, value, color }: { label: string; value: number; c
 function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id: string) => void }) {
   return (
     <div className="mt-5 w-full text-left">
-      <div className="display-eyebrow mb-2">Alternativas melhores</div>
+      <div className="t-eyebrow mb-2">Alternativas melhores</div>
       <div className="space-y-2">
         {items.map((a) => (
           <button
             key={a.id}
             type="button"
             onClick={() => openItem(a.id)}
-            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-white/[0.02] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
+            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
           >
-            <span className="text-2xl">{a.emoji}</span>
+            <IconTile size="md" icon={<span>{a.emoji}</span>} />
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[0.9rem] font-semibold">{a.name}</div>
-              <div className="truncate text-[0.78rem] text-text-muted">{a.brand}</div>
+              <div className="t-title truncate">{a.name}</div>
+              <div className="t-caption truncate">{a.brand}</div>
             </div>
             <span
-              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[#0a140e]"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[var(--on-primary)]"
               style={{ background: SCORE_COLORS[a.score] }}
             >
               {a.score}

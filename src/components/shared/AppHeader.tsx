@@ -7,6 +7,7 @@ import { useSocialStore } from '@/store/socialStore';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
 import { Icon } from '@/components/ui/Icon';
+import { Chip } from '@/components/ui/Chip';
 
 const ROUTE_TITLES: Record<string, string> = {
   '/home': 'Sua rotina',
@@ -58,29 +59,23 @@ export function AppHeader() {
       id="app-header"
       className="sticky top-0 z-40 px-3 pt-[calc(env(safe-area-inset-top,0px)+10px)]"
     >
-      <div
-        className="flex items-center justify-between gap-3 rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[rgba(15,23,19,0.85)] px-4 py-3 shadow-[var(--shadow-card)]"
-        style={{ backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)' }}
-      >
+      <div className="card-glass flex items-center justify-between gap-3 px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <span
             aria-hidden
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
             style={{ background: 'var(--gradient-primary)' }}
           >
-            <Icon icon={Leaf} size={18} strokeWidth={2.2} className="text-[#0a140e]" />
+            <Icon icon={Leaf} size={18} strokeWidth={2.2} className="text-[var(--on-primary)]" />
           </span>
           <div className="min-w-0">
-            <div className="font-display text-[0.68rem] font-bold uppercase leading-none tracking-[0.22em] text-text-muted">
-              EcoPulse
-            </div>
-            <div className="mt-1 text-[1rem] font-semibold leading-none text-text-primary">{title}</div>
+            <div className="t-eyebrow leading-none">EcoPulse</div>
+            <div className="mt-1 t-title leading-none">{title}</div>
           </div>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--line-soft)] bg-white/[0.04] px-3 py-1.5 text-[0.78rem] font-semibold text-text-primary">
-          <Icon icon={summaryIcon} size={14} className="text-accent-green" />
+        <Chip asStatic active leftIcon={<Icon icon={summaryIcon} size={14} className="text-[var(--accent-green)]" />}>
           {summaryText}
-        </span>
+        </Chip>
       </div>
     </header>
   );

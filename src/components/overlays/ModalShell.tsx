@@ -35,22 +35,20 @@ export function ModalShell({
     <Modal onClose={close} variant={variant}>
       {variant === 'bottom' && showHandle ? (
         <div className="flex justify-center pt-2.5">
-          <span aria-hidden className="h-1 w-12 rounded-full bg-white/15" />
+          <span aria-hidden className="h-1 w-12 rounded-full bg-[var(--line-strong)]" />
         </div>
       ) : null}
 
       <header className="flex items-start justify-between gap-3 px-5 pb-4 pt-4">
         <div className="min-w-0 flex-1">
-          {eyebrow ? <div className="display-eyebrow mb-1">{eyebrow}</div> : null}
-          {title ? (
-            <h2 className="text-[1.15rem] font-semibold leading-tight text-text-primary">{title}</h2>
-          ) : null}
+          {eyebrow ? <div className="t-eyebrow mb-1">{eyebrow}</div> : null}
+          {title ? <h2 className="t-headline">{title}</h2> : null}
         </div>
         <button
           type="button"
           onClick={close}
           aria-label="Fechar"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-white/4 text-text-secondary transition-colors hover:border-[var(--line-strong)] hover:text-text-primary"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
         >
           <Icon icon={X} size={18} />
         </button>

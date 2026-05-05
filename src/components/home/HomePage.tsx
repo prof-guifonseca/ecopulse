@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Coins, Flame, Package, Sparkles, Target, Users } from 'lucide-react';
+import { ArrowRight, Check, Coins, Flame, Package, Sparkles, Target, Users } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -11,9 +11,13 @@ import { Avatar } from '@/components/shared/Avatar';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { Stat } from '@/components/ui/Stat';
+import { Tile } from '@/components/ui/Tile';
+import { IconTile } from '@/components/ui/IconTile';
+import { Chip } from '@/components/ui/Chip';
+import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Skeleton } from '@/components/shared/Skeleton';
+import { resolveIcon } from '@/lib/iconRegistry';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { missionChecks, tryClaimDailyBonus } from '@/lib/missions';
 import { cn } from '@/lib/cn';
@@ -35,47 +39,44 @@ export function HomePage() {
   if (!hydrated) return <HomeSkeleton />;
 
   return (
-    <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <PageShell>
       <Card tone="hero" accent="none" padded={false} className="px-5 py-6">
         <div className="flex items-start gap-4">
-          <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-white/4 p-2">
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />
-          </div>
+          <IconTile size="xl" tone="ghost" icon={<Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="lg" />} />
           <div className="min-w-0 flex-1">
-            <div className="display-eyebrow">Bom te ver</div>
-            <h1 className="mt-2 text-[1.55rem] font-semibold leading-tight text-text-primary">
-              Oi, {name}
-            </h1>
-            <p className="mt-2 text-[0.9rem] leading-6 text-text-muted">
-              Complete as missões e libere o bônus do dia.
-            </p>
+            <div className="t-eyebrow">Bom te ver</div>
+            <h1 className="t-display mt-2">Oi, {name}</h1>
+            <p className="t-body-sm mt-2">Complete as missões e libere o bônus do dia.</p>
           </div>
         </div>
 
         <div className="mt-5 grid grid-cols-3 gap-2">
-          <Stat label="Sequência" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
-          <Stat label="Eco-Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
-          <Stat label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />
+          <Tile size="sm" label="Sequência" value={`${streak}d`} icon={<Icon icon={Flame} size={13} />} />
+          <Tile size="sm" label="Eco-Tokens" value={tokens} icon={<Icon icon={Coins} size={13} />} />
+          <Tile size="sm" label="Scans" value={scannedCount} icon={<Icon icon={Package} size={13} />} />
         </div>
 
         <div className="mt-5">
-          <div className="mb-1.5 flex items-center justify-between text-[0.78rem]">
-            <span className="text-text-muted">Nível {level}</span>
-            <span className="font-semibold text-text-secondary">
+          <div className="mb-1.5 flex items-center justify-between">
+            <span className="t-caption">Nível {level}</span>
+            <span className="t-caption font-semibold text-[var(--text-secondary)]">
               {xp}/{xpToNext} XP
             </span>
           </div>
           <ProgressBar value={xpToNext > 0 ? (xp / xpToNext) * 100 : 0} tone="brand" size="sm" />
         </div>
 
-        <Link
+        <Button
+          as={Link}
           href="/scanner"
-          className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-[0.95rem] font-semibold text-[#0a140e] shadow-[0_10px_22px_rgba(141,219,152,0.22)] transition-all duration-150 hover:shadow-[0_14px_28px_rgba(141,219,152,0.3)] active:scale-[0.98]"
-          style={{ background: 'var(--gradient-primary)' }}
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-5"
+          rightIcon={<Icon icon={ArrowRight} size={16} />}
         >
           Abrir scanner
-          <Icon icon={ArrowRight} size={16} />
-        </Link>
+        </Button>
       </Card>
 
       <MissionsPanel />
@@ -89,7 +90,7 @@ export function HomePage() {
         <SectionHeader title="Upcycling" />
         <UpcyclingGrid />
       </section>
-    </div>
+    </PageShell>
   );
 }
 
@@ -103,15 +104,16 @@ function MissionsPanel() {
       <SectionHeader
         title="Missões do dia"
         right={
-          <span className="command-pill" data-active="true">
+          <Chip asStatic active>
             {done}/3
-          </span>
+          </Chip>
         }
       />
 
       <div className="space-y-2">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
+          const MissionIcon = resolveIcon(mission.iconName as never);
 
           return (
             <div
@@ -119,23 +121,26 @@ function MissionsPanel() {
               className={cn(
                 'flex items-center gap-3 rounded-[var(--radius-md)] border px-4 py-3 transition-colors',
                 isDone
-                  ? 'border-[rgba(141,219,152,0.3)] bg-[rgba(141,219,152,0.08)]'
-                  : 'border-[var(--line-soft)] bg-white/[0.02]'
+                  ? 'border-[var(--line-active)] bg-[var(--tint-green-2)]'
+                  : 'border-[var(--line-soft)] bg-[var(--tint-1)]'
               )}
             >
-              <div
-                className={cn(
-                  'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg',
-                  isDone ? 'bg-[rgba(141,219,152,0.16)] text-accent-green' : 'bg-white/5'
-                )}
-              >
-                {isDone ? '✓' : mission.emoji}
-              </div>
+              <IconTile
+                size="md"
+                tone={isDone ? 'brand' : 'default'}
+                icon={
+                  isDone ? (
+                    <Icon icon={Check} size={18} strokeWidth={2.4} />
+                  ) : MissionIcon ? (
+                    <Icon icon={MissionIcon} size={18} />
+                  ) : (
+                    <span>{mission.emoji}</span>
+                  )
+                }
+              />
               <div className="min-w-0 flex-1">
-                <div className={cn('text-[0.92rem] font-semibold', isDone ? 'text-accent-green' : 'text-text-primary')}>
-                  {mission.title}
-                </div>
-                <div className="mt-0.5 flex items-center gap-1 text-[0.78rem] text-text-muted">
+                <div className={cn('t-title', isDone && 'text-[var(--accent-green)]')}>{mission.title}</div>
+                <div className="mt-0.5 flex items-center gap-1 t-caption">
                   <Icon icon={Coins} size={12} />
                   +{mission.reward} tokens
                 </div>
@@ -146,9 +151,9 @@ function MissionsPanel() {
       </div>
 
       <div className="mt-5">
-        <div className="mb-2 flex items-center justify-between gap-3 text-[0.82rem]">
-          <span className="text-text-muted">Bônus diário</span>
-          <span className={cn('font-semibold', bonusClaimed ? 'text-accent-green' : 'text-text-secondary')}>
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <span className="t-caption">Bônus diário</span>
+          <span className={cn('t-caption font-semibold', bonusClaimed ? 'text-[var(--accent-green)]' : 'text-[var(--text-secondary)]')}>
             {bonusClaimed ? 'Coletado' : '+25 ao concluir'}
           </span>
         </div>
@@ -184,12 +189,13 @@ function ChallengesList() {
           : isActive
           ? Math.min(100, (currentProgress / challenge.duration) * 100)
           : 0;
+        const ChallengeIcon = resolveIcon(challenge.iconName as never);
 
         const handle = () => {
           if (isDone) return;
           if (!isActive) {
             join(challenge.id);
-            showToast(`Desafio aceito! ${challenge.emoji}`, 'info');
+            showToast(`Desafio aceito! ${challenge.title}`, 'info');
             return;
           }
           const finished = advance(challenge.id, challenge.duration);
@@ -207,13 +213,21 @@ function ChallengesList() {
 
         return (
           <Card key={challenge.id} tone="solid" padded={false} className="px-4 py-4">
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <IconTile
+                size="md"
+                tone="brand"
+                icon={ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : <span>{challenge.emoji}</span>}
+              />
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{challenge.emoji}</span>
-                  <h3 className="text-[0.98rem] font-semibold text-text-primary">{challenge.title}</h3>
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="t-title">{challenge.title}</h3>
+                  <div className="flex shrink-0 items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
+                    <Icon icon={Coins} size={13} />
+                    {challenge.tokens}
+                  </div>
                 </div>
-                <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[0.78rem] text-text-muted">
+                <div className="mt-1.5 flex flex-wrap items-center gap-3 t-caption">
                   <span className="inline-flex items-center gap-1">
                     <Icon icon={challenge.type === 'individual' ? Target : Users} size={12} />
                     {challenge.type === 'individual' ? 'Solo' : 'Em grupo'}
@@ -222,22 +236,18 @@ function ChallengesList() {
                   <span>{challenge.duration} dias</span>
                 </div>
               </div>
-              <div className="flex shrink-0 items-center gap-1 text-[0.85rem] font-semibold text-accent-gold">
-                <Icon icon={Coins} size={13} />
-                {challenge.tokens}
-              </div>
             </div>
 
             <div className="mt-4">
-              <div className="mb-2 flex items-center justify-between text-[0.78rem] text-text-muted">
+              <div className="mb-2 flex items-center justify-between t-caption">
                 <span>Progresso</span>
-                <span className="font-semibold text-text-secondary">{Math.round(completion)}%</span>
+                <span className="font-semibold text-[var(--text-secondary)]">{Math.round(completion)}%</span>
               </div>
               <ProgressBar value={completion} tone="brand" />
             </div>
 
             <div className="mt-4 flex items-center justify-between gap-3">
-              <span className="text-[0.82rem] text-text-muted">
+              <span className="t-caption">
                 {isDone ? 'Concluído' : isActive ? 'Em andamento' : 'Pronto pra começar'}
               </span>
               <Button
@@ -299,12 +309,12 @@ function UpcyclingGrid() {
         >
           <Card tone="solid" padded={false} className="h-full">
             <div className="relative flex min-h-[110px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
-              <div className="absolute inset-0 bg-black/20" aria-hidden />
+              <div className="absolute inset-0 bg-black/15" aria-hidden />
               <div className="relative text-4xl drop-shadow-md">{tutorial.emoji}</div>
             </div>
             <div className="px-4 py-3">
-              <h3 className="text-[0.88rem] font-semibold leading-5 text-text-primary">{tutorial.title}</h3>
-              <div className="mt-1.5 text-[0.72rem] text-text-muted">
+              <h3 className="t-title">{tutorial.title}</h3>
+              <div className="mt-1 t-caption">
                 {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))} · {tutorial.time}
               </div>
             </div>
