@@ -335,10 +335,12 @@ input, textarea, select {
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: 1px solid var(--line-soft);
-    background:
-      radial-gradient(circle at 0% 0%, var(--tint-green-2), transparent 52%),
-      linear-gradient(180deg, var(--bg-elevated), #101915);
-    box-shadow: var(--shadow-lifted-val);
+    background: linear-gradient(180deg, var(--bg-elevated), #101915);
+    /* A thin top highlight gives the same 'lifted' feel as the old radial
+       overlay without competing with the headline content underneath. */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      var(--shadow-lifted-val);
   }
 
   /* Slim 2px top accent bar — never a full-card wash */
