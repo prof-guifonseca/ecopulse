@@ -1,47 +1,34 @@
-'use client';
-
 import { BADGES, SKIN_PACKS } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { hapticSuccess } from '@/lib/haptic';
+import { pendingSkinUnlocks, type GameSnapshot } from '@/lib/game/rules';
 import type { SkinPack } from '@/types';
 
 /**
- * Evaluate a SkinPack's unlock criterion against current store state.
- * 'paid' is never auto-met; it requires an explicit purchase flow.
+ * Build a fresh snapshot of the bits of state the rules care about.
+ * Lives here because the stores are the runtime source of truth; the
+ * rules module stays pure / framework-free.
  */
-function meetsUnlock(skin: SkinPack): boolean {
+function snapshotForRules(): GameSnapshot {
   const user = useUserStore.getState();
   const game = useGameStore.getState();
-
-  switch (skin.unlock.kind) {
-    case 'paid':
-      return false;
-    case 'level':
-      return user.level >= skin.unlock.value;
-    case 'badge':
-      return game.badges.includes(skin.unlock.id);
-    case 'count': {
-      const target = skin.unlock.value;
-      switch (skin.unlock.metric) {
-        case 'scans':
-          return game.scannedProducts.length >= target;
-        case 'visits':
-          return game.visitedPoints.length >= target;
-        case 'challenges':
-          return game.completedChallenges.length >= target;
-        case 'tutorials':
-          return game.completedTutorials.length >= target;
-      }
-      return false;
-    }
-  }
+  return {
+    level: user.level,
+    tokens: user.tokens,
+    badges: game.badges,
+    ownedSkinPacks: user.ownedSkinPacks,
+    scannedProductsCount: game.scannedProducts.length,
+    visitedPointsCount: game.visitedPoints.length,
+    completedChallengesCount: game.completedChallenges.length,
+    completedTutorialsCount: game.completedTutorials.length,
+  };
 }
 
 /**
  * Walk the SkinPack catalog; auto-unlock anything whose progression criterion
- * is now met. Fires a celebratory toast + haptic per newly-unlocked skin.
+ * is now met (per pure rules). Fires a toast + haptic per newly-unlocked skin.
  *
  * Called after every gameplay action that could move progress forward
  * (awardTokens, unlockBadge, addScannedProduct, etc.).
@@ -49,13 +36,10 @@ function meetsUnlock(skin: SkinPack): boolean {
 export function checkSkinUnlocks(): string[] {
   const user = useUserStore.getState();
   const ui = useUIStore.getState();
+  const candidates = pendingSkinUnlocks(SKIN_PACKS, snapshotForRules());
   const newlyUnlocked: string[] = [];
 
-  for (const skin of SKIN_PACKS) {
-    if (user.ownedSkinPacks.includes(skin.id)) continue;
-    if (skin.unlock.kind === 'paid') continue;
-    if (!meetsUnlock(skin)) continue;
-
+  for (const skin of candidates) {
     if (user.unlockSkinPack(skin.id)) {
       newlyUnlocked.push(skin.id);
       ui.showToast(`Skin desbloqueada: ${skin.name}`, 'reward');

@@ -6,7 +6,7 @@ import {
   SHOP_ITEMS,
   SKIN_PACKS,
 } from '@/data';
-import type { OutfitSlot, SkinUnlock } from '@/types';
+import type { OutfitSlot } from '@/types';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -14,6 +14,7 @@ import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { unlockHint } from '@/lib/skinUnlocks';
+import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
 
 const SLOT_LABELS: Record<OutfitSlot, string> = {
@@ -26,32 +27,6 @@ const SLOT_LABELS: Record<OutfitSlot, string> = {
   hairstyle: 'cabelo',
 };
 
-/** Mirrors checkSkinUnlocks logic for the locked-state visual cue. */
-function unlockMet(unlock: SkinUnlock): boolean {
-  const user = useUserStore.getState();
-  const game = useGameStore.getState();
-  switch (unlock.kind) {
-    case 'paid':
-      return false;
-    case 'level':
-      return user.level >= unlock.value;
-    case 'badge':
-      return game.badges.includes(unlock.id);
-    case 'count':
-      switch (unlock.metric) {
-        case 'scans':
-          return game.scannedProducts.length >= unlock.value;
-        case 'visits':
-          return game.visitedPoints.length >= unlock.value;
-        case 'challenges':
-          return game.completedChallenges.length >= unlock.value;
-        case 'tutorials':
-          return game.completedTutorials.length >= unlock.value;
-      }
-      return false;
-  }
-}
-
 export function ShopPanel({ tokens }: { tokens: number }) {
   const openModal = useUIStore((s) => s.openModal);
   const openAvatarBuilder = useUIStore((s) => s.openAvatarBuilder);
@@ -60,6 +35,24 @@ export function ShopPanel({ tokens }: { tokens: number }) {
   const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
   const ownedOutfits = useUserStore((s) => s.ownedOutfits);
   const outfitsEquipped = useUserStore((s) => s.avatarOutfits);
+  // Subscribed slices the unlock rule depends on — needed so the locked
+  // visual cue re-evaluates when these change.
+  const level = useUserStore((s) => s.level);
+  const badges = useGameStore((s) => s.badges);
+  const scannedCount = useGameStore((s) => s.scannedProducts.length);
+  const visitedCount = useGameStore((s) => s.visitedPoints.length);
+  const completedChallengesCount = useGameStore((s) => s.completedChallenges.length);
+  const completedTutorialsCount = useGameStore((s) => s.completedTutorials.length);
+  const ruleSnapshot = {
+    level,
+    tokens,
+    badges,
+    ownedSkinPacks,
+    scannedProductsCount: scannedCount,
+    visitedPointsCount: visitedCount,
+    completedChallengesCount,
+    completedTutorialsCount,
+  };
 
   return (
     <div className="space-y-6">
@@ -85,7 +78,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           {SKIN_PACKS.map((skin) => {
             const owned = ownedSkinPacks.includes(skin.id);
             const equipped = equippedSkinPack === skin.id;
-            const meets = unlockMet(skin.unlock);
+            const meets = meetsSkinUnlock(skin.unlock, ruleSnapshot);
             const locked = !owned && !meets && skin.unlock.kind !== 'paid';
             return (
               <button
