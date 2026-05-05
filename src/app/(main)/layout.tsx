@@ -9,6 +9,7 @@ import { ensureDailyReset } from '@/lib/dailyReset';
 import { seedDemoStateIfEmpty } from '@/lib/demoSeed';
 import { AppHeader } from '@/components/shared/AppHeader';
 import { BottomNav } from '@/components/shared/BottomNav';
+import { FauxStatusBar } from '@/components/shared/FauxStatusBar';
 import { Overlays } from '@/components/overlays/Overlays';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -46,6 +47,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="device-shell mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col overflow-hidden sm:h-[calc(100dvh-3rem)] sm:max-h-[920px] sm:rounded-[var(--radius-shell)]">
+      <FauxStatusBar />
       <AppHeader />
       <main
         className="flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 pt-1"
