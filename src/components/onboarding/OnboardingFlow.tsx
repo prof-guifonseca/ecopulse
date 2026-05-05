@@ -40,7 +40,7 @@ export function OnboardingFlow() {
 
   return (
     <div
-      className="relative mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col justify-between overflow-hidden bg-[var(--bg-primary)] px-6 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-[calc(env(safe-area-inset-top,0px)+28px)]"
+      className="device-shell mx-auto flex h-[100dvh] w-full max-w-[var(--shell-width)] flex-col justify-between overflow-hidden px-6 pb-[calc(env(safe-area-inset-bottom,0px)+24px)] pt-[calc(env(safe-area-inset-top,0px)+28px)] sm:h-[calc(100dvh-3rem)] sm:max-h-[920px] sm:rounded-[var(--radius-shell)]"
     >
       {/* Soft brand halo, centered */}
       <div

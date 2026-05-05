@@ -135,7 +135,7 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
 
   return (
     <div className="space-y-6">
-      <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
+      <Card tone="solid" padded={false} className="px-5 py-5">
         <SectionHeader title="Seu impacto" />
         <div className="grid grid-cols-3 gap-3">
           <ImpactMetric pct={Math.min(100, scannedCount * 10)} color="var(--accent-green)" label="CO2" value={`${co2}kg`} />
@@ -147,7 +147,7 @@ function ImpactPanel({ scannedCount }: { scannedCount: number }) {
         </p>
       </Card>
 
-      <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
+      <Card tone="solid" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Fundo EcoPulse"
           right={
@@ -431,7 +431,7 @@ function TribesPanel({ currentTribe }: { currentTribe: string }) {
         </div>
       </section>
 
-      <Card tone="solid" accent="brand" padded={false} className="px-5 py-5">
+      <Card tone="solid" padded={false} className="px-5 py-5">
         <SectionHeader title="Ranking da semana" />
         <ol className="space-y-2">
           {LEADERBOARD.slice(0, 10).map((entry) => {

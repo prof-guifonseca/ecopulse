@@ -86,8 +86,11 @@ function StoriesRail({
               <span
                 className={cn(
                   'relative flex h-[88px] w-[88px] items-center justify-center rounded-full p-[3px] transition-transform duration-200 group-active:scale-95',
+                  // Solid soft-green ring for unread, neutral line for seen.
+                  // The previous conic gradient (green↔gold↔green) made 5+
+                  // adjacent stories feel busy without adding meaning.
                   unread
-                    ? 'bg-[conic-gradient(from_140deg,var(--accent-green),var(--accent-gold),var(--accent-green))]'
+                    ? 'bg-[color:color-mix(in_srgb,var(--accent-green)_55%,transparent)]'
                     : 'bg-[var(--line-soft)]'
                 )}
               >

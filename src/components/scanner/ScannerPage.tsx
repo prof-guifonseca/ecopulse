@@ -186,7 +186,7 @@ export function ScannerPage() {
             <button
               key={product.id}
               onClick={() => openModal({ kind: 'product', id: product.id })}
-              className="group block w-full text-left transition-transform duration-200 hover:-translate-y-0.5"
+              className="group block w-full text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
             >
               <Card tone="solid" padded={false} className="px-4 py-4">
                 <div className="flex items-start gap-4">

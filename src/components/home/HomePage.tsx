@@ -311,7 +311,7 @@ function UpcyclingGrid() {
         <button
           key={tutorial.id}
           onClick={() => openModal({ kind: 'tutorial', id: tutorial.id })}
-          className="group block text-left transition-transform duration-200 hover:-translate-y-0.5"
+          className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
         >
           <Card tone="solid" padded={false} className="h-full">
             <div className="relative flex min-h-[110px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
