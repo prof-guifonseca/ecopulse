@@ -6,6 +6,7 @@ import { FEED_POSTS, STORIES } from '@/data';
 import { useSocialStore } from '@/store/socialStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
+import { useHydrated } from '@/hooks/useHydrated';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Card } from '@/components/ui/Card';
@@ -13,13 +14,17 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { PageShell } from '@/components/ui/PageShell';
+import { Skeleton } from '@/components/shared/Skeleton';
 import { cn } from '@/lib/cn';
 
 export function CommunityPage() {
+  const hydrated = useHydrated();
   const openStory = useUIStore((s) => s.openStory);
   const openChatList = useUIStore((s) => s.openChatList);
   const openModal = useUIStore((s) => s.openModal);
   const unreadHint = STORIES.length;
+
+  if (!hydrated) return <CommunitySkeleton />;
 
   return (
     <PageShell>
@@ -236,5 +241,47 @@ function FeedPostCard({
         <div className="px-4 pb-4" />
       )}
     </Card>
+  );
+}
+
+function CommunitySkeleton() {
+  return (
+    <PageShell>
+      <header className="flex items-end justify-between gap-3" aria-busy="true" aria-live="polite">
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-9 w-56" />
+        </div>
+        <Skeleton className="h-9 w-32 rounded-full" />
+      </header>
+
+      <section aria-label="Carregando stories">
+        <div className="-mx-3 flex gap-3 overflow-hidden px-3 pb-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex w-[88px] shrink-0 flex-col items-center gap-1.5">
+              <Skeleton className="h-[88px] w-[88px] rounded-full" />
+              <Skeleton className="h-3 w-14" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="space-y-6">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Card key={i} tone="solid" padded={false} className="overflow-hidden">
+            <Skeleton className="aspect-[4/5] w-full rounded-none" />
+            <div className="flex items-center gap-2 px-4 pt-3">
+              <Skeleton className="h-8 w-14 rounded-full" />
+              <Skeleton className="h-8 w-12 rounded-full" />
+              <Skeleton className="ml-auto h-3 w-20" />
+            </div>
+            <div className="space-y-2 px-4 py-3">
+              <Skeleton className="h-3 w-2/3" />
+              <Skeleton className="h-3 w-1/3" />
+            </div>
+          </Card>
+        ))}
+      </div>
+    </PageShell>
   );
 }
