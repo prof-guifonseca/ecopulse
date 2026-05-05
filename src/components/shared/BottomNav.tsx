@@ -14,52 +14,61 @@ const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
   { page: 'profile', label: 'Perfil', icon: UserRound },
 ];
 
+/**
+ * BottomNav now flows as the last child of the device-shell flex column,
+ * so it stays anchored to the shell bottom at any viewport size — instead
+ * of escaping to the viewport bottom via `position: fixed` (which broke
+ * the centered desktop framing).
+ */
 export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
-      <nav
-        id="bottom-nav"
-        className="pointer-events-auto mx-auto max-w-[var(--shell-width)]"
-        role="tablist"
-      >
-        <div className="card-glass flex items-center gap-1 px-2 py-1.5">
-          {TABS.map((t) => {
-            const active = pathname === `/${t.page}`;
-
-            return (
-              <Link
-                key={t.page}
-                href={`/${t.page}`}
-                role="tab"
-                aria-current={active ? 'page' : undefined}
-                aria-selected={active}
+    <nav
+      id="bottom-nav"
+      role="tablist"
+      className="shrink-0 border-t border-[var(--line-soft)] bg-[var(--glass-bg)] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] pt-2 backdrop-blur-md"
+    >
+      <div className="flex items-center gap-1">
+        {TABS.map((t) => {
+          const active = pathname === `/${t.page}`;
+          return (
+            <Link
+              key={t.page}
+              href={`/${t.page}`}
+              role="tab"
+              aria-current={active ? 'page' : undefined}
+              aria-selected={active}
+              aria-label={t.label}
+              className={cn(
+                'group flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 py-2 transition-colors duration-200',
+                active ? 'text-[var(--accent-green)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+              )}
+            >
+              <span
                 className={cn(
-                  'group flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 py-2 transition-colors duration-200',
-                  active ? 'text-[var(--accent-green)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                  'flex h-8 w-8 items-center justify-center rounded-xl transition-colors duration-200',
+                  active ? 'bg-[var(--tint-green-3)]' : 'bg-transparent'
                 )}
               >
-                <span
-                  className={cn(
-                    'flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-200',
-                    active ? 'bg-[var(--tint-green-3)]' : 'bg-transparent'
-                  )}
-                >
-                  <Icon
-                    icon={t.icon}
-                    size={20}
-                    strokeWidth={active ? 2.1 : 1.6}
-                  />
-                </span>
-                <span className={cn('t-caption leading-none', active && 'text-[var(--text-primary)]')}>
-                  {t.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-    </div>
+                <Icon
+                  icon={t.icon}
+                  size={20}
+                  strokeWidth={active ? 2.1 : 1.6}
+                />
+              </span>
+              <span
+                className={cn(
+                  'text-[0.66rem] font-medium leading-none',
+                  active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
+                )}
+              >
+                {t.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

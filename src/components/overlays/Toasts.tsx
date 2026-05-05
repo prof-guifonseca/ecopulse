@@ -19,13 +19,16 @@ export function Toasts() {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom,0px)+14px)] left-1/2 z-[1100] flex w-full max-w-[var(--shell-width)] -translate-x-1/2 flex-col items-center gap-2 px-4"
+      className="pointer-events-none absolute bottom-[96px] left-0 right-0 z-[60] flex flex-col items-center gap-2 px-4"
       aria-live="polite"
     >
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={cn('card pointer-events-auto flex w-full items-center gap-3 px-4 py-3', ACCENT_MAP[t.type])}
+          className={cn(
+            'card pointer-events-auto flex w-full max-w-[calc(var(--shell-width)-2rem)] items-center gap-3 px-4 py-3',
+            ACCENT_MAP[t.type]
+          )}
           style={{ animation: 'slideDown 0.3s ease' }}
         >
           <IconTile size="sm" tone={TONE_MAP[t.type]} icon={<Icon icon={ICON_MAP[t.type]} size={16} strokeWidth={2.4} />} />
