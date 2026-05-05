@@ -1,7 +1,7 @@
 'use client';
 
 import { Clock, MapPin, Ruler } from 'lucide-react';
-import { MAP_POINTS, MAP_DETAIL_LABELS } from '@/data';
+import { MAP_POINTS, MAP_DETAIL_LABELS, MAP_TYPE_ICON } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
@@ -25,7 +25,7 @@ export function MapPointModal({ id }: Props) {
 
   if (!point) return null;
 
-  const PointIcon = resolveIcon(point.iconName as never);
+  const PointIcon = resolveIcon(MAP_TYPE_ICON[point.type] as never) ?? MapPin;
 
   const visit = () => {
     addVisited(id);
@@ -45,7 +45,7 @@ export function MapPointModal({ id }: Props) {
     <ModalShell eyebrow={MAP_DETAIL_LABELS[point.type]} title={point.name}>
       <div>
         <div className="flex items-center gap-3">
-          <IconTile size="lg" tone="brand" icon={PointIcon ? <Icon icon={PointIcon} size={24} /> : <span>{point.emoji}</span>} />
+          <IconTile size="lg" tone="brand" icon={<Icon icon={PointIcon} size={24} />} />
           <div className="min-w-0 flex-1">
             <div className="t-caption">{point.address}</div>
           </div>

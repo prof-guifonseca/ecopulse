@@ -23,7 +23,6 @@ import { useHydrated } from '@/hooks/useHydrated';
 export function HomePage() {
   const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
-  const avatar = useUserStore((s) => s.avatar);
   const avatarBase = useUserStore((s) => s.avatarBase);
   const avatarOutfits = useUserStore((s) => s.avatarOutfits);
   const tokens = useUserStore((s) => s.tokens);
@@ -47,7 +46,7 @@ export function HomePage() {
           </h1>
         </div>
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)]">
-          <Avatar baseId={avatarBase} outfits={avatarOutfits} emoji={avatar} size="md" />
+          <Avatar baseId={avatarBase} outfits={avatarOutfits} size="md" />
         </div>
       </header>
 
@@ -57,7 +56,7 @@ export function HomePage() {
           <span className="font-semibold text-[var(--text-secondary)]">Nível {level}</span>
           <span>{xp}/{xpToNext} XP</span>
         </div>
-        <ProgressBar value={xpPct} tone="brand" size="sm" className="mt-2" />
+        <ProgressBar value={xpPct} size="sm" className="mt-2" />
 
         <div className="mt-4 flex items-center gap-3 text-[var(--text-secondary)]">
           <InlineStat icon={Flame} value={`${streak}d`} label="sequência" />
@@ -132,9 +131,7 @@ function MissionsBlock() {
                   <Icon icon={Check} size={14} strokeWidth={2.6} />
                 ) : MissionIcon ? (
                   <Icon icon={MissionIcon} size={15} />
-                ) : (
-                  <span className="text-sm">{mission.emoji}</span>
-                )}
+                ) : null}
               </span>
               <span className={cn('flex-1 t-body', isDone && 'text-[var(--accent-green)]')}>
                 {mission.title}
@@ -222,7 +219,7 @@ function DiscoveryBlock() {
       <Card tone="solid" padded={false} className="px-4 py-4">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-active)] bg-[var(--tint-green-2)] text-[var(--accent-green)]">
-            {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : <span>{featured.emoji}</span>}
+            {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : null}
           </span>
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Desafio</p>
@@ -238,7 +235,7 @@ function DiscoveryBlock() {
         </div>
 
         {(isActive || isDone) ? (
-          <ProgressBar value={completion} tone="brand" size="sm" className="mt-4" />
+          <ProgressBar value={completion} size="sm" className="mt-4" />
         ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3">

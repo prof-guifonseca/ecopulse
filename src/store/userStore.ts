@@ -7,7 +7,6 @@ import { createSafeJSONStorage, readLegacyState, markLegacyMigrated } from './st
 
 interface UserState {
   name: string;
-  avatar: string;
   tribe: string;
   level: number;
   xp: number;
@@ -30,12 +29,11 @@ interface UserState {
   setOutfit: (slot: keyof AvatarOutfits, id: string | null) => void;
   addOwnedOutfit: (id: string) => void;
   markFirstScanCompleted: () => void;
-  completeOnboarding: (data: { name: string; avatar: string; avatarBase: string | null; tribe: string }) => void;
+  completeOnboarding: (data: { name: string; avatarBase: string | null; tribe: string }) => void;
 }
 
 const DEFAULT_USER = {
   name: 'Eco-User',
-  avatar: '🌿',
   tribe: 'guardioes',
   level: 1,
   xp: 0,
@@ -96,8 +94,8 @@ export const useUserStore = create<UserState>()(
       addOwnedOutfit: (id) =>
         set((s) => (s.ownedOutfits.includes(id) ? s : { ownedOutfits: [...s.ownedOutfits, id] })),
 
-      completeOnboarding: ({ name, avatar, avatarBase, tribe }) =>
-        set({ name, avatar, avatarBase, tribe, onboarded: true }),
+      completeOnboarding: ({ name, avatarBase, tribe }) =>
+        set({ name, avatarBase, tribe, onboarded: true }),
     }),
     {
       name: 'ecopulse:user',
@@ -109,7 +107,6 @@ export const useUserStore = create<UserState>()(
           return {
             ...(state as UserState),
             name: legacy.name ?? DEFAULT_USER.name,
-            avatar: legacy.avatar ?? DEFAULT_USER.avatar,
             tribe: legacy.tribe ?? DEFAULT_USER.tribe,
             level: legacy.level ?? DEFAULT_USER.level,
             xp: legacy.xp ?? DEFAULT_USER.xp,

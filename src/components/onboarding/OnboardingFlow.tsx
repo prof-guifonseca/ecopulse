@@ -11,7 +11,6 @@ import { Icon } from '@/components/ui/Icon';
 
 const DEFAULT_NAME = 'Suelen';
 const DEFAULT_AVATAR_BASE = 'base1';
-const DEFAULT_AVATAR_EMOJI = '🌿';
 const DEFAULT_TRIBE = 'guardioes';
 
 export function OnboardingFlow() {
@@ -31,7 +30,6 @@ export function OnboardingFlow() {
     finishing.current = true;
     completeOnboarding({
       name: DEFAULT_NAME,
-      avatar: DEFAULT_AVATAR_EMOJI,
       avatarBase: DEFAULT_AVATAR_BASE,
       tribe: DEFAULT_TRIBE,
     });
