@@ -35,6 +35,7 @@ export interface MapPoint {
   name: string;
   type: MapPointType;
   emoji: string;
+  iconName?: string;
   address: string;
   hours: string;
   distance: string;
@@ -64,6 +65,7 @@ export interface Challenge {
   tokens: number;
   participants: number;
   emoji: string;
+  iconName?: string;
 }
 
 export interface FeedComment {
@@ -104,6 +106,7 @@ export interface Badge {
   id: string;
   name: string;
   emoji: string;
+  iconName?: string;
   desc: string;
   tier: BadgeTier;
 }
@@ -120,6 +123,7 @@ export interface Tribe {
   id: string;
   name: string;
   emoji: string;
+  iconName?: string;
   members: number;
   weeklyXP: number;
   rank: number;
@@ -190,6 +194,7 @@ export interface DailyMission {
   check: 'scan' | 'likes' | 'map';
   target?: number;
   emoji: string;
+  iconName?: string;
 }
 
 export interface AvatarBase {

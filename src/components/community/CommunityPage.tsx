@@ -12,6 +12,8 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Tabs } from '@/components/ui/Tabs';
+import { Chip } from '@/components/ui/Chip';
+import { PageShell } from '@/components/ui/PageShell';
 import { cn } from '@/lib/cn';
 
 const HASHTAGS = [
@@ -32,7 +34,7 @@ export function CommunityPage() {
   const openModal = useUIStore((s) => s.openModal);
 
   return (
-    <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <PageShell>
       <Card tone="hero" padded={false} className="px-5 py-5">
         <SectionHeader
           title="A rede em movimento"
@@ -56,7 +58,7 @@ export function CommunityPage() {
               onClick={() => openStory(index)}
               className="group flex min-w-[104px] shrink-0 flex-col gap-2 text-left"
             >
-              <div className="relative flex h-[120px] items-end overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[linear-gradient(180deg,rgba(141,219,152,0.14),rgba(15,23,19,0.9))] px-3 py-3 transition-transform duration-200 group-hover:-translate-y-0.5">
+              <div className="relative flex h-[120px] items-end overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-green-2)] px-3 py-3 transition-transform duration-200 group-hover:-translate-y-0.5">
                 <span
                   aria-hidden
                   className="absolute left-0 top-0 h-full w-[3px]"
@@ -65,8 +67,8 @@ export function CommunityPage() {
                 <div className="text-3xl">{story.avatar}</div>
               </div>
               <div>
-                <div className="truncate text-[0.82rem] font-semibold text-text-primary">{story.user}</div>
-                <div className="line-clamp-2 text-[0.72rem] leading-4 text-text-muted">{story.text}</div>
+                <div className="t-caption truncate font-semibold text-[var(--text-primary)]">{story.user}</div>
+                <div className="t-caption line-clamp-2 leading-4">{story.text}</div>
               </div>
             </button>
           ))}
@@ -95,7 +97,7 @@ export function CommunityPage() {
       ) : (
         <HashtagList />
       )}
-    </div>
+    </PageShell>
   );
 }
 
@@ -133,12 +135,12 @@ function FeedPostCard({
   return (
     <Card tone="solid" padded={false}>
       <div className="flex items-center gap-3 px-4 pt-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line-soft)] bg-white/[0.04] text-2xl">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-2)] text-2xl">
           {post.user.avatar}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-[0.9rem] font-semibold text-text-primary">{post.user.name}</div>
-          <div className="text-[0.72rem] text-text-muted">
+          <div className="t-title">{post.user.name}</div>
+          <div className="t-caption">
             Nível {post.user.level} · {post.time}
           </div>
         </div>
@@ -153,7 +155,7 @@ function FeedPostCard({
           {post.hashtags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center rounded-full bg-black/40 px-2.5 py-1 text-[0.72rem] font-semibold text-white backdrop-blur-sm"
+              className="t-caption inline-flex items-center rounded-full bg-black/40 px-2.5 py-1 font-semibold text-white backdrop-blur-sm"
             >
               {tag}
             </span>
@@ -162,25 +164,22 @@ function FeedPostCard({
       </div>
 
       <div className="space-y-4 px-4 py-4">
-        <p className="text-[0.88rem] leading-6 text-text-primary">{post.caption}</p>
-        <div className="flex items-center gap-2 text-[0.85rem]">
-          <button
+        <p className="t-body">{post.caption}</p>
+        <div className="flex items-center gap-2">
+          <Chip
+            active={liked}
             onClick={handleLike}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border border-[var(--line-soft)] px-3 py-1.5 font-semibold transition-colors',
-              liked ? 'border-[rgba(227,138,132,0.4)] bg-[rgba(227,138,132,0.1)] text-accent-red' : 'bg-white/[0.02] text-text-secondary hover:text-text-primary'
-            )}
+            leftIcon={<Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />}
+            className={cn(liked && 'text-[var(--accent-red)]')}
           >
-            <Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />
             {likeCount}
-          </button>
-          <button
+          </Chip>
+          <Chip
             onClick={onOpenComments}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line-soft)] bg-white/[0.02] px-3 py-1.5 font-semibold text-text-secondary transition-colors hover:text-text-primary"
+            leftIcon={<Icon icon={MessageCircle} size={14} />}
           >
-            <Icon icon={MessageCircle} size={14} />
             {post.comments}
-          </button>
+          </Chip>
         </div>
       </div>
     </Card>
@@ -194,15 +193,14 @@ function HashtagList() {
         <Card key={entry.tag} tone="solid" padded={false} className="px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <div className="text-[0.95rem] font-semibold text-text-primary">{entry.tag}</div>
-              <div className="mt-0.5 text-[0.78rem] text-text-muted">
+              <div className="t-title">{entry.tag}</div>
+              <div className="t-caption mt-0.5">
                 {entry.count.toLocaleString('pt-BR')} posts ativos
               </div>
             </div>
-            <span className="command-pill" data-active="true">
-              <Icon icon={Sparkles} size={12} />
+            <Chip asStatic active leftIcon={<Icon icon={Sparkles} size={12} />}>
               Em alta
-            </span>
+            </Chip>
           </div>
         </Card>
       ))}

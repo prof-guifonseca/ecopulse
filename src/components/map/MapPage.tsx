@@ -1,15 +1,19 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Battery, Cpu, Droplet, Hammer, Leaf, MapPin, Shirt, type LucideIcon } from 'lucide-react';
-import { MAP_POINTS, MAP_TYPE_LABELS, EVENTS } from '@/data';
+import { MapPin } from 'lucide-react';
+import { MAP_POINTS, MAP_TYPE_LABELS, MAP_TYPE_ICON, EVENTS } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { Stat } from '@/components/ui/Stat';
+import { Tile } from '@/components/ui/Tile';
+import { IconTile } from '@/components/ui/IconTile';
+import { Chip } from '@/components/ui/Chip';
 import { Tabs } from '@/components/ui/Tabs';
+import { PageShell } from '@/components/ui/PageShell';
+import { resolveIcon } from '@/lib/iconRegistry';
 import type { MapPointType } from '@/types';
 
 const FILTERS: Array<'todos' | MapPointType> = [
@@ -21,16 +25,6 @@ const FILTERS: Array<'todos' | MapPointType> = [
   'granel',
   'reparo',
 ];
-
-const FILTER_ICON: Record<'todos' | MapPointType, LucideIcon> = {
-  todos: MapPin,
-  baterias: Battery,
-  eletronicos: Cpu,
-  oleo: Droplet,
-  trocas: Shirt,
-  granel: Leaf,
-  reparo: Hammer,
-};
 
 export function MapPage() {
   const [filter, setFilter] = useState<'todos' | MapPointType>('todos');
@@ -44,25 +38,31 @@ export function MapPage() {
   );
 
   return (
-    <div className="space-y-6" style={{ animation: 'fadeIn 0.35s ease' }}>
+    <PageShell>
       <Card tone="hero" padded={false} className="px-5 py-5">
         <SectionHeader
           title="Perto de você"
-          subtitle="Filtre por tipo e escolha só o próximo lugar que faz sentido visitar."
+          subtitle="Filtre por tipo e escolha o próximo lugar que faz sentido visitar."
         />
 
         <div className="-mx-1 mb-4 flex gap-2 overflow-x-auto pb-1 pl-1 pr-1">
-          {FILTERS.map((currentFilter) => (
-            <button
-              key={currentFilter}
-              onClick={() => setFilter(currentFilter)}
-              className="command-pill shrink-0 whitespace-nowrap"
-              data-active={filter === currentFilter ? 'true' : undefined}
-            >
-              <Icon icon={FILTER_ICON[currentFilter]} size={13} />
-              {MAP_TYPE_LABELS[currentFilter]}
-            </button>
-          ))}
+          {FILTERS.map((currentFilter) => {
+            const iconName =
+              currentFilter === 'todos' ? 'mapPin' : MAP_TYPE_ICON[currentFilter as MapPointType];
+            const Lucide = resolveIcon(iconName as never);
+
+            return (
+              <Chip
+                key={currentFilter}
+                active={filter === currentFilter}
+                onClick={() => setFilter(currentFilter)}
+                leftIcon={Lucide ? <Icon icon={Lucide} size={13} /> : null}
+                className="shrink-0 whitespace-nowrap"
+              >
+                {MAP_TYPE_LABELS[currentFilter]}
+              </Chip>
+            );
+          })}
         </div>
 
         <div className="scan-frame p-4">
@@ -71,7 +71,7 @@ export function MapPage() {
             style={{
               aspectRatio: '1 / 1',
               background:
-                'radial-gradient(circle at 24% 24%, rgba(141,219,152,0.12), transparent 30%), linear-gradient(180deg, #162320, #0c1410)',
+                'radial-gradient(circle at 24% 24%, var(--tint-green-2), transparent 30%), linear-gradient(180deg, var(--bg-elevated), #0c1410)',
             }}
           >
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
@@ -87,13 +87,13 @@ export function MapPage() {
             </svg>
 
             <div
-              className="absolute h-4 w-4 rounded-full"
+              className="absolute h-3 w-3 rounded-full"
               style={{
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
                 background: 'var(--accent-green)',
-                boxShadow: '0 0 0 6px rgba(141,219,152,0.18), 0 0 16px rgba(141,219,152,0.3)',
+                boxShadow: '0 0 0 5px var(--tint-green-3), 0 0 16px var(--tint-green-4)',
                 animation: 'pinPulse 1.8s ease-in-out infinite',
               }}
               title="Você está aqui"
@@ -101,32 +101,34 @@ export function MapPage() {
 
             {pins.map((point) => {
               const isVisited = visited.includes(point.id);
+              const Lucide = resolveIcon(point.iconName as never);
 
               return (
                 <button
                   key={point.id}
                   onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-                  className="absolute flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 text-base transition-transform duration-200 hover:scale-110 active:scale-95"
+                  className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 transition-transform duration-200 hover:scale-110 active:scale-95"
                   style={{
                     left: `${point.x}%`,
                     top: `${point.y}%`,
-                    background: isVisited ? 'rgba(141,219,152,0.9)' : 'rgba(15,23,19,0.92)',
+                    background: isVisited ? 'var(--accent-green)' : 'rgba(15,23,19,0.92)',
                     boxShadow: isVisited
-                      ? '0 0 0 3px rgba(141,219,152,0.2), 0 10px 20px rgba(0,0,0,0.4)'
+                      ? '0 0 0 3px var(--tint-green-3), 0 10px 20px rgba(0,0,0,0.4)'
                       : '0 10px 20px rgba(0,0,0,0.4)',
+                    color: isVisited ? 'var(--on-primary)' : 'var(--accent-green)',
                   }}
                   aria-label={point.name}
                 >
-                  {point.emoji}
+                  {Lucide ? <Icon icon={Lucide} size={16} /> : <Icon icon={MapPin} size={16} />}
                 </button>
               );
             })}
           </div>
 
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <Stat label="Locais" value={pins.length} />
-            <Stat label="Visitados" value={visited.length} />
-            <Stat label="Filtro" value={<span className="truncate">{MAP_TYPE_LABELS[filter]}</span>} />
+            <Tile size="sm" label="Locais" value={pins.length} />
+            <Tile size="sm" label="Visitados" value={visited.length} />
+            <Tile size="sm" label="Filtro" value={<span className="truncate">{MAP_TYPE_LABELS[filter]}</span>} />
           </div>
         </div>
       </Card>
@@ -147,34 +149,37 @@ export function MapPage() {
             subtitle={`${pins.length} ponto${pins.length === 1 ? '' : 's'} combinando com o filtro atual.`}
           />
           <div className="space-y-3">
-            {pins.map((point) => (
-              <button
-                key={point.id}
-                onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-                className="block w-full text-left transition-transform duration-200 hover:-translate-y-0.5"
-              >
-                <Card tone="solid" padded={false} className="px-4 py-4">
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] text-xl"
-                      style={{ background: 'rgba(141,219,152,0.12)' }}
-                    >
-                      {point.emoji}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <h3 className="truncate text-[0.98rem] font-semibold text-text-primary">{point.name}</h3>
-                          <p className="mt-0.5 truncate text-[0.8rem] text-text-muted">{point.address}</p>
+            {pins.map((point) => {
+              const Lucide = resolveIcon(point.iconName as never);
+
+              return (
+                <button
+                  key={point.id}
+                  onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
+                  className="block w-full text-left transition-transform duration-200 hover:-translate-y-0.5"
+                >
+                  <Card tone="solid" padded={false} className="px-4 py-4">
+                    <div className="flex items-start gap-3">
+                      <IconTile
+                        size="md"
+                        tone="brand"
+                        icon={Lucide ? <Icon icon={Lucide} size={20} /> : <span>{point.emoji}</span>}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h3 className="t-title truncate">{point.name}</h3>
+                            <p className="t-caption mt-0.5 truncate">{point.address}</p>
+                          </div>
+                          <Chip asStatic className="shrink-0">{point.distance}</Chip>
                         </div>
-                        <span className="command-pill shrink-0">{point.distance}</span>
+                        <div className="t-caption mt-2">{point.hours}</div>
                       </div>
-                      <div className="mt-2 text-[0.78rem] text-text-muted">{point.hours}</div>
                     </div>
-                  </div>
-                </Card>
-              </button>
-            ))}
+                  </Card>
+                </button>
+              );
+            })}
           </div>
         </section>
       ) : (
@@ -187,17 +192,13 @@ export function MapPage() {
             {EVENTS.map((event) => (
               <Card key={event.id} tone="solid" padded={false} className="px-4 py-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-white/[0.03] text-text-primary">
+                  <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[14px] border border-[var(--line-soft)] bg-[var(--tint-2)] text-[var(--text-primary)]">
                     <span className="text-base font-semibold leading-none">{event.day}</span>
-                    <span className="mt-0.5 text-[0.65rem] font-medium uppercase tracking-wide text-text-muted">
-                      {event.month}
-                    </span>
+                    <span className="t-caption mt-0.5 leading-none">{event.month}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[0.95rem] font-semibold text-text-primary">
-                      {event.emoji} {event.title}
-                    </div>
-                    <div className="mt-0.5 text-[0.78rem] text-text-muted">
+                    <div className="t-title">{event.title}</div>
+                    <div className="t-caption mt-0.5">
                       {event.time} · {event.rsvp} confirmados
                     </div>
                   </div>
@@ -207,6 +208,6 @@ export function MapPage() {
           </div>
         </section>
       )}
-    </div>
+    </PageShell>
   );
 }
