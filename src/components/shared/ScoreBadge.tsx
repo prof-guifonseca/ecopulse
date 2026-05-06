@@ -1,5 +1,4 @@
 import type { Score } from '@/types';
-import { SCORE_COLORS } from '@/lib/scanner';
 import { cn } from '@/lib/cn';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -19,12 +18,12 @@ const SIZE_CLASSES: Record<Size, string> = {
 export function ScoreBadge({ score, size = 'md', className }: Props) {
   return (
     <span
+      data-score={score}
       className={cn(
-        'flex items-center justify-center rounded-[var(--radius-md)] border-soft font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
+        'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
         SIZE_CLASSES[size],
         className
       )}
-      style={{ background: SCORE_COLORS[score] }}
     >
       {score}
     </span>

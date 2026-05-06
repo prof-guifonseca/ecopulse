@@ -679,6 +679,26 @@ input, textarea, select {
     animation-duration: 1.2s;
   }
 
+  /* Score-driven backgrounds (badges, score discs, fill bars) — pair with
+     data-score="A".."E". Replaces inline style={{ background: SCORE_COLORS[...] }}. */
+  .score-badge[data-score="A"],
+  .bg-score[data-score="A"] { background: var(--score-a); }
+  .score-badge[data-score="B"],
+  .bg-score[data-score="B"] { background: var(--score-b); }
+  .score-badge[data-score="C"],
+  .bg-score[data-score="C"] { background: var(--score-c); }
+  .score-badge[data-score="D"],
+  .bg-score[data-score="D"] { background: var(--score-d); }
+  .score-badge[data-score="E"],
+  .bg-score[data-score="E"] { background: var(--score-e); }
+
+  /* Score-tinted text — companion to score-badge for foreground accents */
+  .text-score[data-score="A"] { color: var(--score-a); }
+  .text-score[data-score="B"] { color: var(--score-b); }
+  .text-score[data-score="C"] { color: var(--score-c); }
+  .text-score[data-score="D"] { color: var(--score-d); }
+  .text-score[data-score="E"] { color: var(--score-e); }
+
   /* GPS marker — solid blue dot with a soft pulsing halo */
   .gps-dot {
     background: var(--accent-gps);

@@ -4,7 +4,6 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Camera, Search, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '@/data';
-import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -247,10 +246,7 @@ export function ScannerPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{product.name}</h3>
-                    <p
-                      className="mt-0.5 truncate t-caption"
-                      style={{ color: SCORE_COLORS[product.score] }}
-                    >
+                    <p data-score={product.score} className="text-score mt-0.5 truncate t-caption">
                       {product.brand} · {product.tip}
                     </p>
                   </div>
