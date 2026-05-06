@@ -17,7 +17,7 @@ export function LondrinaMap({ children }: { children?: React.ReactNode }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)]"
+      className="relative overflow-hidden rounded-[var(--radius-md)] border-soft"
       style={{ aspectRatio: '1 / 1' }}
       role="img"
       aria-label="Mapa de Londrina · 24 pontos sustentáveis no centro"

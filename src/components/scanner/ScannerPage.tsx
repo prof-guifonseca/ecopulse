@@ -195,7 +195,7 @@ export function ScannerPage() {
                   onClick={() => openModal({ kind: 'product', id: scan.id })}
                   className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
                     {scan.emoji}
                   </span>
                   <div className="min-w-0 flex-1">

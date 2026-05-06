@@ -52,7 +52,7 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
       </header>
 
       <main className="animate-fade-in relative flex flex-1 flex-col items-start justify-center gap-7">
-        <div className="flex h-32 w-32 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] shadow-[var(--shadow-glow)]">
+        <div className="flex h-32 w-32 items-center justify-center rounded-full border-soft bg-tint-1 shadow-[var(--shadow-glow)]">
           <Avatar baseId={avatarBase} size="xl" />
         </div>
 

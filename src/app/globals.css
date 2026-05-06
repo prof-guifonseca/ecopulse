@@ -112,6 +112,14 @@
   --color-accent-gps: var(--accent-gps);
   --color-on-primary: var(--on-primary);
   --color-on-reward: var(--on-reward);
+  --color-tint-1: var(--tint-1);
+  --color-tint-2: var(--tint-2);
+  --color-tint-3: var(--tint-3);
+  --color-tint-4: var(--tint-4);
+  --color-tint-green-1: var(--tint-green-1);
+  --color-tint-green-2: var(--tint-green-2);
+  --color-tint-green-3: var(--tint-green-3);
+  --color-tint-green-4: var(--tint-green-4);
   --color-score-a: var(--score-a);
   --color-score-b: var(--score-b);
   --color-score-c: var(--score-c);
@@ -532,17 +540,8 @@ input, textarea, select {
   .border-strong { border: 1px solid var(--line-strong); }
   .border-active { border: 1px solid var(--line-active); }
 
-  /* Token-aware backgrounds (replace `bg-[var(--tint-*)]`) */
-  .bg-tint-1 { background: var(--tint-1); }
-  .bg-tint-2 { background: var(--tint-2); }
-  .bg-tint-3 { background: var(--tint-3); }
-  .bg-tint-4 { background: var(--tint-4); }
-  .bg-tint-green-1 { background: var(--tint-green-1); }
-  .bg-tint-green-2 { background: var(--tint-green-2); }
-  .bg-tint-green-3 { background: var(--tint-green-3); }
-  .bg-tint-green-4 { background: var(--tint-green-4); }
-
-  /* Modal backdrop */
+  /* Tailwind generates bg-tint-N / hover:bg-tint-N from --color-tint-* in
+     @theme. Keep modal-backdrop alias as a one-off (no scale). */
   .bg-scrim { background: var(--scrim); }
 
   /* Pills / chips */

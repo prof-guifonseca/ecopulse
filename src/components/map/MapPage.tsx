@@ -122,7 +122,7 @@ export function MapPage() {
               <li key={point.id}>
                 <button
                   onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
                   <span
                     className={cn(

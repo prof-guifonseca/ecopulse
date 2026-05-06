@@ -128,7 +128,7 @@ export function ProductDetailModal({ id }: Props) {
         </div>
 
         {view.rationale.length > 0 ? (
-          <div className="mt-3 w-full rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-3 text-left">
+          <div className="mt-3 w-full rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 text-left">
             <div className="flex items-center gap-2 t-eyebrow">
               <Icon icon={Info} size={12} />
               Como calculamos

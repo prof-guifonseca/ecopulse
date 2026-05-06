@@ -42,9 +42,9 @@ const VARIANT: Record<Variant, string> = {
   reward:
     'gradient-gold text-[var(--on-reward)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
   secondary:
-    'border-strong bg-tint-2 text-[var(--text-primary)] hover:bg-[var(--tint-3)] active:scale-[0.98]',
+    'border-strong bg-tint-2 text-[var(--text-primary)] hover:bg-tint-3 active:scale-[0.98]',
   ghost:
-    'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--tint-2)] active:scale-[0.98]',
+    'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-tint-2 active:scale-[0.98]',
 };
 
 export const Button = forwardRef<HTMLElement, Props>(function Button(

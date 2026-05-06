@@ -137,7 +137,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <li key={item.id}>
                 <button
                   onClick={openAvatarBuilder}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2 text-lg">
                     {item.emoji}

@@ -61,9 +61,9 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
           {PILLARS.map((p) => (
             <li
               key={p.title}
-              className="flex gap-4 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-4"
+              className="flex gap-4 rounded-[var(--radius-md)] border-soft bg-tint-1 p-4"
             >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-green-3)] text-[var(--accent-green)]">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-green-3 text-[var(--accent-green)]">
                 <Icon icon={p.icon} size={22} strokeWidth={1.6} />
               </div>
               <div className="min-w-0 flex-1">
