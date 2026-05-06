@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { AvatarLoadout, GearItem, GearSet } from '@/types';
 import {
   deriveStatsFromLoadout,
+  clearSlot,
   equipGearItem,
   equipGearSet,
   isGearSetComplete,
@@ -56,6 +57,15 @@ describe('gear rules', () => {
     const overridden = equipGearItem(equippedSet, alternate);
     expect(overridden.equippedGear.face).toBe('mask');
     expect(overridden.equippedGear.torso).toBe('jacket');
+    expect(overridden.activeSetId).toBeNull();
+  });
+
+  it('clearing a slot switches the loadout back to free mode', () => {
+    const equippedSet = equipGearSet(emptyLoadout, setItem);
+    const cleared = clearSlot(equippedSet, 'mainHand');
+
+    expect(cleared.equippedGear.mainHand).toBeNull();
+    expect(cleared.activeSetId).toBeNull();
   });
 
   it('applies set bonus only when required pieces are equipped', () => {
@@ -81,6 +91,27 @@ describe('gear rules', () => {
 
     expect(completeStats.speed).toBe(incompleteStats.speed + 2);
     expect(completeStats.focus).toBe(incompleteStats.focus + 1);
+  });
+
+  it('does not apply set bonus to a complete-looking free-mode mix', () => {
+    const complete = equipGearSet(emptyLoadout, setItem);
+    const freeModeComplete = { ...complete, activeSetId: null };
+
+    const completeStats = deriveStatsFromLoadout({
+      baseStats: { hp: 100, attack: 10, defense: 10, speed: 10, focus: 10 },
+      loadout: complete,
+      gearItems: items,
+      gearSets: [setItem],
+    });
+    const freeStats = deriveStatsFromLoadout({
+      baseStats: { hp: 100, attack: 10, defense: 10, speed: 10, focus: 10 },
+      loadout: freeModeComplete,
+      gearItems: items,
+      gearSets: [setItem],
+    });
+
+    expect(completeStats.speed).toBe(freeStats.speed + 2);
+    expect(completeStats.focus).toBe(freeStats.focus + 1);
   });
 });
 

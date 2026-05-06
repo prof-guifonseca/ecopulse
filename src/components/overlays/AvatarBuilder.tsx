@@ -8,7 +8,8 @@ import {
   GEAR_ITEMS,
   GEAR_SETS,
   GEAR_SLOT_LABELS,
-  defaultLoadoutForSet,
+  createAvatarLoadoutPresets,
+  type DemoLoadoutPreset,
 } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -18,7 +19,6 @@ import {
   clearSlot,
   deriveStatsFromLoadout,
   equipGearItem,
-  equipGearSet,
   equippedGearIds,
 } from '@/lib/gear/rules';
 import { Avatar } from '@/components/shared/Avatar';
@@ -76,7 +76,7 @@ const GEAR_SLOTS: GearSlot[] = [
 ];
 
 const TAB_ITEMS = [
-  { value: 'sets', label: 'Conjuntos' },
+  { value: 'presets', label: 'Presets' },
   { value: 'base', label: 'Base' },
   ...GEAR_SLOTS.map((slot) => ({ value: slot, label: GEAR_SLOT_LABELS[slot] })),
 ] as const;
@@ -94,7 +94,11 @@ export function AvatarBuilder() {
     equippedGear: { ...EMPTY_GEAR, ...user.avatarLoadout.equippedGear },
     activeSetId: user.avatarLoadout.activeSetId ?? null,
   }));
-  const [tab, setTab] = useState<TabValue>('sets');
+  const [tab, setTab] = useState<TabValue>('presets');
+  const presets = useMemo(
+    () => createAvatarLoadoutPresets(draftLoadout.baseId ?? user.avatarBase ?? AVATAR_BASES[0].id),
+    [draftLoadout.baseId, user.avatarBase]
+  );
 
   const currentStats = useMemo(
     () =>
@@ -145,14 +149,16 @@ export function AvatarBuilder() {
     });
   };
 
-  const handleSelectSet = (id: string) => {
-    const setItem = GEAR_SETS.find((item) => item.id === id);
-    if (!setItem) return;
-    if (!user.ownedGearSets.includes(id)) {
-      openModal({ kind: 'gearSet', id });
+  const handleSelectPreset = (preset: DemoLoadoutPreset) => {
+    if (preset.kind === 'set' && !user.ownedGearSets.includes(preset.id)) {
+      openModal({ kind: 'gearSet', id: preset.id });
       return;
     }
-    setDraftLoadout((prev) => equipGearSet(prev, setItem));
+    setDraftLoadout((prev) => ({
+      baseId: prev.baseId ?? preset.loadout.baseId,
+      equippedGear: { ...EMPTY_GEAR, ...preset.loadout.equippedGear },
+      activeSetId: preset.loadout.activeSetId,
+    }));
   };
 
   return (
@@ -183,7 +189,10 @@ export function AvatarBuilder() {
                 highlightSlot={isGearSlot(tab) ? tab : undefined}
               />
             </div>
-            <StatsComparison current={currentStats} draft={draftStats} />
+            <div className="space-y-3">
+              <LoadoutStatus loadout={draftLoadout} />
+              <StatsComparison current={currentStats} draft={draftStats} />
+            </div>
           </div>
         </div>
 
@@ -192,39 +201,13 @@ export function AvatarBuilder() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
-          {tab === 'sets' ? (
-            <div className="grid grid-cols-2 gap-3">
-              {GEAR_SETS.map((setItem) => {
-                const owned = user.ownedGearSets.includes(setItem.id);
-                const selected = setItem.itemIds.every((id) => Object.values(draftLoadout.equippedGear).includes(id));
-                const previewLoadout = defaultLoadoutForSet(setItem.id, draftLoadout.baseId);
-                return (
-                  <PickerTile
-                    key={setItem.id}
-                    selected={selected}
-                    onClick={() => handleSelectSet(setItem.id)}
-                    className="relative"
-                  >
-                    {selected ? (
-                      <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
-                        <Icon icon={Check} size={12} strokeWidth={2.4} />
-                      </span>
-                    ) : null}
-                    <div className={cn('flex h-24 w-24 items-center justify-center', !owned && 'opacity-55 grayscale')}>
-                      <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} pose="builder" />
-                    </div>
-                    <span className="t-title">{setItem.name}</span>
-                    <span className="t-caption">{owned ? (selected ? 'Aplicado' : 'Equipar') : 'Ver'}</span>
-                    {!owned ? (
-                      <span className="inline-flex items-center gap-1 t-caption">
-                        <Icon icon={Lock} size={11} />
-                        {setItem.priceTokens} tokens
-                      </span>
-                    ) : null}
-                  </PickerTile>
-                );
-              })}
-            </div>
+          {tab === 'presets' ? (
+            <PresetGrid
+              presets={presets}
+              draftLoadout={draftLoadout}
+              ownedGearSets={user.ownedGearSets}
+              onSelectPreset={handleSelectPreset}
+            />
           ) : tab === 'base' ? (
             <div className="grid grid-cols-3 gap-3">
               {AVATAR_BASES.map((base) => {
@@ -329,6 +312,74 @@ function GearSlotGrid({
 
 function isGearSlot(value: TabValue): value is GearSlot {
   return GEAR_SLOTS.includes(value as GearSlot);
+}
+
+function LoadoutStatus({ loadout }: { loadout: AvatarLoadout }) {
+  const activeSet = GEAR_SETS.find((item) => item.id === loadout.activeSetId);
+  const equippedCount = equippedGearIds(loadout).length;
+  return (
+    <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-3">
+      <p className="t-eyebrow">{activeSet ? 'Conjunto ativo' : 'Modo livre'}</p>
+      <div className="mt-1 flex items-baseline justify-between gap-2">
+        <span className="t-title truncate">{activeSet?.name ?? 'Peças combinadas'}</span>
+        <span className="t-caption shrink-0">{equippedCount} peças</span>
+      </div>
+    </div>
+  );
+}
+
+function PresetGrid({
+  presets,
+  draftLoadout,
+  ownedGearSets,
+  onSelectPreset,
+}: {
+  presets: DemoLoadoutPreset[];
+  draftLoadout: AvatarLoadout;
+  ownedGearSets: string[];
+  onSelectPreset: (preset: DemoLoadoutPreset) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {presets.map((preset) => {
+        const setItem = preset.kind === 'set' ? GEAR_SETS.find((item) => item.id === preset.id) : undefined;
+        const owned = preset.kind === 'mix' || ownedGearSets.includes(preset.id);
+        const selected = loadoutMatches(draftLoadout, preset.loadout);
+        return (
+          <PickerTile
+            key={preset.id}
+            selected={selected}
+            onClick={() => onSelectPreset(preset)}
+            className="relative"
+          >
+            {selected ? (
+              <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
+                <Icon icon={Check} size={12} strokeWidth={2.4} />
+              </span>
+            ) : null}
+            <div className={cn('flex h-28 w-28 items-center justify-center', !owned && 'opacity-55 grayscale')}>
+              <Avatar loadout={preset.loadout} size="xl" alt={preset.name} pose="builder" />
+            </div>
+            <span className="t-title">{preset.name}</span>
+            <span className="t-caption">
+              {selected ? 'Aplicado' : preset.kind === 'mix' ? 'Aplicar mix' : owned ? 'Aplicar conjunto' : 'Liberar'}
+            </span>
+            {!owned ? (
+              <span className="inline-flex items-center gap-1 t-caption">
+                <Icon icon={Lock} size={11} />
+                {setItem?.priceTokens ?? 0} tokens
+              </span>
+            ) : null}
+          </PickerTile>
+        );
+      })}
+    </div>
+  );
+}
+
+function loadoutMatches(a: AvatarLoadout, b: AvatarLoadout) {
+  if ((a.activeSetId ?? null) !== (b.activeSetId ?? null)) return false;
+  return GEAR_SLOTS.every((slot) => (a.equippedGear[slot] ?? null) === (b.equippedGear[slot] ?? null));
 }
 
 function previewLoadoutForGear(loadout: AvatarLoadout, item: GearItem): AvatarLoadout {

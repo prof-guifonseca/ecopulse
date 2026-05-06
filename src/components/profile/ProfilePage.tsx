@@ -5,6 +5,7 @@ import { Pencil } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
+import { GEAR_SETS } from '@/data';
 import { Avatar } from '@/components/shared/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -41,6 +42,8 @@ export function ProfilePage() {
 
   const pct = Math.min(100, Math.round((xp / xpToNext) * 100));
   const stage = gardenStage(level);
+  const activeSet = GEAR_SETS.find((item) => item.id === avatarLoadout.activeSetId);
+  const loadoutLabel = activeSet?.name ?? 'Modo livre';
 
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
@@ -60,8 +63,9 @@ export function ProfilePage() {
           <div className="min-w-0">
             <h1 className="t-display truncate">{name}</h1>
             <p className="mt-1 t-caption">
-              Nv {level} · {tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}
+              Nv {level} · {loadoutLabel}
             </p>
+            <p className="mt-1 t-caption">{tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}</p>
           </div>
         </div>
 
