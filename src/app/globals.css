@@ -90,6 +90,17 @@
 
   /* ---------- Scrim (modal backdrop) ---------- */
   --scrim: rgba(3, 8, 5, 0.62);
+  --scrim-strong: rgba(5, 10, 8, 0.92);    /* full-screen takeovers (avatar builder) */
+  --scrim-card: rgba(0, 0, 0, 0.55);       /* readable badge over busy backgrounds */
+
+  /* ---------- Photo fades ----------
+     Used to darken editorial hero photos so headlines stay readable. */
+  --gradient-photo-fade: linear-gradient(
+    180deg,
+    rgba(10, 18, 14, 0.30) 0%,
+    rgba(10, 18, 14, 0.70) 55%,
+    rgba(10, 18, 14, 0.96) 100%
+  );
 
   /* ---------- Modal sizing ---------- */
   --modal-max-h: 88dvh;
@@ -541,8 +552,13 @@ input, textarea, select {
   .border-active { border: 1px solid var(--line-active); }
 
   /* Tailwind generates bg-tint-N / hover:bg-tint-N from --color-tint-* in
-     @theme. Keep modal-backdrop alias as a one-off (no scale). */
+     @theme. Scrim aliases are kept as named one-offs (no scale). */
   .bg-scrim { background: var(--scrim); }
+  .bg-scrim-strong { background: var(--scrim-strong); }
+  .bg-scrim-card { background: var(--scrim-card); }
+
+  /* Editorial photo overlay — drop on top of bg-image to keep headlines legible */
+  .photo-fade { background: var(--gradient-photo-fade); }
 
   /* Pills / chips */
   .command-pill {

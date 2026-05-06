@@ -96,14 +96,7 @@ export function ProductDetailModal({ id }: Props) {
             backgroundPosition: 'center',
           }}
         >
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(10,18,14,0.30) 0%, rgba(10,18,14,0.70) 75%, var(--bg-secondary) 100%)',
-            }}
-          />
+          <div aria-hidden className="photo-fade absolute inset-0" />
           <div
             data-score={view.score}
             className="score-badge t-mega animate-score-reveal absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[var(--on-primary)] shadow-[var(--shadow-deep-glow)]"

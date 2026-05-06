@@ -132,7 +132,7 @@ export function AvatarBuilder() {
   };
 
   return (
-    <div className="animate-fade-in fixed inset-0 z-[700] flex justify-center bg-[rgba(5,10,8,0.92)]">
+    <div className="animate-fade-in bg-scrim-strong fixed inset-0 z-[700] flex justify-center">
       <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
         <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
           <IconButton

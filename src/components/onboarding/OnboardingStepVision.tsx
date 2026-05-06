@@ -24,13 +24,7 @@ export function OnboardingStepVision({ onNext }: Props) {
           className="object-cover"
           style={{ filter: 'blur(2px) saturate(1.05)' }}
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,18,14,0.55) 0%, rgba(10,18,14,0.78) 55%, rgba(10,18,14,0.96) 100%)',
-          }}
-        />
+        <div className="photo-fade absolute inset-0" />
       </div>
 
       <header className="relative">

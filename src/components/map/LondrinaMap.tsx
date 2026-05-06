@@ -41,7 +41,7 @@ export function LondrinaMap({ children }: { children?: React.ReactNode }) {
       </div>
 
       {/* Top-left status pill — adds GPS legitimacy */}
-      <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-soft bg-[var(--scrim)] px-2.5 py-1 backdrop-blur-md">
+      <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-soft bg-scrim-card px-2.5 py-1 backdrop-blur-md">
         <Locate size={11} className="text-[var(--accent-gps)]" strokeWidth={2.4} />
         <span className="t-micro tracking-[0.08em] text-[var(--text-secondary)]">
           LONDRINA · CENTRO
