@@ -74,11 +74,7 @@ export function AnimatedNumber({
   return (
     <span
       key={pulse}
-      className={cn('inline-block', className)}
-      style={{
-        animation: pulse > 0 ? 'tokenPulse 0.6s cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
-        transformOrigin: 'center',
-      }}
+      className={cn('inline-block origin-center', pulse > 0 && 'animate-token-pulse', className)}
     >
       {format(display)}
     </span>

@@ -37,12 +37,9 @@ export function OnboardingStepVision({ onNext }: Props) {
         <p className="t-eyebrow">EcoPulse</p>
       </header>
 
-      <main
-        className="relative flex flex-1 flex-col justify-end gap-6"
-        style={{ animation: 'fadeIn 0.6s ease' }}
-      >
+      <main className="animate-fade-in relative flex flex-1 flex-col justify-end gap-6">
         <div className="space-y-4">
-          <h1 className="t-display leading-[0.95]" style={{ fontSize: '2.4rem' }}>
+          <h1 className="t-display leading-[0.95]">
             Sustentabilidade <br />
             <span className="t-italic-soft">que cabe no bolso.</span>
           </h1>

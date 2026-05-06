@@ -52,11 +52,8 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
         <span className="h-9 w-9" aria-hidden />
       </header>
 
-      <main
-        className="relative flex flex-1 flex-col justify-center gap-7"
-        style={{ animation: 'fadeIn 0.5s ease' }}
-      >
-        <h1 className="t-display leading-[0.95]" style={{ fontSize: '2rem' }}>
+      <main className="animate-fade-in relative flex flex-1 flex-col justify-center gap-7">
+        <h1 className="t-mega leading-[0.95]">
           Três gestos. <span className="t-italic-soft">Um caminho.</span>
         </h1>
 
