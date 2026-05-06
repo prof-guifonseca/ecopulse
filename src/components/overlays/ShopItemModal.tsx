@@ -28,7 +28,7 @@ export function ShopItemModal({ id }: Props) {
   const buy = () => {
     if (owned) return;
     if (!spend(item.price)) {
-      showToast('Eco-Tokens insuficientes', 'info');
+      showToast('Tokens insuficientes', 'info');
       return;
     }
     addOwned(id);
@@ -51,7 +51,7 @@ export function ShopItemModal({ id }: Props) {
           <Icon icon={Coins} size={22} />
           {item.price}
         </div>
-        <p className="t-caption mt-1">Você tem {tokens} Eco-Tokens</p>
+        <p className="t-caption mt-1">{tokens} tokens disponíveis</p>
 
         <Button
           variant="reward"
@@ -61,7 +61,7 @@ export function ShopItemModal({ id }: Props) {
           onClick={buy}
           disabled={disabled}
         >
-          {owned ? 'Já adquirido' : tokens < item.price ? 'Eco-Tokens insuficientes' : 'Comprar'}
+          {owned ? 'Já adquirido' : tokens < item.price ? 'Tokens insuficientes' : 'Comprar'}
         </Button>
       </div>
     </ModalShell>

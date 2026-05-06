@@ -92,7 +92,7 @@ export function GearSetModal({ id }: Props) {
         </div>
 
         <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3">
-          <p className="t-eyebrow">Peças liberadas</p>
+          <p className="t-eyebrow">Peças</p>
           <ul className="mt-3 space-y-2">
             {pieces.map((piece) => (
               <li key={piece.id} className="flex items-center gap-3">
@@ -122,19 +122,19 @@ export function GearSetModal({ id }: Props) {
           </div>
         ) : owned ? (
           <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
-            Você já desbloqueou este conjunto. Equipar aplica as peças nos slots correspondentes.
+            Desbloqueado.
           </div>
         ) : locked ? (
           <div className="flex items-start gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
             <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--text-muted)]" />
             <div>
-              <p className="font-semibold text-[var(--text-primary)]">Bloqueado por progresso</p>
-              <p>Meta: {unlockHint(setItem)}. Também dá para comprar direto por {setItem.priceTokens} tokens.</p>
+              <p className="font-semibold text-[var(--text-primary)]">Bloqueado</p>
+              <p>{unlockHint(setItem)} · {setItem.priceTokens} tokens</p>
             </div>
           </div>
         ) : (
           <div className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
-            Critério atingido. Pronto para liberar.
+            Pronto para liberar.
           </div>
         )}
 
@@ -156,7 +156,7 @@ export function GearSetModal({ id }: Props) {
             leftIcon={<Icon icon={Coins} size={16} />}
           >
             {tokens < setItem.priceTokens
-              ? 'Eco-Tokens insuficientes'
+              ? 'Tokens insuficientes'
               : locked
                 ? `Comprar agora · ${setItem.priceTokens}`
                 : `Adquirir · ${setItem.priceTokens}`}

@@ -4,22 +4,22 @@
   color-scheme: dark;
 
   /* ---------- Surfaces ---------- */
-  --bg-primary: #0a120e;     /* app canvas */
-  --bg-secondary: #111b16;   /* default surface */
-  --bg-elevated: #192d23;    /* hero / elevated surface — slightly more saturated */
+  --bg-primary: #070b0f;     /* app canvas */
+  --bg-secondary: #0d1418;   /* default surface */
+  --bg-elevated: #111c21;    /* elevated surface */
 
   /* ---------- Text ---------- */
-  --text-primary: #f2f4ef;
-  --text-secondary: #b3bcaf;  /* bumped from #aab3a7 — comfortably WCAG AA on bg-primary */
-  --text-muted: #8a948c;      /* bumped from #6f7b72 — was 4.49 (AA fail for body); now ≈6.5 */
+  --text-primary: #f5f7f2;
+  --text-secondary: #b8c0b8;
+  --text-muted: #808a84;
 
   /* ---------- Brand ---------- */
-  --accent-green: #8ddb98;
-  --accent-gold: #e0c27a;
-  --accent-red: #e38a84;
-  --accent-cyan: #7ec5d8;
-  --accent-orange: #e0a576;
-  --accent-gps: #5aa9ff;          /* GPS / location marker accent */
+  --accent-green: #72d376;
+  --accent-gold: #d8ad4d;
+  --accent-red: #e0706c;
+  --accent-cyan: #66bed6;
+  --accent-orange: #d5915a;
+  --accent-gps: #5aa9ff;
 
   /* Semantic score tokens (A=best → E=worst) */
   --score-a: var(--accent-green);
@@ -29,18 +29,18 @@
   --score-e: var(--accent-red);
 
   /* On-gradient text (for primary/reward buttons & chips) */
-  --on-primary: #0a140e;
-  --on-reward: #1a130a;
+  --on-primary: #071008;
+  --on-reward: #160f05;
 
   /* Deep canvas — used by hero gradients and the desktop body background.
      Slightly darker than --bg-primary to give the column its lift. */
-  --bg-canvas-deep: #050907;
-  --bg-hero-bottom: #101915;
-  --bg-editorial-bottom: #0e1612;
+  --bg-canvas-deep: #03070a;
+  --bg-hero-bottom: #0c1418;
+  --bg-editorial-bottom: #0a1115;
 
   /* Focus ring — composed of an inner darken plus an outer brand glow */
-  --focus-ring-inner: rgba(10, 18, 14, 0.95);
-  --focus-ring-outer: rgba(141, 219, 152, 0.38);
+  --focus-ring-inner: rgba(7, 11, 15, 0.95);
+  --focus-ring-outer: rgba(114, 211, 118, 0.38);
 
   /* ---------- Tints (white) ---------- */
   /* Use exclusively for subtle inset surfaces. */
@@ -51,37 +51,37 @@
 
   /* ---------- Tints (brand) ---------- */
   --tint-green-1: color-mix(in srgb, var(--accent-green) 4%, transparent);
-  --tint-green-2: color-mix(in srgb, var(--accent-green) 8%, transparent);
-  --tint-green-3: color-mix(in srgb, var(--accent-green) 16%, transparent);
-  --tint-green-4: color-mix(in srgb, var(--accent-green) 32%, transparent);
+  --tint-green-2: color-mix(in srgb, var(--accent-green) 9%, transparent);
+  --tint-green-3: color-mix(in srgb, var(--accent-green) 15%, transparent);
+  --tint-green-4: color-mix(in srgb, var(--accent-green) 28%, transparent);
 
   /* ---------- Lines ---------- */
-  --line-soft: rgba(255, 255, 255, 0.06);
-  --line-strong: rgba(255, 255, 255, 0.12);
-  --line-active: color-mix(in srgb, var(--accent-green) 32%, transparent);
+  --line-soft: rgba(255, 255, 255, 0.075);
+  --line-strong: rgba(255, 255, 255, 0.15);
+  --line-active: color-mix(in srgb, var(--accent-green) 38%, transparent);
 
   /* ---------- Glass (header, nav, modals) ---------- */
-  --glass-bg: rgba(15, 23, 19, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: blur(20px);
+  --glass-bg: rgba(8, 13, 17, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-blur: blur(18px);
 
   /* ---------- Gradients ---------- */
-  --gradient-primary: linear-gradient(135deg, #4ea76a 0%, #8fd9a3 100%);
-  --gradient-gold: linear-gradient(135deg, #f0d493 0%, #c9995b 100%);
+  --gradient-primary: linear-gradient(135deg, #66c96d 0%, #8ce287 100%);
+  --gradient-gold: linear-gradient(135deg, #e2ba55 0%, #c98932 100%);
   --gradient-canvas: linear-gradient(180deg, var(--bg-canvas-deep) 0%, var(--bg-primary) 55%);
 
   /* ---------- Elevation ---------- */
-  --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.32);
-  --shadow-glow-val: 0 20px 60px -20px rgba(141, 219, 152, 0.22);
-  --shadow-deep-glow-val: 0 24px 60px -18px rgba(0, 0, 0, 0.55), 0 12px 32px -16px rgba(141, 219, 152, 0.30);
-  --shadow-lifted-val: 0 28px 60px -16px rgba(0, 0, 0, 0.55);
+  --shadow-card-val: 0 14px 34px -24px rgba(0, 0, 0, 0.72);
+  --shadow-glow-val: 0 12px 28px -22px rgba(114, 211, 118, 0.45);
+  --shadow-deep-glow-val: 0 26px 60px -32px rgba(0, 0, 0, 0.85);
+  --shadow-lifted-val: 0 30px 70px -34px rgba(0, 0, 0, 0.86);
 
   /* ---------- Radii ---------- */
-  --radius-xs: 10px;
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 26px;
-  --radius-shell: 32px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-shell: 22px;
 
   /* ---------- Shell / canvas ---------- */
   --shell-width: 430px;        /* legacy — modals + a few helpers still use this */
@@ -89,8 +89,8 @@
   --content-width: 600px;      /* narrower content blocks (text-heavy) */
 
   /* ---------- Scrim (modal backdrop) ---------- */
-  --scrim: rgba(3, 8, 5, 0.62);
-  --scrim-strong: rgba(5, 10, 8, 0.92);    /* full-screen takeovers (avatar builder) */
+  --scrim: rgba(2, 6, 10, 0.68);
+  --scrim-strong: rgba(3, 7, 11, 0.94);    /* full-screen takeovers (avatar builder) */
   --scrim-card: rgba(0, 0, 0, 0.55);       /* readable badge over busy backgrounds */
 
   /* ---------- Photo fades ----------
@@ -137,7 +137,7 @@
   --color-score-d: var(--score-d);
   --color-score-e: var(--score-e);
   --font-sans: var(--font-sans), Inter, system-ui, sans-serif;
-  --font-display: var(--font-display), Fraunces, Georgia, serif;
+  --font-display: var(--font-sans), Inter, system-ui, sans-serif;
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -261,6 +261,7 @@
   }
 }
 
+@layer base {
 *,
 *::before,
 *::after {
@@ -282,10 +283,8 @@ body {
   font-size: 16px;
   line-height: 1.55;
   color: var(--text-primary);
-  /* Mobile: a single soft halo at the top, no extra ambient. The shell is
-     full-bleed at this size so 'environment' would be invisible anyway. */
   background:
-    radial-gradient(circle at 50% -10%, rgba(141, 219, 152, 0.05), transparent 38%),
+    radial-gradient(circle at 50% -12%, rgba(114, 211, 118, 0.045), transparent 36%),
     var(--bg-primary);
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
@@ -293,14 +292,11 @@ body {
 
 @media (min-width: 640px) {
   body {
-    /* Desktop: a single calm canvas. No framed device, no halos competing
-       with content. One very soft top halo for atmosphere, then flat
-       --bg-primary so the column reads as the document itself. */
     overflow: auto;
     background:
       radial-gradient(
         ellipse 80% 40% at 50% -10%,
-        color-mix(in srgb, var(--accent-green) 6%, transparent),
+        color-mix(in srgb, var(--accent-green) 5%, transparent),
         transparent 70%
       ),
       var(--bg-primary);
@@ -308,12 +304,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: 0;
   text-wrap: balance;
-  font-variation-settings: "SOFT" 50, "opsz" 144;
 }
 
 p {
@@ -381,6 +376,8 @@ input, textarea, select {
   }
 }
 
+}
+
 @layer components {
   /* =========================================================
      App column — a vertical reading column, no framing chrome
@@ -397,18 +394,22 @@ input, textarea, select {
   .card {
     position: relative;
     border-radius: var(--radius-md);
-    background: var(--bg-secondary);
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-secondary) 96%, white 4%), var(--bg-secondary));
+    box-shadow: var(--shadow-card-val);
   }
 
   .card-soft {
     position: relative;
     border-radius: var(--radius-md);
+    border: 1px solid var(--line-soft);
     background: var(--tint-1);
   }
 
   .card-glass {
     position: relative;
     border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -418,9 +419,9 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, var(--bg-elevated), var(--bg-hero-bottom));
-    /* Single soft glow only — no border, no heavy box-shadow. */
-    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-elevated) 96%, white 4%), var(--bg-hero-bottom));
+    box-shadow: var(--shadow-card-val);
   }
 
   /* Editorial hero — a magazine cover. Photo slot via --bg-image,
@@ -429,8 +430,9 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
+    border: 1px solid var(--line-soft);
     background: linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
-    box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
+    box-shadow: var(--shadow-card-val);
     isolation: isolate;
   }
   .card-editorial::before {
@@ -450,9 +452,9 @@ input, textarea, select {
     inset: 0;
     background:
       linear-gradient(180deg,
-        rgba(10, 18, 14, 0.20) 0%,
-        rgba(10, 18, 14, 0.55) 55%,
-        rgba(10, 18, 14, 0.88) 100%
+        rgba(7, 11, 15, 0.18) 0%,
+        rgba(7, 11, 15, 0.52) 55%,
+        rgba(7, 11, 15, 0.88) 100%
       );
     z-index: 0;
   }
@@ -509,37 +511,35 @@ input, textarea, select {
      Single source of truth. Components must NOT use text-[Nrem].
      ========================================================= */
   .t-display {
-    font-family: var(--font-display);
-    font-size: 2.05rem;
-    font-weight: 600;
-    line-height: 1.02;
-    letter-spacing: -0.025em;
+    font-family: var(--font-sans);
+    font-size: 1.72rem;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0;
     color: var(--text-primary);
-    font-variation-settings: "SOFT" 50, "opsz" 144;
   }
 
   .t-headline {
-    font-family: var(--font-display);
-    font-size: 1.45rem;
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-family: var(--font-sans);
+    font-size: 1.24rem;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: 0;
     color: var(--text-primary);
-    font-variation-settings: "SOFT" 60, "opsz" 96;
   }
 
   .t-title {
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.25;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     color: var(--text-primary);
   }
 
   .t-body {
     font-family: var(--font-sans);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 400;
     line-height: 1.6;
     color: var(--text-primary);
@@ -547,7 +547,7 @@ input, textarea, select {
 
   .t-body-sm {
     font-family: var(--font-sans);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 400;
     line-height: 1.55;
     color: var(--text-muted);
@@ -555,7 +555,7 @@ input, textarea, select {
 
   .t-caption {
     font-family: var(--font-sans);
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     font-weight: 500;
     line-height: 1.4;
     color: var(--text-muted);
@@ -564,18 +564,18 @@ input, textarea, select {
 
   .t-eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     font-weight: 600;
-    letter-spacing: 0.18em;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--text-muted);
   }
 
   .t-label {
     font-family: var(--font-sans);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--text-muted);
   }
@@ -586,24 +586,22 @@ input, textarea, select {
     font-size: 0.66rem;
     font-weight: 600;
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
   }
 
   /* Editorial display for hero numbers (score letter, large prices) */
   .t-mega {
-    font-family: var(--font-display);
-    font-size: 2rem;
+    font-family: var(--font-sans);
+    font-size: 1.85rem;
     font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     color: var(--text-primary);
-    font-variation-settings: "SOFT" 50, "opsz" 144;
   }
 
   /* Editorial italic flourish on Fraunces — apply to specific words via a span */
   .t-italic-soft {
-    font-style: italic;
-    font-variation-settings: "SOFT" 100, "opsz" 144;
+    font-style: normal;
   }
 
   /* =========================================================
@@ -630,14 +628,14 @@ input, textarea, select {
   .command-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    border-radius: 999px;
+    gap: 0.35rem;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--line-soft);
     background: var(--tint-2);
-    padding: 0.42rem 0.78rem;
-    font-size: 0.78rem;
+    padding: 0.34rem 0.58rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.005em;
+    letter-spacing: 0;
     color: var(--text-secondary);
     transition: all 0.18s ease;
   }
@@ -649,14 +647,13 @@ input, textarea, select {
 
   .command-pill[data-active="true"] {
     border-color: var(--line-active);
-    background: var(--tint-green-3);
+    background: var(--tint-green-2);
     color: var(--text-primary);
-    box-shadow: var(--shadow-glow-val);
   }
 
   /* Form shell */
   .input-shell {
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     border: 1px solid var(--line-soft);
     background: var(--tint-1);
     transition: border-color 0.18s ease, background-color 0.18s ease;
@@ -703,8 +700,9 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
+    border: 1px solid var(--line-soft);
     background:
-      radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 60%),
+      radial-gradient(circle at 50% 30%, var(--tint-green-2), transparent 60%),
       linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
   }
 
@@ -802,7 +800,7 @@ input, textarea, select {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--line-soft);
     background: var(--tint-1);
     backdrop-filter: blur(8px);

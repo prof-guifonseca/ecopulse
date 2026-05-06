@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn';
 
 const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
   { page: 'home', label: 'Início', icon: Home },
-  { page: 'scanner', label: 'Scanner', icon: ScanLine },
+  { page: 'scanner', label: 'Scan', icon: ScanLine },
   { page: 'arena', label: 'Arena', icon: Swords },
   { page: 'map', label: 'Mapa', icon: MapPin },
   { page: 'community', label: 'Social', icon: Users },
@@ -30,20 +30,18 @@ export function BottomNav() {
     <nav
       id="bottom-nav"
       role="tablist"
-      className="shrink-0 border-t border-[var(--line-soft)] bg-[var(--bg-primary)] px-4 pb-[calc(env(safe-area-inset-bottom,0px)+10px)] pt-3 sm:px-8"
+      className="shrink-0 border-t border-[var(--line-soft)] bg-[color-mix(in_srgb,var(--bg-primary)_92%,transparent)] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] pt-2 backdrop-blur-xl sm:px-8"
     >
-      <div className="relative mx-auto flex min-w-0 max-w-[var(--content-width)] items-center gap-1">
-        {/* Sliding ride indicator — a thin gradient bar above the active tab */}
+      <div className="relative mx-auto flex min-w-0 max-w-[var(--content-width)] items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-tint-1 p-1">
         <span
           aria-hidden
-          className="gradient-primary pointer-events-none absolute -top-2 h-[3px] rounded-full"
+          className="gradient-primary pointer-events-none absolute bottom-1 top-1 rounded-[var(--radius-md)]"
           style={{
-            left: 0,
-            width: `${100 / TABS.length}%`,
+            left: '0.25rem',
+            width: `calc((100% - 0.5rem) / ${TABS.length})`,
             transform: `translateX(${(indicatorVisible ? activeIndex : 0) * 100}%)`,
             transition: 'transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
             opacity: indicatorVisible ? 1 : 0,
-            boxShadow: '0 0 12px rgba(141, 219, 152, 0.45)',
           }}
         />
 
@@ -58,22 +56,22 @@ export function BottomNav() {
               aria-selected={active}
               aria-label={t.label}
               className={cn(
-                'group relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[var(--radius-md)] px-1 pb-1 pt-2 transition-colors duration-200',
-                active ? 'text-[var(--accent-green)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                'group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-[var(--radius-md)] px-1 py-1.5 transition-colors duration-200',
+                active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
               )}
             >
               <span
                 className={cn(
-                  'flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-300',
-                  active ? 'bg-tint-green-3 scale-105' : 'bg-transparent scale-100'
+                  'flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] transition-all duration-300',
+                  active ? 'scale-105' : 'scale-100'
                 )}
               >
-                <Icon icon={t.icon} size={20} strokeWidth={active ? 2.1 : 1.6} />
+                <Icon icon={t.icon} size={17} strokeWidth={active ? 2.2 : 1.7} />
               </span>
               <span
                 className={cn(
-                't-micro max-w-full truncate font-medium tracking-[0.01em] transition-colors duration-200',
-                  active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
+                  'max-w-full truncate text-[0.62rem] font-semibold leading-none tracking-normal transition-colors duration-200',
+                  active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)]'
                 )}
               >
                 {t.label}

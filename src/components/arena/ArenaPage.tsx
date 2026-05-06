@@ -209,7 +209,7 @@ export function ArenaPage() {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h1 className="t-headline max-w-full break-words leading-none">Arena Tática</h1>
-            <p className="mt-1 t-caption">Duelo local por rounds · Arena XP sem Eco-Tokens</p>
+            <p className="mt-1 t-caption">Rounds · Arena XP</p>
           </div>
           <span className="shrink-0 rounded-full border-soft bg-tint-1 px-3 py-1 t-caption">
             0 tokens por luta
@@ -234,7 +234,6 @@ export function ArenaPage() {
           playerFighter={playerFighter}
           opponent={selectedOpponent}
           unlocked={selectedUnlocked}
-          tokens={tokens}
           masteryWins={rivalMastery[selectedOpponent.id]?.wins ?? 0}
           onStart={handleStartBattle}
         />
@@ -245,7 +244,7 @@ export function ArenaPage() {
           <h2 className="t-title">Trilha de rivais</h2>
           <span className="t-caption">{defeatedOpponents.length}/{orderedOpponents.length} dominados</span>
         </div>
-        <div className="-mx-5 overflow-x-auto px-5 pb-1">
+        <div className="-mx-4 overflow-x-auto px-4 pb-1">
           <div className="relative flex gap-3 pb-1">
             <span className="absolute left-7 right-7 top-9 h-px bg-[var(--line-soft)]" aria-hidden />
             {orderedOpponents.map((opponent) => {
@@ -275,7 +274,7 @@ export function ArenaPage() {
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Seu loadout</p>
             <h2 className="t-title mt-1 truncate">{playerFighter.title}</h2>
-            <p className="mt-1 t-caption">Nível {level} · {tokens} Eco-Tokens preservados</p>
+            <p className="mt-1 t-caption">Nv {level} · {tokens} tokens</p>
             <BattleStatChips stats={playerFighter.stats} compact className="mt-3 max-w-[calc(100vw-152px)]" />
           </div>
         </div>
@@ -291,7 +290,6 @@ function ArenaSetup({
   playerFighter,
   opponent,
   unlocked,
-  tokens,
   masteryWins,
   onStart,
 }: {
@@ -299,7 +297,6 @@ function ArenaSetup({
   playerFighter: ReturnType<typeof createPlayerFighter>;
   opponent: ArenaOpponent;
   unlocked: boolean;
-  tokens: number;
   masteryWins: number;
   onStart: () => void;
 }) {
@@ -344,7 +341,7 @@ function ArenaSetup({
       <div className="relative z-10 mt-5 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2">
         <InfoPill icon={Swords} label={ARENA_ARCHETYPE_LABELS[opponent.archetype]} />
         <InfoPill icon={Zap} label={`+${xpPreview} XP`} />
-        <InfoPill icon={Shield} label={`${tokens} tokens`} muted />
+        <InfoPill icon={Shield} label="0 tokens" muted />
       </div>
 
       <Button
@@ -360,7 +357,7 @@ function ArenaSetup({
       </Button>
       <p className="relative z-10 mt-3 text-center t-caption">
         {unlocked
-          ? 'Simulação local · sem aposta · sem perda de Eco-Tokens'
+          ? 'Simulação local · 0 tokens'
           : 'Avance na trilha vencendo os rivais anteriores.'}
       </p>
     </Card>

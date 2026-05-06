@@ -40,10 +40,10 @@ export function ModalShell({
         </div>
       ) : null}
 
-      <header className="flex items-start justify-between gap-3 px-5 pb-4 pt-4">
+      <header className="flex items-start justify-between gap-3 px-5 pb-3 pt-4">
         <div className="min-w-0 flex-1">
           {eyebrow ? <div className="t-eyebrow mb-1">{eyebrow}</div> : null}
-          {title ? <h2 className="t-headline">{title}</h2> : null}
+          {title ? <h2 className="t-title">{title}</h2> : null}
         </div>
         <IconButton
           onClick={close}

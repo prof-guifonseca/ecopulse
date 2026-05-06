@@ -13,18 +13,18 @@ interface Props {
 const PILLARS = [
   {
     icon: ScanLine,
-    title: 'Scanner inteligente',
-    body: 'Aponte para qualquer produto e veja o impacto ambiental real antes de comprar.',
+    title: 'Scanner',
+    body: 'Veja o impacto do produto.',
   },
   {
     icon: MapPin,
-    title: 'Mapa de ação',
-    body: 'Pontos de coleta, mercados verdes e eventos próximos a você. Um clique até a ação.',
+    title: 'Mapa',
+    body: 'Encontre pontos próximos.',
   },
   {
     icon: Users,
-    title: 'Tribo viva',
-    body: 'Histórias de pessoas reais transformando o cotidiano. Você não caminha sozinho.',
+    title: 'Comunidade',
+    body: 'Acompanhe a turma.',
   },
 ] as const;
 
@@ -53,9 +53,7 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
       </header>
 
       <main className="animate-fade-in relative flex flex-1 flex-col justify-center gap-7">
-        <h1 className="t-mega leading-[0.95]">
-          Três gestos. <span className="t-italic-soft">Um caminho.</span>
-        </h1>
+        <h1 className="t-mega">Três gestos.</h1>
 
         <ul className="space-y-4">
           {PILLARS.map((p) => (

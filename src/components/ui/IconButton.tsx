@@ -12,19 +12,19 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const SIZE_CLASSES: Record<Size, string> = {
-  sm: 'h-9 w-9',
-  md: 'h-10 w-10',
+  sm: 'h-8 w-8',
+  md: 'h-9 w-9',
 };
 
 const VARIANT_CLASSES: Record<Variant, string> = {
   /** No chrome until hover. Used in modal headers, where the surface itself
       should carry the visual weight. */
   ghost:
-    'text-[var(--text-secondary)] hover:bg-tint-3 hover:text-[var(--text-primary)]',
+    'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--text-primary)]',
   /** Subtle filled circle. Used inside content blocks (onboarding back-arrow,
       list rows) where the button needs to read as a target before hover. */
   soft:
-    'border-soft bg-tint-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--line-strong)]',
+    'border-soft bg-tint-1 text-[var(--text-secondary)] hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]',
 };
 
 /**
@@ -46,7 +46,7 @@ export function IconButton({
     <button
       type={type}
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full transition-colors',
+        'inline-flex shrink-0 items-center justify-center rounded-[var(--radius-sm)] transition-colors',
         SIZE_CLASSES[size],
         VARIANT_CLASSES[variant],
         className

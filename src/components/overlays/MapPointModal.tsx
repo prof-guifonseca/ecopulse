@@ -37,7 +37,7 @@ export function MapPointModal({ id }: Props) {
       markMission('map', true);
       showToast('Missão diária: visitar Mapa concluída', 'success');
     } else {
-      showToast('+10 Eco-Tokens', 'reward');
+      showToast('+10 tokens', 'reward');
     }
     if (visitedPoints.length >= 3) unlockBadge('map-explorer');
     closeModal();
@@ -78,9 +78,9 @@ export function MapPointModal({ id }: Props) {
           disabled={visited}
           leftIcon={<Icon icon={MapPin} size={16} />}
         >
-          {visited ? 'Já visitado' : 'Marcar como visitado'}
+          {visited ? 'Visitado' : 'Marcar visita'}
         </Button>
-        {!visited ? <p className="t-caption mt-2 text-center">+10 Eco-Tokens</p> : null}
+        {!visited ? <p className="t-caption mt-2 text-center">+10 tokens</p> : null}
       </div>
     </ModalShell>
   );

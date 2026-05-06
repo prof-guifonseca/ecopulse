@@ -34,18 +34,16 @@ export default function RootError({
             style={{
               fontSize: '0.68rem',
               fontWeight: 600,
-              letterSpacing: '0.18em',
+              letterSpacing: 0,
               textTransform: 'uppercase',
               color: 'var(--text-muted, #6f7b72)',
             }}
           >
             Algo travou
           </p>
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 600, lineHeight: 1.1 }}>
-            Tropeçamos aqui.
-          </h1>
+          <h1 style={{ fontSize: '1.35rem', fontWeight: 700, lineHeight: 1.1 }}>Algo travou.</h1>
           <p style={{ color: 'var(--text-secondary, #aab3a7)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-            Recarregue para voltar à rotina. Se persistir, conta pra gente.
+            Tente de novo.
           </p>
           <button
             type="button"
@@ -53,7 +51,7 @@ export default function RootError({
             style={{
               marginTop: '0.6rem',
               height: 44,
-              borderRadius: 999,
+              borderRadius: 'var(--radius-sm, 8px)',
               padding: '0 1.4rem',
               fontWeight: 600,
               color: 'var(--on-primary, #0a140e)',

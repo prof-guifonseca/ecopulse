@@ -21,14 +21,14 @@ export default function MainError({
       role="alert"
     >
       <p className="t-eyebrow">Algo travou</p>
-      <h2 className="t-headline">Não foi dessa vez.</h2>
+      <h2 className="t-headline">Algo travou.</h2>
       <p className="t-body-sm" style={{ maxWidth: 280 }}>
-        Aconteceu um tropeço nessa tela. Tente recarregar — sua rotina continua salva.
+        Tente de novo.
       </p>
       <button
         type="button"
         onClick={reset}
-        className="mt-2 inline-flex h-11 items-center justify-center rounded-full px-6 font-semibold"
+        className="mt-2 inline-flex h-10 items-center justify-center rounded-[var(--radius-sm)] px-5 text-sm font-semibold"
         style={{
           background: 'var(--gradient-primary)',
           color: 'var(--on-primary)',

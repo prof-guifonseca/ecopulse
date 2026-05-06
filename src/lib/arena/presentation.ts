@@ -74,7 +74,7 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   if (outcome === 'win') {
     return {
       title: 'Rival dominado',
-      body: 'Sua leitura de round venceu a simulação. Domínio registrado na Arena.',
+      body: 'Domínio registrado na Arena.',
       tone: 'win',
       primaryCta: 'Revanche',
       secondaryCta: 'Trocar rival',
@@ -82,8 +82,8 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   }
   if (outcome === 'loss') {
     return {
-      title: 'Derrota sem custo',
-      body: 'A Arena registra aprendizado, não punição. Eco-Tokens continuam intactos.',
+      title: 'Derrota',
+      body: 'Sem perda de tokens.',
       tone: 'loss',
       primaryCta: 'Tentar de novo',
       secondaryCta: 'Trocar rival',
@@ -91,7 +91,7 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   }
   return {
     title: 'Empate técnico',
-    body: 'Ninguém caiu, mas a sessão contou para seu treino de Arena.',
+    body: 'Sessão registrada.',
     tone: 'draw',
     primaryCta: 'Nova sessão',
     secondaryCta: 'Trocar rival',

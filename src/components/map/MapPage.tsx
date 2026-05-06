@@ -39,10 +39,8 @@ export function MapPage() {
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
-        <p className="t-eyebrow">Londrina · Centro</p>
-        <h1 className="t-display mt-1.5 leading-[0.95]">
-          Onde a sua rua <span className="t-italic-soft">recicla</span>
-        </h1>
+        <h1 className="t-headline">Mapa</h1>
+        <p className="mt-1 t-caption">Londrina · Centro</p>
       </header>
 
       <LondrinaMap>

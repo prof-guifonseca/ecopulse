@@ -50,17 +50,17 @@ export function ShopPanel({ tokens }: { tokens: number }) {
 
   return (
     <div className="space-y-6">
-      <Card tone="hero" padded={false} className="px-5 py-5">
+      <Card tone="solid" padded={false} className="px-5 py-4">
         <div>
           <p className="t-eyebrow">Carteira</p>
           <div className="mt-1.5 flex items-baseline gap-2">
             <AnimatedNumber
               value={tokens}
-              className="t-display leading-[1] text-[var(--accent-green)]"
+              className="t-headline leading-[1] text-[var(--accent-green)]"
             />
-            <span className="t-body-sm">Eco-Tokens</span>
+            <span className="t-body-sm">tokens</span>
           </div>
-          <p className="mt-2 t-caption">Ganhos jogando. Sem compra.</p>
+          <p className="mt-2 t-caption">Ganhos no app.</p>
         </div>
       </Card>
 
@@ -96,7 +96,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                 </div>
                 <div className="space-y-1 px-3 py-3">
                   <h3 className="t-title truncate">{setItem.name}</h3>
-                  <p className="t-caption">
+                  <p className="t-caption truncate">
                     {equipped ? (
                       <span className="text-[var(--accent-green)]">Equipado</span>
                     ) : owned ? (
@@ -118,7 +118,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
       <section>
         <div className="mb-3 flex items-baseline justify-between gap-3">
           <h2 className="t-title">Equipamentos</h2>
-          <span className="t-caption">Vestiário</span>
+          <span className="t-caption">Peças</span>
         </div>
         <ListCard>
           {GEAR_ITEMS.map((item) => {

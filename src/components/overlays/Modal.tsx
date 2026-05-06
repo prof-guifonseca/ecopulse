@@ -92,7 +92,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
   return createPortal(
     <div
       className={cn(
-        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-[28px] saturate-150',
+        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-xl',
         variant === 'center' ? 'items-center' : 'items-end'
       )}
       onClick={(e) => {

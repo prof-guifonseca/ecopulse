@@ -33,12 +33,9 @@ export function OnboardingStepVision({ onNext }: Props) {
 
       <main className="animate-fade-in relative flex flex-1 flex-col justify-end gap-6">
         <div className="space-y-4">
-          <h1 className="t-display leading-[0.95]">
-            Sustentabilidade <br />
-            <span className="t-italic-soft">que cabe no bolso.</span>
-          </h1>
+          <h1 className="t-display">Sustentabilidade na rotina.</h1>
           <p className="t-body max-w-[28ch] text-[var(--text-secondary)]">
-            Hábitos reais, recompensas tangíveis. Sem ruído.
+            Ações simples. Impacto visível.
           </p>
         </div>
       </main>

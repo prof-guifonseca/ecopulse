@@ -62,7 +62,7 @@ export function buyGearSet(id: string): boolean {
   if (!setItem) return false;
   if (user.ownedGearSets.includes(id)) return false;
   if (!user.spendTokens(setItem.priceTokens)) {
-    useUIStore.getState().showToast('Eco-Tokens insuficientes', 'info');
+    useUIStore.getState().showToast('Tokens insuficientes', 'info');
     return false;
   }
   user.unlockGearSet(id);

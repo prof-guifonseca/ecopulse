@@ -71,7 +71,7 @@ export function ProductDetailModal({ id }: Props) {
   const addToHistoryFromCatalog = () => {
     addScanned(view.catalogId);
     awardTokens(5);
-    showToast('+5 Eco-Tokens', 'reward');
+    showToast('+5 tokens', 'reward');
     if (!missionScan) markMission('scan', true);
     const count = useGameStore.getState().scannedProducts.length;
     if (count === 1) unlockBadge('first-scan');
@@ -124,7 +124,7 @@ export function ProductDetailModal({ id }: Props) {
           <div className="mt-3 w-full rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 text-left">
             <div className="flex items-center gap-2 t-eyebrow">
               <Icon icon={Info} size={12} />
-              Como calculamos
+              Cálculo
             </div>
             <ul className="mt-2 space-y-1 t-caption">
               {view.rationale.map((line) => (
@@ -142,7 +142,7 @@ export function ProductDetailModal({ id }: Props) {
         ) : null}
 
         {isFromHistory ? (
-          <Button variant="secondary" size="lg" fullWidth className="mt-6" onClick={closeModal}>
+            <Button variant="secondary" size="lg" fullWidth className="mt-6" onClick={closeModal}>
             Fechar
           </Button>
         ) : (
@@ -155,7 +155,7 @@ export function ProductDetailModal({ id }: Props) {
             disabled={scanned}
             leftIcon={!scanned ? <Icon icon={Plus} size={16} strokeWidth={2.4} /> : undefined}
           >
-            {scanned ? 'Já adicionado' : 'Adicionar ao histórico'}
+            {scanned ? 'Já adicionado' : 'Adicionar'}
           </Button>
         )}
       </div>
@@ -220,7 +220,7 @@ function BreakdownRow({ label, value, score }: { label: string; value: number; s
 function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id: string) => void }) {
   return (
     <div className="mt-5 w-full text-left">
-      <div className="t-eyebrow mb-2">Alternativas melhores</div>
+      <div className="t-eyebrow mb-2">Alternativas</div>
       <div className="space-y-2">
         {items.map((a) => (
           <button

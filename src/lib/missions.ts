@@ -106,7 +106,7 @@ export function tryClaimDailyBonus() {
   if (done === 3 && !dm.bonusClaimed) {
     useGameStore.getState().claimBonus();
     awardTokens(25);
-    useUIStore.getState().showToast('Bônus diário! +25 Eco-Tokens 🎁', 'reward');
+  useUIStore.getState().showToast('Bônus diário · +25 tokens', 'reward');
     useUIStore.getState().fireConfetti();
     hapticSuccess();
   }

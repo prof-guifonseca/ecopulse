@@ -75,7 +75,7 @@ function Metric({ icon, label, value }: { icon: LucideIcon; label: string; value
   return (
     <div className="min-w-0 rounded-[var(--radius-md)] bg-tint-1 px-2 py-2 text-center">
       <Icon icon={icon} size={14} className="mx-auto text-[var(--accent-green)]" />
-      <p className="mt-1 truncate text-[0.62rem] font-semibold uppercase tracking-[0.06em] text-[var(--text-muted)]">
+      <p className="mt-1 truncate text-[0.62rem] font-semibold uppercase tracking-normal text-[var(--text-muted)]">
         {label}
       </p>
       <p className="t-title mt-0.5">{value}</p>

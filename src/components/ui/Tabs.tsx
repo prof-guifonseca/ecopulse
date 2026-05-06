@@ -20,7 +20,7 @@ export function Tabs<Value extends string>({ items, value, onChange, className, 
     <div
       role="tablist"
       className={cn(
-        'relative flex gap-1 border-b border-[var(--line-soft)]',
+        'relative flex gap-1 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-tint-1 p-1',
         fitted ? 'w-full' : 'inline-flex',
         className
       )}
@@ -34,20 +34,13 @@ export function Tabs<Value extends string>({ items, value, onChange, className, 
             aria-selected={active}
             onClick={() => onChange(item.value)}
             className={cn(
-              'relative flex-1 px-3 py-3 text-sm font-semibold transition-colors duration-200',
+              'relative flex-1 rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold transition-colors duration-200',
               active
-                ? 'text-[var(--text-primary)]'
+                ? 'bg-[var(--bg-secondary)] text-[var(--accent-green)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
             )}
           >
             {item.label}
-            <span
-              aria-hidden
-              className={cn(
-                'gradient-primary pointer-events-none absolute -bottom-px left-4 right-4 h-[2px] rounded-full transition-opacity duration-200',
-                active ? 'opacity-100' : 'opacity-0'
-              )}
-            />
           </button>
         );
       })}

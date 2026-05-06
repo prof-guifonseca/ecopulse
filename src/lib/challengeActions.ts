@@ -24,7 +24,7 @@ export function runChallenge(challenge: Challenge) {
 
   const finished = game.advanceChallenge(challenge.id, challenge.duration);
   awardTokens(5);
-  ui.showToast('+5 Eco-Tokens', 'reward');
+  ui.showToast('+5 tokens', 'reward');
 
   if (finished) {
     game.completeChallenge(challenge.id);

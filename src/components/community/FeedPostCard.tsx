@@ -72,7 +72,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
               <span className="text-[var(--text-secondary)]">{firstComment.text}</span>
             </p>
             {post.comments > 1 ? (
-              <p className="t-caption mt-0.5">Ver todos os {post.comments} comentários →</p>
+              <p className="t-caption mt-0.5">Ver comentários</p>
             ) : null}
           </button>
         ) : null}

@@ -10,6 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Tabs } from '@/components/ui/Tabs';
 import { PageShell } from '@/components/ui/PageShell';
+import { Card } from '@/components/ui/Card';
 import { gardenStage, GARDEN_LABEL } from '@/lib/garden';
 import { Stat } from '@/components/ui/Stat';
 import { ImpactPanel } from './ImpactPanel';
@@ -43,50 +44,43 @@ export function ProfilePage() {
 
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
-      {/* Editorial portrait */}
-      <header className="flex flex-col items-center pt-2 text-center">
-        <button
-          onClick={openAvatarBuilder}
-          className="relative h-32 w-32 rounded-full p-2"
-          aria-label="Editar avatar"
-        >
-          <span
-            aria-hidden
-            className="absolute inset-[-4px] rounded-full opacity-70"
-            style={{
-              background:
-                'conic-gradient(from 130deg, color-mix(in srgb, var(--accent-green) 35%, transparent), transparent 35%, color-mix(in srgb, var(--accent-gold) 30%, transparent), transparent 70%)',
-            }}
-          />
-          <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
+      <Card as="header" tone="solid" padded={false} className="px-4 py-4">
+        <div className="grid grid-cols-[7.25rem_minmax(0,1fr)] items-center gap-4">
+          <button
+            onClick={openAvatarBuilder}
+            className="relative flex h-32 w-full items-end justify-center rounded-[var(--radius-lg)] bg-tint-1"
+            aria-label="Editar avatar"
+          >
             <Avatar loadout={avatarLoadout} size="xl" alt={name} pose="builder" />
-          </span>
-          <span className="gradient-gold absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]">
-            <Icon icon={Pencil} size={12} strokeWidth={2.4} />
-          </span>
-        </button>
+            <span className="gradient-gold absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-reward)]">
+              <Icon icon={Pencil} size={12} strokeWidth={2.4} />
+            </span>
+          </button>
 
-        <h1 className="t-display mt-4 leading-[0.95]">{name}</h1>
-        <p className="mt-1.5 t-caption">
-          Nível {level} · {tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'} · {GARDEN_LABEL[stage]}
-        </p>
-
-        <div className="mt-4 grid w-full grid-cols-3 gap-3 text-center">
-          <Stat label="Tokens" value={tokens} />
-          <Stat label="Streak" value={`${streak}d`} />
-          <Stat label="Badges" value={badges.length} />
+          <div className="min-w-0">
+            <h1 className="t-display truncate">{name}</h1>
+            <p className="mt-1 t-caption">
+              Nv {level} · {tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-4 w-full">
+        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+          <Stat label="Tokens" value={tokens} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
+          <Stat label="Seq." value={`${streak}d`} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
+          <Stat label="Badges" value={badges.length} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
+        </div>
+
+        <div className="mt-4">
           <div className="mb-1.5 flex items-baseline justify-between t-caption">
-            <span>Próximo nível</span>
+            <span>{GARDEN_LABEL[stage]}</span>
             <span className="font-semibold text-[var(--text-secondary)]">
               {xp}/{xpToNext} XP
             </span>
           </div>
           <ProgressBar value={pct} size="sm" />
         </div>
-      </header>
+      </Card>
 
       <Tabs items={PROFILE_TABS} value={tab} onChange={setTab} />
 

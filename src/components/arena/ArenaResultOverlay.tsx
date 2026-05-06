@@ -69,7 +69,7 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
 
       <p className="mt-3 flex items-center justify-center gap-1.5 text-center t-caption">
         <Icon icon={Zap} size={13} className="text-[var(--accent-gold)]" />
-        Eco-Tokens preservados em toda batalha.
+        0 tokens por batalha.
       </p>
     </section>
   );
@@ -78,7 +78,7 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
 function RewardTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-[var(--radius-md)] border border-white/10 bg-black/18 px-2 py-3 text-center">
-      <p className="truncate text-[0.64rem] font-semibold uppercase tracking-[0.06em] text-[var(--text-secondary)]">
+      <p className="truncate text-[0.64rem] font-semibold uppercase tracking-normal text-[var(--text-secondary)]">
         {label}
       </p>
       <p className="mt-1 t-title text-[var(--text-primary)]">{value}</p>

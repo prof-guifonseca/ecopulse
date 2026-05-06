@@ -27,7 +27,7 @@ export function TutorialModal({ id }: Props) {
   const doComplete = () => {
     complete(id);
     awardTokens(tutorial.tokens);
-    showToast(`+${tutorial.tokens} Eco-Tokens`, 'reward');
+    showToast(`+${tutorial.tokens} tokens`, 'reward');
     fireConfetti();
     const count = useGameStore.getState().completedTutorials.length;
     if (count === 1) unlockBadge('upcycler-1');
@@ -84,7 +84,7 @@ export function TutorialModal({ id }: Props) {
 
         <div className="mt-5 flex items-center gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 t-body-sm">
           <Icon icon={Coins} size={14} className="text-[var(--accent-gold)]" />
-          Recompensa: <strong className="text-[var(--accent-gold)]">{tutorial.tokens} Eco-Tokens</strong>
+          <strong className="text-[var(--accent-gold)]">+{tutorial.tokens} tokens</strong>
         </div>
 
         <Button
@@ -96,7 +96,7 @@ export function TutorialModal({ id }: Props) {
           disabled={done}
           leftIcon={done ? <Icon icon={Check} size={16} /> : undefined}
         >
-          {done ? 'Completo' : 'Completar tutorial'}
+          {done ? 'Completo' : 'Concluir'}
         </Button>
       </div>
     </ModalShell>

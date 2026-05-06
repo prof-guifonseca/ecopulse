@@ -3,7 +3,7 @@ import { CommunityPage } from '@/components/community/CommunityPage';
 
 export const metadata: Metadata = {
   title: 'Comunidade — EcoPulse',
-  description: 'Quem caminha com você. Feed da comunidade EcoPulse Londrina.',
+  description: 'Comunidade EcoPulse Londrina.',
 };
 
 export default function Page() {

@@ -34,7 +34,7 @@ export function Stat({ value, label, icon, layout = 'block', className }: Props)
 
   return (
     <div className={className}>
-      <div className="t-headline leading-none">{value}</div>
+      <div className="text-base font-bold leading-none text-[var(--text-primary)]">{value}</div>
       <div className="mt-1 t-caption">{label}</div>
     </div>
   );

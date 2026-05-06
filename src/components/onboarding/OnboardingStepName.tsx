@@ -57,11 +57,9 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
         </div>
 
         <div className="space-y-3">
-          <h1 className="t-display leading-[0.95]">
-            Como você <span className="t-italic-soft">se chama?</span>
-          </h1>
+          <h1 className="t-display">Seu nome</h1>
           <p className="t-body max-w-[26ch] text-[var(--text-secondary)]">
-            Vamos personalizar a sua jornada. Pode trocar depois no perfil.
+            Pode trocar depois.
           </p>
         </div>
 

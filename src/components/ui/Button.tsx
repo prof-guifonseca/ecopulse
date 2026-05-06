@@ -31,20 +31,20 @@ type AnchorOnlyProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Commo
 type Props = CommonProps & ButtonOnlyProps & Partial<AnchorOnlyProps>;
 
 const SIZE: Record<Size, string> = {
-  sm: 'h-9 px-4 text-sm',
-  md: 'h-11 px-5 text-sm',
-  lg: 'h-12 px-6 text-base',
+  sm: 'h-8 px-3 text-xs',
+  md: 'h-10 px-4 text-sm',
+  lg: 'h-11 px-5 text-sm',
 };
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    'gradient-primary text-[var(--on-primary)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
+    'gradient-primary text-[var(--on-primary)] shadow-[0_12px_26px_-22px_rgba(114,211,118,0.75)] hover:brightness-105 active:scale-[0.98]',
   reward:
-    'gradient-gold text-[var(--on-reward)] shadow-[var(--shadow-glow)] hover:brightness-105 active:scale-[0.97]',
+    'gradient-gold text-[var(--on-reward)] shadow-[0_12px_26px_-22px_rgba(216,173,77,0.8)] hover:brightness-105 active:scale-[0.98]',
   secondary:
-    'border-strong bg-tint-2 text-[var(--text-primary)] hover:bg-tint-3 active:scale-[0.98]',
+    'border border-[var(--line-strong)] bg-tint-2 text-[var(--text-primary)] hover:bg-tint-3 active:scale-[0.99]',
   ghost:
-    'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-tint-2 active:scale-[0.98]',
+    'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-tint-2 active:scale-[0.99]',
 };
 
 export const Button = forwardRef<HTMLElement, Props>(function Button(
@@ -78,7 +78,7 @@ export const Button = forwardRef<HTMLElement, Props>(function Button(
     <Component
       ref={ref}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200',
+        'inline-flex items-center justify-center gap-2 rounded-[var(--radius-sm)] font-semibold tracking-normal transition-all duration-200',
         Component === 'button' && 'disabled:cursor-not-allowed disabled:opacity-55',
         SIZE[size],
         VARIANT[variant],

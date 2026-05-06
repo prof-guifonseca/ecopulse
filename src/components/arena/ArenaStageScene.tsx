@@ -33,7 +33,7 @@ export function ArenaStageScene({ session, stageTheme = 'forest', cue }: Props) 
       <div className="relative z-10 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="t-caption font-semibold text-[var(--text-primary)]">{visual.name}</p>
-          <p className="truncate text-[0.68rem] font-medium uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+      <p className="truncate text-[0.68rem] font-medium uppercase tracking-normal text-[var(--text-secondary)]">
             {visual.ambience}
           </p>
         </div>
@@ -300,7 +300,7 @@ function Meter({
 }) {
   return (
     <div>
-      <div className="mb-0.5 flex items-center justify-between gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.06em] text-[var(--text-secondary)]">
+      <div className="mb-0.5 flex items-center justify-between gap-2 text-[0.62rem] font-semibold uppercase tracking-normal text-[var(--text-secondary)]">
         <span>{label}</span>
         <span>{Math.max(0, Math.round(value))}/{max}</span>
       </div>

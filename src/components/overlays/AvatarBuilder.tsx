@@ -51,7 +51,7 @@ function PickerTile({
       className={cn(
         'flex min-h-[132px] flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
         selected
-          ? 'border-[var(--line-active)] bg-tint-green-2 shadow-[var(--shadow-glow)]'
+          ? 'border-[var(--line-active)] bg-tint-green-2'
           : 'border-[var(--line-soft)] bg-tint-1 hover:border-[var(--line-strong)]',
         disabled && 'cursor-not-allowed opacity-50',
         className
@@ -128,7 +128,7 @@ export function AvatarBuilder() {
   const buyGearItem = (item: GearItem) => {
     if (user.ownedGearItems.includes(item.id)) return true;
     if (!user.spendTokens(item.priceTokens)) {
-      showToast('Eco-Tokens insuficientes', 'info');
+      showToast('Tokens insuficientes', 'info');
       return false;
     }
     user.addOwnedGearItem(item.id);
@@ -158,14 +158,13 @@ export function AvatarBuilder() {
   return (
     <div className="animate-fade-in bg-scrim-strong fixed inset-0 z-[700] flex justify-center">
       <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+10px)] pb-3 backdrop-blur-xl">
           <IconButton
             onClick={close}
             aria-label="Fechar"
             icon={<Icon icon={X} size={18} />}
           />
           <div className="flex-1 text-center">
-            <div className="t-eyebrow">Avatar</div>
             <h2 className="t-title">Vestiário</h2>
           </div>
           <Button variant="ghost" size="sm" onClick={save}>
@@ -207,7 +206,7 @@ export function AvatarBuilder() {
                     className="relative"
                   >
                     {selected ? (
-                      <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]">
+                      <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
                         <Icon icon={Check} size={12} strokeWidth={2.4} />
                       </span>
                     ) : null}
@@ -215,7 +214,7 @@ export function AvatarBuilder() {
                       <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} pose="builder" />
                     </div>
                     <span className="t-title">{setItem.name}</span>
-                    <span className="t-caption">{owned ? (selected ? 'Aplicado' : 'Equipar conjunto') : 'Ver liberação'}</span>
+                    <span className="t-caption">{owned ? (selected ? 'Aplicado' : 'Equipar') : 'Ver'}</span>
                     {!owned ? (
                       <span className="inline-flex items-center gap-1 t-caption">
                         <Icon icon={Lock} size={11} />
@@ -274,15 +273,15 @@ function GearSlotGrid({
   return (
     <div className="grid grid-cols-2 gap-3">
       <PickerTile selected={!loadout.equippedGear[slot]} onClick={onClear}>
-        <span className="flex h-12 w-12 items-center justify-center rounded-full border-soft bg-tint-2 t-title">
+        <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2 t-title">
           -
         </span>
         <span className="t-title">Vazio</span>
-        <span className="t-caption">Sem peça neste slot</span>
+        <span className="t-caption">Sem peça</span>
       </PickerTile>
 
       {items.length === 0 ? (
-        <p className="col-span-2 t-caption text-center">Sem equipamentos nesse slot ainda.</p>
+        <p className="col-span-2 t-caption text-center">Slot vazio.</p>
       ) : null}
 
       {items.map((item) => {
@@ -296,7 +295,7 @@ function GearSlotGrid({
             className="relative"
           >
             {equipped ? (
-              <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]">
+              <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
                 <Icon icon={Check} size={12} strokeWidth={2.4} />
               </span>
             ) : null}
@@ -314,7 +313,7 @@ function GearSlotGrid({
             <span className="t-caption">{item.tier}</span>
             <StatDeltas stats={item.battleStats} />
             {owned ? (
-              <span className="t-caption">{equipped ? 'Equipado' : 'Toque para equipar'}</span>
+              <span className="t-caption">{equipped ? 'Equipado' : 'Equipar'}</span>
             ) : (
               <span className="inline-flex items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
                 <Icon icon={Coins} size={12} />

@@ -97,10 +97,7 @@ export function ScannerPage() {
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
-        <p className="t-eyebrow">Scanner</p>
-        <h1 className="t-display mt-1.5 leading-[0.95]">
-          O que você <span className="t-italic-soft">vai comprar</span>?
-        </h1>
+        <h1 className="t-headline">Scanner</h1>
       </header>
 
       {/* Scan instrument — the ritual lives here */}
@@ -157,12 +154,11 @@ export function ScannerPage() {
           loading={scanning}
           leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
         >
-          {scanning ? 'Lendo código…' : 'Simular scan de produto'}
+          {scanning ? 'Lendo…' : 'Simular scan'}
         </Button>
 
         <p className="mt-3 text-center t-caption">
-          {history.length} scan{history.length === 1 ? '' : 's'} no histórico ·{' '}
-          {missionScan ? 'missão diária ✓' : 'missão diária pendente'}
+          {history.length} scan{history.length === 1 ? '' : 's'} · {missionScan ? 'missão ok' : 'pendente'}
         </p>
 
         {lastBarcode ? (
@@ -175,7 +171,7 @@ export function ScannerPage() {
       {firstRun ? (
         <p className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
-          Toque em Simular scan e a home libera.
+          Faça um scan para liberar a Home.
         </p>
       ) : null}
 
@@ -183,7 +179,7 @@ export function ScannerPage() {
       {history.length > 0 ? (
         <section>
           <div className="mb-4 flex items-baseline justify-between">
-            <h2 className="t-title">Meus scans recentes</h2>
+            <h2 className="t-title">Scans recentes</h2>
             <span className="t-caption">
               {history.length} item{history.length === 1 ? '' : 's'}
             </span>
@@ -223,7 +219,7 @@ export function ScannerPage() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar nome, marca, categoria ou código"
+            placeholder="Buscar produto"
             aria-label="Buscar produtos"
             className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
           />
