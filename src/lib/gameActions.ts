@@ -14,6 +14,7 @@ function snapshotForBadges(): GameSnapshot {
     tokens: user.tokens,
     badges: game.badges,
     ownedSkinPacks: user.ownedSkinPacks,
+    ownedGearSets: user.ownedGearSets,
     scannedProductsCount: game.scannedProducts.length,
     visitedPointsCount: game.visitedPoints.length,
     completedChallengesCount: game.completedChallenges.length,

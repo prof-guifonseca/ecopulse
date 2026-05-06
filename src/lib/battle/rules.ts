@@ -1,15 +1,19 @@
 import type {
   ArenaOpponent,
-  AvatarOutfit,
-  AvatarOutfits,
+  AvatarLoadout,
+  BattleAction,
   BattleEvent,
   BattleFighter,
   BattleResult,
   BattleStats,
-  SkinPack,
+  GearItem,
+  GearSet,
 } from '@/types';
+import { deriveStatsFromLoadout } from '@/lib/gear/rules';
 
 const MAX_ROUNDS = 8;
+const MAX_ENERGY = 60;
+const SPECIAL_COST = 30;
 
 export const BATTLE_STAT_LABELS: Record<keyof BattleStats, string> = {
   hp: 'HP',
@@ -17,6 +21,12 @@ export const BATTLE_STAT_LABELS: Record<keyof BattleStats, string> = {
   defense: 'Defesa',
   speed: 'Veloc.',
   focus: 'Foco',
+};
+
+export const BATTLE_ACTION_LABELS: Record<BattleAction, string> = {
+  attack: 'Atacar',
+  defend: 'Defender',
+  focus: 'Focar',
 };
 
 export function battleStatEntries(stats: Partial<BattleStats> | undefined) {
@@ -50,34 +60,24 @@ export function addBattleStats(base: BattleStats, bonus?: Partial<BattleStats>):
 
 export interface PlayerStatsInput {
   level: number;
-  skinPackId: string | null;
-  avatarOutfits: AvatarOutfits;
-  skinPacks: SkinPack[];
-  outfits: AvatarOutfit[];
+  loadout: AvatarLoadout;
+  gearItems: GearItem[];
+  gearSets: GearSet[];
 }
 
 export function derivePlayerStats(input: PlayerStatsInput): BattleStats {
-  let stats = baseStatsForLevel(input.level);
-
-  if (input.skinPackId) {
-    const skin = input.skinPacks.find((item) => item.id === input.skinPackId);
-    return clampStats(addBattleStats(stats, skin?.battleStats));
-  }
-
-  const outfitById = new Map(input.outfits.map((item) => [item.id, item]));
-  for (const id of Object.values(input.avatarOutfits)) {
-    if (!id) continue;
-    stats = addBattleStats(stats, outfitById.get(id)?.battleStats);
-  }
-
-  return clampStats(stats);
+  return deriveStatsFromLoadout({
+    baseStats: baseStatsForLevel(input.level),
+    loadout: input.loadout,
+    gearItems: input.gearItems,
+    gearSets: input.gearSets,
+  });
 }
 
 export interface PlayerFighterInput extends PlayerStatsInput {
   id?: string;
   name: string;
   title: string;
-  avatarBase: string | null;
 }
 
 export function createPlayerFighter(input: PlayerFighterInput): BattleFighter {
@@ -87,9 +87,11 @@ export function createPlayerFighter(input: PlayerFighterInput): BattleFighter {
     title: input.title,
     level: Math.max(1, Math.floor(input.level)),
     stats: derivePlayerStats(input),
-    skinPackId: input.skinPackId,
-    avatarBase: input.avatarBase,
-    avatarOutfits: input.avatarOutfits,
+    energy: 0,
+    loadout: input.loadout,
+    avatarBase: input.loadout.baseId,
+    avatarOutfits: {},
+    skinPackId: null,
   };
 }
 
@@ -98,10 +100,12 @@ export function opponentToFighter(opponent: ArenaOpponent): BattleFighter {
     id: opponent.id,
     name: opponent.name,
     title: opponent.title,
-    level: opponent.difficulty,
+    level: opponent.level,
     stats: opponent.stats,
-    skinPackId: opponent.skinPackId,
-    avatarBase: null,
+    energy: 0,
+    loadout: opponent.loadout,
+    skinPackId: opponent.skinPackId ?? null,
+    avatarBase: opponent.loadout.baseId,
     avatarOutfits: {},
   };
 }
@@ -112,6 +116,8 @@ export interface SimulateBattleInput {
   opponentId: string;
   seed: string;
   playedAt?: string;
+  playerPlan?: BattleAction[];
+  opponentPlan?: BattleAction[];
 }
 
 export function simulateBattle({
@@ -120,21 +126,31 @@ export function simulateBattle({
   opponentId,
   seed,
   playedAt,
+  playerPlan,
+  opponentPlan,
 }: SimulateBattleInput): BattleResult {
   const rng = createSeededRandom(seed);
   const events: BattleEvent[] = [];
   let playerHp = player.stats.hp;
   let opponentHp = opponent.stats.hp;
+  let playerEnergy = clampEnergy(player.energy ?? 0);
+  let opponentEnergy = clampEnergy(opponent.energy ?? 0);
+  let playerGuard = 0;
+  let opponentGuard = 0;
+  let playerFocus = 0;
+  let opponentFocus = 0;
   let eventCount = 0;
   let rounds = 0;
 
-  const pushEvent = (event: Omit<BattleEvent, 'id' | 'playerHp' | 'opponentHp'>) => {
+  const pushEvent = (event: Omit<BattleEvent, 'id' | 'playerHp' | 'opponentHp' | 'playerEnergy' | 'opponentEnergy'>) => {
     eventCount += 1;
     events.push({
       ...event,
       id: `${event.round}-${event.type}-${eventCount}`,
       playerHp,
       opponentHp,
+      playerEnergy,
+      opponentEnergy,
     });
   };
 
@@ -151,39 +167,94 @@ export function simulateBattle({
     if (playerHp <= 0 || opponentHp <= 0) break;
     rounds = round;
 
-    const playerInitiative = initiativeScore(player, rng);
-    const opponentInitiative = initiativeScore(opponent, rng);
-    const first = playerInitiative >= opponentInitiative ? player : opponent;
-    const second = first.id === player.id ? opponent : player;
+    const playerAction = chooseAction({
+      fighter: player,
+      hp: playerHp,
+      energy: playerEnergy,
+      plan: playerPlan,
+      round,
+      rng,
+    });
+    const opponentAction = chooseAction({
+      fighter: opponent,
+      hp: opponentHp,
+      energy: opponentEnergy,
+      plan: opponentPlan,
+      round,
+      rng,
+    });
+
+    const playerInitiative = initiativeScore(player, rng, playerAction);
+    const opponentInitiative = initiativeScore(opponent, rng, opponentAction);
+    const firstSide = playerInitiative >= opponentInitiative ? 'player' : 'opponent';
+    const secondSide = firstSide === 'player' ? 'opponent' : 'player';
 
     pushEvent({
       round,
       type: 'initiative',
-      actorId: first.id,
-      targetId: second.id,
+      actorId: firstSide === 'player' ? player.id : opponent.id,
+      targetId: secondSide === 'player' ? player.id : opponent.id,
       damage: 0,
-      message: `${first.name} toma a iniciativa no round ${round}.`,
+      message: `${firstSide === 'player' ? player.name : opponent.name} toma a iniciativa no round ${round}.`,
     });
 
-    for (const attacker of [first, second]) {
+    for (const side of [firstSide, secondSide] as const) {
       if (playerHp <= 0 || opponentHp <= 0) break;
-      const defender = attacker.id === player.id ? opponent : player;
-      const outcome = attackOutcome(attacker, defender, rng);
+      const action = side === 'player' ? playerAction : opponentAction;
 
-      if (defender.id === player.id) {
-        playerHp = Math.max(0, playerHp - outcome.damage);
+      if (side === 'player') {
+        const result = resolveAction({
+          action,
+          attacker: player,
+          defender: opponent,
+          rng,
+          attackerHp: playerHp,
+          defenderHp: opponentHp,
+          attackerEnergy: playerEnergy,
+          defenderGuard: opponentGuard,
+          attackerFocus: playerFocus,
+        });
+        playerEnergy = result.attackerEnergy;
+        playerGuard = result.attackerGuard;
+        playerFocus = result.attackerFocus;
+        opponentGuard = result.defenderGuard;
+        opponentHp = result.defenderHp;
+        pushEvent({
+          round,
+          type: result.type,
+          actorId: player.id,
+          targetId: result.targeted ? opponent.id : null,
+          action,
+          damage: result.damage,
+          message: result.message,
+        });
       } else {
-        opponentHp = Math.max(0, opponentHp - outcome.damage);
+        const result = resolveAction({
+          action,
+          attacker: opponent,
+          defender: player,
+          rng,
+          attackerHp: opponentHp,
+          defenderHp: playerHp,
+          attackerEnergy: opponentEnergy,
+          defenderGuard: playerGuard,
+          attackerFocus: opponentFocus,
+        });
+        opponentEnergy = result.attackerEnergy;
+        opponentGuard = result.attackerGuard;
+        opponentFocus = result.attackerFocus;
+        playerGuard = result.defenderGuard;
+        playerHp = result.defenderHp;
+        pushEvent({
+          round,
+          type: result.type,
+          actorId: opponent.id,
+          targetId: result.targeted ? player.id : null,
+          action,
+          damage: result.damage,
+          message: result.message,
+        });
       }
-
-      pushEvent({
-        round,
-        type: outcome.type,
-        actorId: attacker.id,
-        targetId: defender.id,
-        damage: outcome.damage,
-        message: outcome.message,
-      });
     }
   }
 
@@ -217,33 +288,158 @@ export function simulateBattle({
       player: playerHp,
       opponent: opponentHp,
     },
+    finalEnergy: {
+      player: playerEnergy,
+      opponent: opponentEnergy,
+    },
   };
+}
+
+interface ChooseActionInput {
+  fighter: BattleFighter;
+  hp: number;
+  energy: number;
+  plan?: BattleAction[];
+  round: number;
+  rng: () => number;
+}
+
+function chooseAction({ fighter, hp, energy, plan, round, rng }: ChooseActionInput): BattleAction {
+  const planned = plan?.[round - 1];
+  if (planned) return planned;
+
+  const hpPct = hp / fighter.stats.hp;
+  if (hpPct < 0.34 && rng() < 0.42) return 'defend';
+  if (energy < SPECIAL_COST && rng() < 0.28 + fighter.stats.focus / 260) return 'focus';
+  return 'attack';
+}
+
+interface ActionResolutionInput {
+  action: BattleAction;
+  attacker: BattleFighter;
+  defender: BattleFighter;
+  rng: () => number;
+  attackerHp: number;
+  defenderHp: number;
+  attackerEnergy: number;
+  defenderGuard: number;
+  attackerFocus: number;
+}
+
+interface ActionResolution {
+  type: BattleEvent['type'];
+  damage: number;
+  message: string;
+  targeted: boolean;
+  attackerEnergy: number;
+  attackerGuard: number;
+  defenderGuard: number;
+  attackerFocus: number;
+  defenderHp: number;
+}
+
+function resolveAction({
+  action,
+  attacker,
+  defender,
+  rng,
+  attackerEnergy,
+  defenderGuard,
+  attackerFocus,
+  defenderHp,
+}: ActionResolutionInput): ActionResolution {
+  if (action === 'defend') {
+    return {
+      type: 'defend',
+      damage: 0,
+      targeted: false,
+      attackerEnergy: clampEnergy(attackerEnergy + 8),
+      attackerGuard: Math.min(0.62, 0.36 + attacker.stats.defense / 260),
+      defenderGuard,
+      attackerFocus,
+      defenderHp,
+      message: `${attacker.name} assume postura defensiva e prepara o próximo impacto.`,
+    };
+  }
+
+  if (action === 'focus') {
+    return {
+      type: 'focus',
+      damage: 0,
+      targeted: false,
+      attackerEnergy: clampEnergy(attackerEnergy + 14),
+      attackerGuard: 0,
+      defenderGuard,
+      attackerFocus: Math.min(3, attackerFocus + 1),
+      defenderHp,
+      message: `${attacker.name} foca a energia e aumenta a chance de um golpe decisivo.`,
+    };
+  }
+
+  const outcome = attackOutcome({
+    attacker,
+    defender,
+    rng,
+    energy: attackerEnergy,
+    focusStacks: attackerFocus,
+    guardReduction: defenderGuard,
+  });
+  return {
+    type: outcome.type,
+    damage: outcome.damage,
+    targeted: true,
+    attackerEnergy: clampEnergy(attackerEnergy - outcome.energySpent + 10),
+    attackerGuard: 0,
+    defenderGuard: 0,
+    attackerFocus: 0,
+    defenderHp: Math.max(0, defenderHp - outcome.damage),
+    message: outcome.message,
+  };
+}
+
+interface AttackOutcomeInput {
+  attacker: BattleFighter;
+  defender: BattleFighter;
+  rng: () => number;
+  energy: number;
+  focusStacks: number;
+  guardReduction: number;
 }
 
 interface AttackOutcome {
   type: BattleEvent['type'];
   damage: number;
   message: string;
+  energySpent: number;
 }
 
-function attackOutcome(
-  attacker: BattleFighter,
-  defender: BattleFighter,
-  rng: () => number
-): AttackOutcome {
+function attackOutcome({
+  attacker,
+  defender,
+  rng,
+  energy,
+  focusStacks,
+  guardReduction,
+}: AttackOutcomeInput): AttackOutcome {
   const variance = 0.82 + rng() * 0.36;
-  let damage = Math.max(3, attacker.stats.attack * variance - defender.stats.defense * 0.5);
-  const special = rng() < Math.min(0.24, 0.07 + attacker.stats.focus / 180);
-  const critical = !special && rng() < Math.min(0.26, 0.06 + attacker.stats.focus / 210);
-  const block = !special && rng() < Math.min(0.28, 0.05 + defender.stats.defense / 150);
+  const focusMultiplier = 1 + focusStacks * 0.12;
+  let damage = Math.max(3, attacker.stats.attack * variance * focusMultiplier - defender.stats.defense * 0.5);
+  const canSpecial = energy >= SPECIAL_COST;
+  const special =
+    canSpecial && rng() < Math.min(0.68, 0.24 + attacker.stats.focus / 170 + focusStacks * 0.1);
+  const critical =
+    !special && rng() < Math.min(0.34, 0.06 + attacker.stats.focus / 210 + focusStacks * 0.09);
+  const randomBlock = !special && rng() < Math.min(0.28, 0.05 + defender.stats.defense / 150);
 
   if (special) {
-    damage = damage * 1.35 + attacker.stats.focus * 0.35;
+    damage = damage * 1.42 + attacker.stats.focus * 0.38;
   } else if (critical) {
     damage *= 1.55;
   }
 
-  if (block) {
+  if (guardReduction > 0) {
+    damage *= 1 - guardReduction;
+  } else if (randomBlock) {
     damage *= 0.58;
   }
 
@@ -253,7 +449,8 @@ function attackOutcome(
     return {
       type: 'special',
       damage: roundedDamage,
-      message: `${attacker.name} usa um golpe especial e causa ${roundedDamage} de dano.`,
+      energySpent: SPECIAL_COST,
+      message: `${attacker.name} converte energia em um especial e causa ${roundedDamage} de dano.`,
     };
   }
 
@@ -261,27 +458,31 @@ function attackOutcome(
     return {
       type: 'critical',
       damage: roundedDamage,
+      energySpent: 0,
       message: `${attacker.name} acerta um crítico de ${roundedDamage} de dano.`,
     };
   }
 
-  if (block) {
+  if (guardReduction > 0 || randomBlock) {
     return {
       type: 'block',
       damage: roundedDamage,
-      message: `${defender.name} defende parte do impacto e recebe ${roundedDamage} de dano.`,
+      energySpent: 0,
+      message: `${defender.name} reduz o impacto e recebe ${roundedDamage} de dano.`,
     };
   }
 
   return {
     type: 'attack',
     damage: roundedDamage,
+    energySpent: 0,
     message: `${attacker.name} ataca e causa ${roundedDamage} de dano.`,
   };
 }
 
-function initiativeScore(fighter: BattleFighter, rng: () => number) {
-  return fighter.stats.speed + fighter.stats.focus * 0.15 + rng() * 8;
+function initiativeScore(fighter: BattleFighter, rng: () => number, action: BattleAction) {
+  const actionBonus = action === 'defend' ? 1.5 : action === 'focus' ? -0.5 : 0;
+  return fighter.stats.speed + fighter.stats.focus * 0.15 + actionBonus + rng() * 8;
 }
 
 function decideWinner(
@@ -303,14 +504,8 @@ function decideWinner(
   return null;
 }
 
-function clampStats(stats: BattleStats): BattleStats {
-  return {
-    hp: clampInt(stats.hp, 1, 999),
-    attack: clampInt(stats.attack, 1, 99),
-    defense: clampInt(stats.defense, 0, 99),
-    speed: clampInt(stats.speed, 1, 99),
-    focus: clampInt(stats.focus, 1, 99),
-  };
+function clampEnergy(value: number) {
+  return clampInt(value, 0, MAX_ENERGY);
 }
 
 function clampInt(value: number, min: number, max: number) {

@@ -1,26 +1,34 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Check, Coins, Lock, X } from 'lucide-react';
-import { AVATAR_BASES, AVATAR_OUTFITS, SKIN_PACKS } from '@/data';
+import {
+  AVATAR_BASES,
+  EMPTY_GEAR,
+  GEAR_ITEMS,
+  GEAR_SETS,
+  GEAR_SLOT_LABELS,
+  defaultLoadoutForSet,
+} from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { unlockBadge } from '@/lib/gameActions';
+import { baseStatsForLevel } from '@/lib/battle/rules';
+import {
+  clearSlot,
+  deriveStatsFromLoadout,
+  equipGearItem,
+  equipGearSet,
+  equippedGearIds,
+} from '@/lib/gear/rules';
 import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
-import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { Tabs } from '@/components/ui/Tabs';
-import { SkinPackArt } from '@/components/skins/SkinPackArt';
-import { unlockHint } from '@/lib/skinUnlocks';
 import { cn } from '@/lib/cn';
-import type { OutfitSlot } from '@/types';
+import type { AvatarLoadout, BattleStats, GearItem, GearSlot } from '@/types';
 
-/**
- * Small selectable tile, inlined here because AvatarBuilder
- * is its only consumer.
- */
 function PickerTile({
   selected,
   onClick,
@@ -41,7 +49,7 @@ function PickerTile({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'flex flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
+        'flex min-h-[132px] flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
         selected
           ? 'border-[var(--line-active)] bg-tint-green-2 shadow-[var(--shadow-glow)]'
           : 'border-[var(--line-soft)] bg-tint-1 hover:border-[var(--line-strong)]',
@@ -54,26 +62,23 @@ function PickerTile({
   );
 }
 
-const SLOT_LABELS: Record<OutfitSlot, string> = {
-  hat: 'Chapéu',
-  glasses: 'Óculos',
-  shirt: 'Camisa',
-  accessory: 'Acessório',
-  background: 'Fundo',
-  weapon: 'Arma',
-  hairstyle: 'Cabelo',
-};
+const GEAR_SLOTS: GearSlot[] = [
+  'hair',
+  'head',
+  'face',
+  'torso',
+  'legs',
+  'feet',
+  'back',
+  'mainHand',
+  'offHand',
+  'aura',
+];
 
 const TAB_ITEMS = [
-  { value: 'persona', label: 'Personagem' },
+  { value: 'sets', label: 'Conjuntos' },
   { value: 'base', label: 'Base' },
-  { value: 'hairstyle', label: SLOT_LABELS.hairstyle },
-  { value: 'hat', label: SLOT_LABELS.hat },
-  { value: 'glasses', label: SLOT_LABELS.glasses },
-  { value: 'shirt', label: SLOT_LABELS.shirt },
-  { value: 'weapon', label: SLOT_LABELS.weapon },
-  { value: 'accessory', label: SLOT_LABELS.accessory },
-  { value: 'background', label: SLOT_LABELS.background },
+  ...GEAR_SLOTS.map((slot) => ({ value: slot, label: GEAR_SLOT_LABELS[slot] })),
 ] as const;
 
 type TabValue = (typeof TAB_ITEMS)[number]['value'];
@@ -84,52 +89,70 @@ export function AvatarBuilder() {
   const openModal = useUIStore((s) => s.openModal);
 
   const user = useUserStore();
-  const [baseId, setBaseId] = useState(user.avatarBase ?? AVATAR_BASES[0].id);
-  const [outfits, setOutfits] = useState(user.avatarOutfits);
-  const [skinPackId, setSkinPackId] = useState<string | null>(user.equippedSkinPack);
-  const [tab, setTab] = useState<TabValue>('persona');
+  const [draftLoadout, setDraftLoadout] = useState<AvatarLoadout>(() => ({
+    baseId: user.avatarLoadout.baseId ?? user.avatarBase ?? AVATAR_BASES[0].id,
+    equippedGear: { ...EMPTY_GEAR, ...user.avatarLoadout.equippedGear },
+    activeSetId: user.avatarLoadout.activeSetId ?? null,
+  }));
+  const [tab, setTab] = useState<TabValue>('sets');
 
-  const composite = skinPackId === null;
+  const currentStats = useMemo(
+    () =>
+      deriveStatsFromLoadout({
+        baseStats: baseStatsForLevel(user.level),
+        loadout: user.avatarLoadout,
+        gearItems: GEAR_ITEMS,
+        gearSets: GEAR_SETS,
+      }),
+    [user.avatarLoadout, user.level]
+  );
+  const draftStats = useMemo(
+    () =>
+      deriveStatsFromLoadout({
+        baseStats: baseStatsForLevel(user.level),
+        loadout: draftLoadout,
+        gearItems: GEAR_ITEMS,
+        gearSets: GEAR_SETS,
+      }),
+    [draftLoadout, user.level]
+  );
 
   const save = () => {
-    user.setProfile({ avatarBase: baseId, avatarOutfits: outfits });
-    user.equipSkinPack(skinPackId);
-    if (composite) {
-      const equippedCount = Object.values(outfits).filter(Boolean).length;
-      if (equippedCount >= 3) unlockBadge('fashionista');
-    }
+    user.setAvatarLoadout(draftLoadout);
+    const equippedCount = equippedGearIds(draftLoadout).length;
+    if (equippedCount >= 3) unlockBadge('fashionista');
     showToast('Avatar atualizado', 'success');
     close();
   };
 
-  const toggleOutfit = (slot: OutfitSlot, id: string) => {
-    setOutfits((prev) => ({ ...prev, [slot]: prev[slot] === id ? null : id }));
-  };
-
-  const buyOutfit = (id: string) => {
-    if (user.ownedOutfits.includes(id)) return true;
-    const outfit = AVATAR_OUTFITS.find((o) => o.id === id);
-    if (!outfit) return false;
-    if (!user.spendTokens(outfit.price)) {
+  const buyGearItem = (item: GearItem) => {
+    if (user.ownedGearItems.includes(item.id)) return true;
+    if (!user.spendTokens(item.priceTokens)) {
       showToast('Eco-Tokens insuficientes', 'info');
       return false;
     }
-    user.addOwnedOutfit(id);
-    showToast(`${outfit.name} adquirido`, 'reward');
+    user.addOwnedGearItem(item.id);
+    showToast(`${item.name} adquirido`, 'reward');
     return true;
   };
 
-  const handleSelectSkin = (id: string | null) => {
-    if (id === null) {
-      setSkinPackId(null);
+  const handleSelectGear = (item: GearItem) => {
+    const owned = user.ownedGearItems.includes(item.id);
+    if (!owned && !buyGearItem(item)) return;
+    setDraftLoadout((prev) => {
+      const alreadyEquipped = prev.equippedGear[item.slot] === item.id;
+      return alreadyEquipped ? clearSlot(prev, item.slot) : equipGearItem(prev, item);
+    });
+  };
+
+  const handleSelectSet = (id: string) => {
+    const setItem = GEAR_SETS.find((item) => item.id === id);
+    if (!setItem) return;
+    if (!user.ownedGearSets.includes(id)) {
+      openModal({ kind: 'gearSet', id });
       return;
     }
-    if (!user.ownedSkinPacks.includes(id)) {
-      // Open the SkinPack detail modal so the user can see details and buy/unlock.
-      openModal({ kind: 'skinPack', id });
-      return;
-    }
-    setSkinPackId(id);
+    setDraftLoadout((prev) => equipGearSet(prev, setItem));
   };
 
   return (
@@ -143,162 +166,209 @@ export function AvatarBuilder() {
           />
           <div className="flex-1 text-center">
             <div className="t-eyebrow">Avatar</div>
-            <h2 className="t-title">Personalizar</h2>
+            <h2 className="t-title">Vestiário</h2>
           </div>
           <Button variant="ghost" size="sm" onClick={save}>
             Salvar
           </Button>
         </header>
 
-        {/* Live preview */}
-        <div className="flex flex-col items-center px-4 py-6">
-          <div className="rounded-[var(--radius-lg)] border-soft bg-tint-1 p-6">
-            <Avatar
-              baseId={baseId}
-              outfits={outfits}
-              skinPackId={skinPackId}
-              size="xl"
-            />
+        <div className="px-4 py-5">
+          <div className="grid grid-cols-[auto_1fr] items-center gap-4">
+            <div className="flex h-32 w-32 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
+              <Avatar loadout={draftLoadout} size="xl" alt="Preview do avatar" />
+            </div>
+            <StatsComparison current={currentStats} draft={draftStats} />
           </div>
-          {!composite ? (
-            <p className="mt-3 max-w-[28ch] text-center t-caption">
-              Personagem equipado bloqueia as peças soltas. Volte ao{' '}
-              <button
-                className="font-semibold text-[var(--accent-green)] underline-offset-2 hover:underline"
-                onClick={() => setSkinPackId(null)}
-              >
-                Modo Livre
-              </button>{' '}
-              pra customizar.
-            </p>
-          ) : null}
         </div>
 
-        <div className="px-3">
-          <Tabs<TabValue> items={TAB_ITEMS} value={tab} onChange={setTab} />
+        <div className="overflow-x-auto px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <Tabs<TabValue> items={TAB_ITEMS} value={tab} onChange={setTab} fitted={false} className="min-w-max" />
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
-          {tab === 'persona' ? (
+          {tab === 'sets' ? (
             <div className="grid grid-cols-2 gap-3">
-              {/* Modo Livre option */}
-              <PickerTile
-                selected={composite}
-                onClick={() => handleSelectSkin(null)}
-              >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-soft bg-tint-2">
-                  <Avatar baseId={baseId} outfits={outfits} size="sm" />
-                </div>
-                <span className="t-title">Modo Livre</span>
-                <span className="t-caption">Misture peças</span>
-              </PickerTile>
-
-              {SKIN_PACKS.map((skin) => {
-                const owned = user.ownedSkinPacks.includes(skin.id);
-                const selected = skinPackId === skin.id;
-                const locked = !owned;
+              {GEAR_SETS.map((setItem) => {
+                const owned = user.ownedGearSets.includes(setItem.id);
+                const selected = setItem.itemIds.every((id) => Object.values(draftLoadout.equippedGear).includes(id));
+                const previewLoadout = defaultLoadoutForSet(setItem.id, draftLoadout.baseId);
                 return (
                   <PickerTile
-                    key={skin.id}
+                    key={setItem.id}
                     selected={selected}
-                    onClick={() => handleSelectSkin(skin.id)}
+                    onClick={() => handleSelectSet(setItem.id)}
+                    className="relative"
                   >
-                    <div
-                      className={cn(
-                        'flex h-16 w-16 items-center justify-center rounded-full',
-                        locked && 'opacity-50 grayscale'
-                      )}
-                    >
-                      <SkinPackArt id={skin.id} size="md" />
+                    {selected ? (
+                      <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]">
+                        <Icon icon={Check} size={12} strokeWidth={2.4} />
+                      </span>
+                    ) : null}
+                    <div className={cn('flex h-20 w-20 items-center justify-center', !owned && 'opacity-55 grayscale')}>
+                      <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} />
                     </div>
-                    <span className="t-title">{skin.name}</span>
-                    <BattleStatChips stats={skin.battleStats} compact className="justify-center" />
-                    {owned ? (
-                      <span className="t-caption">{selected ? 'Equipado' : 'Toque pra equipar'}</span>
-                    ) : (
+                    <span className="t-title">{setItem.name}</span>
+                    <span className="t-caption">{owned ? (selected ? 'Aplicado' : 'Equipar conjunto') : 'Ver liberação'}</span>
+                    {!owned ? (
                       <span className="inline-flex items-center gap-1 t-caption">
                         <Icon icon={Lock} size={11} />
-                        {unlockHint(skin)}
+                        {setItem.priceTokens} tokens
                       </span>
-                    )}
+                    ) : null}
                   </PickerTile>
                 );
               })}
             </div>
-          ) : !composite ? (
-            // Other tabs are visible but disabled when a SkinPack is equipped.
-            <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-6 text-center">
-              <p className="t-body-sm">
-                Você está usando um personagem completo. Peças soltas ficam ocultas até você
-                voltar ao Modo Livre.
-              </p>
-              <Button variant="ghost" size="sm" className="mt-3" onClick={() => setSkinPackId(null)}>
-                Ir pro Modo Livre
-              </Button>
-            </div>
           ) : tab === 'base' ? (
             <div className="grid grid-cols-3 gap-3">
-              {AVATAR_BASES.map((b) => {
-                const active = baseId === b.id;
+              {AVATAR_BASES.map((base) => {
+                const active = draftLoadout.baseId === base.id;
                 return (
                   <PickerTile
-                    key={b.id}
+                    key={base.id}
                     selected={active}
-                    onClick={() => setBaseId(b.id)}
+                    onClick={() => setDraftLoadout((prev) => ({ ...prev, baseId: base.id }))}
                   >
-                    <Avatar baseId={b.id} size="md" />
-                    <span className="t-caption font-semibold text-[var(--text-primary)]">{b.name}</span>
+                    <Avatar loadout={{ ...draftLoadout, baseId: base.id }} size="md" alt={base.name} />
+                    <span className="t-caption font-semibold text-[var(--text-primary)]">{base.name}</span>
                   </PickerTile>
                 );
               })}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {AVATAR_OUTFITS.filter((o) => o.slot === tab).length === 0 ? (
-                <p className="col-span-2 t-caption text-center">Sem peças nesse slot ainda.</p>
-              ) : null}
-              {AVATAR_OUTFITS.filter((o) => o.slot === tab).map((o) => {
-                const owned = user.ownedOutfits.includes(o.id);
-                const equipped = outfits[o.slot] === o.id;
-                const act = () => {
-                  if (!owned) {
-                    if (buyOutfit(o.id)) toggleOutfit(tab as OutfitSlot, o.id);
-                  } else {
-                    toggleOutfit(tab as OutfitSlot, o.id);
-                  }
-                };
-                return (
-                  <PickerTile
-                    key={o.id}
-                    selected={equipped}
-                    onClick={act}
-                    className="relative"
-                  >
-                    {equipped ? (
-                      <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]">
-                        <Icon icon={Check} size={12} strokeWidth={2.4} />
-                      </span>
-                    ) : null}
-                    <span className="text-4xl leading-none">{o.emoji}</span>
-                    <span className="t-title">{o.name}</span>
-                    <BattleStatChips stats={o.battleStats} compact className="justify-center" />
-                    {owned ? (
-                      <span className="t-caption">
-                        {equipped ? 'Equipado' : 'Toque para equipar'}
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
-                        <Icon icon={Coins} size={12} />
-                        {o.price}
-                      </span>
-                    )}
-                  </PickerTile>
-                );
-              })}
-            </div>
+            <GearSlotGrid
+              slot={tab}
+              loadout={draftLoadout}
+              ownedGearItems={user.ownedGearItems}
+              onClear={() => setDraftLoadout((prev) => clearSlot(prev, tab))}
+              onSelect={handleSelectGear}
+            />
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function GearSlotGrid({
+  slot,
+  loadout,
+  ownedGearItems,
+  onClear,
+  onSelect,
+}: {
+  slot: GearSlot;
+  loadout: AvatarLoadout;
+  ownedGearItems: string[];
+  onClear: () => void;
+  onSelect: (item: GearItem) => void;
+}) {
+  const items = GEAR_ITEMS.filter((item) => item.slot === slot);
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <PickerTile selected={!loadout.equippedGear[slot]} onClick={onClear}>
+        <span className="flex h-12 w-12 items-center justify-center rounded-full border-soft bg-tint-2 t-title">
+          -
+        </span>
+        <span className="t-title">Vazio</span>
+        <span className="t-caption">Sem peça neste slot</span>
+      </PickerTile>
+
+      {items.length === 0 ? (
+        <p className="col-span-2 t-caption text-center">Sem equipamentos nesse slot ainda.</p>
+      ) : null}
+
+      {items.map((item) => {
+        const owned = ownedGearItems.includes(item.id);
+        const equipped = loadout.equippedGear[item.slot] === item.id;
+        return (
+          <PickerTile
+            key={item.id}
+            selected={equipped}
+            onClick={() => onSelect(item)}
+            className="relative"
+          >
+            {equipped ? (
+              <span className="gradient-primary absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--on-primary)]">
+                <Icon icon={Check} size={12} strokeWidth={2.4} />
+              </span>
+            ) : null}
+            <span className="text-4xl leading-none">{item.emoji}</span>
+            <span className="t-title">{item.name}</span>
+            <span className="t-caption">{item.tier}</span>
+            <StatDeltas stats={item.battleStats} />
+            {owned ? (
+              <span className="t-caption">{equipped ? 'Equipado' : 'Toque para equipar'}</span>
+            ) : (
+              <span className="inline-flex items-center gap-1 t-body-sm font-semibold text-[var(--accent-gold)]">
+                <Icon icon={Coins} size={12} />
+                {item.priceTokens}
+              </span>
+            )}
+          </PickerTile>
+        );
+      })}
+    </div>
+  );
+}
+
+function StatsComparison({ current, draft }: { current: BattleStats; draft: BattleStats }) {
+  const rows: Array<{ key: keyof BattleStats; label: string }> = [
+    { key: 'hp', label: 'HP' },
+    { key: 'attack', label: 'Ataque' },
+    { key: 'defense', label: 'Defesa' },
+    { key: 'speed', label: 'Veloc.' },
+    { key: 'focus', label: 'Foco' },
+  ];
+  return (
+    <div className="min-w-0 rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-3">
+      <p className="t-eyebrow">Atributos</p>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        {rows.map((row) => {
+          const delta = draft[row.key] - current[row.key];
+          return (
+            <div key={row.key} className="rounded-[var(--radius-sm)] bg-tint-2 px-2 py-1.5">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="t-caption">{row.label}</span>
+                <span className="t-body-sm font-semibold">{draft[row.key]}</span>
+              </div>
+              <span
+                className={cn(
+                  't-caption font-semibold',
+                  delta > 0 ? 'text-[var(--accent-green)]' : delta < 0 ? 'text-[#c2876f]' : 'text-[var(--text-muted)]'
+                )}
+              >
+                {delta > 0 ? `+${delta}` : delta}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function StatDeltas({ stats }: { stats: Partial<BattleStats> }) {
+  const entries = [
+    ['hp', 'HP'],
+    ['attack', 'Ataq.'],
+    ['defense', 'Def.'],
+    ['speed', 'Vel.'],
+    ['focus', 'Foco'],
+  ] as const;
+  const visible = entries.filter(([key]) => Boolean(stats[key]));
+  if (visible.length === 0) return null;
+  return (
+    <div className="flex flex-wrap justify-center gap-1">
+      {visible.map(([key, label]) => (
+        <span
+          key={key}
+          className="rounded-full border border-[var(--line-soft)] bg-tint-2 px-2 py-0.5 text-[0.64rem] font-semibold text-[var(--text-secondary)]"
+        >
+          +{stats[key]} {label}
+        </span>
+      ))}
     </div>
   );
 }

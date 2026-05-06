@@ -1,4 +1,12 @@
-import { ARENA_OPPONENTS, AVATAR_OUTFITS, PRODUCTS, SKIN_PACKS } from '@/data';
+import {
+  ARENA_OPPONENTS,
+  GEAR_ITEMS,
+  GEAR_SETS,
+  PRODUCTS,
+  defaultLoadoutForSet,
+  gearItemIdsFromLegacySkinPacks,
+  unique,
+} from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useArenaStore } from '@/store/arenaStore';
@@ -71,6 +79,15 @@ export function seedDemoStateIfEmpty(): void {
 
   // User profile — Arthur, level 7.
   // xpToNext at level 7 follows 100 * 1.4^(level-1) ≈ 750.
+  const seededGearSets = [
+    'ciclista-verde',
+    'cyber-reciclador',
+    'cientista-eco',
+    'ninja-eco',
+    'pirata-recicla',
+    'capoeirista',
+  ];
+  const seededLegacyItems = ['hat1', 'hat2', 'hat3', 'glass1', 'glass2', 'shirt1', 'shirt2', 'acc1', 'acc2', 'bg1'];
   useUserStore.getState().setProfile({
     name: 'Arthur',
     tribe: 'guardioes',
@@ -92,16 +109,12 @@ export function seedDemoStateIfEmpty(): void {
       weapon: null,
       hairstyle: null,
     },
-    ownedOutfits: ['hat1', 'hat2', 'hat3', 'glass1', 'glass2', 'shirt1', 'shirt2', 'acc1', 'acc2', 'bg1'],
-    equippedSkinPack: 'cyber-reciclador',
-    ownedSkinPacks: [
-      'ciclista-verde',
-      'cyber-reciclador',
-      'cientista-eco',
-      'ninja-eco',
-      'pirata-recicla',
-      'capoeirista',
-    ],
+    avatarLoadout: defaultLoadoutForSet('cyber-reciclador', 'base2'),
+    ownedOutfits: seededLegacyItems,
+    equippedSkinPack: null,
+    ownedSkinPacks: seededGearSets,
+    ownedGearSets: seededGearSets,
+    ownedGearItems: unique([...seededLegacyItems, ...gearItemIdsFromLegacySkinPacks(seededGearSets)]),
   });
 
   // Game state — 8 badges, scans synced with history, mid-flight challenge.
@@ -172,11 +185,9 @@ function seedArenaDemoIfEmpty(): void {
       name: user.name,
       title: 'Cyber Reciclador',
       level: user.level,
-      skinPackId: user.equippedSkinPack,
-      avatarBase: user.avatarBase,
-      avatarOutfits: user.avatarOutfits,
-      skinPacks: SKIN_PACKS,
-      outfits: AVATAR_OUTFITS,
+      loadout: user.avatarLoadout,
+      gearItems: GEAR_ITEMS,
+      gearSets: GEAR_SETS,
     }),
     opponent: opponentToFighter(opponent),
     opponentId: opponent.id,

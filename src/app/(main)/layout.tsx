@@ -28,7 +28,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       seedRan.current = true;
       seedDemoStateIfEmpty();
     }
-    if (!onboarded) {
+    const currentOnboarded = useUserStore.getState().onboarded;
+    if (!currentOnboarded) {
       router.replace('/onboarding');
       return;
     }
@@ -45,13 +46,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [hydrated, onboarded, router, showToast]);
 
   return (
-    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--canvas-width)] flex-col">
+    <div className="mx-auto flex h-[100dvh] min-w-0 w-[min(100vw,var(--canvas-width))] max-w-full flex-col overflow-hidden">
       <AppHeader />
       <main
-        className="flex-1 overflow-y-auto overflow-x-hidden px-5 pb-12 pt-2 sm:px-8"
+        className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-5 pb-12 pt-2 sm:px-8"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="mx-auto w-full max-w-[var(--content-width)]">
+        <div className="mx-auto min-w-0 w-full max-w-[var(--content-width)] overflow-x-hidden">
           {children}
         </div>
       </main>

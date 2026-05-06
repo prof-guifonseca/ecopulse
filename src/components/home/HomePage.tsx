@@ -16,9 +16,7 @@ import { HomeSkeleton } from './HomeSkeleton';
 export function HomePage() {
   const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
-  const avatarBase = useUserStore((s) => s.avatarBase);
-  const avatarOutfits = useUserStore((s) => s.avatarOutfits);
-  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
+  const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
   const level = useUserStore((s) => s.level);
@@ -57,7 +55,7 @@ export function HomePage() {
               ['--ring-size' as string]: '72px',
             }}
           >
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
+            <Avatar loadout={avatarLoadout} size="md" alt={name} />
           </div>
         </header>
 

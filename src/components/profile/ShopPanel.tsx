@@ -2,16 +2,17 @@
 
 import { Coins } from 'lucide-react';
 import {
-  AVATAR_OUTFITS,
+  defaultLoadoutForSet,
+  GEAR_ITEMS,
+  GEAR_SETS,
+  GEAR_SLOT_LABELS,
   SHOP_ITEMS,
-  SKIN_PACKS,
 } from '@/data';
-import type { OutfitSlot } from '@/types';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
-import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
+import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -20,26 +21,14 @@ import { unlockHint } from '@/lib/skinUnlocks';
 import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
 
-const SLOT_LABELS: Record<OutfitSlot, string> = {
-  hat: 'chapéu',
-  glasses: 'óculos',
-  shirt: 'roupa',
-  accessory: 'acessório',
-  background: 'fundo',
-  weapon: 'arma',
-  hairstyle: 'cabelo',
-};
-
 export function ShopPanel({ tokens }: { tokens: number }) {
   const openModal = useUIStore((s) => s.openModal);
   const openAvatarBuilder = useUIStore((s) => s.openAvatarBuilder);
   const ownedItems = useGameStore((s) => s.ownedShopItems);
-  const ownedSkinPacks = useUserStore((s) => s.ownedSkinPacks);
-  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
-  const ownedOutfits = useUserStore((s) => s.ownedOutfits);
-  const outfitsEquipped = useUserStore((s) => s.avatarOutfits);
-  // Subscribed slices the unlock rule depends on — needed so the locked
-  // visual cue re-evaluates when these change.
+  const ownedGearSets = useUserStore((s) => s.ownedGearSets);
+  const ownedGearItems = useUserStore((s) => s.ownedGearItems);
+  const avatarLoadout = useUserStore((s) => s.avatarLoadout);
+  const activeSetId = avatarLoadout.activeSetId;
   const level = useUserStore((s) => s.level);
   const badges = useGameStore((s) => s.badges);
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
@@ -50,7 +39,8 @@ export function ShopPanel({ tokens }: { tokens: number }) {
     level,
     tokens,
     badges,
-    ownedSkinPacks,
+    ownedSkinPacks: ownedGearSets,
+    ownedGearSets,
     scannedProductsCount: scannedCount,
     visitedPointsCount: visitedCount,
     completedChallengesCount,
@@ -59,7 +49,6 @@ export function ShopPanel({ tokens }: { tokens: number }) {
 
   return (
     <div className="space-y-6">
-      {/* Carteira */}
       <Card tone="hero" padded={false} className="px-5 py-5">
         <div>
           <p className="t-eyebrow">Carteira</p>
@@ -74,23 +63,23 @@ export function ShopPanel({ tokens }: { tokens: number }) {
         </div>
       </Card>
 
-      {/* Personagens — SkinPacks como cards ilustrados em carousel horizontal */}
       <section>
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          <h2 className="t-title">Personagens</h2>
-          <span className="t-caption">{ownedSkinPacks.length}/{SKIN_PACKS.length} desbloqueados</span>
+          <h2 className="t-title">Conjuntos</h2>
+          <span className="t-caption">{ownedGearSets.length}/{GEAR_SETS.length} desbloqueados</span>
         </div>
         <div className="-mx-3 flex gap-3 overflow-x-auto px-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {SKIN_PACKS.map((skin) => {
-            const owned = ownedSkinPacks.includes(skin.id);
-            const equipped = equippedSkinPack === skin.id;
-            const meets = meetsSkinUnlock(skin.unlock, ruleSnapshot);
-            const locked = !owned && !meets && skin.unlock.kind !== 'paid';
+          {GEAR_SETS.map((setItem) => {
+            const owned = ownedGearSets.includes(setItem.id);
+            const equipped = activeSetId === setItem.id;
+            const meets = meetsSkinUnlock(setItem.unlock, ruleSnapshot);
+            const locked = !owned && !meets && setItem.unlock.kind !== 'paid';
+            const previewLoadout = defaultLoadoutForSet(setItem.id, avatarLoadout.baseId);
             return (
               <button
-                key={skin.id}
-                onClick={() => openModal({ kind: 'skinPack', id: skin.id })}
-                className="group flex w-[140px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
+                key={setItem.id}
+                onClick={() => openModal({ kind: 'gearSet', id: setItem.id })}
+                className="group flex w-[150px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
                 style={{
                   borderColor: equipped ? 'var(--line-active)' : 'var(--line-soft)',
                   backgroundColor: equipped ? 'var(--tint-green-2)' : undefined,
@@ -98,26 +87,26 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               >
                 <div
                   className={cn(
-                    'flex h-[120px] items-center justify-center overflow-hidden rounded-t-[var(--radius-md)]',
+                    'flex h-[124px] items-center justify-center overflow-hidden rounded-t-[var(--radius-md)] bg-tint-2',
                     locked && 'opacity-40 grayscale'
                   )}
                 >
-                  <SkinPackArt id={skin.id} size="lg" />
+                  <Avatar loadout={previewLoadout} size="xl" alt={setItem.name} />
                 </div>
                 <div className="space-y-1 px-3 py-3">
-                  <div className="flex items-center justify-between gap-1">
-                    <h3 className="t-title truncate">{skin.name}</h3>
-                  </div>
+                  <h3 className="t-title truncate">{setItem.name}</h3>
                   <p className="t-caption">
-                    {equipped
-                      ? <span className="text-[var(--accent-green)]">Equipado</span>
-                      : owned
-                      ? 'Possuído · toque pra equipar'
-                      : locked
-                      ? `🔒 ${unlockHint(skin)}`
-                      : <span className="text-[var(--accent-gold)]">{skin.priceTokens} tokens</span>}
+                    {equipped ? (
+                      <span className="text-[var(--accent-green)]">Equipado</span>
+                    ) : owned ? (
+                      'Possuído'
+                    ) : locked ? (
+                      `Bloq. ${unlockHint(setItem)}`
+                    ) : (
+                      <span className="text-[var(--accent-gold)]">{setItem.priceTokens} tokens</span>
+                    )}
                   </p>
-                  <BattleStatChips stats={skin.battleStats} compact className="mt-2" />
+                  <BattleStatChips stats={setItem.setBonusStats} compact className="mt-2" />
                 </div>
               </button>
             );
@@ -125,16 +114,15 @@ export function ShopPanel({ tokens }: { tokens: number }) {
         </div>
       </section>
 
-      {/* Acessórios — peças soltas para modo composite */}
       <section>
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          <h2 className="t-title">Acessórios</h2>
-          <span className="t-caption">Modo livre</span>
+          <h2 className="t-title">Equipamentos</h2>
+          <span className="t-caption">Vestiário</span>
         </div>
         <ListCard>
-          {AVATAR_OUTFITS.map((item) => {
-            const owned = ownedOutfits.includes(item.id);
-            const equippedHere = outfitsEquipped[item.slot] === item.id;
+          {GEAR_ITEMS.map((item) => {
+            const owned = ownedGearItems.includes(item.id);
+            const equippedHere = avatarLoadout.equippedGear[item.slot] === item.id;
             return (
               <li key={item.id}>
                 <button
@@ -146,7 +134,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="t-title truncate">{item.name}</div>
-                    <p className="mt-0.5 t-caption">{SLOT_LABELS[item.slot]} · {item.tier}</p>
+                    <p className="mt-0.5 t-caption">{GEAR_SLOT_LABELS[item.slot]} · {item.tier}</p>
                     <BattleStatChips stats={item.battleStats} compact className="mt-1.5" />
                   </div>
                   <span
@@ -155,11 +143,11 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                       equippedHere
                         ? 'text-[var(--accent-green)]'
                         : owned
-                        ? 'text-[var(--text-secondary)]'
-                        : 'text-[var(--accent-gold)]'
+                          ? 'text-[var(--text-secondary)]'
+                          : 'text-[var(--accent-gold)]'
                     )}
                   >
-                    {equippedHere ? 'Equipado' : owned ? 'Possuído' : `${item.price}t`}
+                    {equippedHere ? 'Equipado' : owned ? 'Possuído' : `${item.priceTokens}t`}
                   </span>
                 </button>
               </li>
@@ -168,7 +156,6 @@ export function ShopPanel({ tokens }: { tokens: number }) {
         </ListCard>
       </section>
 
-      {/* Outros — SHOP_ITEMS originais */}
       <section>
         <h2 className="mb-3 t-title">Outros</h2>
         <div className="grid grid-cols-2 gap-3">
@@ -204,4 +191,3 @@ export function ShopPanel({ tokens }: { tokens: number }) {
     </div>
   );
 }
-

@@ -1,4 +1,5 @@
 import type { ArenaOpponent } from '@/types';
+import { defaultLoadoutForSet } from './gear';
 
 export const ARENA_OPPONENTS: ArenaOpponent[] = [
   {
@@ -7,6 +8,8 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     title: 'Aprendiz da compostagem',
     difficulty: 1,
     quote: 'Minha energia vem do sol. Vamos ver se a sua vem do hábito.',
+    level: 3,
+    loadout: defaultLoadoutForSet('ciclista-verde', 'base1'),
     skinPackId: 'ciclista-verde',
     stats: { hp: 92, attack: 18, defense: 12, speed: 14, focus: 11 },
   },
@@ -16,6 +19,8 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     title: 'Mestre das gambiarras boas',
     difficulty: 2,
     quote: 'Nada se perde. Nem esse round.',
+    level: 5,
+    loadout: defaultLoadoutForSet('aventureiro', 'base3'),
     skinPackId: 'aventureiro',
     stats: { hp: 104, attack: 21, defense: 15, speed: 12, focus: 13 },
   },
@@ -25,6 +30,8 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     title: 'Estrategista dos recicláveis',
     difficulty: 3,
     quote: 'Meu plano tem três etapas: reduzir, reutilizar e vencer.',
+    level: 7,
+    loadout: defaultLoadoutForSet('cyber-reciclador', 'base4'),
     skinPackId: 'cyber-reciclador',
     stats: { hp: 112, attack: 23, defense: 16, speed: 16, focus: 18 },
   },
@@ -34,6 +41,8 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     title: 'Guardião do movimento limpo',
     difficulty: 4,
     quote: 'Quem cuida do corpo também cuida do caminho.',
+    level: 9,
+    loadout: defaultLoadoutForSet('capoeirista', 'base2'),
     skinPackId: 'capoeirista',
     stats: { hp: 124, attack: 27, defense: 18, speed: 20, focus: 17 },
   },
@@ -43,6 +52,8 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     title: 'Campeão da floresta',
     difficulty: 5,
     quote: 'Cresci devagar. Luto do mesmo jeito: firme.',
+    level: 12,
+    loadout: defaultLoadoutForSet('guardiao-da-floresta', 'base1'),
     skinPackId: 'guardiao-da-floresta',
     stats: { hp: 150, attack: 31, defense: 24, speed: 15, focus: 22 },
   },

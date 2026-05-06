@@ -1,10 +1,12 @@
-import { BADGES, SKIN_PACKS } from '@/data';
+import { BADGES, GEAR_SETS } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { hapticSuccess } from '@/lib/haptic';
-import { pendingSkinUnlocks, type GameSnapshot } from '@/lib/game/rules';
-import type { SkinPack } from '@/types';
+import { pendingGearSetUnlocks, type GameSnapshot } from '@/lib/game/rules';
+import type { GearSet, SkinUnlock } from '@/types';
+
+type UnlockableCatalogItem = Pick<GearSet, 'id' | 'name' | 'unlock' | 'priceTokens'>;
 
 /**
  * Build a fresh snapshot of the bits of state the rules care about.
@@ -19,6 +21,7 @@ function snapshotForRules(): GameSnapshot {
     tokens: user.tokens,
     badges: game.badges,
     ownedSkinPacks: user.ownedSkinPacks,
+    ownedGearSets: user.ownedGearSets,
     scannedProductsCount: game.scannedProducts.length,
     visitedPointsCount: game.visitedPoints.length,
     completedChallengesCount: game.completedChallenges.length,
@@ -27,22 +30,21 @@ function snapshotForRules(): GameSnapshot {
 }
 
 /**
- * Walk the SkinPack catalog; auto-unlock anything whose progression criterion
- * is now met (per pure rules). Fires a toast + haptic per newly-unlocked skin.
+ * Walk the GearSet catalog; auto-unlock anything whose progression criterion
+ * is now met (per pure rules). Fires a toast + haptic per newly-unlocked set.
  *
- * Called after every gameplay action that could move progress forward
- * (awardTokens, unlockBadge, addScannedProduct, etc.).
+ * Kept under the old module name while the app migrates away from "skins".
  */
 export function checkSkinUnlocks(): string[] {
   const user = useUserStore.getState();
   const ui = useUIStore.getState();
-  const candidates = pendingSkinUnlocks(SKIN_PACKS, snapshotForRules());
+  const candidates = pendingGearSetUnlocks(GEAR_SETS, snapshotForRules());
   const newlyUnlocked: string[] = [];
 
-  for (const skin of candidates) {
-    if (user.unlockSkinPack(skin.id)) {
-      newlyUnlocked.push(skin.id);
-      ui.showToast(`Skin desbloqueada: ${skin.name}`, 'reward');
+  for (const setItem of candidates) {
+    if (user.unlockGearSet(setItem.id)) {
+      newlyUnlocked.push(setItem.id);
+      ui.showToast(`Conjunto desbloqueado: ${setItem.name}`, 'reward');
     }
   }
 
@@ -54,49 +56,51 @@ export function checkSkinUnlocks(): string[] {
   return newlyUnlocked;
 }
 
-/**
- * Buy + own a SkinPack. Returns true on success, false if already owned or
- * not enough tokens.
- */
-export function buySkinPack(id: string): boolean {
+export function buyGearSet(id: string): boolean {
   const user = useUserStore.getState();
-  const skin = SKIN_PACKS.find((s) => s.id === id);
-  if (!skin) return false;
-  if (user.ownedSkinPacks.includes(id)) return false;
-  if (!user.spendTokens(skin.priceTokens)) {
+  const setItem = GEAR_SETS.find((item) => item.id === id);
+  if (!setItem) return false;
+  if (user.ownedGearSets.includes(id)) return false;
+  if (!user.spendTokens(setItem.priceTokens)) {
     useUIStore.getState().showToast('Eco-Tokens insuficientes', 'info');
     return false;
   }
-  user.unlockSkinPack(id);
-  useUIStore.getState().showToast(`Skin adquirida: ${skin.name}`, 'reward');
+  user.unlockGearSet(id);
+  useUIStore.getState().showToast(`Conjunto adquirido: ${setItem.name}`, 'reward');
   useUIStore.getState().fireConfetti();
   hapticSuccess();
   return true;
 }
 
 /**
- * Human-readable progress hint for a locked skin.
- * Used by the shop and the SkinPackModal.
+ * Legacy wrapper for call sites that still say SkinPack.
  */
-export function unlockHint(skin: SkinPack): string {
-  switch (skin.unlock.kind) {
+export function buySkinPack(id: string): boolean {
+  return buyGearSet(id);
+}
+
+/**
+ * Human-readable progress hint for a locked set/equipment pack.
+ */
+export function unlockHint(item: UnlockableCatalogItem | { unlock: SkinUnlock; priceTokens: number }): string {
+  switch (item.unlock.kind) {
     case 'paid':
-      return `${skin.priceTokens} tokens`;
+      return `${item.priceTokens} tokens`;
     case 'level':
-      return `Nível ${skin.unlock.value}`;
+      return `Nível ${item.unlock.value}`;
     case 'badge': {
-      const badgeId = skin.unlock.id;
+      const badgeId = item.unlock.id;
       const found = BADGES.find((b) => b.id === badgeId);
       return `Conquista: ${found?.name ?? badgeId}`;
     }
     case 'count': {
-      const labels: Record<typeof skin.unlock.metric, string> = {
+      const labels: Record<typeof item.unlock.metric, string> = {
         scans: 'scans',
         visits: 'visitas no mapa',
         challenges: 'desafios',
         tutorials: 'tutoriais',
       };
-      return `${skin.unlock.value} ${labels[skin.unlock.metric]}`;
+      return `${item.unlock.value} ${labels[item.unlock.metric]}`;
     }
   }
 }
