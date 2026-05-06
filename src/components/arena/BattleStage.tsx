@@ -9,6 +9,7 @@ import type {
   BattleFighter,
   BattleResult,
   BattleSession,
+  AvatarPose,
 } from '@/types';
 import { BATTLE_ACTION_LABELS, sessionToBattleResult } from '@/lib/battle/rules';
 import { cn } from '@/lib/cn';
@@ -90,6 +91,7 @@ export function BattleStage({ session, stageTheme = 'forest', onAction, onComple
             focus={session.playerFocus}
             active={playerActive}
             align="left"
+            pose={playerActive ? poseForEvent(lastEvent) : 'battleReady'}
           />
           <div className="mb-24 flex h-10 w-10 items-center justify-center rounded-full border-soft bg-[var(--bg-primary)] t-title text-[var(--accent-gold)] shadow-[var(--shadow-card)] sm:mb-24 sm:h-11 sm:w-11">
             VS
@@ -102,6 +104,7 @@ export function BattleStage({ session, stageTheme = 'forest', onAction, onComple
             focus={session.opponentFocus}
             active={opponentActive}
             align="right"
+            pose={opponentActive ? poseForEvent(lastEvent) : 'battleReady'}
           />
         </div>
 
@@ -200,6 +203,7 @@ function FighterPod({
   focus,
   active,
   align,
+  pose,
 }: {
   fighter: BattleFighter;
   hp: number;
@@ -208,6 +212,7 @@ function FighterPod({
   focus: number;
   active: boolean;
   align: 'left' | 'right';
+  pose: AvatarPose;
 }) {
   return (
     <div className={cn('min-w-0', align === 'right' && 'text-right')}>
@@ -225,6 +230,7 @@ function FighterPod({
           size="stage"
           alt={fighter.name}
           mirror={align === 'right'}
+          pose={pose}
         />
       </div>
 
@@ -244,6 +250,13 @@ function FighterPod({
       </div>
     </div>
   );
+}
+
+function poseForEvent(event: BattleEvent | undefined) {
+  if (event?.action === 'defend' || event?.type === 'block') return 'defend';
+  if (event?.action === 'focus' || event?.type === 'focus') return 'focus';
+  if (event?.type === 'finish') return 'battleReady';
+  return 'attack';
 }
 
 function Meter({

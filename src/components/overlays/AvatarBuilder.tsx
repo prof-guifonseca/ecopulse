@@ -176,7 +176,13 @@ export function AvatarBuilder() {
         <div className="px-4 py-5">
           <div className="grid grid-cols-[auto_1fr] items-center gap-4">
             <div className="flex h-32 w-32 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
-              <Avatar loadout={draftLoadout} size="xl" alt="Preview do avatar" />
+              <Avatar
+                loadout={draftLoadout}
+                size="xl"
+                alt="Preview do avatar"
+                pose="builder"
+                highlightSlot={isGearSlot(tab) ? tab : undefined}
+              />
             </div>
             <StatsComparison current={currentStats} draft={draftStats} />
           </div>
@@ -206,7 +212,7 @@ export function AvatarBuilder() {
                       </span>
                     ) : null}
                     <div className={cn('flex h-20 w-20 items-center justify-center', !owned && 'opacity-55 grayscale')}>
-                      <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} />
+                      <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} pose="builder" />
                     </div>
                     <span className="t-title">{setItem.name}</span>
                     <span className="t-caption">{owned ? (selected ? 'Aplicado' : 'Equipar conjunto') : 'Ver liberação'}</span>
@@ -230,7 +236,7 @@ export function AvatarBuilder() {
                     selected={active}
                     onClick={() => setDraftLoadout((prev) => ({ ...prev, baseId: base.id }))}
                   >
-                    <Avatar loadout={{ ...draftLoadout, baseId: base.id }} size="md" alt={base.name} />
+                    <Avatar loadout={{ ...draftLoadout, baseId: base.id }} size="md" alt={base.name} pose="builder" />
                     <span className="t-caption font-semibold text-[var(--text-primary)]">{base.name}</span>
                   </PickerTile>
                 );
@@ -294,7 +300,16 @@ function GearSlotGrid({
                 <Icon icon={Check} size={12} strokeWidth={2.4} />
               </span>
             ) : null}
-            <span className="text-4xl leading-none">{item.emoji}</span>
+            <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-md)] bg-tint-2">
+              <Avatar
+                loadout={previewLoadoutForGear(loadout, item)}
+                size="lg"
+                alt={item.name}
+                pose="builder"
+                highlightSlot={item.slot}
+                showAura={item.slot === 'aura'}
+              />
+            </div>
             <span className="t-title">{item.name}</span>
             <span className="t-caption">{item.tier}</span>
             <StatDeltas stats={item.battleStats} />
@@ -311,6 +326,18 @@ function GearSlotGrid({
       })}
     </div>
   );
+}
+
+function isGearSlot(value: TabValue): value is GearSlot {
+  return GEAR_SLOTS.includes(value as GearSlot);
+}
+
+function previewLoadoutForGear(loadout: AvatarLoadout, item: GearItem): AvatarLoadout {
+  return {
+    baseId: loadout.baseId,
+    equippedGear: { ...EMPTY_GEAR, [item.slot]: item.id },
+    activeSetId: null,
+  };
 }
 
 function StatsComparison({ current, draft }: { current: BattleStats; draft: BattleStats }) {

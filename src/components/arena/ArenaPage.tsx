@@ -257,7 +257,7 @@ export function ArenaPage() {
       <Card tone="solid" padded={false} className="border-soft px-5 py-5">
         <div className="flex items-start gap-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
-            <Avatar loadout={avatarLoadout} size="lg" alt={name} />
+            <Avatar loadout={avatarLoadout} size="lg" alt={name} pose="battleReady" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Seu loadout</p>
@@ -354,7 +354,7 @@ function SetupFighter({
   return (
     <div className="min-w-0 text-center">
       <div className="mx-auto flex h-28 w-28 items-end justify-center rounded-full bg-black/10">
-        <Avatar loadout={loadout} size="xl" alt={name} mirror={mirror} />
+        <Avatar loadout={loadout} size="xl" alt={name} mirror={mirror} pose="battleReady" />
       </div>
       <p className="mt-2 truncate t-title">{name}</p>
       <p className="truncate t-caption">{title}</p>

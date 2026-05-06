@@ -1,6 +1,6 @@
 'use client';
 
-import type { AvatarLoadout, AvatarOutfits } from '@/types';
+import type { AvatarLoadout, AvatarOutfits, AvatarPose, GearSlot } from '@/types';
 import { loadoutFromLegacy } from '@/data';
 import { AvatarRenderer } from './AvatarRenderer';
 
@@ -20,6 +20,9 @@ interface Props {
    *  with the label; when omitted, it stays decorative (aria-hidden). */
   alt?: string;
   mirror?: boolean;
+  pose?: AvatarPose;
+  highlightSlot?: GearSlot;
+  showAura?: boolean;
 }
 
 export function Avatar({
@@ -31,6 +34,9 @@ export function Avatar({
   loadout,
   alt,
   mirror,
+  pose,
+  highlightSlot,
+  showAura,
 }: Props) {
   const sz = SIZE_MAP[size];
 
@@ -58,6 +64,9 @@ export function Avatar({
       className={className}
       alt={alt}
       mirror={mirror}
+      pose={pose}
+      highlightSlot={highlightSlot}
+      showAura={showAura}
     />
   );
 }

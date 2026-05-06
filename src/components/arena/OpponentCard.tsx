@@ -37,7 +37,7 @@ export function OpponentCard({ opponent, selected, defeated, locked, mastery, cl
         )}
       >
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-2">
-          <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} />
+          <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} pose="battleReady" />
         </div>
 
         <div className="min-w-0 flex-1">

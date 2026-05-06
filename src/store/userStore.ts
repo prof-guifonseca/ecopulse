@@ -134,6 +134,40 @@ export function migrateUserStateToV3(state: Partial<UserState>): UserState {
   };
 }
 
+export function migrateUserStateToV4(state: Partial<UserState>): UserState {
+  const prev = migrateUserStateToV3(state);
+  const ownedGearSets = unique(prev.ownedGearSets ?? []);
+  const ownedGearItems = unique([
+    ...(prev.ownedGearItems ?? []),
+    ...gearItemIdsFromLegacySkinPacks(ownedGearSets),
+  ]);
+  const activeSet = getGearSet(prev.avatarLoadout.activeSetId);
+  const equippedGear = { ...EMPTY_GEAR, ...(prev.avatarLoadout.equippedGear ?? {}) };
+
+  if (activeSet) {
+    for (const [slot, itemId] of Object.entries(activeSet.defaultLoadout) as Array<[GearSlot, string]>) {
+      if (!equippedGear[slot]) {
+        equippedGear[slot] = itemId;
+      }
+    }
+  }
+
+  const avatarLoadout = {
+    baseId: prev.avatarLoadout.baseId ?? prev.avatarBase,
+    equippedGear,
+    activeSetId: prev.avatarLoadout.activeSetId ?? null,
+  };
+
+  return {
+    ...prev,
+    avatarBase: avatarLoadout.baseId,
+    avatarLoadout,
+    ownedGearSets,
+    ownedGearItems,
+    ownedOutfits: unique([...(prev.ownedOutfits ?? []), ...ownedGearItems]),
+  };
+}
+
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
@@ -329,13 +363,13 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'ecopulse:user',
-      version: 3,
+      version: 4,
       storage: createSafeJSONStorage<UserState>(),
       migrate: (state, version) => {
         // Legacy localStorage import (still supported for v0).
         const legacy = readLegacyState();
         if (legacy) {
-          return migrateUserStateToV3({
+          return migrateUserStateToV4({
             ...(state as UserState),
             name: legacy.name ?? DEFAULT_USER.name,
             tribe: legacy.tribe ?? DEFAULT_USER.tribe,
@@ -357,7 +391,7 @@ export const useUserStore = create<UserState>()(
         // v1 → v2: ensure new skin fields + new slot defaults
         if (version === 1) {
           const prev = state as Partial<UserState>;
-          return migrateUserStateToV3({
+          return migrateUserStateToV4({
             ...(state as UserState),
             avatarOutfits: { ...DEFAULT_USER.avatarOutfits, ...(prev.avatarOutfits ?? {}) },
             equippedSkinPack: prev.equippedSkinPack ?? null,
@@ -365,9 +399,9 @@ export const useUserStore = create<UserState>()(
           } as Partial<UserState>);
         }
         if (version === 2) {
-          return migrateUserStateToV3(state as Partial<UserState>);
+          return migrateUserStateToV4(state as Partial<UserState>);
         }
-        return migrateUserStateToV3(state as Partial<UserState>);
+        return migrateUserStateToV4(state as Partial<UserState>);
       },
       onRehydrateStorage: () => () => markLegacyMigrated(),
     }

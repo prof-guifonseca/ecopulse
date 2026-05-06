@@ -93,6 +93,7 @@ function gear(id: string, slot: GearItem['slot'], battleStats: Partial<GearItem[
     priceTokens: 10,
     unlock: { kind: 'paid' },
     battleStats,
+    visualKey: `test:${slot}`,
     visualLayerId: `test:${slot}:${id}`,
     emoji: '*',
     tags: ['test'],

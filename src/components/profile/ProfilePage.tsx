@@ -42,12 +42,12 @@ export function ProfilePage() {
   const stage = gardenStage(level);
 
   return (
-    <PageShell spacing={5} className="w-[min(100%,calc(100vw-40px))] max-w-full overflow-hidden">
+    <PageShell spacing={5} className="max-w-full overflow-hidden">
       {/* Editorial portrait */}
       <header className="flex flex-col items-center pt-2 text-center">
         <button
           onClick={openAvatarBuilder}
-          className="relative h-28 w-28 rounded-full p-2"
+          className="relative h-32 w-32 rounded-full p-2"
           aria-label="Editar avatar"
         >
           <span
@@ -59,7 +59,7 @@ export function ProfilePage() {
             }}
           />
           <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
-            <Avatar loadout={avatarLoadout} size="md" alt={name} />
+            <Avatar loadout={avatarLoadout} size="xl" alt={name} pose="builder" />
           </span>
           <span className="gradient-gold absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]">
             <Icon icon={Pencil} size={12} strokeWidth={2.4} />
