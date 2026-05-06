@@ -1,4 +1,4 @@
-import type { SkinPack, SkinUnlock } from '@/types';
+import type { GearSet, SkinPack, SkinUnlock } from '@/types';
 
 /**
  * Read-only snapshot of the gameplay state that auto-unlock rules need.
@@ -9,6 +9,7 @@ export interface GameSnapshot {
   tokens: number;
   badges: string[];
   ownedSkinPacks: string[];
+  ownedGearSets: string[];
   scannedProductsCount: number;
   visitedPointsCount: number;
   completedChallengesCount: number;
@@ -49,6 +50,12 @@ export function meetsSkinUnlock(unlock: SkinUnlock, snap: GameSnapshot): boolean
 export function pendingSkinUnlocks(catalog: SkinPack[], snap: GameSnapshot): SkinPack[] {
   return catalog.filter(
     (skin) => !snap.ownedSkinPacks.includes(skin.id) && meetsSkinUnlock(skin.unlock, snap)
+  );
+}
+
+export function pendingGearSetUnlocks(catalog: GearSet[], snap: GameSnapshot): GearSet[] {
+  return catalog.filter(
+    (set) => !snap.ownedGearSets.includes(set.id) && meetsSkinUnlock(set.unlock, snap)
   );
 }
 

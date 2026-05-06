@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { AvatarOutfit, SkinPack } from '@/types';
+import type { AvatarLoadout, GearItem, GearSet } from '@/types';
 import {
   baseStatsForLevel,
   createPlayerFighter,
@@ -16,6 +16,55 @@ const baseFighter = {
   avatarBase: null,
   avatarOutfits: {},
 };
+
+const emptyLoadout: AvatarLoadout = {
+  baseId: 'base1',
+  equippedGear: {},
+  activeSetId: null,
+};
+
+const testGearItems = [
+  {
+    id: 'visor-a',
+    name: 'Visor A',
+    slot: 'face',
+    tier: 'rare',
+    priceTokens: 10,
+    unlock: { kind: 'paid' },
+    battleStats: { focus: 3 },
+    visualLayerId: 'cyber:face:test',
+    emoji: 'A',
+    tags: ['test'],
+  },
+  {
+    id: 'tool-a',
+    name: 'Tool A',
+    slot: 'mainHand',
+    tier: 'common',
+    priceTokens: 10,
+    unlock: { kind: 'paid' },
+    battleStats: { attack: 4 },
+    visualLayerId: 'cyber:mainHand:test',
+    emoji: 'B',
+    tags: ['test'],
+  },
+] satisfies GearItem[];
+
+const testGearSets = [
+  {
+    id: 'set-a',
+    name: 'Set A',
+    theme: 'cyber',
+    tagline: 'Teste',
+    tier: 'rare',
+    unlock: { kind: 'paid' },
+    priceTokens: 10,
+    itemIds: ['visor-a', 'tool-a'],
+    defaultLoadout: { face: 'visor-a', mainHand: 'tool-a' },
+    requiredItemIds: ['visor-a', 'tool-a'],
+    setBonusStats: { speed: 2 },
+  },
+] satisfies GearSet[];
 
 describe('battle rules', () => {
   it('produces a predictable player victory with a fixed seed', () => {
@@ -104,72 +153,37 @@ describe('battle rules', () => {
     expect(result.events.at(-1)?.type).toBe('finish');
   });
 
-  it('derives stats from skin or equipped items according to loadout mode', () => {
-    const skinPacks = [
-      {
-        id: 'skin-a',
-        name: 'Skin A',
-        theme: 'cyber',
-        tagline: 'Teste',
-        tier: 'rare',
-        unlock: { kind: 'paid' },
-        priceTokens: 10,
-        artId: 'cyber-reciclador',
-        battleStats: { attack: 7, focus: 3 },
-      },
-    ] satisfies SkinPack[];
-    const outfits = [
-      {
-        id: 'hat-a',
-        name: 'Hat A',
-        slot: 'hat',
-        price: 1,
-        emoji: 'A',
-        tier: 'common',
-        battleStats: { defense: 2 },
-      },
-      {
-        id: 'weapon-a',
-        name: 'Weapon A',
-        slot: 'weapon',
-        price: 1,
-        emoji: 'B',
-        tier: 'rare',
-        battleStats: { attack: 4 },
-      },
-    ] satisfies AvatarOutfit[];
-
-    const skinStats = derivePlayerStats({
+  it('derives stats from wearable loadout items and complete set bonus', () => {
+    const stats = derivePlayerStats({
       level: 5,
-      skinPackId: 'skin-a',
-      avatarOutfits: { hat: 'hat-a', weapon: 'weapon-a' },
-      skinPacks,
-      outfits,
-    });
-    const compositeStats = derivePlayerStats({
-      level: 5,
-      skinPackId: null,
-      avatarOutfits: { hat: 'hat-a', weapon: 'weapon-a' },
-      skinPacks,
-      outfits,
+      loadout: {
+        baseId: 'base1',
+        equippedGear: { face: 'visor-a', mainHand: 'tool-a' },
+        activeSetId: 'set-a',
+      },
+      gearItems: testGearItems,
+      gearSets: testGearSets,
     });
     const base = baseStatsForLevel(5);
 
-    expect(skinStats.attack).toBe(base.attack + 7);
-    expect(skinStats.defense).toBe(base.defense);
-    expect(compositeStats.attack).toBe(base.attack + 4);
-    expect(compositeStats.defense).toBe(base.defense + 2);
+    expect(stats.attack).toBe(base.attack + 4);
+    expect(stats.focus).toBe(base.focus + 3);
+    expect(stats.speed).toBe(base.speed + 2);
   });
 
   it('creates a player fighter with derived stats and visual snapshot', () => {
     const fighter = createPlayerFighter({
-      ...baseFighter,
+      id: 'player',
+      name: 'Aluno',
+      title: 'Guardião',
       level: 3,
-      skinPacks: [],
-      outfits: [],
+      loadout: emptyLoadout,
+      gearItems: [],
+      gearSets: [],
     });
 
     expect(fighter.stats).toEqual(baseStatsForLevel(3));
-    expect(fighter.avatarOutfits).toEqual({});
+    expect(fighter.loadout).toEqual(emptyLoadout);
+    expect(fighter.avatarBase).toBe('base1');
   });
 });

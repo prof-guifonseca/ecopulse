@@ -2,7 +2,7 @@
 
 import { CheckCircle2 } from 'lucide-react';
 import type { ArenaOpponent } from '@/types';
-import { SkinPackArt } from '@/components/skins/SkinPackArt';
+import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -27,7 +27,7 @@ export function OpponentCard({ opponent, selected, defeated, onSelect }: Props) 
         )}
       >
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-2">
-          <SkinPackArt id={opponent.skinPackId} size="md" />
+          <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} />
         </div>
 
         <div className="min-w-0 flex-1">
@@ -53,7 +53,7 @@ export function OpponentCard({ opponent, selected, defeated, onSelect }: Props) 
             ))}
           </div>
 
-          <BattleStatChips stats={opponent.stats} compact className="mt-2" />
+          <BattleStatChips stats={opponent.stats} compact className="mt-2 max-w-[calc(100vw-132px)]" />
         </div>
       </Card>
     </button>

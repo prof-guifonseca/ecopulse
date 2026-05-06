@@ -11,6 +11,17 @@ export type OutfitSlot =
   | 'background'
   | 'weapon'
   | 'hairstyle';
+export type GearSlot =
+  | 'hair'
+  | 'head'
+  | 'face'
+  | 'torso'
+  | 'legs'
+  | 'feet'
+  | 'back'
+  | 'mainHand'
+  | 'offHand'
+  | 'aura';
 
 // ----- SkinPack (full character look) -----
 export type SkinTheme = 'anime' | 'samurai' | 'ninja' | 'fantasy' | 'cyber' | 'explorer';
@@ -40,6 +51,38 @@ export interface SkinPack {
   artId: string;
   /** Optional Arena stat bonuses. */
   battleStats?: Partial<BattleStats>;
+}
+
+// ----- Gear (wearable avatar equipment) -----
+export type GearTier = 'common' | 'rare' | 'epic' | 'legendary';
+export type GearTheme = SkinTheme | 'utility' | 'nature';
+
+export interface GearItem {
+  id: string;
+  name: string;
+  slot: GearSlot;
+  tier: GearTier;
+  priceTokens: number;
+  unlock: SkinUnlock;
+  battleStats: Partial<BattleStats>;
+  visualLayerId: string;
+  setId?: string;
+  emoji: string;
+  tags: string[];
+}
+
+export interface GearSet {
+  id: string;
+  name: string;
+  theme: GearTheme;
+  tagline: string;
+  tier: GearTier;
+  unlock: SkinUnlock;
+  priceTokens: number;
+  itemIds: string[];
+  defaultLoadout: Partial<Record<GearSlot, string>>;
+  requiredItemIds: string[];
+  setBonusStats: Partial<BattleStats>;
 }
 export type ChallengeType = 'individual' | 'cooperativo';
 export type ShopItemType = 'garden' | 'frame' | 'boost' | 'donation';
@@ -195,6 +238,12 @@ export interface AvatarOutfit {
 
 export type AvatarOutfits = Partial<Record<OutfitSlot, string | null>>;
 
+export interface AvatarLoadout {
+  baseId: string | null;
+  equippedGear: Partial<Record<GearSlot, string | null>>;
+  activeSetId?: string | null;
+}
+
 export interface DailyMissionsProgress {
   scan: boolean;
   likes: number;
@@ -217,15 +266,21 @@ export interface BattleFighter {
   title: string;
   level: number;
   stats: BattleStats;
+  energy?: number;
+  loadout?: AvatarLoadout;
   skinPackId?: string | null;
   avatarBase?: string | null;
   avatarOutfits?: AvatarOutfits;
 }
 
+export type BattleAction = 'attack' | 'defend' | 'focus';
+
 export type BattleEventType =
   | 'start'
   | 'initiative'
   | 'attack'
+  | 'defend'
+  | 'focus'
   | 'block'
   | 'critical'
   | 'special'
@@ -238,9 +293,12 @@ export interface BattleEvent {
   actorId: string | null;
   targetId: string | null;
   message: string;
+  action?: BattleAction;
   damage: number;
   playerHp: number;
   opponentHp: number;
+  playerEnergy: number;
+  opponentEnergy: number;
 }
 
 export interface BattleResult {
@@ -258,6 +316,10 @@ export interface BattleResult {
     player: number;
     opponent: number;
   };
+  finalEnergy: {
+    player: number;
+    opponent: number;
+  };
 }
 
 export interface ArenaOpponent {
@@ -266,7 +328,9 @@ export interface ArenaOpponent {
   title: string;
   difficulty: 1 | 2 | 3 | 4 | 5;
   quote: string;
-  skinPackId: string;
+  level: number;
+  loadout: AvatarLoadout;
+  skinPackId?: string;
   stats: BattleStats;
 }
 

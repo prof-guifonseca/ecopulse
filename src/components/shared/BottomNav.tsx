@@ -11,7 +11,7 @@ const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
   { page: 'scanner', label: 'Scanner', icon: ScanLine },
   { page: 'arena', label: 'Arena', icon: Swords },
   { page: 'map', label: 'Mapa', icon: MapPin },
-  { page: 'community', label: 'Comunidade', icon: Users },
+  { page: 'community', label: 'Social', icon: Users },
   { page: 'profile', label: 'Perfil', icon: UserRound },
 ];
 
@@ -32,7 +32,7 @@ export function BottomNav() {
       role="tablist"
       className="shrink-0 border-t border-[var(--line-soft)] bg-[var(--bg-primary)] px-4 pb-[calc(env(safe-area-inset-bottom,0px)+10px)] pt-3 sm:px-8"
     >
-      <div className="relative mx-auto flex max-w-[var(--content-width)] items-center gap-1">
+      <div className="relative mx-auto flex min-w-0 max-w-[var(--content-width)] items-center gap-1">
         {/* Sliding ride indicator — a thin gradient bar above the active tab */}
         <span
           aria-hidden
@@ -72,7 +72,7 @@ export function BottomNav() {
               </span>
               <span
                 className={cn(
-                  't-micro font-medium tracking-[0.01em] transition-colors duration-200',
+                't-micro max-w-full truncate font-medium tracking-[0.01em] transition-colors duration-200',
                   active ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
                 )}
               >

@@ -7,6 +7,7 @@ import { ProductDetailModal } from './ProductDetailModal';
 import { MapPointModal } from './MapPointModal';
 import { TutorialModal } from './TutorialModal';
 import { ShopItemModal } from './ShopItemModal';
+import { GearSetModal } from './GearSetModal';
 import { SkinPackModal } from './SkinPackModal';
 import { CommentsModal } from './CommentsModal';
 import { AvatarBuilder } from './AvatarBuilder';
@@ -26,6 +27,7 @@ export function Overlays() {
       {modal?.kind === 'mapPoint' && <MapPointModal id={modal.id} />}
       {modal?.kind === 'tutorial' && <TutorialModal id={modal.id} />}
       {modal?.kind === 'shopItem' && <ShopItemModal id={modal.id} />}
+      {modal?.kind === 'gearSet' && <GearSetModal id={modal.id} />}
       {modal?.kind === 'skinPack' && <SkinPackModal id={modal.id} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
       {avatarOpen && <AvatarBuilder />}

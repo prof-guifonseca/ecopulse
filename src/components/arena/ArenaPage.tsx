@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Shield, Sparkles, Swords } from 'lucide-react';
-import { ARENA_OPPONENTS, AVATAR_OUTFITS, SKIN_PACKS } from '@/data';
-import type { BattleResult } from '@/types';
+import { Brain, Shield, ShieldCheck, Sparkles, Swords, Target } from 'lucide-react';
+import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, getGearSet } from '@/data';
+import type { BattleAction, BattleResult } from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -15,6 +15,7 @@ import {
 } from '@/lib/battle/rules';
 import { unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
+import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Button } from '@/components/ui/Button';
@@ -31,13 +32,12 @@ export function ArenaPage() {
   const [selectedOpponentId, setSelectedOpponentId] = useState(ARENA_OPPONENTS[0]?.id ?? '');
   const [battleResult, setBattleResult] = useState<BattleResult | null>(null);
   const [completedBattleId, setCompletedBattleId] = useState<string | null>(null);
+  const [selectedAction, setSelectedAction] = useState<BattleAction>('attack');
 
   const name = useUserStore((s) => s.name);
   const level = useUserStore((s) => s.level);
   const tribe = useUserStore((s) => s.tribe);
-  const avatarBase = useUserStore((s) => s.avatarBase);
-  const avatarOutfits = useUserStore((s) => s.avatarOutfits);
-  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
+  const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const wins = useArenaStore((s) => s.wins);
   const losses = useArenaStore((s) => s.losses);
   const defeatedOpponents = useArenaStore((s) => s.defeatedOpponents);
@@ -47,21 +47,23 @@ export function ArenaPage() {
 
   const selectedOpponent =
     ARENA_OPPONENTS.find((opponent) => opponent.id === selectedOpponentId) ?? ARENA_OPPONENTS[0];
-  const equippedSkin = SKIN_PACKS.find((skin) => skin.id === equippedSkinPack);
+  const activeSet = getGearSet(avatarLoadout.activeSetId);
 
   const playerFighter = useMemo(
     () =>
       createPlayerFighter({
         name,
-        title: equippedSkin ? equippedSkin.name : tribe === 'guardioes' ? 'Guardião em Modo Livre' : 'EcoWarrior em Modo Livre',
+        title: activeSet
+          ? activeSet.name
+          : tribe === 'guardioes'
+            ? 'Guardião em Modo Livre'
+            : 'EcoWarrior em Modo Livre',
         level,
-        skinPackId: equippedSkinPack,
-        avatarBase,
-        avatarOutfits,
-        skinPacks: SKIN_PACKS,
-        outfits: AVATAR_OUTFITS,
+        loadout: avatarLoadout,
+        gearItems: GEAR_ITEMS,
+        gearSets: GEAR_SETS,
       }),
-    [avatarBase, avatarOutfits, equippedSkin, equippedSkinPack, level, name, tribe]
+    [activeSet, avatarLoadout, level, name, tribe]
   );
 
   const simulate = () => {
@@ -73,6 +75,7 @@ export function ArenaPage() {
       opponent,
       opponentId: selectedOpponent.id,
       seed: `${Date.now()}:${selectedOpponent.id}:${wins}:${losses}`,
+      playerPlan: buildTacticalPlan(selectedAction),
     });
     setCompletedBattleId(null);
     setBattleResult(result);
@@ -112,14 +115,14 @@ export function ArenaPage() {
   }
 
   return (
-    <PageShell spacing={6}>
+    <PageShell spacing={6} className="w-[min(100%,calc(100vw-40px))] max-w-full overflow-hidden">
       <header className="pt-2">
         <p className="t-eyebrow">Arena Simulada</p>
         <h1 className="t-display mt-1.5 leading-[0.95]">
           Batalhas de <span className="t-italic-soft">impacto</span>
         </h1>
         <p className="mt-3 t-body-sm">
-          Combates de IA, sem aposta e sem perder Eco-Tokens. Equipamentos e personagens mudam os atributos.
+          Combates de IA sem aposta nem perda de tokens. O loadout vestível define seus atributos.
         </p>
       </header>
 
@@ -127,9 +130,7 @@ export function ArenaPage() {
         <div className="flex items-start gap-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
             <Avatar
-              baseId={avatarBase}
-              outfits={avatarOutfits}
-              skinPackId={equippedSkinPack}
+              loadout={avatarLoadout}
               size="lg"
               alt={name}
             />
@@ -138,8 +139,42 @@ export function ArenaPage() {
             <p className="t-eyebrow">Seu loadout</p>
             <h2 className="t-headline mt-1 truncate">{playerFighter.title}</h2>
             <p className="mt-1 t-caption">Nível {level} · stats calculados localmente</p>
-            <BattleStatChips stats={playerFighter.stats} className="mt-3" />
+            <BattleStatChips stats={playerFighter.stats} compact className="mt-3 max-w-[calc(100vw-152px)]" />
           </div>
+        </div>
+      </Card>
+
+      <Card tone="solid" padded={false} className="border-soft px-4 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="t-eyebrow">Plano tático</p>
+            <h2 className="t-title mt-1">Escolha a postura da simulação</h2>
+          </div>
+          <span className="hidden t-caption min-[420px]:inline">local · 0 tokens</span>
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {TACTICAL_ACTIONS.map((action) => {
+            const IconCmp = action.icon;
+            const active = selectedAction === action.value;
+            return (
+              <button
+                key={action.value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setSelectedAction(action.value)}
+                className={cn(
+                  'min-h-[84px] rounded-[var(--radius-md)] border px-2.5 py-3 text-center transition-colors',
+                  active ? 'border-active bg-tint-green-2' : 'border-soft bg-tint-1 hover:bg-tint-2'
+                )}
+              >
+                <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[var(--bg-primary)] text-[var(--accent-green)]">
+                  <Icon icon={IconCmp} size={16} />
+                </span>
+                <span className="mt-2 block t-body-sm font-semibold">{action.label}</span>
+                <span className="mt-1 block t-caption">{action.hint}</span>
+              </button>
+            );
+          })}
         </div>
       </Card>
 
@@ -164,7 +199,7 @@ export function ArenaPage() {
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="t-title">Rivais de IA</h2>
-          <span className="t-caption">{ARENA_OPPONENTS.length} simulados</span>
+          <span className="hidden t-caption min-[420px]:inline">{ARENA_OPPONENTS.length} simulados</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {ARENA_OPPONENTS.map((opponent) => (
@@ -215,4 +250,25 @@ export function ArenaPage() {
       />
     </PageShell>
   );
+}
+
+const TACTICAL_ACTIONS: Array<{
+  value: BattleAction;
+  label: string;
+  hint: string;
+  icon: typeof Target;
+}> = [
+  { value: 'attack', label: 'Atacar', hint: 'dano e energia', icon: Target },
+  { value: 'defend', label: 'Defender', hint: 'reduz impacto', icon: ShieldCheck },
+  { value: 'focus', label: 'Focar', hint: 'crítico/especial', icon: Brain },
+];
+
+function buildTacticalPlan(action: BattleAction): BattleAction[] {
+  if (action === 'defend') {
+    return ['defend', 'attack', 'defend', 'focus', 'attack', 'defend', 'attack', 'attack'];
+  }
+  if (action === 'focus') {
+    return ['focus', 'attack', 'focus', 'attack', 'attack', 'defend', 'focus', 'attack'];
+  }
+  return ['attack', 'attack', 'focus', 'attack', 'attack', 'defend', 'attack', 'attack'];
 }

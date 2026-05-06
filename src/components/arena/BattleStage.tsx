@@ -41,6 +41,8 @@ export function BattleStage({ result, onComplete }: Props) {
 
   const playerHp = currentEvent.playerHp;
   const opponentHp = currentEvent.opponentHp;
+  const playerEnergy = currentEvent.playerEnergy ?? result.finalEnergy?.player ?? 0;
+  const opponentEnergy = currentEvent.opponentEnergy ?? result.finalEnergy?.opponent ?? 0;
   const playerActive = currentEvent.actorId === result.player.id && currentEvent.type !== 'finish';
   const opponentActive = currentEvent.actorId === result.opponent.id && currentEvent.type !== 'finish';
 
@@ -60,11 +62,11 @@ export function BattleStage({ result, onComplete }: Props) {
         />
 
         <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <FighterPod fighter={result.player} hp={playerHp} active={playerActive} align="left" />
+          <FighterPod fighter={result.player} hp={playerHp} energy={playerEnergy} active={playerActive} align="left" />
           <div className="flex h-12 w-12 items-center justify-center rounded-full border-soft bg-[var(--bg-primary)] t-title text-[var(--accent-gold)]">
             VS
           </div>
-          <FighterPod fighter={result.opponent} hp={opponentHp} active={opponentActive} align="right" />
+          <FighterPod fighter={result.opponent} hp={opponentHp} energy={opponentEnergy} active={opponentActive} align="right" />
         </div>
 
         {currentEvent.damage > 0 ? (
@@ -99,15 +101,18 @@ export function BattleStage({ result, onComplete }: Props) {
 function FighterPod({
   fighter,
   hp,
+  energy,
   active,
   align,
 }: {
   fighter: BattleFighter;
   hp: number;
+  energy: number;
   active: boolean;
   align: 'left' | 'right';
 }) {
   const hpPct = (hp / fighter.stats.hp) * 100;
+  const energyPct = (energy / 60) * 100;
 
   return (
     <div className={cn('min-w-0', align === 'right' && 'text-right')}>
@@ -118,6 +123,7 @@ function FighterPod({
         )}
       >
         <Avatar
+          loadout={fighter.loadout}
           baseId={fighter.avatarBase}
           outfits={fighter.avatarOutfits}
           skinPackId={fighter.skinPackId}
@@ -137,6 +143,11 @@ function FighterPod({
           <span>{Math.max(0, hp)}/{fighter.stats.hp}</span>
         </div>
         <ProgressBar value={hpPct} size="sm" ariaLabel={`HP de ${fighter.name}`} />
+        <div className="mb-1 mt-2 flex items-center justify-between gap-2 t-caption">
+          <span>Energia</span>
+          <span>{Math.max(0, energy)}/60</span>
+        </div>
+        <ProgressBar value={energyPct} size="sm" ariaLabel={`Energia de ${fighter.name}`} />
       </div>
     </div>
   );

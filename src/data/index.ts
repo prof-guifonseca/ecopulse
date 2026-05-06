@@ -10,3 +10,17 @@ export { DAILY_MISSIONS } from './missions';
 export { AVATAR_BASES, AVATAR_OUTFITS } from './avatar';
 export { SKIN_PACKS } from './skins';
 export { ARENA_OPPONENTS } from './arena';
+export {
+  EMPTY_GEAR,
+  GEAR_ITEMS,
+  GEAR_SETS,
+  GEAR_SLOT_LABELS,
+  defaultLoadoutForSet,
+  gearItemIdsFromLegacySkinPacks,
+  gearItemsForSet,
+  getGearItem,
+  getGearSet,
+  legacyItemIdsStillGear,
+  loadoutFromLegacy,
+  unique,
+} from './gear';

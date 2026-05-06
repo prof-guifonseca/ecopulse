@@ -27,9 +27,7 @@ type TabValue = (typeof PROFILE_TABS)[number]['value'];
 export function ProfilePage() {
   const [tab, setTab] = useState<TabValue>('impact');
   const name = useUserStore((s) => s.name);
-  const avatarBase = useUserStore((s) => s.avatarBase);
-  const avatarOutfits = useUserStore((s) => s.avatarOutfits);
-  const equippedSkinPack = useUserStore((s) => s.equippedSkinPack);
+  const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const level = useUserStore((s) => s.level);
   const xp = useUserStore((s) => s.xp);
   const xpToNext = useUserStore((s) => s.xpToNext);
@@ -44,7 +42,7 @@ export function ProfilePage() {
   const stage = gardenStage(level);
 
   return (
-    <PageShell spacing={5}>
+    <PageShell spacing={5} className="w-[min(100%,calc(100vw-40px))] max-w-full overflow-hidden">
       {/* Editorial portrait */}
       <header className="flex flex-col items-center pt-2 text-center">
         <button
@@ -61,7 +59,7 @@ export function ProfilePage() {
             }}
           />
           <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[var(--bg-secondary)]">
-            <Avatar baseId={avatarBase} outfits={avatarOutfits} skinPackId={equippedSkinPack} size="md" />
+            <Avatar loadout={avatarLoadout} size="md" alt={name} />
           </span>
           <span className="gradient-gold absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[var(--on-reward)]">
             <Icon icon={Pencil} size={12} strokeWidth={2.4} />

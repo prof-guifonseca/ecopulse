@@ -15,6 +15,7 @@ export type ModalContent =
   | { kind: 'mapPoint'; id: string }
   | { kind: 'tutorial'; id: string }
   | { kind: 'shopItem'; id: string }
+  | { kind: 'gearSet'; id: string }
   | { kind: 'skinPack'; id: string }
   | { kind: 'postComments'; id: string };
 
