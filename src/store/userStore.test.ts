@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { migrateUserStateToV3, migrateUserStateToV4 } from './userStore';
+import { migrateUserStateToV3, migrateUserStateToV4, migrateUserStateToV5 } from './userStore';
 
 describe('userStore migration v3', () => {
   it('migrates owned outfits and skin packs into wearable gear without losing progress', () => {
@@ -66,5 +66,47 @@ describe('userStore migration v4', () => {
     expect(migrated.avatarLoadout.equippedGear.head).toBe('cyber-reciclador-head');
     expect(migrated.avatarLoadout.equippedGear.legs).toBe('cyber-reciclador-legs');
     expect(migrated.avatarLoadout.equippedGear.feet).toBe('cyber-reciclador-feet');
+  });
+});
+
+describe('userStore migration v5', () => {
+  it('assigns regionId default and empty doctrines, deduces tribe from active gear set', () => {
+    const migrated = migrateUserStateToV5({
+      name: 'Arthur',
+      level: 7,
+      tokens: 480,
+      onboarded: true,
+      avatarBase: 'base2',
+      ownedGearSets: ['cyber-reciclador'],
+      ownedGearItems: ['cyber-reciclador-face'],
+      avatarLoadout: {
+        baseId: 'base2',
+        activeSetId: 'cyber-reciclador',
+        equippedGear: { face: 'cyber-reciclador-face' },
+      },
+    } as Parameters<typeof migrateUserStateToV5>[0]);
+
+    expect(migrated.regionId).toBe('londrina');
+    expect(migrated.adoptedDoctrines).toEqual([]);
+    // cyber-reciclador belongs to recicladores tribe
+    expect(migrated.tribe).toBe('recicladores');
+  });
+
+  it('preserves an explicit non-default tribe', () => {
+    const migrated = migrateUserStateToV5({
+      name: 'X',
+      tribe: 'cultivadores',
+      onboarded: true,
+    } as Parameters<typeof migrateUserStateToV5>[0]);
+    expect(migrated.tribe).toBe('cultivadores');
+  });
+
+  it('preserves existing adoptedDoctrines and regionId', () => {
+    const migrated = migrateUserStateToV5({
+      regionId: 'curitiba',
+      adoptedDoctrines: ['nami-solar:sol-firme'],
+    } as Parameters<typeof migrateUserStateToV5>[0]);
+    expect(migrated.regionId).toBe('curitiba');
+    expect(migrated.adoptedDoctrines).toEqual(['nami-solar:sol-firme']);
   });
 });

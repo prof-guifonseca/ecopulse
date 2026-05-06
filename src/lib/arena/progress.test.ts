@@ -78,7 +78,7 @@ describe('arena progress rules', () => {
   });
 });
 
-function battleResult(outcome: BattleResult['outcome'], seed = outcome): BattleResult {
+function battleResult(outcome: BattleResult['outcome'], seed: string = outcome): BattleResult {
   const player = {
     id: 'player',
     name: 'Aluno',

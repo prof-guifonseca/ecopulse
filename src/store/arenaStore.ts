@@ -7,7 +7,7 @@ import { applyArenaBattleProgress, arenaLevelFromXp } from '@/lib/arena/progress
 import { createSafeJSONStorage } from './storage';
 
 interface ArenaState extends ArenaProgress {
-  recordBattle: (result: BattleResult) => void;
+  recordBattle: (result: BattleResult, loadoutMultiplier?: number) => void;
   setDemoProgress: (progress: ArenaProgress) => void;
 }
 
@@ -43,7 +43,10 @@ export const useArenaStore = create<ArenaState>()(
     (set) => ({
       ...DEFAULT_ARENA,
 
-      recordBattle: (result) => set((state) => applyArenaBattleProgress(state, result)),
+      recordBattle: (result, loadoutMultiplier) =>
+        set((state) =>
+          applyArenaBattleProgress(state, result, { loadoutMultiplier: loadoutMultiplier ?? 1 })
+        ),
 
       setDemoProgress: (progress) => set(progress),
     }),

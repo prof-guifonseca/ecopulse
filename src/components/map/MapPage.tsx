@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { ChevronRight, MapPin } from 'lucide-react';
-import { MAP_POINTS, MAP_TYPE_LABELS, MAP_TYPE_ICON, EVENTS } from '@/data';
+import { MAP_TYPE_LABELS, MAP_TYPE_ICON } from '@/data';
+import { useCurrentRegion, latLngToPercent, distanceFromCenter } from '@/lib/region';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { Icon } from '@/components/ui/Icon';
@@ -10,8 +11,7 @@ import { Chip } from '@/components/ui/Chip';
 import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { resolveIcon } from '@/lib/iconRegistry';
-import { LondrinaMap } from './LondrinaMap';
-import { latLngToPercent, distanceFromCenter } from '@/lib/map/londrina';
+import { RegionMap } from './LondrinaMap';
 import { cn } from '@/lib/cn';
 import type { MapPointType } from '@/types';
 
@@ -26,28 +26,31 @@ const FILTERS: Array<'todos' | MapPointType> = [
 ];
 
 export function MapPage() {
+  const region = useCurrentRegion();
+  const points = region.mapPoints;
+  const events = region.events;
   const [filter, setFilter] = useState<'todos' | MapPointType>('todos');
   const [panel, setPanel] = useState<'places' | 'events'>('places');
   const openModal = useUIStore((s) => s.openModal);
   const visited = useGameStore((s) => s.visitedPoints);
 
   const pins = useMemo(
-    () => (filter === 'todos' ? MAP_POINTS : MAP_POINTS.filter((point) => point.type === filter)),
-    [filter]
+    () => (filter === 'todos' ? points : points.filter((point) => point.type === filter)),
+    [filter, points]
   );
 
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Mapa</h1>
-        <p className="mt-1 t-caption">Londrina · Centro</p>
+        <p className="mt-1 t-caption">{region.blurb}</p>
       </header>
 
-      <LondrinaMap>
+      <RegionMap region={region}>
         {pins.map((point) => {
           const isVisited = visited.includes(point.id);
           const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
-          const { x, y } = latLngToPercent({ lat: point.lat, lng: point.lng });
+          const { x, y } = latLngToPercent(region.bbox, { lat: point.lat, lng: point.lng });
           return (
             <button
               key={point.id}
@@ -68,9 +71,8 @@ export function MapPage() {
             </button>
           );
         })}
-      </LondrinaMap>
+      </RegionMap>
 
-      {/* Filter chips */}
       <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FILTERS.map((currentFilter) => {
           const iconName =
@@ -90,11 +92,10 @@ export function MapPage() {
         })}
       </div>
 
-      {/* Lightweight panel toggle (Locais ⇄ Agenda) */}
       <div className="flex gap-1 rounded-full border-soft bg-tint-1 p-1">
         {([
           { v: 'places' as const, label: `Locais (${pins.length})` },
-          { v: 'events' as const, label: `Agenda (${EVENTS.length})` },
+          { v: 'events' as const, label: `Agenda (${events.length})` },
         ]).map((opt) => (
           <button
             key={opt.v}
@@ -135,7 +136,7 @@ export function MapPage() {
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{point.name}</h3>
                     <p className="t-caption truncate">
-                      {distanceFromCenter({ lat: point.lat, lng: point.lng })} · {point.address}
+                      {distanceFromCenter(region, { lat: point.lat, lng: point.lng })} · {point.address}
                     </p>
                   </div>
                   <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />
@@ -146,7 +147,7 @@ export function MapPage() {
         </ListCard>
       ) : (
         <ListCard>
-          {EVENTS.map((event) => (
+          {events.map((event) => (
             <li key={event.id} className="flex items-center gap-4 px-4 py-3">
               <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
                 <span className="text-sm font-semibold leading-none text-[var(--text-primary)]">{event.day}</span>

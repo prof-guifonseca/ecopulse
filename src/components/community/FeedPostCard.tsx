@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, CheckCircle2, Sparkles } from 'lucide-react';
 import type { FEED_POSTS } from '@/data';
 import { useLikePost } from '@/hooks/useLikePost';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
@@ -9,6 +9,9 @@ import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { cn } from '@/lib/cn';
+import { useGameStore } from '@/store/gameStore';
+import { useUIStore } from '@/store/uiStore';
+import { todayKey } from '@/lib/dailyReset';
 
 interface Props {
   post: (typeof FEED_POSTS)[number];
@@ -19,6 +22,22 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const { liked, toggle } = useLikePost(post.id);
   const likeCount = post.likes + (liked ? 1 : 0);
   const firstComment = post.commentList[0];
+
+  // "Vou tentar isso" creates a one-day micro-challenge keyed by post + day,
+  // and bumps the social-replicate mission counter when applicable.
+  const synthChallengeId = `feed-${post.id}-${todayKey()}`;
+  const activeChallenges = useGameStore((s) => s.activeChallenges);
+  const completedChallenges = useGameStore((s) => s.completedChallenges);
+  const tried = activeChallenges.includes(synthChallengeId) || completedChallenges.includes(synthChallengeId);
+  const showToast = useUIStore((s) => s.showToast);
+
+  const tryThis = () => {
+    if (tried) return;
+    const game = useGameStore.getState();
+    game.joinChallenge(synthChallengeId);
+    game.incrementLikeMission();
+    showToast('Promessa simulada · prototype', 'success');
+  };
 
   return (
     <Card tone="solid" padded={false} className="overflow-hidden">
@@ -59,6 +78,13 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
           </Chip>
           <Chip onClick={onOpenComments} leftIcon={<Icon icon={MessageCircle} size={14} />}>
             {post.comments}
+          </Chip>
+          <Chip
+            active={tried}
+            onClick={tryThis}
+            leftIcon={<Icon icon={tried ? CheckCircle2 : Sparkles} size={14} />}
+          >
+            {tried ? 'Vou tentar' : 'Vou tentar isso'}
           </Chip>
         </div>
 

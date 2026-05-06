@@ -1,5 +1,6 @@
 import {
   ARENA_OPPONENTS,
+  DEFAULT_REGION_ID,
   GEAR_ITEMS,
   GEAR_SETS,
   PRODUCTS,
@@ -18,6 +19,8 @@ import {
 } from '@/lib/battle/rules';
 import { applyArenaBattleProgress } from '@/lib/arena/progress';
 import { scanRecordFromProduct } from '@/lib/simulatedScan';
+import { rollTodaysMissions } from './dailyReset';
+import { DOCTRINE_BY_RIVAL } from './doctrines';
 
 /**
  * One-shot demo state seeder. Idempotent via the `ecopulse:seeded:v1`
@@ -92,6 +95,8 @@ export function seedDemoStateIfEmpty(): void {
   useUserStore.getState().setProfile({
     name: 'Arthur',
     tribe: 'guardioes',
+    regionId: DEFAULT_REGION_ID,
+    adoptedDoctrines: [DOCTRINE_BY_RIVAL['nami-solar']],
     level: 7,
     xp: 320,
     xpToNext: 750,
@@ -167,6 +172,16 @@ export function seedDemoStateIfEmpty(): void {
   game.markMission('scan', true);
   const today = new Date().toISOString().slice(0, 10);
   game.setLastMissionDay(today);
+  // Seed lastScanScore + today's mission template ids so the home screen
+  // surfaces tribe-flavored missions immediately.
+  game.setLastScanScore('B');
+  game.setTodaysMissionIds(rollTodaysMissions(today));
+
+  // Floresta EcoPulse baseline. addVisitedPoint already adds 1.0 kg baterias,
+  // 1 reparo, 1 troca from Arthur's 5 visits. Bump trees and óleo so the
+  // home strip reads "shape of someone with weeks of activity" — coherent
+  // with the rest of the seeded persona density.
+  game.bumpRealImpact({ treesPlanted: 3, oilLitersEstimated: 4, batteriesKgEstimated: 1.5 });
 
   seedArenaDemoIfEmpty();
 

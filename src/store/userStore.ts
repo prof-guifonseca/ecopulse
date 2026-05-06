@@ -13,6 +13,7 @@ import {
   unique,
 } from '@/data';
 import { equipGearItem as equipGearItemRule, equipGearSet as equipGearSetRule } from '@/lib/gear/rules';
+import { DEFAULT_REGION_ID, tribeFromGearSetId } from '@/data';
 import { createSafeJSONStorage, readLegacyState, markLegacyMigrated } from './storage';
 
 interface UserState {
@@ -39,6 +40,11 @@ interface UserState {
   ownedGearItems: string[];
   /** Canonical owned equipment sets. */
   ownedGearSets: string[];
+  /** Current region (geographic context). Defaults to 'londrina' — the first
+   *  instance of the pluggable Region abstraction. */
+  regionId: string;
+  /** Doutrinas adopted by defeating arena rivals — small lasting passives. */
+  adoptedDoctrines: string[];
 
   setProfile: (partial: Partial<UserState>) => void;
   addXp: (amount: number) => { leveled: boolean; newLevel: number };
@@ -61,6 +67,9 @@ interface UserState {
   equipSkinPack: (id: string | null) => void;
   /** Idempotent unlock; returns true if newly unlocked. */
   unlockSkinPack: (id: string) => boolean;
+  /** Adopt a doutrina (idempotent). Returns true when newly adopted. */
+  adoptDoctrine: (id: string) => boolean;
+  setRegionId: (id: string) => void;
 }
 
 const DEFAULT_USER = {
@@ -94,6 +103,8 @@ const DEFAULT_USER = {
   } as AvatarLoadout,
   ownedGearItems: [] as string[],
   ownedGearSets: [] as string[],
+  regionId: DEFAULT_REGION_ID,
+  adoptedDoctrines: [] as string[],
 };
 
 export function migrateUserStateToV3(state: Partial<UserState>): UserState {
@@ -131,6 +142,30 @@ export function migrateUserStateToV3(state: Partial<UserState>): UserState {
     avatarLoadout: migratedLoadout,
     ownedGearItems,
     ownedGearSets,
+  };
+}
+
+export function migrateUserStateToV5(state: Partial<UserState>): UserState {
+  const prev = migrateUserStateToV4(state);
+  const regionId = prev.regionId && prev.regionId.length > 0 ? prev.regionId : DEFAULT_REGION_ID;
+  const adoptedDoctrines = Array.isArray(prev.adoptedDoctrines) ? unique(prev.adoptedDoctrines) : [];
+
+  // If tribe is still the bare default and the user is already onboarded, try
+  // to deduce a tribe from the active gear set so the lateral identity isn't
+  // empty for legacy installs.
+  let tribe = prev.tribe;
+  const looksUntouched = (!tribe || tribe === DEFAULT_USER.tribe) && prev.onboarded;
+  if (looksUntouched) {
+    const deduced = tribeFromGearSetId(prev.avatarLoadout?.activeSetId ?? null);
+    if (deduced) tribe = deduced;
+  }
+  if (!tribe) tribe = DEFAULT_USER.tribe;
+
+  return {
+    ...prev,
+    tribe,
+    regionId,
+    adoptedDoctrines,
   };
 }
 
@@ -344,6 +379,15 @@ export const useUserStore = create<UserState>()(
           };
         }),
 
+      adoptDoctrine: (id) => {
+        const { adoptedDoctrines } = get();
+        if (adoptedDoctrines.includes(id)) return false;
+        set({ adoptedDoctrines: [...adoptedDoctrines, id] });
+        return true;
+      },
+
+      setRegionId: (id) => set({ regionId: id }),
+
       unlockSkinPack: (id) => {
         const setItem = getGearSet(id);
         const { ownedSkinPacks, ownedGearSets, ownedGearItems, ownedOutfits } = get();
@@ -363,13 +407,13 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'ecopulse:user',
-      version: 4,
+      version: 5,
       storage: createSafeJSONStorage<UserState>(),
       migrate: (state, version) => {
         // Legacy localStorage import (still supported for v0).
         const legacy = readLegacyState();
         if (legacy) {
-          return migrateUserStateToV4({
+          return migrateUserStateToV5({
             ...(state as UserState),
             name: legacy.name ?? DEFAULT_USER.name,
             tribe: legacy.tribe ?? DEFAULT_USER.tribe,
@@ -391,17 +435,14 @@ export const useUserStore = create<UserState>()(
         // v1 → v2: ensure new skin fields + new slot defaults
         if (version === 1) {
           const prev = state as Partial<UserState>;
-          return migrateUserStateToV4({
+          return migrateUserStateToV5({
             ...(state as UserState),
             avatarOutfits: { ...DEFAULT_USER.avatarOutfits, ...(prev.avatarOutfits ?? {}) },
             equippedSkinPack: prev.equippedSkinPack ?? null,
             ownedSkinPacks: prev.ownedSkinPacks ?? [],
           } as Partial<UserState>);
         }
-        if (version === 2) {
-          return migrateUserStateToV4(state as Partial<UserState>);
-        }
-        return migrateUserStateToV4(state as Partial<UserState>);
+        return migrateUserStateToV5(state as Partial<UserState>);
       },
       onRehydrateStorage: () => () => markLegacyMigrated(),
     }

@@ -7,6 +7,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { ECO_MULTIPLIER } from '@/lib/ecoMultiplier';
 import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -108,6 +109,13 @@ export function ProductDetailModal({ id }: Props) {
         <p className="t-caption mt-8">
           {[view.brand, view.category].filter(Boolean).join(' · ') || 'Sem metadados'}
         </p>
+
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-micro">
+          <span className="text-[var(--text-muted)]">Recompensa:</span>
+          <span className="font-semibold text-[var(--accent-gold)]">
+            ×{ECO_MULTIPLIER[view.score].toFixed(1)} tokens
+          </span>
+        </div>
 
         <div className="mt-5 w-full space-y-3">
           {Object.entries(view.breakdown).map(([k, v]) => (

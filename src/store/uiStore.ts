@@ -17,7 +17,8 @@ export type ModalContent =
   | { kind: 'shopItem'; id: string }
   | { kind: 'gearSet'; id: string }
   | { kind: 'skinPack'; id: string }
-  | { kind: 'postComments'; id: string };
+  | { kind: 'postComments'; id: string }
+  | { kind: 'chapterUnlock'; chapterId: string };
 
 interface UIState {
   toasts: Toast[];

@@ -11,6 +11,7 @@ import { GearSetModal } from './GearSetModal';
 import { SkinPackModal } from './SkinPackModal';
 import { CommentsModal } from './CommentsModal';
 import { AvatarBuilder } from './AvatarBuilder';
+import { ChapterUnlockOverlay } from './ChapterUnlockOverlay';
 
 /**
  * Single mount that renders any currently-active overlay based on UI store state.
@@ -30,6 +31,7 @@ export function Overlays() {
       {modal?.kind === 'gearSet' && <GearSetModal id={modal.id} />}
       {modal?.kind === 'skinPack' && <SkinPackModal id={modal.id} />}
       {modal?.kind === 'postComments' && <CommentsModal id={modal.id} />}
+      {modal?.kind === 'chapterUnlock' && <ChapterUnlockOverlay chapterId={modal.chapterId} />}
       {avatarOpen && <AvatarBuilder />}
     </>
   );
