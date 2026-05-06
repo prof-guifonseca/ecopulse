@@ -9,6 +9,7 @@ import { unlockBadge } from '@/lib/gameActions';
 import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/IconButton';
 import { Tabs } from '@/components/ui/Tabs';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { unlockHint } from '@/lib/skinUnlocks';
@@ -134,13 +135,11 @@ export function AvatarBuilder() {
     <div className="animate-fade-in fixed inset-0 z-[700] flex justify-center bg-[rgba(5,10,8,0.92)]">
       <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
         <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+12px)] pb-4 backdrop-blur-md">
-          <button
+          <IconButton
             onClick={close}
             aria-label="Fechar"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--tint-3)] hover:text-[var(--text-primary)]"
-          >
-            <Icon icon={X} size={18} />
-          </button>
+            icon={<Icon icon={X} size={18} />}
+          />
           <div className="flex-1 text-center">
             <div className="t-eyebrow">Avatar</div>
             <h2 className="t-title">Personalizar</h2>
