@@ -5,10 +5,11 @@ interface Props {
   max?: number;
   size?: 'sm' | 'md';
   className?: string;
+  fillClassName?: string;
   ariaLabel?: string;
 }
 
-export function ProgressBar({ value, max = 100, size = 'md', className, ariaLabel }: Props) {
+export function ProgressBar({ value, max = 100, size = 'md', className, fillClassName, ariaLabel }: Props) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
 
   return (
@@ -25,7 +26,7 @@ export function ProgressBar({ value, max = 100, size = 'md', className, ariaLabe
       )}
     >
       <div
-        className="gradient-primary h-full rounded-full transition-[width] duration-500 ease-out"
+        className={cn('gradient-primary h-full rounded-full transition-[width] duration-500 ease-out', fillClassName)}
         style={{ width: `${pct}%` }}
       />
     </div>

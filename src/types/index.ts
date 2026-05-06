@@ -260,6 +260,9 @@ export interface BattleStats {
   focus: number;
 }
 
+export type OpponentArchetype = 'balanced' | 'aggressive' | 'defensive' | 'focus' | 'trickster';
+export type ArenaStageTheme = 'solar' | 'workshop' | 'circuit' | 'ginga' | 'forest';
+
 export interface BattleFighter {
   id: string;
   name: string;
@@ -268,12 +271,30 @@ export interface BattleFighter {
   stats: BattleStats;
   energy?: number;
   loadout?: AvatarLoadout;
+  archetype?: OpponentArchetype;
+  arenaXpReward?: number;
   skinPackId?: string | null;
   avatarBase?: string | null;
   avatarOutfits?: AvatarOutfits;
 }
 
 export type BattleAction = 'attack' | 'defend' | 'focus';
+export type BattleSessionStatus = 'active' | 'finished';
+export type BattleOutcome = 'win' | 'loss' | 'draw';
+
+export interface BattleCommand {
+  round: number;
+  actorId: string;
+  action: BattleAction;
+  source: 'player' | 'opponent';
+}
+
+export interface BattleEffect {
+  type: 'damage' | 'guard' | 'focus' | 'energy' | 'critical' | 'special' | 'finish';
+  actorId: string | null;
+  targetId?: string | null;
+  amount?: number;
+}
 
 export type BattleEventType =
   | 'start'
@@ -294,11 +315,55 @@ export interface BattleEvent {
   targetId: string | null;
   message: string;
   action?: BattleAction;
+  effects?: BattleEffect[];
   damage: number;
   playerHp: number;
   opponentHp: number;
   playerEnergy: number;
   opponentEnergy: number;
+}
+
+export interface BattleRoundState {
+  round: number;
+  playerAction: BattleAction;
+  opponentAction: BattleAction;
+  playerHp: number;
+  opponentHp: number;
+  playerEnergy: number;
+  opponentEnergy: number;
+  playerGuard: number;
+  opponentGuard: number;
+  playerFocus: number;
+  opponentFocus: number;
+  events: BattleEvent[];
+  finished: boolean;
+  winnerId: string | null;
+}
+
+export interface BattleSession {
+  id: string;
+  opponentId: string;
+  seed: string;
+  startedAt: string;
+  playedAt?: string;
+  status: BattleSessionStatus;
+  player: BattleFighter;
+  opponent: BattleFighter;
+  round: number;
+  maxRounds: number;
+  rngCursor: number;
+  playerHp: number;
+  opponentHp: number;
+  playerEnergy: number;
+  opponentEnergy: number;
+  playerGuard: number;
+  opponentGuard: number;
+  playerFocus: number;
+  opponentFocus: number;
+  winnerId: string | null;
+  outcome: BattleOutcome | null;
+  events: BattleEvent[];
+  rounds: BattleRoundState[];
 }
 
 export interface BattleResult {
@@ -309,7 +374,7 @@ export interface BattleResult {
   player: BattleFighter;
   opponent: BattleFighter;
   winnerId: string | null;
-  outcome: 'win' | 'loss' | 'draw';
+  outcome: BattleOutcome;
   rounds: number;
   events: BattleEvent[];
   finalHp: {
@@ -328,10 +393,25 @@ export interface ArenaOpponent {
   title: string;
   difficulty: 1 | 2 | 3 | 4 | 5;
   quote: string;
+  introLine: string;
+  victoryLine: string;
+  defeatLine: string;
+  archetype: OpponentArchetype;
+  arenaXpReward: number;
+  stageTheme: ArenaStageTheme;
+  order: number;
   level: number;
   loadout: AvatarLoadout;
   skinPackId?: string;
   stats: BattleStats;
+}
+
+export interface ArenaRivalMastery {
+  wins: number;
+  losses: number;
+  draws: number;
+  firstDefeatedAt?: string;
+  lastOutcome?: BattleOutcome;
 }
 
 export interface ArenaProgress {
@@ -340,4 +420,9 @@ export interface ArenaProgress {
   defeatedOpponents: string[];
   lastBattle: BattleResult | null;
   history: BattleResult[];
+  arenaXp: number;
+  arenaLevel: number;
+  winStreak: number;
+  bestStreak: number;
+  rivalMastery: Record<string, ArenaRivalMastery>;
 }

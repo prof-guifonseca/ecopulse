@@ -16,6 +16,7 @@ import {
   opponentToFighter,
   simulateBattle,
 } from '@/lib/battle/rules';
+import { applyArenaBattleProgress } from '@/lib/arena/progress';
 import { scanRecordFromProduct } from '@/lib/simulatedScan';
 
 /**
@@ -195,13 +196,23 @@ function seedArenaDemoIfEmpty(): void {
     playedAt: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
   });
 
-  useArenaStore.getState().setDemoProgress({
-    wins: result.outcome === 'win' ? 1 : 0,
-    losses: result.outcome === 'loss' ? 1 : 0,
-    defeatedOpponents: result.outcome === 'win' ? [opponent.id] : [],
-    lastBattle: result,
-    history: [result],
-  });
+  useArenaStore.getState().setDemoProgress(
+    applyArenaBattleProgress(
+      {
+        wins: 0,
+        losses: 0,
+        defeatedOpponents: [],
+        lastBattle: null,
+        history: [],
+        arenaXp: 0,
+        arenaLevel: 1,
+        winStreak: 0,
+        bestStreak: 0,
+        rivalMastery: {},
+      },
+      result
+    )
+  );
 }
 
 /**

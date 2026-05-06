@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ArenaProgress, BattleResult } from '@/types';
+import { applyArenaBattleProgress, arenaLevelFromXp } from '@/lib/arena/progress';
 import { createSafeJSONStorage } from './storage';
 
 interface ArenaState extends ArenaProgress {
@@ -16,42 +17,47 @@ const DEFAULT_ARENA: ArenaProgress = {
   defeatedOpponents: [],
   lastBattle: null,
   history: [],
+  arenaXp: 0,
+  arenaLevel: 1,
+  winStreak: 0,
+  bestStreak: 0,
+  rivalMastery: {},
 };
+
+export function migrateArenaStateToV2(state: Partial<ArenaProgress> | undefined): ArenaProgress {
+  const prev = { ...DEFAULT_ARENA, ...(state ?? {}) };
+  return {
+    ...prev,
+    defeatedOpponents: prev.defeatedOpponents ?? [],
+    history: prev.history ?? [],
+    arenaXp: prev.arenaXp ?? 0,
+    arenaLevel: prev.arenaLevel ?? arenaLevelFromXp(prev.arenaXp ?? 0),
+    winStreak: prev.winStreak ?? 0,
+    bestStreak: prev.bestStreak ?? 0,
+    rivalMastery: prev.rivalMastery ?? {},
+  };
+}
 
 export const useArenaStore = create<ArenaState>()(
   persist(
     (set) => ({
       ...DEFAULT_ARENA,
 
-      recordBattle: (result) =>
-        set((state) => {
-          const won = result.outcome === 'win';
-          const defeatedOpponents =
-            won && !state.defeatedOpponents.includes(result.opponentId)
-              ? [...state.defeatedOpponents, result.opponentId]
-              : state.defeatedOpponents;
-
-          return {
-            wins: state.wins + (won ? 1 : 0),
-            losses: state.losses + (result.outcome === 'loss' ? 1 : 0),
-            defeatedOpponents,
-            lastBattle: result,
-            history: [result, ...state.history].slice(0, 8),
-          };
-        }),
+      recordBattle: (result) => set((state) => applyArenaBattleProgress(state, result)),
 
       setDemoProgress: (progress) => set(progress),
     }),
     {
       name: 'ecopulse:arena',
-      version: 1,
-      storage: createSafeJSONStorage<ArenaState>(),
+      version: 2,
+      storage: createSafeJSONStorage<ArenaProgress>(),
+      migrate: (state) => migrateArenaStateToV2(state as Partial<ArenaProgress>),
     }
   )
 );
 
 if (typeof window !== 'undefined') {
   useArenaStore.persist.setOptions({
-    storage: createSafeJSONStorage<ArenaState>(),
+    storage: createSafeJSONStorage<ArenaProgress>(),
   });
 }

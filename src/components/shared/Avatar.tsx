@@ -4,8 +4,8 @@ import type { AvatarLoadout, AvatarOutfits } from '@/types';
 import { loadoutFromLegacy } from '@/data';
 import { AvatarRenderer } from './AvatarRenderer';
 
-type Size = 'sm' | 'md' | 'lg' | 'xl';
-const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120 };
+type Size = 'sm' | 'md' | 'lg' | 'xl' | 'stage';
+const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120, stage: 124 };
 
 interface Props {
   baseId?: string | null;
