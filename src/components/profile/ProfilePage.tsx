@@ -1,10 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Pencil } from 'lucide-react';
+import { MapPin, Pencil } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
+import { useArenaStore } from '@/store/arenaStore';
+import { useScanHistoryStore } from '@/store/scanHistoryStore';
+import { useCurrentRegion } from '@/lib/region';
 import { GEAR_SETS } from '@/data';
 import { Avatar } from '@/components/shared/Avatar';
 import { Icon } from '@/components/ui/Icon';
@@ -13,10 +16,15 @@ import { Tabs } from '@/components/ui/Tabs';
 import { PageShell } from '@/components/ui/PageShell';
 import { Card } from '@/components/ui/Card';
 import { gardenStage, GARDEN_LABEL } from '@/lib/garden';
+import { selectEcoQualityIndex } from '@/lib/ecoMultiplier';
+import { chapterProgress } from '@/lib/journey';
+import { TRIBES, type TribeId } from '@/data/tribes';
 import { Stat } from '@/components/ui/Stat';
 import { ImpactPanel } from './ImpactPanel';
 import { ShopPanel } from './ShopPanel';
 import { BadgesPanel } from './BadgesPanel';
+import { JourneySection } from './JourneySection';
+import { FlorestaSection } from './FlorestaSection';
 
 const PROFILE_TABS = [
   { value: 'impact' as const, label: 'Impacto' },
@@ -40,10 +48,26 @@ export function ProfilePage() {
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
   const openAvatarBuilder = useUIStore((s) => s.openAvatarBuilder);
 
-  const pct = Math.min(100, Math.round((xp / xpToNext) * 100));
-  const stage = gardenStage(level);
+  const scannedProducts = useGameStore((s) => s.scannedProducts);
+  const visitedPoints = useGameStore((s) => s.visitedPoints);
+  const defeated = useArenaStore((s) => s.defeatedOpponents);
+  const history = useScanHistoryStore((s) => s.history);
+  const region = useCurrentRegion();
+  const tribeId = (tribe ?? 'guardioes') as TribeId;
+  const tribeLabel = TRIBES[tribeId]?.label ?? 'Guardiões';
   const activeSet = GEAR_SETS.find((item) => item.id === avatarLoadout.activeSetId);
   const loadoutLabel = activeSet?.name ?? 'Modo livre';
+
+  const eco = selectEcoQualityIndex(history);
+  const journey = chapterProgress({
+    level,
+    scans: scannedProducts.length,
+    ecoIndex: eco.letter,
+    visitedPointIds: visitedPoints,
+    defeatedRivals: defeated.length,
+  });
+  const pct = Math.min(100, Math.round((xp / xpToNext) * 100));
+  const stage = gardenStage(level, journey.current);
 
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
@@ -63,9 +87,13 @@ export function ProfilePage() {
           <div className="min-w-0">
             <h1 className="t-display truncate">{name}</h1>
             <p className="mt-1 t-caption">
-              Nv {level} · {loadoutLabel}
+              Nv {level} · {tribeLabel}
             </p>
-            <p className="mt-1 t-caption">{tribe === 'guardioes' ? 'Guardiões' : 'EcoWarriors'}</p>
+            <p className="mt-1 t-caption text-[var(--text-secondary)]">{loadoutLabel}</p>
+            <p className="mt-1 inline-flex items-center gap-1 t-caption text-[var(--text-muted)]">
+              <Icon icon={MapPin} size={11} />
+              {region.blurb}
+            </p>
           </div>
         </div>
 
@@ -85,6 +113,9 @@ export function ProfilePage() {
           <ProgressBar value={pct} size="sm" />
         </div>
       </Card>
+
+      <JourneySection />
+      <FlorestaSection />
 
       <Tabs items={PROFILE_TABS} value={tab} onChange={setTab} />
 

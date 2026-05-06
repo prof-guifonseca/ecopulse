@@ -38,33 +38,43 @@ export function arenaLevelProgress(xp: number) {
   };
 }
 
+export interface BattleRewardOptions {
+  /** Multiplier on win/loss/draw XP (NOT applied to first-win bonus). */
+  loadoutMultiplier?: number;
+}
+
 export function battleArenaXpReward(
   result: BattleResult,
-  existingMastery?: ArenaRivalMastery
+  existingMastery?: ArenaRivalMastery,
+  options: BattleRewardOptions = {}
 ) {
-  const baseReward =
+  const multiplier = options.loadoutMultiplier ?? 1;
+  const rawBase =
     result.outcome === 'win'
       ? result.opponent.arenaXpReward ?? ARENA_XP_REWARDS.win
       : ARENA_XP_REWARDS[result.outcome];
+  const baseReward = Math.round(rawBase * multiplier);
   const firstWinBonus =
     result.outcome === 'win' && (existingMastery?.wins ?? 0) === 0 ? FIRST_RIVAL_WIN_BONUS : 0;
   return {
     baseReward,
     firstWinBonus,
     total: baseReward + firstWinBonus,
+    multiplier,
   };
 }
 
 export function applyArenaBattleProgress(
   progress: ArenaProgress,
-  result: BattleResult
+  result: BattleResult,
+  options: BattleRewardOptions = {}
 ): ArenaProgress {
   const previousMastery = progress.rivalMastery[result.opponentId] ?? {
     wins: 0,
     losses: 0,
     draws: 0,
   };
-  const reward = battleArenaXpReward(result, previousMastery);
+  const reward = battleArenaXpReward(result, previousMastery, options);
   const won = result.outcome === 'win';
   const lost = result.outcome === 'loss';
   const drew = result.outcome === 'draw';

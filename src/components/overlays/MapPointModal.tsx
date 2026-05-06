@@ -1,9 +1,12 @@
 'use client';
 
 import { CheckCircle2, Clock, MapPin, Phone, Ruler } from 'lucide-react';
-import { MAP_POINTS, MAP_DETAIL_LABELS, MAP_TYPE_ICON } from '@/data';
+import { MAP_POINTS, MAP_DETAIL_LABELS, MAP_TYPE_ICON, getMissionTemplate } from '@/data';
+import { visitMeetsTemplate } from '@/data/missionPool';
+import type { TribeId } from '@/data/tribes';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
+import { useUserStore } from '@/store/userStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -32,8 +35,19 @@ export function MapPointModal({ id }: Props) {
   const visit = () => {
     addVisited(id);
     awardTokens(10);
-    const { visitedPoints, dailyMissions, markMission } = useGameStore.getState();
-    if (!dailyMissions.map) {
+    const game = useGameStore.getState();
+    const { visitedPoints, dailyMissions, markMission, todaysMissionIds } = game;
+    // Resolve today's map template; mark only when the visit type matches
+    // its affinity filter (per tribe) — falls back to "any visit counts".
+    const tribe = (useUserStore.getState().tribe ?? 'guardioes') as TribeId;
+    const mapTemplateId = todaysMissionIds.find((mid) => {
+      const tpl = getMissionTemplate(mid);
+      return tpl?.slot === 'map';
+    });
+    const mapTemplate = getMissionTemplate(mapTemplateId);
+    const eligible = mapTemplate ? visitMeetsTemplate(mapTemplate, point.type, tribe) : true;
+
+    if (eligible && !dailyMissions.map) {
       markMission('map', true);
       showToast('Missão diária: visitar Mapa concluída', 'success');
     } else {

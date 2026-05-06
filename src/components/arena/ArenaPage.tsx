@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Shield, Sparkles, Swords, Zap, type LucideIcon } from 'lucide-react';
-import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, arenaStageVisual, getGearSet } from '@/data';
+import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, arenaStageVisual, getGearSet, TRIBES } from '@/data';
+import type { TribeId } from '@/data/tribes';
 import type {
   ArenaOpponent,
   ArenaProgress,
@@ -22,7 +23,9 @@ import {
   startBattleSession,
 } from '@/lib/battle/rules';
 import { battleArenaXpReward, FIRST_RIVAL_WIN_BONUS } from '@/lib/arena/progress';
+import { computeLoadoutAffinity } from '@/lib/arena/affinity';
 import { ARENA_ARCHETYPE_LABELS } from '@/lib/arena/presentation';
+import { DOCTRINE_BY_RIVAL, DOCTRINE_LABEL } from '@/lib/doctrines';
 import { unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
 import { cn } from '@/lib/cn';
@@ -168,16 +171,35 @@ export function ArenaPage() {
       setCompletedBattleId(result.id);
 
       const arena = useArenaStore.getState();
-      const reward = battleArenaXpReward(result, arena.rivalMastery[result.opponentId]);
+      const user = useUserStore.getState();
+      const affinity = computeLoadoutAffinity(user.avatarLoadout, user.tribe);
+      const reward = battleArenaXpReward(
+        result,
+        arena.rivalMastery[result.opponentId],
+        { loadoutMultiplier: affinity.multiplier }
+      );
       const nextWins = arena.wins + (result.outcome === 'win' ? 1 : 0);
-      arena.recordBattle(result);
+      arena.recordBattle(result, affinity.multiplier);
 
       const opponent = ARENA_OPPONENTS.find((item) => item.id === result.opponentId);
       if (result.outcome === 'win') {
         unlockBadge('arena-first');
         if (nextWins >= 3) unlockBadge('arena-trio');
+        // Grant doctrine on first defeat of this rival.
+        const doctrineId = DOCTRINE_BY_RIVAL[result.opponentId];
+        const isFirstWin = (arena.rivalMastery[result.opponentId]?.wins ?? 0) === 0;
+        if (doctrineId && isFirstWin) {
+          if (user.adoptDoctrine(doctrineId)) {
+            showToast(`Doutrina adotada · ${DOCTRINE_LABEL[doctrineId]}`, 'reward', 4200);
+          }
+        }
         fireConfetti();
-        showToast(`+${reward.total} Arena XP · ${opponent?.defeatLine ?? 'Vitória registrada.'}`, 'reward', 4200);
+        const alignedSuffix = affinity.aligned ? ' · loadout alinhado +25% XP' : '';
+        showToast(
+          `+${reward.total} Arena XP${alignedSuffix} · ${opponent?.defeatLine ?? 'Vitória registrada.'}`,
+          'reward',
+          4200
+        );
       } else if (result.outcome === 'loss') {
         showToast(`+${reward.total} Arena XP · ${opponent?.victoryLine ?? 'Derrota sem custo.'}`, 'info', 4200);
       } else {
@@ -249,6 +271,8 @@ export function ArenaPage() {
             <span className="absolute left-7 right-7 top-9 h-px bg-[var(--line-soft)]" aria-hidden />
             {orderedOpponents.map((opponent) => {
               const locked = !isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents);
+              const tribeDef = TRIBES[(tribe ?? 'guardioes') as TribeId];
+              const isPatron = opponent.id === tribeDef.patronRivalId;
               return (
                 <OpponentCard
                   key={opponent.id}
@@ -259,6 +283,8 @@ export function ArenaPage() {
                   mastery={rivalMastery[opponent.id]}
                   className="w-[176px] shrink-0"
                   onSelect={() => handleSelectOpponent(opponent)}
+                  isPatron={isPatron}
+                  patronLabel={isPatron ? tribeDef.label : undefined}
                 />
               );
             })}

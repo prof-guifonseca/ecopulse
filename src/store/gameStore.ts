@@ -2,8 +2,30 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { DailyMissionsProgress } from '@/types';
+import type { DailyMissionsProgress, Score } from '@/types';
+import { MAP_POINTS } from '@/data';
 import { createSafeJSONStorage, readLegacyState } from './storage';
+
+export interface RealImpact {
+  /** Trees planted via donation (s6) or chapter-end ritual. */
+  treesPlanted: number;
+  /** Estimated kg of batteries dropped off (0.5 kg per visit). */
+  batteriesKgEstimated: number;
+  /** Estimated liters of cooking oil delivered (1 L per visit). */
+  oilLitersEstimated: number;
+  /** Repairs registered (1 per reparo visit). */
+  repairsCount: number;
+  /** Exchanges/swaps registered (1 per troca visit). */
+  exchangesCount: number;
+}
+
+const EMPTY_REAL_IMPACT: RealImpact = {
+  treesPlanted: 0,
+  batteriesKgEstimated: 0,
+  oilLitersEstimated: 0,
+  repairsCount: 0,
+  exchangesCount: 0,
+};
 
 interface GameState {
   scannedProducts: string[];
@@ -16,6 +38,12 @@ interface GameState {
   badges: string[];
   dailyMissions: DailyMissionsProgress;
   lastMissionDay: string | null;
+  /** Mission template ids picked for today's three slots (scan, map, social). */
+  todaysMissionIds: string[];
+  /** Score of the most recent scan — used to validate scan-quality missions. */
+  lastScanScore: Score | null;
+  /** Floresta EcoPulse — endgame meta counter (simulated). */
+  realImpact: RealImpact;
 
   addScannedProduct: (id: string) => void;
   addVisitedPoint: (id: string) => void;
@@ -30,6 +58,9 @@ interface GameState {
   claimBonus: () => void;
   resetDailyMissions: (day: string) => void;
   setLastMissionDay: (day: string) => void;
+  setTodaysMissionIds: (ids: string[]) => void;
+  setLastScanScore: (score: Score | null) => void;
+  bumpRealImpact: (delta: Partial<RealImpact>) => void;
 }
 
 const DEFAULT_GAME = {
@@ -43,7 +74,57 @@ const DEFAULT_GAME = {
   badges: [] as string[],
   dailyMissions: { scan: false, likes: 0, map: false, bonusClaimed: false } as DailyMissionsProgress,
   lastMissionDay: null as string | null,
+  todaysMissionIds: [] as string[],
+  lastScanScore: null as Score | null,
+  realImpact: { ...EMPTY_REAL_IMPACT } as RealImpact,
 };
+
+/** Maps a visited map-point id to the realImpact delta that visit produces. */
+function realImpactDeltaForVisit(pointId: string): Partial<RealImpact> {
+  const point = MAP_POINTS.find((p) => p.id === pointId);
+  if (!point) return {};
+  switch (point.type) {
+    case 'baterias':
+      return { batteriesKgEstimated: 0.5 };
+    case 'oleo':
+      return { oilLitersEstimated: 1 };
+    case 'reparo':
+      return { repairsCount: 1 };
+    case 'trocas':
+      return { exchangesCount: 1 };
+    default:
+      return {};
+  }
+}
+
+function applyImpactDelta(prev: RealImpact, delta: Partial<RealImpact>): RealImpact {
+  return {
+    treesPlanted: prev.treesPlanted + (delta.treesPlanted ?? 0),
+    batteriesKgEstimated: prev.batteriesKgEstimated + (delta.batteriesKgEstimated ?? 0),
+    oilLitersEstimated: prev.oilLitersEstimated + (delta.oilLitersEstimated ?? 0),
+    repairsCount: prev.repairsCount + (delta.repairsCount ?? 0),
+    exchangesCount: prev.exchangesCount + (delta.exchangesCount ?? 0),
+  };
+}
+
+export function migrateGameStateToV2(state: Partial<GameState>): GameState {
+  const merged = { ...DEFAULT_GAME, ...state } as GameState;
+  // Backfill realImpact from visitedPoints when older installs upgrade.
+  const persistedImpact =
+    state.realImpact && typeof state.realImpact === 'object' ? state.realImpact : null;
+  if (!persistedImpact) {
+    let impact: RealImpact = { ...EMPTY_REAL_IMPACT };
+    for (const id of merged.visitedPoints ?? []) {
+      impact = applyImpactDelta(impact, realImpactDeltaForVisit(id));
+    }
+    merged.realImpact = impact;
+  } else {
+    merged.realImpact = { ...EMPTY_REAL_IMPACT, ...persistedImpact };
+  }
+  if (!Array.isArray(merged.todaysMissionIds)) merged.todaysMissionIds = [];
+  if (merged.lastScanScore === undefined) merged.lastScanScore = null;
+  return merged;
+}
 
 export const useGameStore = create<GameState>()(
   persist(
@@ -56,9 +137,14 @@ export const useGameStore = create<GameState>()(
         ),
 
       addVisitedPoint: (id) =>
-        set((s) =>
-          s.visitedPoints.includes(id) ? s : { visitedPoints: [...s.visitedPoints, id] }
-        ),
+        set((s) => {
+          if (s.visitedPoints.includes(id)) return s;
+          const delta = realImpactDeltaForVisit(id);
+          return {
+            visitedPoints: [...s.visitedPoints, id],
+            realImpact: applyImpactDelta(s.realImpact, delta),
+          };
+        }),
 
       addOwnedShopItem: (id) =>
         set((s) =>
@@ -112,15 +198,22 @@ export const useGameStore = create<GameState>()(
         }),
 
       setLastMissionDay: (day) => set({ lastMissionDay: day }),
+
+      setTodaysMissionIds: (ids) => set({ todaysMissionIds: ids }),
+
+      setLastScanScore: (score) => set({ lastScanScore: score }),
+
+      bumpRealImpact: (delta) =>
+        set((s) => ({ realImpact: applyImpactDelta(s.realImpact, delta) })),
     }),
     {
       name: 'ecopulse:game',
-      version: 1,
+      version: 2,
       storage: createSafeJSONStorage<GameState>(),
       migrate: (state) => {
         const legacy = readLegacyState();
         if (legacy) {
-          return {
+          return migrateGameStateToV2({
             ...(state as GameState),
             scannedProducts: legacy.scannedProducts ?? DEFAULT_GAME.scannedProducts,
             visitedPoints: legacy.visitedPoints ?? [],
@@ -132,9 +225,9 @@ export const useGameStore = create<GameState>()(
             badges: legacy.badges ?? DEFAULT_GAME.badges,
             dailyMissions: legacy.dailyMissions ?? DEFAULT_GAME.dailyMissions,
             lastMissionDay: legacy.lastMissionDay ?? null,
-          } as GameState;
+          } as Partial<GameState>);
         }
-        return state as GameState;
+        return migrateGameStateToV2(state as Partial<GameState>);
       },
     }
   )

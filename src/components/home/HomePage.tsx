@@ -14,7 +14,7 @@ import {
   Swords,
   type LucideIcon,
 } from 'lucide-react';
-import { DAILY_MISSIONS } from '@/data';
+import { DAILY_MISSIONS, getMissionTemplate } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { Avatar } from '@/components/shared/Avatar';
@@ -24,6 +24,7 @@ import { Icon } from '@/components/ui/Icon';
 import { PageShell } from '@/components/ui/PageShell';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useHydrated } from '@/hooks/useHydrated';
+import { useJourneyTransition } from '@/hooks/useJourneyTransition';
 import {
   buildMissionChecks,
   resolveDailyAction,
@@ -33,7 +34,10 @@ import {
 } from '@/lib/missions';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { cn } from '@/lib/cn';
+import type { TribeId } from '@/data/tribes';
 import { HomeSkeleton } from './HomeSkeleton';
+import { ChapterPill } from './ChapterPill';
+import { FlorestaCounterStrip } from './FlorestaCounterStrip';
 
 const DAILY_MISSION_TARGET = 3;
 
@@ -46,13 +50,16 @@ const ACTION_ICONS: Record<DailyActionKind, LucideIcon> = {
 };
 
 export function HomePage() {
+  useJourneyTransition();
   const hydrated = useHydrated();
   const name = useUserStore((s) => s.name);
   const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const tokens = useUserStore((s) => s.tokens);
   const streak = useUserStore((s) => s.streak);
   const level = useUserStore((s) => s.level);
+  const tribe = useUserStore((s) => (s.tribe ?? 'guardioes') as TribeId);
   const dailyMissions = useGameStore((s) => s.dailyMissions);
+  const todaysMissionIds = useGameStore((s) => s.todaysMissionIds);
 
   if (!hydrated) return <HomeSkeleton />;
 
@@ -60,6 +67,10 @@ export function HomePage() {
   const action = resolveDailyAction(checks, dailyMissions.bonusClaimed);
   const progressPct = (action.completedCount / DAILY_MISSION_TARGET) * 100;
   const ActionIcon = ACTION_ICONS[action.kind];
+
+  // Build the 3 mission rows from the active pool when populated; fallback
+  // to the legacy DAILY_MISSIONS list otherwise.
+  const rows = buildMissionRows(todaysMissionIds, dailyMissions, tribe);
 
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
@@ -82,8 +93,14 @@ export function HomePage() {
             <HomeMetric icon={Flame} label="Seq." value={`${streak}d`} />
             <HomeMetric icon={Coins} label="Tokens" value={tokens} reward />
           </div>
+
+          <div className="mt-4">
+            <ChapterPill />
+          </div>
         </Card>
       </section>
+
+      <FlorestaCounterStrip />
 
       <Card tone="solid" padded={false} className="px-5 py-5">
         <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-3">
@@ -107,30 +124,34 @@ export function HomePage() {
         </div>
 
         <ul className="mt-4 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-tint-1">
-          {DAILY_MISSIONS.map((mission) => {
-            const isDone = checks[mission.id as keyof typeof checks];
-            const MissionIcon = resolveIcon(mission.iconName);
+          {rows.map((row) => {
+            const MissionIcon = resolveIcon(row.iconName);
             return (
-              <li key={mission.id} className="flex items-center gap-3 px-3 py-3">
+              <li key={row.id} className="flex items-center gap-3 px-3 py-3">
                 <span
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
-                    isDone
+                    row.done
                       ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
                       : 'border-soft text-[var(--text-secondary)]'
                   )}
                 >
-                  {isDone ? (
+                  {row.done ? (
                     <Icon icon={Check} size={14} strokeWidth={2.6} />
                   ) : MissionIcon ? (
                     <Icon icon={MissionIcon} size={15} />
                   ) : null}
                 </span>
-                <span className={cn('min-w-0 flex-1 truncate t-body-sm', isDone && 'text-[var(--accent-green)]')}>
-                  {mission.title}
+                <span
+                  className={cn(
+                    'min-w-0 flex-1 truncate t-body-sm',
+                    row.done && 'text-[var(--accent-green)]'
+                  )}
+                >
+                  {row.title}
                 </span>
                 <span className="shrink-0 t-caption font-semibold text-[var(--accent-gold)]">
-                  +{mission.reward}
+                  +{row.reward}
                 </span>
               </li>
             );
@@ -141,6 +162,57 @@ export function HomePage() {
       </Card>
     </PageShell>
   );
+}
+
+interface MissionRow {
+  id: string;
+  title: string;
+  reward: number;
+  iconName: string;
+  done: boolean;
+}
+
+function buildMissionRows(
+  ids: string[],
+  dailyMissions: { scan: boolean; likes: number; map: boolean },
+  tribe: TribeId
+): MissionRow[] {
+  if (!ids || ids.length === 0) {
+    return DAILY_MISSIONS.map((m) => ({
+      id: m.id,
+      title: m.title,
+      reward: m.reward,
+      iconName: m.iconName,
+      done:
+        m.check === 'scan'
+          ? dailyMissions.scan
+          : m.check === 'likes'
+            ? dailyMissions.likes >= (m.target ?? 2)
+            : dailyMissions.map,
+    }));
+  }
+  const order: Array<'scan' | 'map' | 'social'> = ['scan', 'map', 'social'];
+  return order
+    .map((slot) => {
+      const tplId = ids.find((i) => getMissionTemplate(i)?.slot === slot);
+      const tpl = getMissionTemplate(tplId);
+      if (!tpl) return null;
+      const flavor = tpl.flavorByTribe[tribe] ?? tpl.flavorByTribe.guardioes;
+      const done =
+        slot === 'scan'
+          ? dailyMissions.scan
+          : slot === 'map'
+            ? dailyMissions.map
+            : dailyMissions.likes >= tpl.target;
+      return {
+        id: tpl.id,
+        title: flavor.title,
+        reward: tpl.reward,
+        iconName: tpl.iconName,
+        done,
+      } satisfies MissionRow;
+    })
+    .filter((x): x is MissionRow => x !== null);
 }
 
 function HomeMetric({

@@ -16,9 +16,12 @@ interface Props {
   mastery?: ArenaRivalMastery;
   className?: string;
   onSelect: () => void;
+  /** When true, render a "Patrono · Tribo" banner — this rival is patron of the player's tribe. */
+  isPatron?: boolean;
+  patronLabel?: string;
 }
 
-export function OpponentCard({ opponent, selected, defeated, locked, mastery, className, onSelect }: Props) {
+export function OpponentCard({ opponent, selected, defeated, locked, mastery, className, onSelect, isPatron, patronLabel }: Props) {
   const stage = arenaStageVisual(opponent.stageTheme);
 
   return (
@@ -38,6 +41,14 @@ export function OpponentCard({ opponent, selected, defeated, locked, mastery, cl
           locked && 'opacity-50'
         )}
       >
+        {isPatron ? (
+          <span
+            className="absolute right-2 top-2 z-10 rounded-full bg-[var(--accent-gold)] px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-[var(--bg-primary)]"
+            aria-label={`Patrono da tribo ${patronLabel ?? ''}`.trim()}
+          >
+            Patrono{patronLabel ? ` · ${patronLabel}` : ''}
+          </span>
+        ) : null}
         <div
           aria-hidden
           className="absolute inset-x-0 top-0 h-20 opacity-60"

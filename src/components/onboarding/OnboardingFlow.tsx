@@ -4,14 +4,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
+import type { TribeId } from '@/data/tribes';
 import { OnboardingStepVision } from './OnboardingStepVision';
 import { OnboardingStepPillars } from './OnboardingStepPillars';
+import { OnboardingStepTribe } from './OnboardingStepTribe';
 import { OnboardingStepName } from './OnboardingStepName';
 import { OnboardingDots } from './OnboardingDots';
 
 const DEFAULT_AVATAR_BASE = 'base2';
-const DEFAULT_TRIBE = 'guardioes';
-const TOTAL_STEPS = 3;
+const DEFAULT_TRIBE: TribeId = 'guardioes';
+const TOTAL_STEPS = 4;
 
 export function OnboardingFlow() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export function OnboardingFlow() {
   const completeOnboarding = useUserStore((s) => s.completeOnboarding);
   const finishing = useRef(false);
   const [step, setStep] = useState(0);
+  const [tribe, setTribe] = useState<TribeId>(DEFAULT_TRIBE);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -32,7 +35,7 @@ export function OnboardingFlow() {
     completeOnboarding({
       name,
       avatarBase: DEFAULT_AVATAR_BASE,
-      tribe: DEFAULT_TRIBE,
+      tribe,
     });
     router.replace('/scanner?welcome=1');
   };
@@ -43,11 +46,20 @@ export function OnboardingFlow() {
         <OnboardingStepVision onNext={() => setStep(1)} />
       ) : step === 1 ? (
         <OnboardingStepPillars onNext={() => setStep(2)} onBack={() => setStep(0)} />
+      ) : step === 2 ? (
+        <OnboardingStepTribe
+          initial={tribe}
+          onNext={(t) => {
+            setTribe(t);
+            setStep(3);
+          }}
+          onBack={() => setStep(1)}
+        />
       ) : (
         <OnboardingStepName
           avatarBase={DEFAULT_AVATAR_BASE}
           onSubmit={finish}
-          onBack={() => setStep(1)}
+          onBack={() => setStep(2)}
         />
       )}
 
