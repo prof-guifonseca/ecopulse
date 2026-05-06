@@ -14,6 +14,18 @@ describe('AvatarRenderer', () => {
     }
   });
 
+  it('renders every Arena pose at duel size', () => {
+    const loadout = defaultLoadoutForSet('cyber-reciclador', 'base1');
+    const poses = ['idle', 'builder', 'battleReady', 'attack', 'defend', 'focus', 'victory', 'defeat'] as const;
+
+    for (const pose of poses) {
+      const markup = renderToStaticMarkup(<AvatarRenderer loadout={loadout} size="duel" pose={pose} />);
+
+      expect(markup).toContain('width="152"');
+      expect(markup).toContain('<svg');
+    }
+  });
+
   it('renders every individual gear item as a highlighted wearable layer', () => {
     for (const item of GEAR_ITEMS) {
       const markup = renderToStaticMarkup(

@@ -11,9 +11,9 @@ import {
 import { paletteForGear } from '@/components/avatar/palettes';
 import { cn } from '@/lib/cn';
 
-type Size = 'sm' | 'md' | 'lg' | 'xl' | 'stage';
+type Size = 'sm' | 'md' | 'lg' | 'xl' | 'stage' | 'duel';
 
-const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120, stage: 124 };
+const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120, stage: 124, duel: 152 };
 
 const SLOT_ORDER: GearSlot[] = [
   'aura',

@@ -1,9 +1,16 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Shield, Swords, Trophy, Zap, type LucideIcon } from 'lucide-react';
-import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, getGearSet } from '@/data';
-import type { ArenaOpponent, ArenaProgress, BattleAction, BattleResult, BattleSession } from '@/types';
+import { Shield, Sparkles, Swords, Zap, type LucideIcon } from 'lucide-react';
+import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, arenaStageVisual, getGearSet } from '@/data';
+import type {
+  ArenaOpponent,
+  ArenaProgress,
+  ArenaRivalMastery,
+  BattleAction,
+  BattleResult,
+  BattleSession,
+} from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -15,8 +22,10 @@ import {
   startBattleSession,
 } from '@/lib/battle/rules';
 import { battleArenaXpReward, FIRST_RIVAL_WIN_BONUS } from '@/lib/arena/progress';
+import { ARENA_ARCHETYPE_LABELS } from '@/lib/arena/presentation';
 import { unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
+import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Button } from '@/components/ui/Button';
@@ -36,6 +45,7 @@ export function ArenaPage() {
   );
   const [selectedOpponentId, setSelectedOpponentId] = useState(orderedOpponents[0]?.id ?? '');
   const [battleSession, setBattleSession] = useState<BattleSession | null>(null);
+  const [battleMasteryAtStart, setBattleMasteryAtStart] = useState<ArenaRivalMastery | undefined>(undefined);
   const [completedBattleId, setCompletedBattleId] = useState<string | null>(null);
 
   const name = useUserStore((s) => s.name);
@@ -119,6 +129,7 @@ export function ArenaPage() {
       }
       setSelectedOpponentId(opponent.id);
       setBattleSession(null);
+      setBattleMasteryAtStart(undefined);
       setCompletedBattleId(null);
     },
     [battleSession?.status, defeatedOpponents, orderedOpponents, showToast]
@@ -130,6 +141,7 @@ export function ArenaPage() {
     const seed = `${Date.now()}:${selectedOpponent.id}:${wins}:${losses}:${arenaXp}`;
     const opponent = opponentToFighter(selectedOpponent);
     setCompletedBattleId(null);
+    setBattleMasteryAtStart(rivalMastery[selectedOpponent.id]);
     setBattleSession(
       startBattleSession({
         player: playerFighter,
@@ -140,7 +152,7 @@ export function ArenaPage() {
       })
     );
     showToast(selectedOpponent.introLine, 'info', 3600);
-  }, [arenaXp, losses, playerFighter, selectedOpponent, selectedUnlocked, showToast, wins]);
+  }, [arenaXp, losses, playerFighter, rivalMastery, selectedOpponent, selectedUnlocked, showToast, wins]);
 
   const handleBattleAction = useCallback((action: BattleAction) => {
     hapticTap();
@@ -175,6 +187,12 @@ export function ArenaPage() {
     [completedBattleId, fireConfetti, showToast]
   );
 
+  const handleChangeOpponent = useCallback(() => {
+    setBattleSession(null);
+    setBattleMasteryAtStart(undefined);
+    setCompletedBattleId(null);
+  }, []);
+
   if (!hydrated) {
     return (
       <PageShell spacing={5}>
@@ -186,26 +204,17 @@ export function ArenaPage() {
   }
 
   return (
-    <PageShell spacing={5} className="max-w-full overflow-hidden pb-3">
-      <header className="pt-2">
-        <div className="flex items-center justify-between gap-3">
+    <PageShell spacing={4} className="max-w-full overflow-hidden pb-3">
+      <header className="pt-1">
+        <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="t-eyebrow">Arena Tática</p>
-            <h1 className="t-display mt-1.5 max-w-full break-words leading-[0.95]">
-              Escolha.
-              <br />
-              Responda.
-              <br />
-              <span className="t-italic-soft">Domine</span>.
-            </h1>
+            <h1 className="t-headline max-w-full break-words leading-none">Arena Tática</h1>
+            <p className="mt-1 t-caption">Duelo local por rounds · Arena XP sem Eco-Tokens</p>
           </div>
-          <span className="hidden shrink-0 rounded-full border-soft bg-tint-1 px-3 py-1 t-caption sm:inline">
+          <span className="shrink-0 rounded-full border-soft bg-tint-1 px-3 py-1 t-caption">
             0 tokens por luta
           </span>
         </div>
-        <p className="mt-3 t-body-sm">
-          Mini-RPG local por rounds. Vitória dá Arena XP e domínio de rival, nunca Eco-Tokens.
-        </p>
       </header>
 
       {battleSession ? (
@@ -213,8 +222,11 @@ export function ArenaPage() {
           key={battleSession.id}
           session={battleSession}
           stageTheme={selectedOpponent?.stageTheme}
+          masteryAtStart={battleMasteryAtStart}
           onAction={handleBattleAction}
           onComplete={handleBattleComplete}
+          onRematch={handleStartBattle}
+          onChangeOpponent={handleChangeOpponent}
         />
       ) : selectedOpponent ? (
         <ArenaSetup
@@ -231,10 +243,11 @@ export function ArenaPage() {
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="t-title">Trilha de rivais</h2>
-          <span className="t-caption">contra IA · local</span>
+          <span className="t-caption">{defeatedOpponents.length}/{orderedOpponents.length} dominados</span>
         </div>
         <div className="-mx-5 overflow-x-auto px-5 pb-1">
-          <div className="flex gap-3">
+          <div className="relative flex gap-3 pb-1">
+            <span className="absolute left-7 right-7 top-9 h-px bg-[var(--line-soft)]" aria-hidden />
             {orderedOpponents.map((opponent) => {
               const locked = !isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents);
               return (
@@ -245,7 +258,7 @@ export function ArenaPage() {
                   defeated={defeatedOpponents.includes(opponent.id)}
                   locked={locked}
                   mastery={rivalMastery[opponent.id]}
-                  className="w-[284px] shrink-0"
+                  className="w-[176px] shrink-0"
                   onSelect={() => handleSelectOpponent(opponent)}
                 />
               );
@@ -292,46 +305,60 @@ function ArenaSetup({
 }) {
   const firstWinBonus = masteryWins === 0 ? FIRST_RIVAL_WIN_BONUS : 0;
   const xpPreview = opponent.arenaXpReward + firstWinBonus;
+  const stage = arenaStageVisual(opponent.stageTheme);
 
   return (
-    <Card tone="hero" padded={false} className="px-4 py-5">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="t-eyebrow">Próximo rival</p>
+    <Card
+      tone="hero"
+      padded={false}
+      className="relative isolate border border-[var(--line-soft)] px-4 py-5 shadow-[var(--shadow-deep-glow)]"
+      style={{
+        background: `radial-gradient(circle at 50% 12%, ${stage.palette.glow}2f, transparent 40%), linear-gradient(180deg, ${stage.palette.skyTop}, ${stage.palette.skyBottom})`,
+      }}
+    >
+      <div aria-hidden className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/46 to-transparent" />
+      <div className="relative z-10 flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="t-eyebrow">{stage.name}</p>
           <h2 className="t-headline mt-1 truncate">{opponent.name}</h2>
-          <p className="mt-1 t-body-sm">&ldquo;{opponent.quote}&rdquo;</p>
+          <p className="mt-1 line-clamp-2 t-body-sm">&ldquo;{opponent.quote}&rdquo;</p>
         </div>
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tint-green-3 text-[var(--accent-green)]">
-          <Icon icon={Trophy} size={21} />
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/24 text-[var(--accent-gold)]">
+          <Icon icon={Sparkles} size={21} />
         </span>
       </div>
 
-      <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2">
+      <div className="relative z-10 mt-4 grid min-h-[178px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2">
+        <div
+          aria-hidden
+          className="absolute inset-x-3 bottom-6 h-20 rounded-full opacity-80"
+          style={{ background: `radial-gradient(ellipse, ${stage.palette.floor} 0%, transparent 68%)` }}
+        />
         <SetupFighter name={playerName} title={playerFighter.title} loadout={playerFighter.loadout} />
-        <div className="mb-14 flex h-10 w-10 items-center justify-center rounded-full border-soft bg-[var(--bg-primary)] t-title text-[var(--accent-gold)]">
+        <div className="relative z-10 mb-16 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/32 t-title text-[var(--accent-gold)]">
           VS
         </div>
         <SetupFighter name={opponent.name} title={opponent.title} loadout={opponent.loadout} mirror />
       </div>
 
-      <div className="mt-5 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2">
-        <InfoPill icon={Swords} label="Por round" />
+      <div className="relative z-10 mt-5 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2">
+        <InfoPill icon={Swords} label={ARENA_ARCHETYPE_LABELS[opponent.archetype]} />
         <InfoPill icon={Zap} label={`+${xpPreview} XP`} />
-        <InfoPill icon={Shield} label={`${tokens} tokens`} />
+        <InfoPill icon={Shield} label={`${tokens} tokens`} muted />
       </div>
 
       <Button
         variant="primary"
         size="lg"
         fullWidth
-        className="mt-5"
+        className="relative z-10 mt-5"
         onClick={onStart}
         disabled={!unlocked}
         leftIcon={<Icon icon={unlocked ? Swords : Shield} size={16} />}
       >
         {unlocked ? 'Iniciar batalha tática' : 'Rival bloqueado'}
       </Button>
-      <p className="mt-3 text-center t-caption">
+      <p className="relative z-10 mt-3 text-center t-caption">
         {unlocked
           ? 'Simulação local · sem aposta · sem perda de Eco-Tokens'
           : 'Avance na trilha vencendo os rivais anteriores.'}
@@ -352,8 +379,8 @@ function SetupFighter({
   mirror?: boolean;
 }) {
   return (
-    <div className="min-w-0 text-center">
-      <div className="mx-auto flex h-28 w-28 items-end justify-center rounded-full bg-black/10">
+    <div className="relative z-10 min-w-0 text-center">
+      <div className="mx-auto flex h-32 w-[min(39vw,8rem)] items-end justify-center rounded-b-[44%] rounded-t-full bg-black/12">
         <Avatar loadout={loadout} size="xl" alt={name} mirror={mirror} pose="battleReady" />
       </div>
       <p className="mt-2 truncate t-title">{name}</p>
@@ -362,10 +389,10 @@ function SetupFighter({
   );
 }
 
-function InfoPill({ icon, label }: { icon: LucideIcon; label: string }) {
+function InfoPill({ icon, label, muted }: { icon: LucideIcon; label: string; muted?: boolean }) {
   return (
-    <div className="min-w-0 rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3 text-center">
-      <Icon icon={icon} size={16} className="mx-auto text-[var(--accent-green)]" />
+    <div className="min-w-0 rounded-[var(--radius-md)] border border-white/10 bg-black/18 px-2 py-3 text-center">
+      <Icon icon={icon} size={16} className={cn('mx-auto', muted ? 'text-[var(--text-muted)]' : 'text-[var(--accent-green)]')} />
       <p className="mt-1 break-words t-caption text-[var(--text-secondary)]">{label}</p>
     </div>
   );

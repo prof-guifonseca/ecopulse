@@ -5,7 +5,6 @@ import type { ArenaProgress } from '@/types';
 import { arenaLevelProgress } from '@/lib/arena/progress';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { ListCard } from '@/components/ui/ListCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 
 interface Props {
@@ -19,82 +18,68 @@ export function ArenaProgressPanel({ progress, totalOpponents }: Props) {
 
   return (
     <section className="space-y-3">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="t-title">Rank da Arena</h2>
-        <span className="t-caption">{progress.defeatedOpponents.length}/{totalOpponents} rivais dominados</span>
-      </div>
-
-      <Card tone="hero" padded={false} className="px-5 py-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="t-eyebrow">Arena nível {level.arenaLevel}</p>
-            <h3 className="t-headline mt-1">{rank}</h3>
-            <p className="mt-1 t-caption">{progress.arenaXp} Arena XP total</p>
-          </div>
+      <Card tone="solid" padded={false} className="border-soft px-4 py-4">
+        <div className="flex items-start gap-3">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-tint-green-3 text-[var(--accent-green)]">
-            <Icon icon={Trophy} size={22} />
+            <Icon icon={Trophy} size={21} />
           </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="t-eyebrow">Rank da Arena</p>
+                <h2 className="t-title mt-1 truncate">{rank}</h2>
+              </div>
+              <span className="shrink-0 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-caption">
+                Nv {level.arenaLevel}
+              </span>
+            </div>
+
+            <div className="mt-3">
+              <div className="mb-1 flex items-center justify-between gap-2 t-caption">
+                <span>{progress.arenaXp} XP total</span>
+                <span>{level.current}/{level.next}</span>
+              </div>
+              <ProgressBar value={level.current} max={level.next} ariaLabel="Progresso do rank da Arena" />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-4">
-          <div className="mb-1 flex items-center justify-between gap-2 t-caption">
-            <span>Próximo nível</span>
-            <span>{level.current}/{level.next} XP</span>
-          </div>
-          <ProgressBar value={level.current} max={level.next} ariaLabel="Progresso do rank da Arena" />
+        <div className="mt-4 grid grid-cols-4 gap-2">
+          <Metric icon={Medal} label="Vitórias" value={progress.wins} />
+          <Metric icon={Zap} label="Seq." value={progress.winStreak} />
+          <Metric icon={Flame} label="Melhor" value={progress.bestStreak} />
+          <Metric icon={Trophy} label="Rivais" value={`${progress.defeatedOpponents.length}/${totalOpponents}`} />
         </div>
       </Card>
 
-      <div className="grid grid-cols-3 gap-3">
-        <MetricCard icon={Medal} label="Vitórias" value={progress.wins} tone="green" />
-        <MetricCard icon={Zap} label="Sequência" value={progress.winStreak} tone="gold" />
-        <MetricCard icon={Flame} label="Melhor" value={progress.bestStreak} tone="cyan" />
-      </div>
-
       {progress.history.length > 0 ? (
-        <ListCard>
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {progress.history.slice(0, 4).map((battle) => (
-            <li key={battle.id} className="flex items-center justify-between gap-3 px-4 py-3">
-              <div className="min-w-0">
-                <p className="t-title truncate">{battle.opponent.name}</p>
-                <p className="t-caption">
-                  {formatDate(battle.playedAt)} · {battle.rounds} round{battle.rounds === 1 ? '' : 's'}
-                </p>
-              </div>
-              <span className={outcomeClass(battle.outcome)}>
-                {battle.outcome === 'win' ? 'Vitória' : battle.outcome === 'loss' ? 'Derrota' : 'Empate'}
-              </span>
-            </li>
+            <div
+              key={battle.id}
+              className="min-w-[148px] rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-3"
+            >
+              <p className="truncate text-sm font-bold">{battle.opponent.name}</p>
+              <p className="mt-1 t-caption">
+                {battle.outcome === 'win' ? 'Vitória' : battle.outcome === 'loss' ? 'Derrota' : 'Empate'} · {battle.rounds}r
+              </p>
+            </div>
           ))}
-        </ListCard>
-      ) : (
-        <p className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-4 text-center t-body-sm">
-          Nenhuma sessão tática registrada ainda.
-        </p>
-      )}
+        </div>
+      ) : null}
     </section>
   );
 }
 
-function MetricCard({
-  icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: LucideIcon;
-  label: string;
-  value: number;
-  tone: 'green' | 'gold' | 'cyan';
-}) {
+function Metric({ icon, label, value }: { icon: LucideIcon; label: string; value: number | string }) {
   return (
-    <Card tone="soft" padded={false} className="px-3 py-3 text-center">
-      <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-tint-2">
-        <Icon icon={icon} size={16} className={ICON_TONE[tone]} />
-      </span>
-      <p className="mt-2 t-caption">{label}</p>
-      <p className="t-headline mt-1">{value}</p>
-    </Card>
+    <div className="min-w-0 rounded-[var(--radius-md)] bg-tint-1 px-2 py-2 text-center">
+      <Icon icon={icon} size={14} className="mx-auto text-[var(--accent-green)]" />
+      <p className="mt-1 truncate text-[0.62rem] font-semibold uppercase tracking-[0.06em] text-[var(--text-muted)]">
+        {label}
+      </p>
+      <p className="t-title mt-0.5">{value}</p>
+    </div>
   );
 }
 
@@ -106,19 +91,3 @@ function rankName(level: number) {
   if (level >= 2) return 'Broto Valente';
   return 'Aprendiz de Arena';
 }
-
-function outcomeClass(outcome: 'win' | 'loss' | 'draw') {
-  if (outcome === 'win') return 't-caption font-semibold text-[var(--accent-green)]';
-  if (outcome === 'loss') return 't-caption font-semibold text-[var(--accent-red)]';
-  return 't-caption font-semibold text-[var(--accent-gold)]';
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(new Date(value));
-}
-
-const ICON_TONE = {
-  green: 'text-[var(--accent-green)]',
-  gold: 'text-[var(--accent-gold)]',
-  cyan: 'text-[var(--accent-cyan)]',
-};
