@@ -1,7 +1,13 @@
-import { PRODUCTS } from '@/data';
+import { ARENA_OPPONENTS, AVATAR_OUTFITS, PRODUCTS, SKIN_PACKS } from '@/data';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
+import { useArenaStore } from '@/store/arenaStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
+import {
+  createPlayerFighter,
+  opponentToFighter,
+  simulateBattle,
+} from '@/lib/battle/rules';
 import { scanRecordFromProduct } from '@/lib/simulatedScan';
 
 /**
@@ -28,6 +34,7 @@ export function clearDemoSeed(): void {
   localStorage.removeItem(SEED_SENTINEL);
   localStorage.removeItem('ecopulse:user');
   localStorage.removeItem('ecopulse:game');
+  localStorage.removeItem('ecopulse:arena');
   localStorage.removeItem('ecopulse:scanHistory');
   localStorage.removeItem('ecopulse:social');
   // Force a reload so all stores re-hydrate fresh.
@@ -36,7 +43,10 @@ export function clearDemoSeed(): void {
 
 export function seedDemoStateIfEmpty(): void {
   if (typeof window === 'undefined') return;
-  if (localStorage.getItem(SEED_SENTINEL) === '1') return;
+  if (localStorage.getItem(SEED_SENTINEL) === '1') {
+    seedArenaDemoIfEmpty();
+    return;
+  }
 
   // Pick 23 products spanning the full A–E range so the history feels
   // diverse (Arthur's a real shopper, not a saint).
@@ -144,7 +154,43 @@ export function seedDemoStateIfEmpty(): void {
   const today = new Date().toISOString().slice(0, 10);
   game.setLastMissionDay(today);
 
+  seedArenaDemoIfEmpty();
+
   localStorage.setItem(SEED_SENTINEL, '1');
+}
+
+function seedArenaDemoIfEmpty(): void {
+  if (typeof window === 'undefined') return;
+  if (localStorage.getItem('ecopulse:arena')) return;
+
+  const user = useUserStore.getState();
+  const opponent = ARENA_OPPONENTS[0];
+  if (!opponent) return;
+
+  const result = simulateBattle({
+    player: createPlayerFighter({
+      name: user.name,
+      title: 'Cyber Reciclador',
+      level: user.level,
+      skinPackId: user.equippedSkinPack,
+      avatarBase: user.avatarBase,
+      avatarOutfits: user.avatarOutfits,
+      skinPacks: SKIN_PACKS,
+      outfits: AVATAR_OUTFITS,
+    }),
+    opponent: opponentToFighter(opponent),
+    opponentId: opponent.id,
+    seed: 'demo-arena-arthur-v1',
+    playedAt: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
+  });
+
+  useArenaStore.getState().setDemoProgress({
+    wins: result.outcome === 'win' ? 1 : 0,
+    losses: result.outcome === 'loss' ? 1 : 0,
+    defeatedOpponents: result.outcome === 'win' ? [opponent.id] : [],
+    lastBattle: result,
+    history: [result],
+  });
 }
 
 /**

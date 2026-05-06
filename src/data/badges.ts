@@ -14,4 +14,6 @@ export const BADGES: Badge[] = [
   { id: 'tree-grown', name: 'Árvore Madura', iconName: 'trees', desc: 'Jardim Eco atingiu estágio árvore', tier: 'epic' },
   { id: 'chat-first', name: 'Conversador', iconName: 'messageCircle', desc: 'Enviou sua primeira mensagem', tier: 'bronze' },
   { id: 'fashionista', name: 'Fashionista Eco', iconName: 'shirt', desc: 'Equipou 3 itens de outfit', tier: 'silver' },
+  { id: 'arena-first', name: 'Primeira Vitória', iconName: 'trophy', desc: 'Venceu uma batalha simulada na Arena', tier: 'silver' },
+  { id: 'arena-trio', name: 'Trio Imbatível', iconName: 'target', desc: 'Venceu 3 batalhas simuladas na Arena', tier: 'gold' },
 ];

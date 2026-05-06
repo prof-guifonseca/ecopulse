@@ -12,6 +12,7 @@ import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
+import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { ListCard } from '@/components/ui/ListCard';
@@ -116,6 +117,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                       ? `🔒 ${unlockHint(skin)}`
                       : <span className="text-[var(--accent-gold)]">{skin.priceTokens} tokens</span>}
                   </p>
+                  <BattleStatChips stats={skin.battleStats} compact className="mt-2" />
                 </div>
               </button>
             );
@@ -145,6 +147,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   <div className="min-w-0 flex-1">
                     <div className="t-title truncate">{item.name}</div>
                     <p className="mt-0.5 t-caption">{SLOT_LABELS[item.slot]} · {item.tier}</p>
+                    <BattleStatChips stats={item.battleStats} compact className="mt-1.5" />
                   </div>
                   <span
                     className={cn(

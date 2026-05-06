@@ -19,6 +19,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'level', value: 8 },
     priceTokens: 300,
     artId: 'akashi',
+    battleStats: { attack: 8, speed: 5, focus: 4 },
   },
   {
     id: 'samurai-verde',
@@ -29,6 +30,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'scans', value: 50 },
     priceTokens: 250,
     artId: 'samurai-verde',
+    battleStats: { hp: 10, attack: 6, defense: 5 },
   },
   {
     id: 'ninja-eco',
@@ -39,6 +41,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'challenges', value: 5 },
     priceTokens: 200,
     artId: 'ninja-eco',
+    battleStats: { attack: 4, speed: 8, focus: 3 },
   },
   {
     id: 'mago-da-floresta',
@@ -49,6 +52,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'level', value: 10 },
     priceTokens: 350,
     artId: 'mago-da-floresta',
+    battleStats: { hp: 8, attack: 4, focus: 9 },
   },
   {
     id: 'cyber-reciclador',
@@ -59,6 +63,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'badge', id: 'token-100' },
     priceTokens: 280,
     artId: 'cyber-reciclador',
+    battleStats: { attack: 5, defense: 4, focus: 8 },
   },
   {
     id: 'aventureiro',
@@ -69,6 +74,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'visits', value: 10 },
     priceTokens: 220,
     artId: 'aventureiro',
+    battleStats: { hp: 12, defense: 4, speed: 3 },
   },
   {
     id: 'pirata-recicla',
@@ -79,6 +85,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'visits', value: 8 },
     priceTokens: 240,
     artId: 'pirata-recicla',
+    battleStats: { hp: 8, attack: 6, speed: 4 },
   },
   {
     id: 'cientista-eco',
@@ -89,6 +96,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'tutorials', value: 3 },
     priceTokens: 230,
     artId: 'cientista-eco',
+    battleStats: { defense: 4, speed: 3, focus: 7 },
   },
   {
     id: 'ciclista-verde',
@@ -99,6 +107,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'level', value: 6 },
     priceTokens: 210,
     artId: 'ciclista-verde',
+    battleStats: { hp: 6, defense: 3, speed: 7 },
   },
   {
     id: 'capoeirista',
@@ -109,6 +118,7 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'count', metric: 'scans', value: 30 },
     priceTokens: 200,
     artId: 'capoeirista',
+    battleStats: { attack: 5, defense: 3, speed: 6 },
   },
   {
     id: 'guardiao-da-floresta',
@@ -119,5 +129,6 @@ export const SKIN_PACKS: SkinPack[] = [
     unlock: { kind: 'level', value: 15 },
     priceTokens: 600,
     artId: 'guardiao-da-floresta',
+    battleStats: { hp: 20, attack: 7, defense: 8, focus: 7 },
   },
 ];

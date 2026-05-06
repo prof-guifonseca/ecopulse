@@ -8,6 +8,7 @@ import { useUIStore } from '@/store/uiStore';
 import { unlockBadge } from '@/lib/gameActions';
 import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
+import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { Tabs } from '@/components/ui/Tabs';
@@ -211,6 +212,7 @@ export function AvatarBuilder() {
                       <SkinPackArt id={skin.id} size="md" />
                     </div>
                     <span className="t-title">{skin.name}</span>
+                    <BattleStatChips stats={skin.battleStats} compact className="justify-center" />
                     {owned ? (
                       <span className="t-caption">{selected ? 'Equipado' : 'Toque pra equipar'}</span>
                     ) : (
@@ -279,6 +281,7 @@ export function AvatarBuilder() {
                     ) : null}
                     <span className="text-4xl leading-none">{o.emoji}</span>
                     <span className="t-title">{o.name}</span>
+                    <BattleStatChips stats={o.battleStats} compact className="justify-center" />
                     {owned ? (
                       <span className="t-caption">
                         {equipped ? 'Equipado' : 'Toque para equipar'}

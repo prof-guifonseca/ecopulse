@@ -7,6 +7,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { buySkinPack, unlockHint } from '@/lib/skinUnlocks';
 import { ModalShell } from './ModalShell';
@@ -62,6 +63,7 @@ export function SkinPackModal({ id }: Props) {
         <div className="space-y-2">
           <p className="t-eyebrow text-[var(--accent-gold)]">{TIER_LABEL[skin.tier]} · {skin.theme}</p>
           <p className="t-body">{skin.tagline}</p>
+          <BattleStatChips stats={skin.battleStats} />
         </div>
 
         {/* Status / unlock hint */}

@@ -38,6 +38,8 @@ export interface SkinPack {
   priceTokens: number;
   /** Identifier of the SVG component in src/components/skins/. */
   artId: string;
+  /** Optional Arena stat bonuses. */
+  battleStats?: Partial<BattleStats>;
 }
 export type ChallengeType = 'individual' | 'cooperativo';
 export type ShopItemType = 'garden' | 'frame' | 'boost' | 'donation';
@@ -187,6 +189,8 @@ export interface AvatarOutfit {
   price: number;
   emoji: string;
   tier: OutfitTier;
+  /** Optional Arena stat bonuses. */
+  battleStats?: Partial<BattleStats>;
 }
 
 export type AvatarOutfits = Partial<Record<OutfitSlot, string | null>>;
@@ -196,4 +200,80 @@ export interface DailyMissionsProgress {
   likes: number;
   map: boolean;
   bonusClaimed: boolean;
+}
+
+// ----- Arena / simulated battles -----
+export interface BattleStats {
+  hp: number;
+  attack: number;
+  defense: number;
+  speed: number;
+  focus: number;
+}
+
+export interface BattleFighter {
+  id: string;
+  name: string;
+  title: string;
+  level: number;
+  stats: BattleStats;
+  skinPackId?: string | null;
+  avatarBase?: string | null;
+  avatarOutfits?: AvatarOutfits;
+}
+
+export type BattleEventType =
+  | 'start'
+  | 'initiative'
+  | 'attack'
+  | 'block'
+  | 'critical'
+  | 'special'
+  | 'finish';
+
+export interface BattleEvent {
+  id: string;
+  round: number;
+  type: BattleEventType;
+  actorId: string | null;
+  targetId: string | null;
+  message: string;
+  damage: number;
+  playerHp: number;
+  opponentHp: number;
+}
+
+export interface BattleResult {
+  id: string;
+  opponentId: string;
+  seed: string;
+  playedAt: string;
+  player: BattleFighter;
+  opponent: BattleFighter;
+  winnerId: string | null;
+  outcome: 'win' | 'loss' | 'draw';
+  rounds: number;
+  events: BattleEvent[];
+  finalHp: {
+    player: number;
+    opponent: number;
+  };
+}
+
+export interface ArenaOpponent {
+  id: string;
+  name: string;
+  title: string;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  quote: string;
+  skinPackId: string;
+  stats: BattleStats;
+}
+
+export interface ArenaProgress {
+  wins: number;
+  losses: number;
+  defeatedOpponents: string[];
+  lastBattle: BattleResult | null;
+  history: BattleResult[];
 }
