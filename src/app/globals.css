@@ -19,6 +19,7 @@
   --accent-red: #e38a84;
   --accent-cyan: #7ec5d8;
   --accent-orange: #e0a576;
+  --accent-gps: #5aa9ff;          /* GPS / location marker accent */
 
   /* Semantic score tokens (A=best → E=worst) */
   --score-a: var(--accent-green);
@@ -30,6 +31,16 @@
   /* On-gradient text (for primary/reward buttons & chips) */
   --on-primary: #0a140e;
   --on-reward: #1a130a;
+
+  /* Deep canvas — used by hero gradients and the desktop body background.
+     Slightly darker than --bg-primary to give the column its lift. */
+  --bg-canvas-deep: #050907;
+  --bg-hero-bottom: #101915;
+  --bg-editorial-bottom: #0e1612;
+
+  /* Focus ring — composed of an inner darken plus an outer brand glow */
+  --focus-ring-inner: rgba(10, 18, 14, 0.95);
+  --focus-ring-outer: rgba(141, 219, 152, 0.38);
 
   /* ---------- Tints (white) ---------- */
   /* Use exclusively for subtle inset surfaces. */
@@ -57,7 +68,7 @@
   /* ---------- Gradients ---------- */
   --gradient-primary: linear-gradient(135deg, #4ea76a 0%, #8fd9a3 100%);
   --gradient-gold: linear-gradient(135deg, #f0d493 0%, #c9995b 100%);
-  --gradient-canvas: linear-gradient(180deg, #050907 0%, var(--bg-primary) 55%);
+  --gradient-canvas: linear-gradient(180deg, var(--bg-canvas-deep) 0%, var(--bg-primary) 55%);
 
   /* ---------- Elevation ---------- */
   --shadow-card-val: 0 10px 28px rgba(0, 0, 0, 0.32);
@@ -79,6 +90,17 @@
 
   /* ---------- Scrim (modal backdrop) ---------- */
   --scrim: rgba(3, 8, 5, 0.62);
+  --scrim-strong: rgba(5, 10, 8, 0.92);    /* full-screen takeovers (avatar builder) */
+  --scrim-card: rgba(0, 0, 0, 0.55);       /* readable badge over busy backgrounds */
+
+  /* ---------- Photo fades ----------
+     Used to darken editorial hero photos so headlines stay readable. */
+  --gradient-photo-fade: linear-gradient(
+    180deg,
+    rgba(10, 18, 14, 0.30) 0%,
+    rgba(10, 18, 14, 0.70) 55%,
+    rgba(10, 18, 14, 0.96) 100%
+  );
 
   /* ---------- Modal sizing ---------- */
   --modal-max-h: 88dvh;
@@ -96,6 +118,24 @@
   --color-accent-green: var(--accent-green);
   --color-accent-gold: var(--accent-gold);
   --color-accent-red: var(--accent-red);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-gps: var(--accent-gps);
+  --color-on-primary: var(--on-primary);
+  --color-on-reward: var(--on-reward);
+  --color-tint-1: var(--tint-1);
+  --color-tint-2: var(--tint-2);
+  --color-tint-3: var(--tint-3);
+  --color-tint-4: var(--tint-4);
+  --color-tint-green-1: var(--tint-green-1);
+  --color-tint-green-2: var(--tint-green-2);
+  --color-tint-green-3: var(--tint-green-3);
+  --color-tint-green-4: var(--tint-green-4);
+  --color-score-a: var(--score-a);
+  --color-score-b: var(--score-b);
+  --color-score-c: var(--score-c);
+  --color-score-d: var(--score-d);
+  --color-score-e: var(--score-e);
   --font-sans: var(--font-sans), Inter, system-ui, sans-serif;
   --font-display: var(--font-display), Fraunces, Georgia, serif;
   --radius-sm: var(--radius-sm);
@@ -278,8 +318,8 @@ input, textarea, select {
 :where(button, a, input, textarea, select):focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 1px rgba(10, 18, 14, 0.95),
-    0 0 0 3px rgba(141, 219, 152, 0.38);
+    0 0 0 1px var(--focus-ring-inner),
+    0 0 0 3px var(--focus-ring-outer);
 }
 
 ::-webkit-scrollbar {
@@ -292,7 +332,7 @@ input, textarea, select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--tint-4);
   border-radius: 999px;
 }
 
@@ -344,7 +384,7 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, var(--bg-elevated), #101915);
+    background: linear-gradient(180deg, var(--bg-elevated), var(--bg-hero-bottom));
     /* Single soft glow only — no border, no heavy box-shadow. */
     box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
   }
@@ -355,7 +395,7 @@ input, textarea, select {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, var(--bg-elevated), #0e1612);
+    background: linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
     box-shadow: 0 12px 32px -16px rgba(141, 219, 152, 0.16);
     isolation: isolate;
   }
@@ -511,18 +551,14 @@ input, textarea, select {
   .border-strong { border: 1px solid var(--line-strong); }
   .border-active { border: 1px solid var(--line-active); }
 
-  /* Token-aware backgrounds (replace `bg-[var(--tint-*)]`) */
-  .bg-tint-1 { background: var(--tint-1); }
-  .bg-tint-2 { background: var(--tint-2); }
-  .bg-tint-3 { background: var(--tint-3); }
-  .bg-tint-4 { background: var(--tint-4); }
-  .bg-tint-green-1 { background: var(--tint-green-1); }
-  .bg-tint-green-2 { background: var(--tint-green-2); }
-  .bg-tint-green-3 { background: var(--tint-green-3); }
-  .bg-tint-green-4 { background: var(--tint-green-4); }
-
-  /* Modal backdrop */
+  /* Tailwind generates bg-tint-N / hover:bg-tint-N from --color-tint-* in
+     @theme. Scrim aliases are kept as named one-offs (no scale). */
   .bg-scrim { background: var(--scrim); }
+  .bg-scrim-strong { background: var(--scrim-strong); }
+  .bg-scrim-card { background: var(--scrim-card); }
+
+  /* Editorial photo overlay — drop on top of bg-image to keep headlines legible */
+  .photo-fade { background: var(--gradient-photo-fade); }
 
   /* Pills / chips */
   .command-pill {
@@ -603,7 +639,7 @@ input, textarea, select {
     border-radius: var(--radius-lg);
     background:
       radial-gradient(circle at 50% 30%, var(--tint-green-3), transparent 60%),
-      linear-gradient(180deg, var(--bg-elevated), #0e1612);
+      linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
   }
 
   /* Pulsing radial light behind the camera target */
@@ -656,6 +692,42 @@ input, textarea, select {
   .scan-frame[data-scanning="true"] .scan-ring-inner { animation-duration: 1.6s; }
   .scan-frame[data-scanning="true"] .scan-target-halo {
     animation-duration: 1.2s;
+  }
+
+  /* Score-driven backgrounds (badges, score discs, fill bars) — pair with
+     data-score="A".."E". Replaces inline style={{ background: SCORE_COLORS[...] }}. */
+  .score-badge[data-score="A"],
+  .bg-score[data-score="A"] { background: var(--score-a); }
+  .score-badge[data-score="B"],
+  .bg-score[data-score="B"] { background: var(--score-b); }
+  .score-badge[data-score="C"],
+  .bg-score[data-score="C"] { background: var(--score-c); }
+  .score-badge[data-score="D"],
+  .bg-score[data-score="D"] { background: var(--score-d); }
+  .score-badge[data-score="E"],
+  .bg-score[data-score="E"] { background: var(--score-e); }
+
+  /* Score-tinted text — companion to score-badge for foreground accents */
+  .text-score[data-score="A"] { color: var(--score-a); }
+  .text-score[data-score="B"] { color: var(--score-b); }
+  .text-score[data-score="C"] { color: var(--score-c); }
+  .text-score[data-score="D"] { color: var(--score-d); }
+  .text-score[data-score="E"] { color: var(--score-e); }
+
+  /* GPS marker — solid blue dot with a soft pulsing halo */
+  .gps-dot {
+    background: var(--accent-gps);
+    box-shadow:
+      0 0 0 2px var(--bg-primary),
+      0 0 12px color-mix(in srgb, var(--accent-gps) 60%, transparent);
+  }
+
+  .gps-halo {
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-gps) 35%, transparent),
+      transparent 70%
+    );
   }
 
   /* Stat ribbon — a thin pill row for secondary stats below hero */

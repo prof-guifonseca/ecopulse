@@ -7,6 +7,7 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
+import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { LondrinaMap } from './LondrinaMap';
@@ -113,7 +114,7 @@ export function MapPage() {
       </div>
 
       {panel === 'places' ? (
-        <ul className="stagger divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+        <ListCard className="stagger">
           {pins.map((point) => {
             const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
             const isVisited = visited.includes(point.id);
@@ -121,7 +122,7 @@ export function MapPage() {
               <li key={point.id}>
                 <button
                   onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
                   <span
                     className={cn(
@@ -144,9 +145,9 @@ export function MapPage() {
               </li>
             );
           })}
-        </ul>
+        </ListCard>
       ) : (
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+        <ListCard>
           {EVENTS.map((event) => (
             <li key={event.id} className="flex items-center gap-4 px-4 py-3">
               <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
@@ -159,7 +160,7 @@ export function MapPage() {
               </div>
             </li>
           ))}
-        </ul>
+        </ListCard>
       )}
     </PageShell>
   );

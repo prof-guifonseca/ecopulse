@@ -1,13 +1,5 @@
 import type { Product, Score } from '@/types';
 
-export const SCORE_COLORS: Record<Score, string> = {
-  A: 'var(--score-a)',
-  B: 'var(--score-b)',
-  C: 'var(--score-c)',
-  D: 'var(--score-d)',
-  E: 'var(--score-e)',
-};
-
 export const BREAKDOWN_LABELS: Record<string, string> = {
   carbono: 'Pegada de Carbono',
   embalagem: 'Embalagem',

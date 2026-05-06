@@ -24,25 +24,16 @@ export function OnboardingStepVision({ onNext }: Props) {
           className="object-cover"
           style={{ filter: 'blur(2px) saturate(1.05)' }}
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,18,14,0.55) 0%, rgba(10,18,14,0.78) 55%, rgba(10,18,14,0.96) 100%)',
-          }}
-        />
+        <div className="photo-fade absolute inset-0" />
       </div>
 
       <header className="relative">
         <p className="t-eyebrow">EcoPulse</p>
       </header>
 
-      <main
-        className="relative flex flex-1 flex-col justify-end gap-6"
-        style={{ animation: 'fadeIn 0.6s ease' }}
-      >
+      <main className="animate-fade-in relative flex flex-1 flex-col justify-end gap-6">
         <div className="space-y-4">
-          <h1 className="t-display leading-[0.95]" style={{ fontSize: '2.4rem' }}>
+          <h1 className="t-display leading-[0.95]">
             Sustentabilidade <br />
             <span className="t-italic-soft">que cabe no bolso.</span>
           </h1>

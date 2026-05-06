@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useUIStore } from '@/store/uiStore';
 import { Icon } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/IconButton';
 import { Modal } from './Modal';
 import { cn } from '@/lib/cn';
 
@@ -44,14 +45,13 @@ export function ModalShell({
           {eyebrow ? <div className="t-eyebrow mb-1">{eyebrow}</div> : null}
           {title ? <h2 className="t-headline">{title}</h2> : null}
         </div>
-        <button
-          type="button"
+        <IconButton
           onClick={close}
           aria-label="Fechar"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-soft bg-tint-2 text-[var(--text-secondary)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]"
-        >
-          <Icon icon={X} size={18} />
-        </button>
+          size="sm"
+          variant="soft"
+          icon={<Icon icon={X} size={18} />}
+        />
       </header>
 
       <div

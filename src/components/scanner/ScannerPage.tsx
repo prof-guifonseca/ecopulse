@@ -4,7 +4,6 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Camera, Search, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '@/data';
-import { SCORE_COLORS } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -15,6 +14,7 @@ import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { cn } from '@/lib/cn';
 
@@ -188,14 +188,14 @@ export function ScannerPage() {
               {history.length} item{history.length === 1 ? '' : 's'}
             </span>
           </div>
-          <ul className="divide-y divide-[var(--line-soft)]">
+          <ListCard tone="flat">
             {history.slice(0, 5).map((scan) => (
               <li key={`${scan.id}-${scan.scannedAt}`}>
                 <button
                   onClick={() => openModal({ kind: 'product', id: scan.id })}
                   className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-2)] text-2xl">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
                     {scan.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -208,7 +208,7 @@ export function ScannerPage() {
                 </button>
               </li>
             ))}
-          </ul>
+          </ListCard>
         </section>
       ) : null}
 
@@ -234,7 +234,7 @@ export function ScannerPage() {
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)]">
+          <ListCard tone="flat" className="stagger mt-4">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button
@@ -246,10 +246,7 @@ export function ScannerPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{product.name}</h3>
-                    <p
-                      className="mt-0.5 truncate t-caption"
-                      style={{ color: SCORE_COLORS[product.score] }}
-                    >
+                    <p data-score={product.score} className="text-score mt-0.5 truncate t-caption">
                       {product.brand} · {product.tip}
                     </p>
                   </div>
@@ -257,7 +254,7 @@ export function ScannerPage() {
                 </button>
               </li>
             ))}
-          </ul>
+          </ListCard>
         )}
       </section>
     </PageShell>

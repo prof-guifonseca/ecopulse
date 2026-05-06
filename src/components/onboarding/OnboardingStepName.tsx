@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft } from 'lucide-react';
 import { Avatar } from '@/components/shared/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/IconButton';
 
 interface Props {
   avatarBase: string;
@@ -39,23 +40,19 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
       />
 
       <header className="relative flex items-center justify-between">
-        <button
-          type="button"
+        <IconButton
           onClick={onBack}
           aria-label="Voltar"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-        >
-          <Icon icon={ChevronLeft} size={18} />
-        </button>
+          size="sm"
+          variant="soft"
+          icon={<Icon icon={ChevronLeft} size={18} />}
+        />
         <p className="t-eyebrow">Quase lá</p>
         <span className="h-9 w-9" aria-hidden />
       </header>
 
-      <main
-        className="relative flex flex-1 flex-col items-start justify-center gap-7"
-        style={{ animation: 'fadeIn 0.5s ease' }}
-      >
-        <div className="flex h-32 w-32 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] shadow-[var(--shadow-glow)]">
+      <main className="animate-fade-in relative flex flex-1 flex-col items-start justify-center gap-7">
+        <div className="flex h-32 w-32 items-center justify-center rounded-full border-soft bg-tint-1 shadow-[var(--shadow-glow)]">
           <Avatar baseId={avatarBase} size="xl" />
         </div>
 

@@ -3,6 +3,7 @@
 import { ArrowRight, ChevronLeft, MapPin, ScanLine, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/IconButton';
 
 interface Props {
   onNext: () => void;
@@ -40,23 +41,19 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
       />
 
       <header className="relative flex items-center justify-between">
-        <button
-          type="button"
+        <IconButton
           onClick={onBack}
           aria-label="Voltar"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--line-soft)] bg-[var(--tint-1)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-        >
-          <Icon icon={ChevronLeft} size={18} />
-        </button>
+          size="sm"
+          variant="soft"
+          icon={<Icon icon={ChevronLeft} size={18} />}
+        />
         <p className="t-eyebrow">Como funciona</p>
         <span className="h-9 w-9" aria-hidden />
       </header>
 
-      <main
-        className="relative flex flex-1 flex-col justify-center gap-7"
-        style={{ animation: 'fadeIn 0.5s ease' }}
-      >
-        <h1 className="t-display leading-[0.95]" style={{ fontSize: '2rem' }}>
+      <main className="animate-fade-in relative flex flex-1 flex-col justify-center gap-7">
+        <h1 className="t-mega leading-[0.95]">
           Três gestos. <span className="t-italic-soft">Um caminho.</span>
         </h1>
 
@@ -64,9 +61,9 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
           {PILLARS.map((p) => (
             <li
               key={p.title}
-              className="flex gap-4 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] p-4"
+              className="flex gap-4 rounded-[var(--radius-md)] border-soft bg-tint-1 p-4"
             >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--tint-green-3)] text-[var(--accent-green)]">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-green-3 text-[var(--accent-green)]">
                 <Icon icon={p.icon} size={22} strokeWidth={1.6} />
               </div>
               <div className="min-w-0 flex-1">

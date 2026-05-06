@@ -2,7 +2,7 @@
 
 import { Info, Lightbulb, Plus } from 'lucide-react';
 import { PRODUCTS } from '@/data';
-import { BREAKDOWN_LABELS, SCORE_COLORS, findAlternatives } from '@/lib/scanner';
+import { BREAKDOWN_LABELS, findAlternatives } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
@@ -62,7 +62,6 @@ export function ProductDetailModal({ id }: Props) {
   const view = resolveView(id, historyEntry);
   if (!view) return null;
 
-  const color = SCORE_COLORS[view.score];
   const isFromHistory = view.source === 'scan';
   const catalogProduct = PRODUCTS.find((p) => p.id === view.catalogId);
   const alternatives = catalogProduct
@@ -97,17 +96,10 @@ export function ProductDetailModal({ id }: Props) {
             backgroundPosition: 'center',
           }}
         >
+          <div aria-hidden className="photo-fade absolute inset-0" />
           <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(10,18,14,0.30) 0%, rgba(10,18,14,0.70) 75%, var(--bg-secondary) 100%)',
-            }}
-          />
-          <div
-            className="t-mega animate-score-reveal absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[var(--on-primary)] shadow-[var(--shadow-deep-glow)]"
-            style={{ background: color }}
+            data-score={view.score}
+            className="score-badge t-mega animate-score-reveal absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[var(--on-primary)] shadow-[var(--shadow-deep-glow)]"
           >
             {view.score}
           </div>
@@ -119,7 +111,7 @@ export function ProductDetailModal({ id }: Props) {
 
         <div className="mt-5 w-full space-y-3">
           {Object.entries(view.breakdown).map(([k, v]) => (
-            <BreakdownRow key={k} label={BREAKDOWN_LABELS[k] ?? k} value={v} color={color} />
+            <BreakdownRow key={k} label={BREAKDOWN_LABELS[k] ?? k} value={v} score={view.score} />
           ))}
         </div>
 
@@ -129,7 +121,7 @@ export function ProductDetailModal({ id }: Props) {
         </div>
 
         {view.rationale.length > 0 ? (
-          <div className="mt-3 w-full rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-[var(--tint-1)] px-4 py-3 text-left">
+          <div className="mt-3 w-full rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 text-left">
             <div className="flex items-center gap-2 t-eyebrow">
               <Icon icon={Info} size={12} />
               Como calculamos
@@ -207,7 +199,7 @@ function resolveView(
   };
 }
 
-function BreakdownRow({ label, value, color }: { label: string; value: number; color: string }) {
+function BreakdownRow({ label, value, score }: { label: string; value: number; score: Score }) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between t-caption">
@@ -216,8 +208,9 @@ function BreakdownRow({ label, value, color }: { label: string; value: number; c
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-tint-3">
         <div
-          className="h-full rounded-full transition-[width] duration-700"
-          style={{ width: `${value}%`, background: color }}
+          data-score={score}
+          className="bg-score h-full rounded-full transition-[width] duration-700"
+          style={{ width: `${value}%` }}
         />
       </div>
     </div>
@@ -242,8 +235,8 @@ function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id
               <div className="t-caption truncate">{a.brand}</div>
             </div>
             <span
-              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[var(--on-primary)]"
-              style={{ background: SCORE_COLORS[a.score] }}
+              data-score={a.score}
+              className="score-badge flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[var(--on-primary)]"
             >
               {a.score}
             </span>

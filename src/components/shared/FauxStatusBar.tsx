@@ -29,10 +29,9 @@ export function FauxStatusBar() {
   return (
     <div
       aria-hidden
-      className="hidden shrink-0 items-center justify-between px-6 py-2 text-[0.72rem] font-semibold sm:flex"
-      style={{ color: 'var(--text-secondary)' }}
+      className="t-micro hidden shrink-0 items-center justify-between px-6 py-2 text-[var(--text-secondary)] sm:flex"
     >
-      <span style={{ color: 'var(--text-primary)' }}>{time ?? '—:—'}</span>
+      <span className="text-[var(--text-primary)]">{time ?? '—:—'}</span>
       <span className="inline-flex items-center gap-1.5">
         <Signal size={11} strokeWidth={2.4} />
         <Wifi size={11} strokeWidth={2.4} />

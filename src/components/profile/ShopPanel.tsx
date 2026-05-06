@@ -14,6 +14,7 @@ import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { ListCard } from '@/components/ui/ListCard';
 import { unlockHint } from '@/lib/skinUnlocks';
 import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
@@ -128,7 +129,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           <h2 className="t-title">Acessórios</h2>
           <span className="t-caption">Modo livre</span>
         </div>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+        <ListCard>
           {AVATAR_OUTFITS.map((item) => {
             const owned = ownedOutfits.includes(item.id);
             const equippedHere = outfitsEquipped[item.slot] === item.id;
@@ -136,7 +137,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <li key={item.id}>
                 <button
                   onClick={openAvatarBuilder}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--tint-2)]"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2 text-lg">
                     {item.emoji}
@@ -161,7 +162,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               </li>
             );
           })}
-        </ul>
+        </ListCard>
       </section>
 
       {/* Outros — SHOP_ITEMS originais */}

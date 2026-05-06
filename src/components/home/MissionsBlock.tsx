@@ -5,6 +5,7 @@ import { DAILY_MISSIONS } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { ListCard } from '@/components/ui/ListCard';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { missionChecks, tryClaimDailyBonus } from '@/lib/missions';
 import { cn } from '@/lib/cn';
@@ -23,7 +24,7 @@ export function MissionsBlock() {
         <span className="t-caption">{done}/{DAILY_MISSION_TARGET}</span>
       </div>
 
-      <ul className="divide-y divide-[var(--line-soft)]">
+      <ListCard tone="flat">
         {DAILY_MISSIONS.map((mission) => {
           const isDone = checks[mission.id as keyof typeof checks];
           const MissionIcon = resolveIcon(mission.iconName);
@@ -57,7 +58,7 @@ export function MissionsBlock() {
             </li>
           );
         })}
-      </ul>
+      </ListCard>
 
       {done === DAILY_MISSION_TARGET && !bonusClaimed ? (
         <Button

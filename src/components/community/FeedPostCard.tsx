@@ -65,7 +65,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
         {firstComment ? (
           <button
             onClick={onOpenComments}
-            className="-mx-1 block w-full text-left rounded-md px-1 py-1 transition-colors hover:bg-[var(--tint-1)]"
+            className="-mx-1 block w-full text-left rounded-md px-1 py-1 transition-colors hover:bg-tint-1"
           >
             <p className="t-body-sm">
               <span className="font-semibold text-[var(--text-primary)]">{firstComment.user}</span>{' '}
