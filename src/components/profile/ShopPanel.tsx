@@ -2,6 +2,7 @@
 
 import { Coins } from 'lucide-react';
 import {
+  EMPTY_GEAR,
   defaultLoadoutForSet,
   GEAR_ITEMS,
   GEAR_SETS,
@@ -129,8 +130,14 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   onClick={openAvatarBuilder}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2 text-lg">
-                    {item.emoji}
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
+                    <Avatar
+                      loadout={previewLoadoutForGear(avatarLoadout.baseId, item)}
+                      size="md"
+                      alt={item.name}
+                      highlightSlot={item.slot}
+                      showAura={item.slot === 'aura'}
+                    />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="t-title truncate">{item.name}</div>
@@ -190,4 +197,12 @@ export function ShopPanel({ tokens }: { tokens: number }) {
       </section>
     </div>
   );
+}
+
+function previewLoadoutForGear(baseId: string | null, item: (typeof GEAR_ITEMS)[number]) {
+  return {
+    baseId,
+    equippedGear: { ...EMPTY_GEAR, [item.slot]: item.id },
+    activeSetId: null,
+  };
 }

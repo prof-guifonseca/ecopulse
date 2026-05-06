@@ -10,6 +10,7 @@ export { DAILY_MISSIONS } from './missions';
 export { AVATAR_BASES, AVATAR_OUTFITS } from './avatar';
 export { SKIN_PACKS } from './skins';
 export { ARENA_OPPONENTS } from './arena';
+export { ARENA_STAGE_VISUALS, arenaStageVisual } from './arenaVisuals';
 export {
   EMPTY_GEAR,
   GEAR_ITEMS,

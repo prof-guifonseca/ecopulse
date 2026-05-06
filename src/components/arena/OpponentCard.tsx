@@ -2,11 +2,11 @@
 
 import { CheckCircle2, LockKeyhole } from 'lucide-react';
 import type { ArenaOpponent, ArenaRivalMastery } from '@/types';
-import { Avatar } from '@/components/shared/Avatar';
-import { BattleStatChips } from '@/components/shared/BattleStatChips';
-import { Card } from '@/components/ui/Card';
-import { Icon } from '@/components/ui/Icon';
+import { arenaStageVisual } from '@/data';
+import { ARENA_ARCHETYPE_LABELS } from '@/lib/arena/presentation';
 import { cn } from '@/lib/cn';
+import { Avatar } from '@/components/shared/Avatar';
+import { Icon } from '@/components/ui/Icon';
 
 interface Props {
   opponent: ArenaOpponent;
@@ -19,73 +19,88 @@ interface Props {
 }
 
 export function OpponentCard({ opponent, selected, defeated, locked, mastery, className, onSelect }: Props) {
+  const stage = arenaStageVisual(opponent.stageTheme);
+
   return (
     <button
       type="button"
       onClick={onSelect}
       disabled={locked}
       aria-pressed={selected}
-      className={cn('w-full text-left disabled:cursor-not-allowed', className)}
+      className={cn('relative text-left disabled:cursor-not-allowed', className)}
     >
-      <Card
-        tone="solid"
-        padded={false}
+      <div
         className={cn(
-          'flex h-full gap-3 px-4 py-4 transition-colors',
-          selected ? 'border-active bg-tint-green-1' : 'border-soft hover:bg-tint-2',
-          locked && 'opacity-55'
+          'relative h-full overflow-hidden rounded-[var(--radius-lg)] border px-3 py-3 transition-all duration-200',
+          selected
+            ? 'border-[var(--line-active)] bg-tint-green-2 shadow-[var(--shadow-glow)]'
+            : 'border-[var(--line-soft)] bg-tint-1 hover:bg-tint-2',
+          locked && 'opacity-50'
         )}
       >
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-2">
-          <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} />
-        </div>
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-20 opacity-60"
+          style={{ background: `radial-gradient(circle at 50% 0%, ${stage.palette.glow}44, transparent 66%)` }}
+        />
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="t-title truncate">{opponent.name}</h3>
-              <p className="mt-0.5 truncate t-caption">{opponent.title}</p>
+        <div className="relative z-10 flex items-center gap-3">
+          <div
+            className={cn(
+              'relative flex h-16 w-16 shrink-0 items-end justify-center rounded-full border bg-black/22',
+              selected ? 'border-[var(--line-active)]' : 'border-[var(--line-soft)]'
+            )}
+          >
+            <span
+              aria-hidden
+              className="absolute inset-x-1 bottom-1 h-5 rounded-full"
+              style={{ background: `radial-gradient(ellipse, ${stage.palette.floor} 0%, transparent 70%)` }}
+            />
+            <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} pose="battleReady" />
+            <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--bg-primary)] text-[0.67rem] font-bold text-[var(--accent-gold)]">
+              {opponent.order}
+            </span>
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-bold leading-tight text-[var(--text-primary)]">{opponent.name}</h3>
+                <p className="mt-0.5 truncate text-[0.68rem] leading-tight text-[var(--text-secondary)]">
+                  {ARENA_ARCHETYPE_LABELS[opponent.archetype]}
+                </p>
+              </div>
+              {locked ? (
+                <Icon icon={LockKeyhole} size={15} className="mt-0.5 shrink-0 text-[var(--text-muted)]" />
+              ) : defeated ? (
+                <Icon icon={CheckCircle2} size={15} className="mt-0.5 shrink-0 text-[var(--accent-green)]" />
+              ) : null}
             </div>
-            {locked ? (
-              <Icon icon={LockKeyhole} size={16} className="mt-0.5 shrink-0 text-[var(--text-muted)]" />
-            ) : defeated ? (
-              <Icon icon={CheckCircle2} size={16} className="mt-0.5 shrink-0 text-[var(--accent-green)]" />
-            ) : null}
           </div>
-
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <span className="rounded-full bg-tint-2 px-2 py-1 t-caption">#{opponent.order}</span>
-            <span className="rounded-full bg-tint-2 px-2 py-1 t-caption">{ARCHETYPE_LABELS[opponent.archetype]}</span>
-            {mastery?.wins ? (
-              <span className="rounded-full bg-tint-green-2 px-2 py-1 t-caption text-[var(--accent-green)]">
-                {mastery.wins} vitória{mastery.wins === 1 ? '' : 's'}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="mt-2 flex items-center gap-1" aria-label={`Dificuldade ${opponent.difficulty} de 5`}>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <span
-                key={index}
-                className={cn(
-                  'h-1.5 flex-1 rounded-full',
-                  index < opponent.difficulty ? 'bg-[var(--accent-gold)]' : 'bg-tint-3'
-                )}
-              />
-            ))}
-          </div>
-
-          <BattleStatChips stats={opponent.stats} compact className="mt-2 max-w-[calc(100vw-132px)]" />
         </div>
-      </Card>
+
+        <div className="relative z-10 mt-3 flex items-center gap-1" aria-label={`Dificuldade ${opponent.difficulty} de 5`}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <span
+              key={index}
+              className={cn(
+                'h-1.5 flex-1 rounded-full',
+                index < opponent.difficulty ? 'bg-[var(--accent-gold)]' : 'bg-tint-3'
+              )}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 mt-3 min-h-[28px]">
+          {mastery?.wins ? (
+            <span className="rounded-full bg-tint-green-2 px-2 py-1 text-[0.66rem] font-semibold text-[var(--accent-green)]">
+              {mastery.wins} vitória{mastery.wins === 1 ? '' : 's'}
+            </span>
+          ) : (
+            <p className="line-clamp-2 text-[0.67rem] leading-snug text-[var(--text-muted)]">{stage.floorLabel}</p>
+          )}
+        </div>
+      </div>
     </button>
   );
 }
-
-const ARCHETYPE_LABELS: Record<ArenaOpponent['archetype'], string> = {
-  balanced: 'Equilibrada',
-  aggressive: 'Agressiva',
-  defensive: 'Defensiva',
-  focus: 'Foco',
-  trickster: 'Truque',
-};

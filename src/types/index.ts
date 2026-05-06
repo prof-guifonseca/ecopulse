@@ -56,6 +56,9 @@ export interface SkinPack {
 // ----- Gear (wearable avatar equipment) -----
 export type GearTier = 'common' | 'rare' | 'epic' | 'legendary';
 export type GearTheme = SkinTheme | 'utility' | 'nature';
+export type AvatarPose = 'idle' | 'builder' | 'battleReady' | 'attack' | 'defend' | 'focus' | 'victory' | 'defeat';
+export type GearHandPose = 'relaxed' | 'weapon' | 'staff' | 'shield' | 'object';
+export type GearFxLevel = 0 | 1 | 2 | 3;
 
 export interface GearItem {
   id: string;
@@ -65,7 +68,14 @@ export interface GearItem {
   priceTokens: number;
   unlock: SkinUnlock;
   battleStats: Partial<BattleStats>;
+  visualKey: string;
   visualLayerId: string;
+  paletteId?: string;
+  variant?: string;
+  hidesHair?: boolean;
+  hidesFace?: boolean;
+  handPose?: GearHandPose;
+  fxLevel?: GearFxLevel;
   setId?: string;
   emoji: string;
   tags: string[];

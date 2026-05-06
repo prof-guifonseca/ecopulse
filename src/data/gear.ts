@@ -51,6 +51,11 @@ interface SetSpec {
     price: number;
     tier?: GearItem['tier'];
     tags?: string[];
+    variant?: string;
+    hidesHair?: boolean;
+    hidesFace?: boolean;
+    handPose?: GearItem['handPose'];
+    fxLevel?: GearItem['fxLevel'];
   }>;
   setBonusStats: Partial<BattleStats>;
 }
@@ -67,10 +72,13 @@ const SET_SPECS: SetSpec[] = [
     setBonusStats: { attack: 2, speed: 2, focus: 1 },
     pieces: [
       { slot: 'torso', name: 'Capa Akashi', emoji: '🧥', stats: { attack: 2, defense: 1 }, price: 70 },
+      { slot: 'legs', name: 'Calça de Sombra Akashi', emoji: '👖', stats: { speed: 1 }, price: 35 },
+      { slot: 'feet', name: 'Botas de Passo Curto', emoji: '👟', stats: { speed: 1 }, price: 35 },
+      { slot: 'hair', name: 'Cabelo Akashi', emoji: '💢', stats: { speed: 1 }, price: 35 },
       { slot: 'head', name: 'Faixa Akashi', emoji: '🎗️', stats: { focus: 2 }, price: 45 },
       { slot: 'face', name: 'Olhar Sombrio', emoji: '👁️', stats: { focus: 2, speed: 1 }, price: 45 },
-      { slot: 'mainHand', name: 'Lâmina de Bambu Negro', emoji: '🗡️', stats: { attack: 4 }, price: 90 },
-      { slot: 'aura', name: 'Aura das Nuvens', emoji: '☁️', stats: { speed: 2 }, price: 80, tier: 'epic' },
+      { slot: 'mainHand', name: 'Lâmina de Bambu Negro', emoji: '🗡️', stats: { attack: 4 }, price: 90, handPose: 'weapon' },
+      { slot: 'aura', name: 'Aura das Nuvens', emoji: '☁️', stats: { speed: 2 }, price: 80, tier: 'epic', fxLevel: 2 },
     ],
   },
   {
@@ -83,9 +91,11 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 250,
     setBonusStats: { hp: 4, defense: 2 },
     pieces: [
+      { slot: 'hair', name: 'Topknot Verde', emoji: '🎎', stats: { focus: 1 }, price: 35 },
       { slot: 'head', name: 'Kabuto de Folhas', emoji: '🎋', stats: { defense: 2 }, price: 55 },
       { slot: 'torso', name: 'Do Verde', emoji: '🥋', stats: { hp: 5, defense: 3 }, price: 75 },
-      { slot: 'mainHand', name: 'Katana de Bambu', emoji: '🗡️', stats: { attack: 4 }, price: 80 },
+      { slot: 'legs', name: 'Hakama de Folhas', emoji: '👖', stats: { defense: 1 }, price: 45 },
+      { slot: 'mainHand', name: 'Katana de Bambu', emoji: '🗡️', stats: { attack: 4 }, price: 80, handPose: 'weapon' },
       { slot: 'feet', name: 'Sandálias de Campo', emoji: '🥿', stats: { speed: 2 }, price: 40 },
     ],
   },
@@ -99,9 +109,11 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 200,
     setBonusStats: { speed: 3 },
     pieces: [
-      { slot: 'face', name: 'Máscara Ninja', emoji: '🥷', stats: { focus: 1, speed: 2 }, price: 50 },
+      { slot: 'head', name: 'Capuz Ninja Eco', emoji: '🥷', stats: { defense: 1 }, price: 40, hidesHair: true },
+      { slot: 'face', name: 'Máscara Ninja', emoji: '🥷', stats: { focus: 1, speed: 2 }, price: 50, hidesFace: true },
       { slot: 'torso', name: 'Traje de Sombra', emoji: '🥋', stats: { defense: 1, speed: 2 }, price: 65 },
-      { slot: 'mainHand', name: 'Shuriken Reciclada', emoji: '✴️', stats: { attack: 3, speed: 2 }, price: 70 },
+      { slot: 'legs', name: 'Calça Silenciosa', emoji: '👖', stats: { speed: 1 }, price: 35 },
+      { slot: 'mainHand', name: 'Shuriken Reciclada', emoji: '✴️', stats: { attack: 3, speed: 2 }, price: 70, handPose: 'weapon' },
       { slot: 'feet', name: 'Tabis Silenciosos', emoji: '🥿', stats: { speed: 2 }, price: 35 },
     ],
   },
@@ -115,10 +127,13 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 350,
     setBonusStats: { focus: 4, hp: 3 },
     pieces: [
-      { slot: 'head', name: 'Capuz de Musgo', emoji: '🧙', stats: { focus: 2 }, price: 70 },
+      { slot: 'head', name: 'Capuz de Musgo', emoji: '🧙', stats: { focus: 2 }, price: 70, hidesHair: true },
       { slot: 'torso', name: 'Manto da Floresta', emoji: '🟩', stats: { hp: 5, focus: 2 }, price: 85 },
-      { slot: 'mainHand', name: 'Cajado de Folha', emoji: '🪄', stats: { attack: 2, focus: 3 }, price: 85 },
-      { slot: 'aura', name: 'Círculo das Raízes', emoji: '🌿', stats: { defense: 2, focus: 2 }, price: 110, tier: 'epic' },
+      { slot: 'legs', name: 'Calça de Musgo', emoji: '👖', stats: { hp: 1 }, price: 35 },
+      { slot: 'feet', name: 'Botas de Raiz', emoji: '🥾', stats: { defense: 1 }, price: 40 },
+      { slot: 'back', name: 'Capa de Folhas Longa', emoji: '🍃', stats: { hp: 1 }, price: 50 },
+      { slot: 'mainHand', name: 'Cajado de Folha', emoji: '🪄', stats: { attack: 2, focus: 3 }, price: 85, handPose: 'staff' },
+      { slot: 'aura', name: 'Círculo das Raízes', emoji: '🌿', stats: { defense: 2, focus: 2 }, price: 110, tier: 'epic', fxLevel: 2 },
     ],
   },
   {
@@ -131,11 +146,14 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 280,
     setBonusStats: { focus: 3, attack: 1 },
     pieces: [
+      { slot: 'head', name: 'Fone Solar', emoji: '🎧', stats: { focus: 1 }, price: 40 },
       { slot: 'face', name: 'Visor Eco-Tech', emoji: '🥽', stats: { focus: 3, speed: 1 }, price: 65 },
       { slot: 'torso', name: 'Jaqueta Solar', emoji: '🦺', stats: { defense: 3, focus: 1 }, price: 75 },
+      { slot: 'legs', name: 'Calça Eco-Tech', emoji: '🦿', stats: { speed: 1 }, price: 45 },
+      { slot: 'feet', name: 'Tênis Neon', emoji: '👟', stats: { speed: 1 }, price: 45 },
       { slot: 'back', name: 'Mochila Recicladora', emoji: '🎒', stats: { hp: 5 }, price: 60 },
-      { slot: 'mainHand', name: 'Coletor de Circuitos', emoji: '🔧', stats: { attack: 3, focus: 2 }, price: 80 },
-      { slot: 'aura', name: 'Pulso Verde', emoji: '💚', stats: { focus: 2 }, price: 70, tier: 'epic' },
+      { slot: 'mainHand', name: 'Coletor de Circuitos', emoji: '🔧', stats: { attack: 3, focus: 2 }, price: 80, handPose: 'object' },
+      { slot: 'aura', name: 'Pulso Verde', emoji: '💚', stats: { focus: 2 }, price: 70, tier: 'epic', fxLevel: 2 },
     ],
   },
   {
@@ -150,8 +168,10 @@ const SET_SPECS: SetSpec[] = [
     pieces: [
       { slot: 'head', name: 'Boné de Trilha', emoji: '🧢', stats: { defense: 1 }, price: 40 },
       { slot: 'torso', name: 'Colete de Exploração', emoji: '🦺', stats: { hp: 4, defense: 2 }, price: 70 },
+      { slot: 'legs', name: 'Calça de Campo', emoji: '👖', stats: { hp: 1 }, price: 40 },
+      { slot: 'feet', name: 'Botas de Trilha', emoji: '🥾', stats: { defense: 1 }, price: 40 },
       { slot: 'back', name: 'Mochila de Campo', emoji: '🎒', stats: { hp: 5 }, price: 65 },
-      { slot: 'offHand', name: 'Mapa Dobrado', emoji: '🗺️', stats: { focus: 2 }, price: 45 },
+      { slot: 'offHand', name: 'Mapa Dobrado', emoji: '🗺️', stats: { focus: 2 }, price: 45, handPose: 'object' },
     ],
   },
   {
@@ -166,8 +186,11 @@ const SET_SPECS: SetSpec[] = [
     pieces: [
       { slot: 'head', name: 'Bandana dos Mares', emoji: '🏴‍☠️', stats: { speed: 1, focus: 1 }, price: 45 },
       { slot: 'torso', name: 'Casaco de Reuso', emoji: '🧥', stats: { hp: 4, defense: 1 }, price: 70 },
-      { slot: 'mainHand', name: 'Gancho de Coleta', emoji: '🪝', stats: { attack: 4 }, price: 80 },
-      { slot: 'offHand', name: 'Garrafa Mensageira', emoji: '🍾', stats: { focus: 2 }, price: 45 },
+      { slot: 'legs', name: 'Calça de Convés', emoji: '👖', stats: { hp: 1 }, price: 40 },
+      { slot: 'feet', name: 'Botas de Convés', emoji: '🥾', stats: { defense: 1 }, price: 40 },
+      { slot: 'back', name: 'Mochila do Tesouro Limpo', emoji: '🎒', stats: { hp: 1 }, price: 45 },
+      { slot: 'mainHand', name: 'Gancho de Coleta', emoji: '🪝', stats: { attack: 4 }, price: 80, handPose: 'weapon' },
+      { slot: 'offHand', name: 'Garrafa Mensageira', emoji: '🍾', stats: { focus: 2 }, price: 45, handPose: 'object' },
     ],
   },
   {
@@ -180,10 +203,13 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 230,
     setBonusStats: { focus: 3, defense: 1 },
     pieces: [
+      { slot: 'head', name: 'Touca de Laboratório', emoji: '🧢', stats: { focus: 1 }, price: 35 },
       { slot: 'face', name: 'Óculos de Laboratório', emoji: '🥽', stats: { focus: 3 }, price: 55 },
       { slot: 'torso', name: 'Jaleco Verde', emoji: '🥼', stats: { defense: 2, focus: 1 }, price: 70 },
-      { slot: 'offHand', name: 'Béquer Vivo', emoji: '🧪', stats: { focus: 2 }, price: 50 },
-      { slot: 'mainHand', name: 'Scanner Manual', emoji: '📟', stats: { attack: 2, speed: 1 }, price: 55 },
+      { slot: 'legs', name: 'Calça de Pesquisa', emoji: '👖', stats: { defense: 1 }, price: 35 },
+      { slot: 'feet', name: 'Botas de Laboratório', emoji: '🥾', stats: {}, price: 35 },
+      { slot: 'offHand', name: 'Béquer Vivo', emoji: '🧪', stats: { focus: 2 }, price: 50, handPose: 'object' },
+      { slot: 'mainHand', name: 'Scanner Manual', emoji: '📟', stats: { attack: 2, speed: 1 }, price: 55, handPose: 'object' },
     ],
   },
   {
@@ -197,7 +223,9 @@ const SET_SPECS: SetSpec[] = [
     setBonusStats: { speed: 3, defense: 1 },
     pieces: [
       { slot: 'head', name: 'Capacete Verde', emoji: '🚴', stats: { defense: 2 }, price: 55 },
+      { slot: 'face', name: 'Óculos de Pedal', emoji: '🕶️', stats: { focus: 1 }, price: 35 },
       { slot: 'torso', name: 'Jaqueta Refletiva', emoji: '🦺', stats: { defense: 1, speed: 2 }, price: 65 },
+      { slot: 'legs', name: 'Bermuda de Pedal', emoji: '🩳', stats: { speed: 1 }, price: 35 },
       { slot: 'feet', name: 'Tênis de Pedal', emoji: '👟', stats: { speed: 3 }, price: 55 },
       { slot: 'back', name: 'Sinalizador Solar', emoji: '🔆', stats: { focus: 1, speed: 1 }, price: 45 },
     ],
@@ -212,10 +240,12 @@ const SET_SPECS: SetSpec[] = [
     priceTokens: 200,
     setBonusStats: { speed: 2, attack: 1 },
     pieces: [
+      { slot: 'head', name: 'Lenço de Roda', emoji: '🎗️', stats: { focus: 1 }, price: 35 },
       { slot: 'torso', name: 'Abadá Verde', emoji: '🥋', stats: { speed: 2, defense: 1 }, price: 60 },
+      { slot: 'legs', name: 'Calça de Ginga', emoji: '👖', stats: { speed: 1 }, price: 35 },
       { slot: 'feet', name: 'Passo Leve', emoji: '🦶', stats: { speed: 3 }, price: 45 },
-      { slot: 'offHand', name: 'Berimbau Mini', emoji: '🎵', stats: { focus: 2 }, price: 45 },
-      { slot: 'mainHand', name: 'Ginga Circular', emoji: '🌀', stats: { attack: 3 }, price: 65 },
+      { slot: 'offHand', name: 'Berimbau Mini', emoji: '🎵', stats: { focus: 2 }, price: 45, handPose: 'staff' },
+      { slot: 'mainHand', name: 'Ginga Circular', emoji: '🌀', stats: { attack: 3 }, price: 65, handPose: 'weapon' },
     ],
   },
   {
@@ -230,9 +260,12 @@ const SET_SPECS: SetSpec[] = [
     pieces: [
       { slot: 'head', name: 'Coroa de Galhos', emoji: '🌿', stats: { defense: 3, focus: 2 }, price: 120, tier: 'epic' },
       { slot: 'torso', name: 'Armadura de Casca', emoji: '🛡️', stats: { hp: 8, defense: 4 }, price: 150, tier: 'epic' },
+      { slot: 'legs', name: 'Grevas de Casca', emoji: '👖', stats: { hp: 2, defense: 1 }, price: 80, tier: 'epic' },
+      { slot: 'feet', name: 'Botas de Raiz Ancestral', emoji: '🥾', stats: { defense: 1 }, price: 80, tier: 'epic' },
+      { slot: 'face', name: 'Marca das Folhas', emoji: '🍃', stats: { focus: 1 }, price: 70, tier: 'epic' },
       { slot: 'back', name: 'Manto das Raízes', emoji: '🍂', stats: { hp: 6, defense: 2 }, price: 110, tier: 'epic' },
-      { slot: 'mainHand', name: 'Machado de Semente', emoji: '🪓', stats: { attack: 5 }, price: 120, tier: 'epic' },
-      { slot: 'aura', name: 'Aura Ancestral', emoji: '🌳', stats: { focus: 4 }, price: 130, tier: 'legendary' },
+      { slot: 'mainHand', name: 'Machado de Semente', emoji: '🪓', stats: { attack: 5 }, price: 120, tier: 'epic', handPose: 'weapon' },
+      { slot: 'aura', name: 'Aura Ancestral', emoji: '🌳', stats: { focus: 4 }, price: 130, tier: 'legendary', fxLevel: 3 },
     ],
   },
 ];
@@ -272,7 +305,14 @@ const SET_GEAR_ITEMS = SET_SPECS.flatMap((set) =>
     priceTokens: piece.price,
     unlock: set.unlock,
     battleStats: piece.stats,
+    visualKey: `${set.theme}:${piece.slot}`,
     visualLayerId: `${set.theme}:${piece.slot}:${set.id}`,
+    paletteId: set.id,
+    variant: piece.variant ?? set.id,
+    hidesHair: piece.hidesHair,
+    hidesFace: piece.hidesFace,
+    handPose: piece.handPose,
+    fxLevel: piece.fxLevel,
     setId: set.id,
     emoji: piece.emoji,
     tags: [set.theme, set.id, ...(piece.tags ?? [])],
@@ -377,7 +417,13 @@ function legacyItem(
     tier,
     unlock: { kind: 'paid' },
     battleStats,
+    visualKey: visualKeyFromLayer(visualLayerId, slot),
     visualLayerId,
     tags: ['legacy', slot],
   };
+}
+
+function visualKeyFromLayer(layerId: string, slot: GearSlot) {
+  const [theme] = layerId.split(':');
+  return `${theme || 'nature'}:${slot}`;
 }

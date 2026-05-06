@@ -203,6 +203,40 @@
   100% { transform: scale(1); filter: brightness(1); }
 }
 
+@keyframes arenaStrikeLeft {
+  0% { transform: translateX(0) translateY(0) scale(1); }
+  42% { transform: translateX(10px) translateY(-5px) scale(1.04); }
+  100% { transform: translateX(0) translateY(0) scale(1); }
+}
+
+@keyframes arenaStrikeRight {
+  0% { transform: translateX(0) translateY(0) scale(1); }
+  42% { transform: translateX(-10px) translateY(-5px) scale(1.04); }
+  100% { transform: translateX(0) translateY(0) scale(1); }
+}
+
+@keyframes arenaHitShake {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-4px); }
+  62% { transform: translateX(4px); }
+}
+
+@keyframes arenaFocusRise {
+  0% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-8px); filter: brightness(1.18); }
+  100% { transform: translateY(0); filter: brightness(1); }
+}
+
+@keyframes arenaPulseSoft {
+  0%, 100% { opacity: 0.42; transform: scale(0.92); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+
+@keyframes arenaParticleFloat {
+  0%, 100% { transform: translateY(0); opacity: 0.35; }
+  50% { transform: translateY(-8px); opacity: 0.75; }
+}
+
 @keyframes ringSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -423,6 +457,38 @@ input, textarea, select {
     z-index: 0;
   }
   .card-editorial > * { position: relative; z-index: 1; }
+
+  .arena-strike-left {
+    animation: arenaStrikeLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .arena-strike-right {
+    animation: arenaStrikeRight 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .arena-hit-shake {
+    animation: arenaHitShake 0.26s ease-out;
+  }
+
+  .arena-focus-rise {
+    animation: arenaFocusRise 0.58s ease-out;
+  }
+
+  .arena-guard-pulse {
+    filter: brightness(1.08);
+  }
+
+  .arena-focus-halo,
+  .arena-guard-halo,
+  .arena-burst-halo {
+    animation: arenaPulseSoft 1.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .arena-particle {
+    animation: arenaParticleFloat 3.2s ease-in-out infinite;
+    transform-origin: center;
+  }
 
   /* Slim 2px top accent bar — never a full-card wash */
   .card-accent-brand::before,
