@@ -5,7 +5,7 @@ import { loadoutFromLegacy } from '@/data';
 import { AvatarRenderer } from './AvatarRenderer';
 
 type Size = 'sm' | 'md' | 'lg' | 'xl' | 'stage' | 'duel';
-const SIZE_MAP: Record<Size, number> = { sm: 36, md: 56, lg: 80, xl: 120, stage: 124, duel: 152 };
+const SIZE_MAP: Record<Size, number> = { sm: 38, md: 58, lg: 86, xl: 140, stage: 158, duel: 196 };
 
 interface Props {
   baseId?: string | null;

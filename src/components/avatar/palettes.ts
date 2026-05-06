@@ -137,6 +137,19 @@ export function paletteForGear(item: GearItem): AvatarPalette {
 }
 
 export function themeFromVisualKey(key: string): GearTheme {
-  const [theme] = key.split(':');
-  return (theme || 'nature') as GearTheme;
+  const [family] = key.includes('.') ? key.split('.') : key.split(':');
+  const familyThemes: Record<string, GearTheme> = {
+    akashi: 'anime',
+    'samurai-verde': 'samurai',
+    'ninja-eco': 'ninja',
+    'mago-da-floresta': 'fantasy',
+    'cyber-reciclador': 'cyber',
+    aventureiro: 'explorer',
+    'pirata-recicla': 'explorer',
+    'cientista-eco': 'fantasy',
+    'ciclista-verde': 'explorer',
+    capoeirista: 'samurai',
+    'guardiao-da-floresta': 'fantasy',
+  };
+  return familyThemes[family] ?? ((family || 'nature') as GearTheme);
 }

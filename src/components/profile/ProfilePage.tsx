@@ -45,13 +45,13 @@ export function ProfilePage() {
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
       <Card as="header" tone="solid" padded={false} className="px-4 py-4">
-        <div className="grid grid-cols-[7.25rem_minmax(0,1fr)] items-center gap-4">
+        <div className="grid grid-cols-[8.75rem_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[10rem_minmax(0,1fr)]">
           <button
             onClick={openAvatarBuilder}
-            className="relative flex h-32 w-full items-end justify-center rounded-[var(--radius-lg)] bg-tint-1"
+            className="relative flex h-40 w-full items-end justify-center overflow-hidden rounded-[var(--radius-lg)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.16),transparent_48%),var(--tint-1)]"
             aria-label="Editar avatar"
           >
-            <Avatar loadout={avatarLoadout} size="xl" alt={name} pose="builder" />
+            <Avatar loadout={avatarLoadout} size="stage" alt={name} pose="builder" />
             <span className="gradient-gold absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-reward)]">
               <Icon icon={Pencil} size={12} strokeWidth={2.4} />
             </span>

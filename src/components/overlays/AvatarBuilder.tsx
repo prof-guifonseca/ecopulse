@@ -173,11 +173,11 @@ export function AvatarBuilder() {
         </header>
 
         <div className="px-4 py-5">
-          <div className="grid grid-cols-[auto_1fr] items-center gap-4">
-            <div className="flex h-32 w-32 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
+          <div className="grid grid-cols-[minmax(8.75rem,10rem)_1fr] items-center gap-4">
+            <div className="flex h-44 w-full items-end justify-center overflow-hidden rounded-[var(--radius-lg)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.16),transparent_48%),var(--tint-1)]">
               <Avatar
                 loadout={draftLoadout}
-                size="xl"
+                size="stage"
                 alt="Preview do avatar"
                 pose="builder"
                 highlightSlot={isGearSlot(tab) ? tab : undefined}
@@ -210,7 +210,7 @@ export function AvatarBuilder() {
                         <Icon icon={Check} size={12} strokeWidth={2.4} />
                       </span>
                     ) : null}
-                    <div className={cn('flex h-20 w-20 items-center justify-center', !owned && 'opacity-55 grayscale')}>
+                    <div className={cn('flex h-24 w-24 items-center justify-center', !owned && 'opacity-55 grayscale')}>
                       <Avatar loadout={previewLoadout} size="lg" alt={setItem.name} pose="builder" />
                     </div>
                     <span className="t-title">{setItem.name}</span>
@@ -299,7 +299,7 @@ function GearSlotGrid({
                 <Icon icon={Check} size={12} strokeWidth={2.4} />
               </span>
             ) : null}
-            <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-md)] bg-tint-2">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-[var(--radius-md)] bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.13),transparent_48%),var(--tint-2)]">
               <Avatar
                 loadout={previewLoadoutForGear(loadout, item)}
                 size="lg"

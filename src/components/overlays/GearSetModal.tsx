@@ -79,8 +79,8 @@ export function GearSetModal({ id }: Props) {
   return (
     <ModalShell eyebrow="Conjunto" title={setItem.name}>
       <div className="space-y-5">
-        <div className="flex h-44 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
-          <Avatar loadout={previewLoadout} size="xl" alt={setItem.name} pose="builder" />
+        <div className="flex h-56 items-end justify-center overflow-hidden rounded-[var(--radius-lg)] border-soft bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.16),transparent_50%),var(--tint-1)]">
+          <Avatar loadout={previewLoadout} size="stage" alt={setItem.name} pose="builder" />
         </div>
 
         <div className="space-y-2">
@@ -96,10 +96,10 @@ export function GearSetModal({ id }: Props) {
           <ul className="mt-3 space-y-2">
             {pieces.map((piece) => (
               <li key={piece.id} className="flex items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] bg-tint-2">
                   <Avatar
                     loadout={previewLoadout}
-                    size="sm"
+                    size="md"
                     alt={piece.name}
                     pose="builder"
                     highlightSlot={piece.slot}

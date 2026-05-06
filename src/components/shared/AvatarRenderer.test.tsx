@@ -21,7 +21,7 @@ describe('AvatarRenderer', () => {
     for (const pose of poses) {
       const markup = renderToStaticMarkup(<AvatarRenderer loadout={loadout} size="duel" pose={pose} />);
 
-      expect(markup).toContain('width="152"');
+      expect(markup).toContain('width="196"');
       expect(markup).toContain('<svg');
     }
   });

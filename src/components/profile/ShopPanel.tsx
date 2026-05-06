@@ -80,7 +80,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <button
                 key={setItem.id}
                 onClick={() => openModal({ kind: 'gearSet', id: setItem.id })}
-                className="group flex w-[150px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
+                className="group flex w-[168px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
                 style={{
                   borderColor: equipped ? 'var(--line-active)' : 'var(--line-soft)',
                   backgroundColor: equipped ? 'var(--tint-green-2)' : undefined,
@@ -88,11 +88,11 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               >
                 <div
                   className={cn(
-                    'flex h-[124px] items-center justify-center overflow-hidden rounded-t-[var(--radius-md)] bg-tint-2',
+                    'flex h-[148px] items-end justify-center overflow-hidden rounded-t-[var(--radius-md)] bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.14),transparent_48%),var(--tint-2)]',
                     locked && 'opacity-40 grayscale'
                   )}
                 >
-                  <Avatar loadout={previewLoadout} size="xl" alt={setItem.name} />
+                  <Avatar loadout={previewLoadout} size="stage" alt={setItem.name} pose="builder" />
                 </div>
                 <div className="space-y-1 px-3 py-3">
                   <h3 className="t-title truncate">{setItem.name}</h3>
@@ -130,10 +130,10 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   onClick={openAvatarBuilder}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.12),transparent_50%),var(--tint-2)]">
                     <Avatar
                       loadout={previewLoadoutForGear(avatarLoadout.baseId, item)}
-                      size="md"
+                      size="lg"
                       alt={item.name}
                       highlightSlot={item.slot}
                       showAura={item.slot === 'aura'}

@@ -305,7 +305,7 @@ const SET_GEAR_ITEMS = SET_SPECS.flatMap((set) =>
     priceTokens: piece.price,
     unlock: set.unlock,
     battleStats: piece.stats,
-    visualKey: `${set.theme}:${piece.slot}`,
+    visualKey: visualKeyForSetPiece(set.id, piece.slot, piece.variant ?? piece.name),
     visualLayerId: `${set.theme}:${piece.slot}:${set.id}`,
     paletteId: set.id,
     variant: piece.variant ?? set.id,
@@ -424,6 +424,19 @@ function legacyItem(
 }
 
 function visualKeyFromLayer(layerId: string, slot: GearSlot) {
-  const [theme] = layerId.split(':');
-  return `${theme || 'nature'}:${slot}`;
+  const [theme, layerSlot, variant] = layerId.split(':');
+  return `${theme || 'nature'}.${layerSlot || slot}.${slugVisual(variant || 'legacy')}`;
+}
+
+function visualKeyForSetPiece(setId: string, slot: GearSlot, variant: string) {
+  return `${setId}.${slot}.${slugVisual(variant)}`;
+}
+
+function slugVisual(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'standard';
 }
