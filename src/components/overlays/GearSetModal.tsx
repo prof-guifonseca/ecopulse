@@ -144,7 +144,7 @@ export function GearSetModal({ id }: Props) {
           </Button>
         ) : owned ? (
           <Button variant="primary" size="lg" fullWidth onClick={handleEquip}>
-            Equipar conjunto
+            Aplicar conjunto
           </Button>
         ) : (
           <Button

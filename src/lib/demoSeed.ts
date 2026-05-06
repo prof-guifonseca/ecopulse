@@ -4,7 +4,7 @@ import {
   GEAR_ITEMS,
   GEAR_SETS,
   PRODUCTS,
-  defaultLoadoutForSet,
+  arthurDemoLoadout,
   gearItemIdsFromLegacySkinPacks,
   unique,
 } from '@/data';
@@ -84,12 +84,7 @@ export function seedDemoStateIfEmpty(): void {
   // User profile — Arthur, level 7.
   // xpToNext at level 7 follows 100 * 1.4^(level-1) ≈ 750.
   const seededGearSets = [
-    'ciclista-verde',
-    'cyber-reciclador',
-    'cientista-eco',
-    'ninja-eco',
-    'pirata-recicla',
-    'capoeirista',
+    ...GEAR_SETS.map((setItem) => setItem.id),
   ];
   const seededLegacyItems = ['hat1', 'hat2', 'hat3', 'glass1', 'glass2', 'shirt1', 'shirt2', 'acc1', 'acc2', 'bg1'];
   useUserStore.getState().setProfile({
@@ -115,7 +110,7 @@ export function seedDemoStateIfEmpty(): void {
       weapon: null,
       hairstyle: null,
     },
-    avatarLoadout: defaultLoadoutForSet('cyber-reciclador', 'base2'),
+    avatarLoadout: arthurDemoLoadout('base2'),
     ownedOutfits: seededLegacyItems,
     equippedSkinPack: null,
     ownedSkinPacks: seededGearSets,
@@ -199,7 +194,7 @@ function seedArenaDemoIfEmpty(): void {
   const result = simulateBattle({
     player: createPlayerFighter({
       name: user.name,
-      title: 'Cyber Reciclador',
+      title: user.avatarLoadout.activeSetId ? 'Conjunto ativo' : 'Modo livre',
       level: user.level,
       loadout: user.avatarLoadout,
       gearItems: GEAR_ITEMS,

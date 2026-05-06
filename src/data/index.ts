@@ -38,3 +38,11 @@ export {
   loadoutFromLegacy,
   unique,
 } from './gear';
+export {
+  AVATAR_LOADOUT_PRESETS,
+  DEMO_GEAR_SET_IDS,
+  arthurDemoLoadout,
+  createAvatarLoadoutPresets,
+  presetItemIds,
+  type DemoLoadoutPreset,
+} from './loadoutPresets';

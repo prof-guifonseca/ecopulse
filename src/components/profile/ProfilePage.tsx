@@ -8,6 +8,7 @@ import { useUIStore } from '@/store/uiStore';
 import { useArenaStore } from '@/store/arenaStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { useCurrentRegion } from '@/lib/region';
+import { GEAR_SETS } from '@/data';
 import { Avatar } from '@/components/shared/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -54,6 +55,8 @@ export function ProfilePage() {
   const region = useCurrentRegion();
   const tribeId = (tribe ?? 'guardioes') as TribeId;
   const tribeLabel = TRIBES[tribeId]?.label ?? 'Guardiões';
+  const activeSet = GEAR_SETS.find((item) => item.id === avatarLoadout.activeSetId);
+  const loadoutLabel = activeSet?.name ?? 'Modo livre';
 
   const eco = selectEcoQualityIndex(history);
   const journey = chapterProgress({
@@ -86,6 +89,7 @@ export function ProfilePage() {
             <p className="mt-1 t-caption">
               Nv {level} · {tribeLabel}
             </p>
+            <p className="mt-1 t-caption text-[var(--text-secondary)]">{loadoutLabel}</p>
             <p className="mt-1 inline-flex items-center gap-1 t-caption text-[var(--text-muted)]">
               <Icon icon={MapPin} size={11} />
               {region.blurb}

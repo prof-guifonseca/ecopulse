@@ -20,7 +20,7 @@ export function equipGearItem(loadout: AvatarLoadout, item: GearItem): AvatarLoa
   return {
     ...loadout,
     equippedGear,
-    activeSetId: loadout.activeSetId,
+    activeSetId: null,
   };
 }
 
@@ -85,6 +85,7 @@ export function clearSlot(loadout: AvatarLoadout, slot: GearSlot): AvatarLoadout
   return {
     ...loadout,
     equippedGear: { ...loadout.equippedGear, [slot]: null },
+    activeSetId: null,
   };
 }
 

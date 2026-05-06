@@ -15,6 +15,7 @@ import { useUIStore } from '@/store/uiStore';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
 import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { ListCard } from '@/components/ui/ListCard';
@@ -51,16 +52,21 @@ export function ShopPanel({ tokens }: { tokens: number }) {
   return (
     <div className="space-y-6">
       <Card tone="solid" padded={false} className="px-5 py-4">
-        <div>
-          <p className="t-eyebrow">Carteira</p>
-          <div className="mt-1.5 flex items-baseline gap-2">
-            <AnimatedNumber
-              value={tokens}
-              className="t-headline leading-[1] text-[var(--accent-green)]"
-            />
-            <span className="t-body-sm">tokens</span>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="t-eyebrow">Carteira</p>
+            <div className="mt-1.5 flex items-baseline gap-2">
+              <AnimatedNumber
+                value={tokens}
+                className="t-headline leading-[1] text-[var(--accent-green)]"
+              />
+              <span className="t-body-sm">tokens</span>
+            </div>
+            <p className="mt-2 t-caption">Ganhos no app.</p>
           </div>
-          <p className="mt-2 t-caption">Ganhos no app.</p>
+          <Button variant="secondary" size="sm" onClick={openAvatarBuilder}>
+            Vestiário
+          </Button>
         </div>
       </Card>
 
@@ -98,9 +104,9 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   <h3 className="t-title truncate">{setItem.name}</h3>
                   <p className="t-caption truncate">
                     {equipped ? (
-                      <span className="text-[var(--accent-green)]">Equipado</span>
+                      <span className="text-[var(--accent-green)]">Aplicado</span>
                     ) : owned ? (
-                      'Possuído'
+                      'Aplicar conjunto'
                     ) : locked ? (
                       `Bloq. ${unlockHint(setItem)}`
                     ) : (
@@ -154,7 +160,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                           : 'text-[var(--accent-gold)]'
                     )}
                   >
-                    {equippedHere ? 'Equipado' : owned ? 'Possuído' : `${item.priceTokens}t`}
+                    {equippedHere ? 'Equipado' : owned ? 'Usar peça' : `${item.priceTokens}t`}
                   </span>
                 </button>
               </li>
