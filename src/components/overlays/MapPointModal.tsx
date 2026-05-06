@@ -8,6 +8,7 @@ import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconTile } from '@/components/ui/IconTile';
+import { ListCard } from '@/components/ui/ListCard';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { distanceFromCenter } from '@/lib/map/londrina';
 import { ModalShell } from './ModalShell';
@@ -52,7 +53,7 @@ export function MapPointModal({ id }: Props) {
           </div>
         </div>
 
-        <div className="mt-5 divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+        <ListCard as="div" className="mt-5">
           <Row icon={MapPin} label="Endereço" value={point.address} />
           <Row icon={Clock} label="Horário" value={point.hours} />
           <Row
@@ -66,7 +67,7 @@ export function MapPointModal({ id }: Props) {
             label="Verificado"
             value={`há ${point.lastVerifiedDays} dia${point.lastVerifiedDays === 1 ? '' : 's'}`}
           />
-        </div>
+        </ListCard>
 
         <Button
           variant="primary"

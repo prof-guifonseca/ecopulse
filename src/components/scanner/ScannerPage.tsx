@@ -15,6 +15,7 @@ import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { cn } from '@/lib/cn';
 
@@ -188,7 +189,7 @@ export function ScannerPage() {
               {history.length} item{history.length === 1 ? '' : 's'}
             </span>
           </div>
-          <ul className="divide-y divide-[var(--line-soft)]">
+          <ListCard tone="flat">
             {history.slice(0, 5).map((scan) => (
               <li key={`${scan.id}-${scan.scannedAt}`}>
                 <button
@@ -208,7 +209,7 @@ export function ScannerPage() {
                 </button>
               </li>
             ))}
-          </ul>
+          </ListCard>
         </section>
       ) : null}
 
@@ -234,7 +235,7 @@ export function ScannerPage() {
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
-          <ul className="stagger mt-4 divide-y divide-[var(--line-soft)]">
+          <ListCard tone="flat" className="stagger mt-4">
             {filtered.map((product) => (
               <li key={product.id}>
                 <button
@@ -257,7 +258,7 @@ export function ScannerPage() {
                 </button>
               </li>
             ))}
-          </ul>
+          </ListCard>
         )}
       </section>
     </PageShell>

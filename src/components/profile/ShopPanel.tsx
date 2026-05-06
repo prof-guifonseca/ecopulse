@@ -14,6 +14,7 @@ import { SkinPackArt } from '@/components/skins/SkinPackArt';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { ListCard } from '@/components/ui/ListCard';
 import { unlockHint } from '@/lib/skinUnlocks';
 import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
@@ -128,7 +129,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           <h2 className="t-title">Acessórios</h2>
           <span className="t-caption">Modo livre</span>
         </div>
-        <ul className="divide-y divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1">
+        <ListCard>
           {AVATAR_OUTFITS.map((item) => {
             const owned = ownedOutfits.includes(item.id);
             const equippedHere = outfitsEquipped[item.slot] === item.id;
@@ -161,7 +162,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               </li>
             );
           })}
-        </ul>
+        </ListCard>
       </section>
 
       {/* Outros — SHOP_ITEMS originais */}
