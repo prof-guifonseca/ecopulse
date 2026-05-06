@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Brain, Shield, ShieldCheck, Sparkles, Swords, Target } from 'lucide-react';
+import { Shield, Swords, Trophy, Zap, type LucideIcon } from 'lucide-react';
 import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, getGearSet } from '@/data';
-import type { BattleAction, BattleResult } from '@/types';
+import type { ArenaOpponent, ArenaProgress, BattleAction, BattleResult, BattleSession } from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -11,11 +11,12 @@ import { useHydrated } from '@/hooks/useHydrated';
 import {
   createPlayerFighter,
   opponentToFighter,
-  simulateBattle,
+  resolveBattleRound,
+  startBattleSession,
 } from '@/lib/battle/rules';
+import { battleArenaXpReward, FIRST_RIVAL_WIN_BONUS } from '@/lib/arena/progress';
 import { unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
-import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
 import { Button } from '@/components/ui/Button';
@@ -29,25 +30,65 @@ import { OpponentCard } from './OpponentCard';
 
 export function ArenaPage() {
   const hydrated = useHydrated();
-  const [selectedOpponentId, setSelectedOpponentId] = useState(ARENA_OPPONENTS[0]?.id ?? '');
-  const [battleResult, setBattleResult] = useState<BattleResult | null>(null);
+  const orderedOpponents = useMemo(
+    () => [...ARENA_OPPONENTS].sort((a, b) => a.order - b.order),
+    []
+  );
+  const [selectedOpponentId, setSelectedOpponentId] = useState(orderedOpponents[0]?.id ?? '');
+  const [battleSession, setBattleSession] = useState<BattleSession | null>(null);
   const [completedBattleId, setCompletedBattleId] = useState<string | null>(null);
-  const [selectedAction, setSelectedAction] = useState<BattleAction>('attack');
 
   const name = useUserStore((s) => s.name);
   const level = useUserStore((s) => s.level);
   const tribe = useUserStore((s) => s.tribe);
+  const tokens = useUserStore((s) => s.tokens);
   const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const wins = useArenaStore((s) => s.wins);
   const losses = useArenaStore((s) => s.losses);
   const defeatedOpponents = useArenaStore((s) => s.defeatedOpponents);
+  const lastBattle = useArenaStore((s) => s.lastBattle);
   const history = useArenaStore((s) => s.history);
+  const arenaXp = useArenaStore((s) => s.arenaXp);
+  const arenaLevel = useArenaStore((s) => s.arenaLevel);
+  const winStreak = useArenaStore((s) => s.winStreak);
+  const bestStreak = useArenaStore((s) => s.bestStreak);
+  const rivalMastery = useArenaStore((s) => s.rivalMastery);
   const showToast = useUIStore((s) => s.showToast);
   const fireConfetti = useUIStore((s) => s.fireConfetti);
 
   const selectedOpponent =
-    ARENA_OPPONENTS.find((opponent) => opponent.id === selectedOpponentId) ?? ARENA_OPPONENTS[0];
+    orderedOpponents.find((opponent) => opponent.id === selectedOpponentId) ?? orderedOpponents[0];
+  const selectedUnlocked = selectedOpponent
+    ? isOpponentUnlocked(selectedOpponent, defeatedOpponents, orderedOpponents)
+    : false;
   const activeSet = getGearSet(avatarLoadout.activeSetId);
+
+  const progress = useMemo<ArenaProgress>(
+    () => ({
+      wins,
+      losses,
+      defeatedOpponents,
+      lastBattle,
+      history,
+      arenaXp,
+      arenaLevel,
+      winStreak,
+      bestStreak,
+      rivalMastery,
+    }),
+    [
+      arenaLevel,
+      arenaXp,
+      bestStreak,
+      defeatedOpponents,
+      history,
+      lastBattle,
+      losses,
+      rivalMastery,
+      winStreak,
+      wins,
+    ]
+  );
 
   const playerFighter = useMemo(
     () =>
@@ -66,20 +107,48 @@ export function ArenaPage() {
     [activeSet, avatarLoadout, level, name, tribe]
   );
 
-  const simulate = () => {
-    if (!selectedOpponent) return;
+  const handleSelectOpponent = useCallback(
+    (opponent: ArenaOpponent) => {
+      if (battleSession?.status === 'active') {
+        showToast('Termine a sessão atual antes de trocar de rival.', 'info');
+        return;
+      }
+      if (!isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents)) {
+        showToast(lockHint(opponent, orderedOpponents), 'info');
+        return;
+      }
+      setSelectedOpponentId(opponent.id);
+      setBattleSession(null);
+      setCompletedBattleId(null);
+    },
+    [battleSession?.status, defeatedOpponents, orderedOpponents, showToast]
+  );
+
+  const handleStartBattle = useCallback(() => {
+    if (!selectedOpponent || !selectedUnlocked) return;
     hapticTap();
+    const seed = `${Date.now()}:${selectedOpponent.id}:${wins}:${losses}:${arenaXp}`;
     const opponent = opponentToFighter(selectedOpponent);
-    const result = simulateBattle({
-      player: playerFighter,
-      opponent,
-      opponentId: selectedOpponent.id,
-      seed: `${Date.now()}:${selectedOpponent.id}:${wins}:${losses}`,
-      playerPlan: buildTacticalPlan(selectedAction),
-    });
     setCompletedBattleId(null);
-    setBattleResult(result);
-  };
+    setBattleSession(
+      startBattleSession({
+        player: playerFighter,
+        opponent,
+        opponentId: selectedOpponent.id,
+        seed,
+        startedAt: new Date().toISOString(),
+      })
+    );
+    showToast(selectedOpponent.introLine, 'info', 3600);
+  }, [arenaXp, losses, playerFighter, selectedOpponent, selectedUnlocked, showToast, wins]);
+
+  const handleBattleAction = useCallback((action: BattleAction) => {
+    hapticTap();
+    setBattleSession((current) => {
+      if (!current || current.status !== 'active') return current;
+      return resolveBattleRound(current, action);
+    });
+  }, []);
 
   const handleBattleComplete = useCallback(
     (result: BattleResult) => {
@@ -87,18 +156,20 @@ export function ArenaPage() {
       setCompletedBattleId(result.id);
 
       const arena = useArenaStore.getState();
+      const reward = battleArenaXpReward(result, arena.rivalMastery[result.opponentId]);
       const nextWins = arena.wins + (result.outcome === 'win' ? 1 : 0);
       arena.recordBattle(result);
 
+      const opponent = ARENA_OPPONENTS.find((item) => item.id === result.opponentId);
       if (result.outcome === 'win') {
         unlockBadge('arena-first');
         if (nextWins >= 3) unlockBadge('arena-trio');
         fireConfetti();
-        showToast(`Vitória contra ${result.opponent.name}`, 'reward');
+        showToast(`+${reward.total} Arena XP · ${opponent?.defeatLine ?? 'Vitória registrada.'}`, 'reward', 4200);
       } else if (result.outcome === 'loss') {
-        showToast(`${result.opponent.name} venceu esta simulação`, 'info');
+        showToast(`+${reward.total} Arena XP · ${opponent?.victoryLine ?? 'Derrota sem custo.'}`, 'info', 4200);
       } else {
-        showToast('Empate técnico na Arena', 'info');
+        showToast(`+${reward.total} Arena XP · Empate técnico registrado.`, 'info', 3800);
       }
     },
     [completedBattleId, fireConfetti, showToast]
@@ -107,168 +178,212 @@ export function ArenaPage() {
   if (!hydrated) {
     return (
       <PageShell spacing={5}>
-        <Skeleton className="h-28 rounded-[var(--radius-lg)]" />
-        <Skeleton className="h-64 rounded-[var(--radius-lg)]" />
-        <Skeleton className="h-48 rounded-[var(--radius-lg)]" />
+        <Skeleton className="h-24 rounded-[var(--radius-lg)]" />
+        <Skeleton className="h-80 rounded-[var(--radius-lg)]" />
+        <Skeleton className="h-40 rounded-[var(--radius-lg)]" />
       </PageShell>
     );
   }
 
   return (
-    <PageShell spacing={6} className="w-[min(100%,calc(100vw-40px))] max-w-full overflow-hidden">
+    <PageShell spacing={5} className="max-w-full overflow-hidden pb-3">
       <header className="pt-2">
-        <p className="t-eyebrow">Arena Simulada</p>
-        <h1 className="t-display mt-1.5 leading-[0.95]">
-          Batalhas de <span className="t-italic-soft">impacto</span>
-        </h1>
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="t-eyebrow">Arena Tática</p>
+            <h1 className="t-display mt-1.5 max-w-full break-words leading-[0.95]">
+              Escolha.
+              <br />
+              Responda.
+              <br />
+              <span className="t-italic-soft">Domine</span>.
+            </h1>
+          </div>
+          <span className="hidden shrink-0 rounded-full border-soft bg-tint-1 px-3 py-1 t-caption sm:inline">
+            0 tokens por luta
+          </span>
+        </div>
         <p className="mt-3 t-body-sm">
-          Combates de IA sem aposta nem perda de tokens. O loadout vestível define seus atributos.
+          Mini-RPG local por rounds. Vitória dá Arena XP e domínio de rival, nunca Eco-Tokens.
         </p>
       </header>
 
-      <Card tone="hero" padded={false} className="px-5 py-5">
+      {battleSession ? (
+        <BattleStage
+          key={battleSession.id}
+          session={battleSession}
+          stageTheme={selectedOpponent?.stageTheme}
+          onAction={handleBattleAction}
+          onComplete={handleBattleComplete}
+        />
+      ) : selectedOpponent ? (
+        <ArenaSetup
+          playerName={name}
+          playerFighter={playerFighter}
+          opponent={selectedOpponent}
+          unlocked={selectedUnlocked}
+          tokens={tokens}
+          masteryWins={rivalMastery[selectedOpponent.id]?.wins ?? 0}
+          onStart={handleStartBattle}
+        />
+      ) : null}
+
+      <section className="space-y-3">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="t-title">Trilha de rivais</h2>
+          <span className="t-caption">contra IA · local</span>
+        </div>
+        <div className="-mx-5 overflow-x-auto px-5 pb-1">
+          <div className="flex gap-3">
+            {orderedOpponents.map((opponent) => {
+              const locked = !isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents);
+              return (
+                <OpponentCard
+                  key={opponent.id}
+                  opponent={opponent}
+                  selected={opponent.id === selectedOpponent?.id}
+                  defeated={defeatedOpponents.includes(opponent.id)}
+                  locked={locked}
+                  mastery={rivalMastery[opponent.id]}
+                  className="w-[284px] shrink-0"
+                  onSelect={() => handleSelectOpponent(opponent)}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <Card tone="solid" padded={false} className="border-soft px-5 py-5">
         <div className="flex items-start gap-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
-            <Avatar
-              loadout={avatarLoadout}
-              size="lg"
-              alt={name}
-            />
+            <Avatar loadout={avatarLoadout} size="lg" alt={name} />
           </div>
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Seu loadout</p>
-            <h2 className="t-headline mt-1 truncate">{playerFighter.title}</h2>
-            <p className="mt-1 t-caption">Nível {level} · stats calculados localmente</p>
+            <h2 className="t-title mt-1 truncate">{playerFighter.title}</h2>
+            <p className="mt-1 t-caption">Nível {level} · {tokens} Eco-Tokens preservados</p>
             <BattleStatChips stats={playerFighter.stats} compact className="mt-3 max-w-[calc(100vw-152px)]" />
           </div>
         </div>
       </Card>
 
-      <Card tone="solid" padded={false} className="border-soft px-4 py-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="t-eyebrow">Plano tático</p>
-            <h2 className="t-title mt-1">Escolha a postura da simulação</h2>
-          </div>
-          <span className="hidden t-caption min-[420px]:inline">local · 0 tokens</span>
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {TACTICAL_ACTIONS.map((action) => {
-            const IconCmp = action.icon;
-            const active = selectedAction === action.value;
-            return (
-              <button
-                key={action.value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setSelectedAction(action.value)}
-                className={cn(
-                  'min-h-[84px] rounded-[var(--radius-md)] border px-2.5 py-3 text-center transition-colors',
-                  active ? 'border-active bg-tint-green-2' : 'border-soft bg-tint-1 hover:bg-tint-2'
-                )}
-              >
-                <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[var(--bg-primary)] text-[var(--accent-green)]">
-                  <Icon icon={IconCmp} size={16} />
-                </span>
-                <span className="mt-2 block t-body-sm font-semibold">{action.label}</span>
-                <span className="mt-1 block t-caption">{action.hint}</span>
-              </button>
-            );
-          })}
-        </div>
-      </Card>
-
-      {battleResult ? (
-        <BattleStage key={battleResult.id} result={battleResult} onComplete={handleBattleComplete} />
-      ) : (
-        <Card tone="soft" padded={false} className="px-4 py-4">
-          <div className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-tint-green-3 text-[var(--accent-green)]">
-              <Icon icon={Sparkles} size={18} />
-            </span>
-            <div>
-              <h2 className="t-title">Pronto para a primeira simulação</h2>
-              <p className="mt-1 t-body-sm">
-                Escolha um rival, toque em simular e a luta roda sozinha em turnos.
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="t-title">Rivais de IA</h2>
-          <span className="hidden t-caption min-[420px]:inline">{ARENA_OPPONENTS.length} simulados</span>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {ARENA_OPPONENTS.map((opponent) => (
-            <OpponentCard
-              key={opponent.id}
-              opponent={opponent}
-              selected={opponent.id === selectedOpponent.id}
-              defeated={defeatedOpponents.includes(opponent.id)}
-              onSelect={() => setSelectedOpponentId(opponent.id)}
-            />
-          ))}
-        </div>
-      </section>
-
-      {selectedOpponent ? (
-        <Card tone="solid" padded={false} className="border-soft px-5 py-5">
-          <div className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-tint-2 text-[var(--accent-gold)]">
-              <Icon icon={Shield} size={18} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="t-eyebrow">Próximo combate</p>
-              <h2 className="t-title mt-1 truncate">{selectedOpponent.name}</h2>
-              <p className="mt-1 t-body-sm">&ldquo;{selectedOpponent.quote}&rdquo;</p>
-            </div>
-          </div>
-
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            className="mt-5"
-            onClick={simulate}
-            leftIcon={<Icon icon={Swords} size={16} />}
-          >
-            Simular batalha
-          </Button>
-          <p className="mt-3 text-center t-caption">Custo: 0 tokens · recompensa: progresso de Arena</p>
-        </Card>
-      ) : null}
-
-      <ArenaProgressPanel
-        wins={wins}
-        losses={losses}
-        defeatedCount={defeatedOpponents.length}
-        totalOpponents={ARENA_OPPONENTS.length}
-        history={history}
-      />
+      <ArenaProgressPanel progress={progress} totalOpponents={orderedOpponents.length} />
     </PageShell>
   );
 }
 
-const TACTICAL_ACTIONS: Array<{
-  value: BattleAction;
-  label: string;
-  hint: string;
-  icon: typeof Target;
-}> = [
-  { value: 'attack', label: 'Atacar', hint: 'dano e energia', icon: Target },
-  { value: 'defend', label: 'Defender', hint: 'reduz impacto', icon: ShieldCheck },
-  { value: 'focus', label: 'Focar', hint: 'crítico/especial', icon: Brain },
-];
+function ArenaSetup({
+  playerName,
+  playerFighter,
+  opponent,
+  unlocked,
+  tokens,
+  masteryWins,
+  onStart,
+}: {
+  playerName: string;
+  playerFighter: ReturnType<typeof createPlayerFighter>;
+  opponent: ArenaOpponent;
+  unlocked: boolean;
+  tokens: number;
+  masteryWins: number;
+  onStart: () => void;
+}) {
+  const firstWinBonus = masteryWins === 0 ? FIRST_RIVAL_WIN_BONUS : 0;
+  const xpPreview = opponent.arenaXpReward + firstWinBonus;
 
-function buildTacticalPlan(action: BattleAction): BattleAction[] {
-  if (action === 'defend') {
-    return ['defend', 'attack', 'defend', 'focus', 'attack', 'defend', 'attack', 'attack'];
-  }
-  if (action === 'focus') {
-    return ['focus', 'attack', 'focus', 'attack', 'attack', 'defend', 'focus', 'attack'];
-  }
-  return ['attack', 'attack', 'focus', 'attack', 'attack', 'defend', 'attack', 'attack'];
+  return (
+    <Card tone="hero" padded={false} className="px-4 py-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="t-eyebrow">Próximo rival</p>
+          <h2 className="t-headline mt-1 truncate">{opponent.name}</h2>
+          <p className="mt-1 t-body-sm">&ldquo;{opponent.quote}&rdquo;</p>
+        </div>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tint-green-3 text-[var(--accent-green)]">
+          <Icon icon={Trophy} size={21} />
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2">
+        <SetupFighter name={playerName} title={playerFighter.title} loadout={playerFighter.loadout} />
+        <div className="mb-14 flex h-10 w-10 items-center justify-center rounded-full border-soft bg-[var(--bg-primary)] t-title text-[var(--accent-gold)]">
+          VS
+        </div>
+        <SetupFighter name={opponent.name} title={opponent.title} loadout={opponent.loadout} mirror />
+      </div>
+
+      <div className="mt-5 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2">
+        <InfoPill icon={Swords} label="Por round" />
+        <InfoPill icon={Zap} label={`+${xpPreview} XP`} />
+        <InfoPill icon={Shield} label={`${tokens} tokens`} />
+      </div>
+
+      <Button
+        variant="primary"
+        size="lg"
+        fullWidth
+        className="mt-5"
+        onClick={onStart}
+        disabled={!unlocked}
+        leftIcon={<Icon icon={unlocked ? Swords : Shield} size={16} />}
+      >
+        {unlocked ? 'Iniciar batalha tática' : 'Rival bloqueado'}
+      </Button>
+      <p className="mt-3 text-center t-caption">
+        {unlocked
+          ? 'Simulação local · sem aposta · sem perda de Eco-Tokens'
+          : 'Avance na trilha vencendo os rivais anteriores.'}
+      </p>
+    </Card>
+  );
+}
+
+function SetupFighter({
+  name,
+  title,
+  loadout,
+  mirror,
+}: {
+  name: string;
+  title: string;
+  loadout: ReturnType<typeof createPlayerFighter>['loadout'];
+  mirror?: boolean;
+}) {
+  return (
+    <div className="min-w-0 text-center">
+      <div className="mx-auto flex h-28 w-28 items-end justify-center rounded-full bg-black/10">
+        <Avatar loadout={loadout} size="xl" alt={name} mirror={mirror} />
+      </div>
+      <p className="mt-2 truncate t-title">{name}</p>
+      <p className="truncate t-caption">{title}</p>
+    </div>
+  );
+}
+
+function InfoPill({ icon, label }: { icon: LucideIcon; label: string }) {
+  return (
+    <div className="min-w-0 rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3 text-center">
+      <Icon icon={icon} size={16} className="mx-auto text-[var(--accent-green)]" />
+      <p className="mt-1 break-words t-caption text-[var(--text-secondary)]">{label}</p>
+    </div>
+  );
+}
+
+function isOpponentUnlocked(
+  opponent: ArenaOpponent,
+  defeatedOpponents: string[],
+  orderedOpponents: ArenaOpponent[]
+) {
+  return orderedOpponents
+    .filter((item) => item.order < opponent.order)
+    .every((item) => defeatedOpponents.includes(item.id));
+}
+
+function lockHint(opponent: ArenaOpponent, orderedOpponents: ArenaOpponent[]) {
+  const previous = [...orderedOpponents]
+    .reverse()
+    .find((item) => item.order < opponent.order);
+  return previous ? `Derrote ${previous.name} para liberar ${opponent.name}.` : 'Rival bloqueado na trilha.';
 }
