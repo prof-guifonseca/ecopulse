@@ -12,7 +12,7 @@ export function CommunitySkeleton() {
       <div className="space-y-5">
         {Array.from({ length: 2 }).map((_, i) => (
           <Card key={i} tone="solid" padded={false} className="overflow-hidden">
-            <Skeleton className="aspect-[4/5] w-full rounded-none" />
+            <Skeleton className="aspect-square w-full rounded-none" />
             <div className="space-y-2 px-4 py-4">
               <Skeleton className="h-3 w-3/4" />
               <Skeleton className="h-3 w-1/2" />

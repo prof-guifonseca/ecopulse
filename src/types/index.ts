@@ -186,7 +186,7 @@ export interface FeedPost {
   likes: number;
   comments: number;
   liked: boolean;
-  /** Curated Unsplash photo key (see src/lib/unsplash.ts) */
+  /** Curated local community image key (see src/data/communityFeedImages.ts). */
   imageKey: string;
   commentList: FeedComment[];
 }

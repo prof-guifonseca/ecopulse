@@ -2,9 +2,8 @@
 
 import Image from 'next/image';
 import { Heart, MessageCircle, CheckCircle2, Sparkles } from 'lucide-react';
-import type { FEED_POSTS } from '@/data';
+import { communityFeedImage, type FEED_POSTS } from '@/data';
 import { useLikePost } from '@/hooks/useLikePost';
-import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
@@ -22,6 +21,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const { liked, toggle } = useLikePost(post.id);
   const likeCount = post.likes + (liked ? 1 : 0);
   const firstComment = post.commentList[0];
+  const image = communityFeedImage(post.imageKey);
 
   // "Vou tentar isso" creates a one-day micro-challenge keyed by post + day,
   // and bumps the social-replicate mission counter when applicable.
@@ -41,11 +41,11 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
 
   return (
     <Card tone="solid" padded={false} className="overflow-hidden">
-      {/* Photo only — caption sits below in clean text, not floating overlay */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden">
+      {/* Image only — caption sits below in clean text, not floating overlay */}
+      <div className="relative aspect-square w-full overflow-hidden">
         <Image
-          src={unsplashUrl(post.imageKey as UnsplashKey, { w: 900, h: 1125 })}
-          alt={post.caption}
+          src={image.src}
+          alt={image.alt}
           fill
           sizes="(max-width: 430px) 100vw, 430px"
           className="object-cover"
