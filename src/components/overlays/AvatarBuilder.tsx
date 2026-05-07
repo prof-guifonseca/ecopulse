@@ -385,7 +385,7 @@ function loadoutMatches(a: AvatarLoadout, b: AvatarLoadout) {
 function previewLoadoutForGear(loadout: AvatarLoadout, item: GearItem): AvatarLoadout {
   return {
     baseId: loadout.baseId,
-    equippedGear: { ...EMPTY_GEAR, [item.slot]: item.id },
+    equippedGear: { ...EMPTY_GEAR, ...loadout.equippedGear, [item.slot]: item.id },
     activeSetId: null,
   };
 }

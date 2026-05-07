@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { GEAR_ITEMS, GEAR_SETS, getGearItem } from './gear';
-import { SLOT_ANCHORS, hasGearVisual, itemHidesFace, itemHidesHair, resolveGearVisual } from '@/components/avatar/gearVisuals';
+import { SLOT_ANCHORS, hasGearVisual, itemHidesFace, itemHidesHair, resolveGearVisual, visualRegistry } from '@/components/avatar/gearVisuals';
+import { buildEquipmentVisualAudit, equipmentVisualStatus } from './equipmentVisualAudit';
 
 describe('gear visual catalog', () => {
   it('maps every gear item to a registered SVG visual', () => {
@@ -27,6 +28,24 @@ describe('gear visual catalog', () => {
     for (const item of GEAR_ITEMS) {
       expect(SLOT_ANCHORS[item.slot]).toBeTruthy();
     }
+  });
+
+  it('keeps the visual registry available through the compatibility barrel', () => {
+    expect(Object.keys(visualRegistry).length).toBeGreaterThanOrEqual(80);
+    expect(hasGearVisual('cyber-reciclador.torso.jaqueta-solar')).toBe(true);
+  });
+
+  it('audits every gear visual without unresolved fallback status', () => {
+    const audit = buildEquipmentVisualAudit(GEAR_ITEMS);
+    expect(audit).toHaveLength(GEAR_ITEMS.length);
+    expect(audit.filter((row) => row.status === 'fallback').map((row) => row.itemId)).toEqual([]);
+  });
+
+  it('classifies signature sets separately from variants and polished legacy pieces', () => {
+    expect(equipmentVisualStatus(getGearItem('cyber-reciclador-torso')!)).toBe('signature');
+    expect(equipmentVisualStatus(getGearItem('samurai-verde-head')!)).toBe('signature');
+    expect(equipmentVisualStatus(getGearItem('akashi-torso')!)).toBe('variant');
+    expect(equipmentVisualStatus(getGearItem('hat1')!)).toBe('legacy-polished');
   });
 
   it('keeps every gear set internally complete', () => {

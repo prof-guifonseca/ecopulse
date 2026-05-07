@@ -22,6 +22,7 @@ import { ListCard } from '@/components/ui/ListCard';
 import { unlockHint } from '@/lib/skinUnlocks';
 import { meetsSkinUnlock } from '@/lib/game/rules';
 import { cn } from '@/lib/cn';
+import type { AvatarLoadout } from '@/types';
 
 export function ShopPanel({ tokens }: { tokens: number }) {
   const openModal = useUIStore((s) => s.openModal);
@@ -138,7 +139,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                 >
                   <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.12),transparent_50%),var(--tint-2)]">
                     <Avatar
-                      loadout={previewLoadoutForGear(avatarLoadout.baseId, item)}
+                      loadout={previewLoadoutForGear(avatarLoadout, item)}
                       size="lg"
                       alt={item.name}
                       highlightSlot={item.slot}
@@ -205,10 +206,10 @@ export function ShopPanel({ tokens }: { tokens: number }) {
   );
 }
 
-function previewLoadoutForGear(baseId: string | null, item: (typeof GEAR_ITEMS)[number]) {
+function previewLoadoutForGear(loadout: AvatarLoadout, item: (typeof GEAR_ITEMS)[number]) {
   return {
-    baseId,
-    equippedGear: { ...EMPTY_GEAR, [item.slot]: item.id },
+    baseId: loadout.baseId,
+    equippedGear: { ...EMPTY_GEAR, ...loadout.equippedGear, [item.slot]: item.id },
     activeSetId: null,
   };
 }
