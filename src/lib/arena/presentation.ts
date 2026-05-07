@@ -50,7 +50,7 @@ export function battleEventToVisualCue(event: BattleEvent | undefined, session: 
       playerPose: 'battleReady',
       opponentPose: 'battleReady',
       iconName: 'flag',
-      title: 'Arena pronta',
+      title: 'Teste pronto',
       shortText: 'Escolha a próxima ação.',
     };
   }
@@ -74,16 +74,16 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   if (outcome === 'win') {
     return {
       title: 'Rival dominado',
-      body: 'Domínio registrado na Arena.',
+      body: 'Loadout aprovado no treino.',
       tone: 'win',
-      primaryCta: 'Revanche',
+      primaryCta: 'Testar de novo',
       secondaryCta: 'Trocar rival',
     };
   }
   if (outcome === 'loss') {
     return {
       title: 'Derrota',
-      body: 'Sem perda de tokens.',
+      body: 'Sem perda de tokens. Ajuste o Vestiário e tente de novo.',
       tone: 'loss',
       primaryCta: 'Tentar de novo',
       secondaryCta: 'Trocar rival',
@@ -91,9 +91,9 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   }
   return {
     title: 'Empate técnico',
-    body: 'Sessão registrada.',
+    body: 'Teste registrado.',
     tone: 'draw',
-    primaryCta: 'Nova sessão',
+    primaryCta: 'Novo teste',
     secondaryCta: 'Trocar rival',
   };
 }

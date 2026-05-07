@@ -30,10 +30,10 @@ describe('resolveDailyAction', () => {
     expect(action.reward).toBe(25);
   });
 
-  it('settles into arena when all missions and the bonus are complete', () => {
+  it('settles into the wardrobe when all missions and the bonus are complete', () => {
     const action = resolveDailyAction(checks({ dm1: true, dm2: true, dm3: true }), true);
     expect(action.kind).toBe('complete');
-    expect(action.href).toBe('/arena');
+    expect(action.href).toBe('/profile?tab=shop');
   });
 });
 

@@ -22,7 +22,7 @@ export function ArenaActionDock({ session, reviewingRound, canChooseAction, onAc
         <div className="flex items-center justify-between gap-3 px-1 py-1">
           <div className="min-w-0">
             <p className="t-title">Sessão encerrada</p>
-            <p className="mt-0.5 t-caption">Arena XP registrado.</p>
+            <p className="mt-0.5 t-caption">XP de teste registrado.</p>
           </div>
           <Icon icon={Zap} size={22} className="shrink-0 text-[var(--accent-gold)]" />
         </div>

@@ -146,10 +146,10 @@ export function resolveDailyAction(
 
   return {
     kind: 'complete',
-    title: 'Dia concluído',
-    body: 'A Arena está livre para um treino.',
-    ctaLabel: 'Ir para Arena',
-    href: '/arena',
+    title: 'Teste seu loadout',
+    body: 'Seu ciclo do dia fechou. Ajuste o Vestiário e leve o conjunto para um treino.',
+    ctaLabel: 'Abrir Vestiário',
+    href: '/profile?tab=shop',
     completedCount,
   };
 }

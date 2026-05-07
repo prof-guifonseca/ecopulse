@@ -58,7 +58,7 @@ export function BattleStage({
   const canChooseAction = session.status === 'active' && !reviewingRound;
 
   return (
-    <section className="space-y-3" aria-label="Arena tática por round">
+    <section className="space-y-3" aria-label="Teste tático de loadout por round">
       <ArenaStageScene session={session} stageTheme={stageTheme} cue={cue} />
 
       {result && reward ? (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MapPin, Pencil } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
@@ -28,14 +28,18 @@ import { FlorestaSection } from './FlorestaSection';
 
 const PROFILE_TABS = [
   { value: 'impact' as const, label: 'Impacto' },
-  { value: 'shop' as const, label: 'Loja' },
+  { value: 'shop' as const, label: 'Vestiário' },
   { value: 'badges' as const, label: 'Badges' },
 ];
 
 type TabValue = (typeof PROFILE_TABS)[number]['value'];
 
-export function ProfilePage() {
-  const [tab, setTab] = useState<TabValue>('impact');
+interface ProfilePageProps {
+  initialTab?: TabValue;
+}
+
+export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
+  const [tab, setTab] = useState<TabValue>(initialTab);
   const name = useUserStore((s) => s.name);
   const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const level = useUserStore((s) => s.level);
@@ -68,6 +72,10 @@ export function ProfilePage() {
   });
   const pct = Math.min(100, Math.round((xp / xpToNext) * 100));
   const stage = gardenStage(level, journey.current);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">

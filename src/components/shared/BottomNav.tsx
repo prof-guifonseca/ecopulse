@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, MapPin, ScanLine, Swords, Users, UserRound, type LucideIcon } from 'lucide-react';
+import { Home, MapPin, ScanLine, Users, UserRound, type LucideIcon } from 'lucide-react';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 
 const TABS: Array<{ page: string; label: string; icon: LucideIcon }> = [
   { page: 'home', label: 'Início', icon: Home },
   { page: 'scanner', label: 'Scan', icon: ScanLine },
-  { page: 'arena', label: 'Arena', icon: Swords },
   { page: 'map', label: 'Mapa', icon: MapPin },
   { page: 'community', label: 'Social', icon: Users },
   { page: 'profile', label: 'Perfil', icon: UserRound },

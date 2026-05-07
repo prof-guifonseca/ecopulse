@@ -40,7 +40,7 @@ export function ShopItemModal({ id }: Props) {
   const disabled = owned || tokens < item.price;
 
   return (
-    <ModalShell eyebrow="Loja" title={item.name}>
+    <ModalShell eyebrow="Vestiário" title={item.name}>
       <div className="flex flex-col items-center text-center">
         <div className="flex h-24 w-24 items-center justify-center rounded-full border-soft bg-tint-2 text-5xl">
           {item.emoji}

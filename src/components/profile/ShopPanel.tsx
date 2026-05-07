@@ -1,6 +1,7 @@
 'use client';
 
-import { Coins } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, Coins, Swords } from 'lucide-react';
 import {
   EMPTY_GEAR,
   defaultLoadoutForSet,
@@ -32,6 +33,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
   const ownedGearItems = useUserStore((s) => s.ownedGearItems);
   const avatarLoadout = useUserStore((s) => s.avatarLoadout);
   const activeSetId = avatarLoadout.activeSetId;
+  const activeSet = GEAR_SETS.find((item) => item.id === activeSetId);
   const level = useUserStore((s) => s.level);
   const badges = useGameStore((s) => s.badges);
   const scannedCount = useGameStore((s) => s.scannedProducts.length);
@@ -70,6 +72,8 @@ export function ShopPanel({ tokens }: { tokens: number }) {
           </Button>
         </div>
       </Card>
+
+      <LoadoutTestCard activeLoadoutLabel={activeSet?.name ?? 'Peças combinadas'} />
 
       <section>
         <div className="mb-3 flex items-baseline justify-between gap-3">
@@ -203,6 +207,36 @@ export function ShopPanel({ tokens }: { tokens: number }) {
         </div>
       </section>
     </div>
+  );
+}
+
+function LoadoutTestCard({ activeLoadoutLabel }: { activeLoadoutLabel: string }) {
+  return (
+    <Card tone="solid" padded={false} className="border-active px-5 py-4">
+      <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] gap-3">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-green-2 text-[var(--accent-green)]">
+          <Icon icon={Swords} size={18} />
+        </span>
+        <div className="min-w-0">
+          <p className="t-eyebrow">Teste seu loadout</p>
+          <h2 className="t-title mt-1">Leve o Vestiário para treino</h2>
+          <p className="mt-1 t-caption">
+            {activeLoadoutLabel} entra em rounds simulados para comparar atributos antes do próximo investimento.
+          </p>
+        </div>
+      </div>
+      <Button
+        as={Link}
+        href="/arena"
+        variant="primary"
+        size="lg"
+        fullWidth
+        className="mt-4"
+        rightIcon={<Icon icon={ArrowRight} size={16} />}
+      >
+        Abrir teste tático
+      </Button>
+    </Card>
   );
 }
 

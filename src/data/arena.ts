@@ -64,7 +64,7 @@ export const ARENA_OPPONENTS: ArenaOpponent[] = [
     quote: 'Quem cuida do corpo também cuida do caminho.',
     introLine: 'Ginga é leitura. Se repetir padrão, eu entro no ritmo.',
     victoryLine: 'Movimento certo, impacto mínimo, round fechado.',
-    defeatLine: 'Você leu minha ginga. Isso é Arena de verdade.',
+    defeatLine: 'Você leu minha ginga. Esse loadout passou no teste.',
     archetype: 'trickster',
     arenaXpReward: 20,
     stageTheme: 'ginga',

@@ -41,7 +41,7 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
-        <RewardTile label="Arena XP" value={`+${reward.total}`} />
+        <RewardTile label="XP de teste" value={`+${reward.total}`} />
         <RewardTile label="Bônus" value={reward.firstWinBonus > 0 ? `+${reward.firstWinBonus}` : '0'} />
         <RewardTile label="Rounds" value={result.rounds.toString()} />
       </div>
@@ -69,7 +69,7 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
 
       <p className="mt-3 flex items-center justify-center gap-1.5 text-center t-caption">
         <Icon icon={Zap} size={13} className="text-[var(--accent-gold)]" />
-        0 tokens por batalha.
+        0 tokens por treino.
       </p>
     </section>
   );

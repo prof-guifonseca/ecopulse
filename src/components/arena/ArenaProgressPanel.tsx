@@ -26,7 +26,7 @@ export function ArenaProgressPanel({ progress, totalOpponents }: Props) {
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="t-eyebrow">Rank da Arena</p>
+                <p className="t-eyebrow">Evolução de teste</p>
                 <h2 className="t-title mt-1 truncate">{rank}</h2>
               </div>
               <span className="shrink-0 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-caption">
@@ -36,10 +36,10 @@ export function ArenaProgressPanel({ progress, totalOpponents }: Props) {
 
             <div className="mt-3">
               <div className="mb-1 flex items-center justify-between gap-2 t-caption">
-                <span>{progress.arenaXp} XP total</span>
+                <span>{progress.arenaXp} XP de teste</span>
                 <span>{level.current}/{level.next}</span>
               </div>
-              <ProgressBar value={level.current} max={level.next} ariaLabel="Progresso do rank da Arena" />
+              <ProgressBar value={level.current} max={level.next} ariaLabel="Progresso do teste de loadout" />
             </div>
           </div>
         </div>
@@ -89,5 +89,5 @@ function rankName(level: number) {
   if (level >= 4) return 'Copa Tática';
   if (level >= 3) return 'Raiz Forte';
   if (level >= 2) return 'Broto Valente';
-  return 'Aprendiz de Arena';
+  return 'Aprendiz de Loadout';
 }

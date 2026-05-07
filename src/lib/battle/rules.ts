@@ -149,7 +149,7 @@ export function startBattleSession({
     playerEnergy,
     opponentEnergy,
     effects: [],
-    message: `${player.name} entra na Arena Tática contra ${opponent.name}.`,
+    message: `${player.name} testa o loadout contra ${opponent.name}.`,
   });
 
   return {
@@ -362,8 +362,8 @@ export function finishBattleSession(session: BattleSession): BattleSession {
     effects: [{ type: 'finish', actorId: winnerId }],
     message:
       outcome === 'draw'
-        ? 'A Arena encerra em empate técnico.'
-        : `${winnerId === session.player.id ? session.player.name : session.opponent.name} vence a batalha tática.`,
+      ? 'O teste encerra em empate técnico.'
+      : `${winnerId === session.player.id ? session.player.name : session.opponent.name} vence o treino tático.`,
   });
 
   return {

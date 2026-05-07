@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Shield, Sparkles, Swords, Zap, type LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft, Shield, Sparkles, Swords, Zap, type LucideIcon } from 'lucide-react';
 import { ARENA_OPPONENTS, GEAR_ITEMS, GEAR_SETS, arenaStageVisual, getGearSet, TRIBES } from '@/data';
 import type { TribeId } from '@/data/tribes';
 import type {
@@ -123,7 +124,7 @@ export function ArenaPage() {
   const handleSelectOpponent = useCallback(
     (opponent: ArenaOpponent) => {
       if (battleSession?.status === 'active') {
-        showToast('Termine a sessão atual antes de trocar de rival.', 'info');
+        showToast('Termine o teste atual antes de trocar de rival.', 'info');
         return;
       }
       if (!isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents)) {
@@ -196,14 +197,14 @@ export function ArenaPage() {
         fireConfetti();
         const alignedSuffix = affinity.aligned ? ' · loadout alinhado +25% XP' : '';
         showToast(
-          `+${reward.total} Arena XP${alignedSuffix} · ${opponent?.defeatLine ?? 'Vitória registrada.'}`,
+          `+${reward.total} XP de teste${alignedSuffix} · ${opponent?.defeatLine ?? 'Vitória registrada.'}`,
           'reward',
           4200
         );
       } else if (result.outcome === 'loss') {
-        showToast(`+${reward.total} Arena XP · ${opponent?.victoryLine ?? 'Derrota sem custo.'}`, 'info', 4200);
+        showToast(`+${reward.total} XP de teste · ${opponent?.victoryLine ?? 'Derrota sem custo.'}`, 'info', 4200);
       } else {
-        showToast(`+${reward.total} Arena XP · Empate técnico registrado.`, 'info', 3800);
+        showToast(`+${reward.total} XP de teste · Empate técnico registrado.`, 'info', 3800);
       }
     },
     [completedBattleId, fireConfetti, showToast]
@@ -230,14 +231,16 @@ export function ArenaPage() {
       <header className="pt-1">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h1 className="t-headline max-w-full break-words leading-none">Arena Tática</h1>
-            <p className="mt-1 t-caption">Rounds · Arena XP</p>
+            <h1 className="t-headline max-w-full break-words leading-none">Teste de Loadout</h1>
+            <p className="mt-1 t-caption">Vestiário · rounds simulados</p>
           </div>
           <span className="shrink-0 rounded-full border-soft bg-tint-1 px-3 py-1 t-caption">
-            0 tokens por luta
+            0 tokens por treino
           </span>
         </div>
       </header>
+
+      <LoadoutSummaryCard name={name} level={level} tokens={tokens} playerFighter={playerFighter} />
 
       {battleSession ? (
         <BattleStage
@@ -263,8 +266,8 @@ export function ArenaPage() {
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="t-title">Trilha de rivais</h2>
-          <span className="t-caption">{defeatedOpponents.length}/{orderedOpponents.length} dominados</span>
+          <h2 className="t-title">Rivais de treino</h2>
+          <span className="t-caption">{defeatedOpponents.length}/{orderedOpponents.length} superados</span>
         </div>
         <div className="-mx-4 overflow-x-auto px-4 pb-1">
           <div className="relative flex gap-3 pb-1">
@@ -292,22 +295,50 @@ export function ArenaPage() {
         </div>
       </section>
 
-      <Card tone="solid" padded={false} className="border-soft px-5 py-5">
-        <div className="flex items-start gap-4">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
-            <Avatar loadout={avatarLoadout} size="lg" alt={name} pose="battleReady" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="t-eyebrow">Seu loadout</p>
-            <h2 className="t-title mt-1 truncate">{playerFighter.title}</h2>
-            <p className="mt-1 t-caption">Nv {level} · {tokens} tokens</p>
-            <BattleStatChips stats={playerFighter.stats} compact className="mt-3 max-w-[calc(100vw-152px)]" />
-          </div>
-        </div>
-      </Card>
-
       <ArenaProgressPanel progress={progress} totalOpponents={orderedOpponents.length} />
     </PageShell>
+  );
+}
+
+function LoadoutSummaryCard({
+  name,
+  level,
+  tokens,
+  playerFighter,
+}: {
+  name: string;
+  level: number;
+  tokens: number;
+  playerFighter: ReturnType<typeof createPlayerFighter>;
+}) {
+  return (
+    <Card tone="solid" padded={false} className="border-soft px-5 py-5">
+      <div className="flex items-start gap-4">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
+          <Avatar loadout={playerFighter.loadout} size="lg" alt={name} pose="battleReady" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="t-eyebrow">Seu loadout</p>
+              <h2 className="t-title mt-1 truncate">{playerFighter.title}</h2>
+            </div>
+            <Button
+              as={Link}
+              href="/profile?tab=shop"
+              variant="secondary"
+              size="sm"
+              className="shrink-0"
+              leftIcon={<Icon icon={ArrowLeft} size={14} />}
+            >
+              Vestiário
+            </Button>
+          </div>
+          <p className="mt-1 t-caption">Nv {level} · {tokens} tokens</p>
+          <BattleStatChips stats={playerFighter.stats} compact className="mt-3 max-w-[calc(100vw-152px)]" />
+        </div>
+      </div>
+    </Card>
   );
 }
 
@@ -366,7 +397,7 @@ function ArenaSetup({
 
       <div className="relative z-10 mt-5 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2">
         <InfoPill icon={Swords} label={ARENA_ARCHETYPE_LABELS[opponent.archetype]} />
-        <InfoPill icon={Zap} label={`+${xpPreview} XP`} />
+        <InfoPill icon={Zap} label={`+${xpPreview} XP teste`} />
         <InfoPill icon={Shield} label="0 tokens" muted />
       </div>
 
@@ -379,12 +410,12 @@ function ArenaSetup({
         disabled={!unlocked}
         leftIcon={<Icon icon={unlocked ? Swords : Shield} size={16} />}
       >
-        {unlocked ? 'Iniciar batalha tática' : 'Rival bloqueado'}
+        {unlocked ? 'Testar loadout' : 'Treino bloqueado'}
       </Button>
       <p className="relative z-10 mt-3 text-center t-caption">
         {unlocked
-          ? 'Simulação local · 0 tokens'
-          : 'Avance na trilha vencendo os rivais anteriores.'}
+          ? 'Treino local · 0 tokens · atributos do Vestiário'
+          : 'Avance na trilha superando os rivais anteriores.'}
       </p>
     </Card>
   );
@@ -435,5 +466,5 @@ function lockHint(opponent: ArenaOpponent, orderedOpponents: ArenaOpponent[]) {
   const previous = [...orderedOpponents]
     .reverse()
     .find((item) => item.order < opponent.order);
-  return previous ? `Derrote ${previous.name} para liberar ${opponent.name}.` : 'Rival bloqueado na trilha.';
+  return previous ? `Supere ${previous.name} para liberar o treino com ${opponent.name}.` : 'Treino bloqueado na trilha.';
 }

@@ -11,7 +11,7 @@ import {
   Leaf,
   MapPin,
   ScanLine,
-  Swords,
+  Shirt,
   type LucideIcon,
 } from 'lucide-react';
 import { DAILY_MISSIONS, getMissionTemplate } from '@/data';
@@ -46,7 +46,7 @@ const ACTION_ICONS: Record<DailyActionKind, LucideIcon> = {
   social: Heart,
   map: MapPin,
   bonus: Gift,
-  complete: Swords,
+  complete: Shirt,
 };
 
 export function HomePage() {
@@ -256,7 +256,7 @@ function ActionButton({ action }: { action: DailyAction }) {
   return (
     <Button
       as={Link}
-      href={action.href ?? '/arena'}
+      href={action.href ?? '/profile?tab=shop'}
       variant={action.kind === 'complete' ? 'secondary' : 'primary'}
       size="lg"
       fullWidth

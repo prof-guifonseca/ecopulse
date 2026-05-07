@@ -84,7 +84,7 @@ describe('arena presentation helpers', () => {
   });
 
   it('describes win, loss and draw outcomes', () => {
-    expect(arenaOutcomePresentation('win').primaryCta).toBe('Revanche');
+    expect(arenaOutcomePresentation('win').primaryCta).toBe('Testar de novo');
     expect(arenaOutcomePresentation('loss').body).toContain('tokens');
     expect(arenaOutcomePresentation('draw').tone).toBe('draw');
   });
