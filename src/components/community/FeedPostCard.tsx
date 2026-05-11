@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Heart, MessageCircle, CheckCircle2, Sparkles } from 'lucide-react';
 import { communityFeedImage } from '@/data';
-import type { SimulatedFeedPost } from '@/simulation';
+import type { CommunityFeedPost } from '@/lib/community/realFeed';
 import { useLikePost } from '@/hooks/useLikePost';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -16,7 +16,7 @@ import { todayKey } from '@/lib/dailyReset';
 import { syncCommunityReaction } from '@/lib/client/mvpSync';
 
 interface Props {
-  post: SimulatedFeedPost;
+  post: CommunityFeedPost;
   onOpenComments: () => void;
 }
 
@@ -76,6 +76,15 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
 
       <div className="px-4 py-4 space-y-3">
         <p className="t-body">{post.caption}</p>
+        <p className="t-micro text-[var(--text-muted)]">
+          Fonte: {post.sourceUrl ? (
+            <a href={post.sourceUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted underline-offset-2">
+              {post.sourceLabel}
+            </a>
+          ) : (
+            post.sourceLabel
+          )}
+        </p>
 
         <div className="flex items-center gap-2">
           <Chip
@@ -86,7 +95,12 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
           >
             {likeCount}
           </Chip>
-          <Chip onClick={onOpenComments} leftIcon={<Icon icon={MessageCircle} size={14} />}>
+          <Chip
+            asStatic={post.comments === 0}
+            staticRole="presentation"
+            onClick={post.comments > 0 ? onOpenComments : undefined}
+            leftIcon={<Icon icon={MessageCircle} size={14} />}
+          >
             {post.comments}
           </Chip>
           <Chip

@@ -31,7 +31,7 @@ export function FlorestaSection() {
       icon: TreePine,
       value: String(realImpact.treesPlanted),
       label: 'árvores plantadas',
-      hint: 'Doações simuladas + ritual de capítulo Floresta.',
+      hint: 'Doações e rituais registrados no ledger local.',
     },
     {
       icon: BatteryCharging,
@@ -63,7 +63,7 @@ export function FlorestaSection() {
     <Card className="p-4">
       <header className="mb-3 flex items-baseline justify-between gap-2">
         <h2 className="t-title">Floresta EcoPulse</h2>
-        <span className="t-micro text-[var(--text-muted)]">Soma simulada · prototype</span>
+        <span className="t-micro text-[var(--text-muted)]">Estimativa local</span>
       </header>
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {metrics.map((m) => (

@@ -49,7 +49,6 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
   const streak = useUserStore((s) => s.streak);
   const tribe = useUserStore((s) => s.tribe);
   const badges = useGameStore((s) => s.badges);
-  const scannedCount = useGameStore((s) => s.scannedProducts.length);
   const openAvatarBuilder = useUIStore((s) => s.openAvatarBuilder);
 
   const scannedProducts = useGameStore((s) => s.scannedProducts);
@@ -123,7 +122,7 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
 
       <Tabs items={PROFILE_TABS} value={tab} onChange={setTab} />
 
-      {tab === 'impact' && <ImpactPanel scannedCount={scannedCount} />}
+      {tab === 'impact' && <ImpactPanel history={history} />}
       {tab === 'shop' && <ShopPanel tokens={tokens} />}
       {tab === 'badges' && <BadgesPanel owned={badges} />}
     </PageShell>

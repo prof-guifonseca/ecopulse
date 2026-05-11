@@ -33,12 +33,12 @@ export function FlorestaCounterStrip() {
 
   return (
     <section
-      aria-label="Floresta EcoPulse · contador simulado"
+      aria-label="Floresta EcoPulse · estimativa local"
       className="rounded-[var(--radius-md)] border-soft bg-tint-1 p-3"
     >
       <header className="mb-2 flex items-baseline justify-between gap-2">
         <h2 className="t-eyebrow">Floresta EcoPulse</h2>
-        <span className="t-micro text-[var(--text-muted)]">Soma simulada · prototype</span>
+        <span className="t-micro text-[var(--text-muted)]">Estimativa local</span>
       </header>
       <ul className="grid grid-cols-5 gap-2">
         {metrics.map((m) => (
