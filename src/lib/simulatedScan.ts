@@ -67,6 +67,11 @@ export function scanRecordFromProduct(
     breakdown: result.breakdown,
     tip: result.tip,
     rationale: result.rationale,
+    confidence: product.confidence,
+    sourceName: product.sourceName,
+    sourceUrl: product.sourceUrl,
+    lastFetchedAt: product.sourceUpdatedAt,
+    evidence: product.evidence,
     scannedAt,
   };
 }

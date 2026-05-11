@@ -48,6 +48,10 @@ interface UnifiedView {
   rationale: string[];
   /** Identifier in the catalog so we can find alternatives. */
   catalogId: string;
+  confidence?: number;
+  sourceName?: string;
+  sourceUrl?: string;
+  evidenceFields?: string[];
 }
 
 export function ProductDetailModal({ id }: Props) {
@@ -117,6 +121,15 @@ export function ProductDetailModal({ id }: Props) {
             ×{ECO_MULTIPLIER[view.score].toFixed(1)} tokens
           </span>
         </div>
+        <div className="mt-2 inline-flex max-w-full flex-wrap justify-center gap-2 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-micro">
+          <span className="text-[var(--text-muted)]">Fonte:</span>
+          <span className="font-semibold text-[var(--text-secondary)]">
+            {view.sourceName ?? 'Open Food Facts'}
+          </span>
+          {view.confidence ? (
+            <span className="text-[var(--text-muted)]">· confiança {view.confidence}%</span>
+          ) : null}
+        </div>
 
         <div className="mt-5 w-full space-y-3">
           {Object.entries(view.breakdown).map(([k, v]) => (
@@ -136,9 +149,15 @@ export function ProductDetailModal({ id }: Props) {
               Cálculo
             </div>
             <ul className="mt-2 space-y-1 t-caption">
+              {view.confidence && view.confidence < 55 ? (
+                <li>· Dados insuficientes para avaliação completa</li>
+              ) : null}
               {view.rationale.map((line) => (
                 <li key={line}>· {line}</li>
               ))}
+              {view.evidenceFields?.length ? (
+                <li>· Evidências: {view.evidenceFields.join(', ')}</li>
+              ) : null}
             </ul>
           </div>
         ) : null}
@@ -189,6 +208,10 @@ function resolveView(
       breakdown: { ...scan.breakdown },
       tip: scan.tip,
       rationale: scan.rationale,
+      confidence: scan.confidence,
+      sourceName: scan.sourceName,
+      sourceUrl: scan.sourceUrl,
+      evidenceFields: scan.evidence?.fields,
     };
   }
   const catalogProduct = getProductCatalog().find((p) => p.id === id);
@@ -205,6 +228,10 @@ function resolveView(
     breakdown: catalogProduct.breakdown,
     tip: catalogProduct.tip,
     rationale: [],
+    confidence: catalogProduct.confidence,
+    sourceName: catalogProduct.sourceName,
+    sourceUrl: catalogProduct.sourceUrl,
+    evidenceFields: catalogProduct.evidence?.fields,
   };
 }
 

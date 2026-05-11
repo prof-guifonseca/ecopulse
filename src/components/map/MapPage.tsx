@@ -49,7 +49,7 @@ export function MapPage() {
   const [filter, setFilter] = useState<'todos' | EnvironmentalCategory>('todos');
   const [panel, setPanel] = useState<'places' | 'events'>('places');
   const [status, setStatus] = useState<LoadStatus>('ready');
-  const [dataSource, setDataSource] = useState<EnvironmentalPointSource>('simulation');
+  const [dataSource, setDataSource] = useState<EnvironmentalPointSource>('official');
   const [sourceReason, setSourceReason] = useState<string | null>(null);
   const [focusCenter, setFocusCenter] = useState<LatLng | undefined>(undefined);
   const [scopeLabel, setScopeLabel] = useState(region.blurb);
@@ -92,7 +92,7 @@ export function MapPage() {
     }) => {
       if (!LIVE_DISCOVERY_ENABLED) {
         setAllPoints(fallbackPoints);
-        setDataSource('simulation');
+        setDataSource('official');
         setSourceReason('live-disabled');
         setStatus('fallback');
         return;
@@ -128,12 +128,12 @@ export function MapPage() {
         setSourceReason(result.reason ?? null);
         setFocusCenter(result.center ?? opts.center);
         setScopeLabel(opts.label);
-        setStatus(result.source === 'simulation' ? 'fallback' : 'ready');
+        setStatus(result.source === 'official' ? 'fallback' : 'ready');
       } catch (error) {
         if (opts.signal?.aborted) return;
         rememberEnvironmentalPoints(fallbackPoints);
         setAllPoints(fallbackPoints);
-        setDataSource('simulation');
+        setDataSource('official');
         setSourceReason(error instanceof Error ? error.message : 'request-error');
         setStatus('error');
       }
@@ -282,8 +282,8 @@ export function MapPage() {
 
       {sourceReason ? (
         <p className="t-caption -mt-2 text-[var(--text-muted)]">
-          {dataSource === 'simulation' || status === 'fallback' || status === 'error'
-            ? 'Pontos simulados ativos enquanto a fonte aberta responde.'
+          {dataSource === 'official' || status === 'fallback' || status === 'error'
+            ? 'Snapshot oficial/curado ativo enquanto a fonte aberta responde.'
             : 'Resultado reaproveitado de consulta recente.'}
         </p>
       ) : null}

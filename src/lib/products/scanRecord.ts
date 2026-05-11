@@ -23,6 +23,16 @@ export function scanRecordFromLookup(
     },
     tip: lookup.tip,
     rationale: lookup.rationale,
+    confidence: lookup.confidence,
+    sourceName:
+      lookup.provider === 'openfoodfacts'
+        ? lookup.source === 'cache'
+          ? 'Open Food Facts snapshot/cache'
+          : 'Open Food Facts'
+        : undefined,
+    sourceUrl: lookup.sourceUrl,
+    lastFetchedAt: lookup.lastFetchedAt,
+    evidence: lookup.evidence,
     scannedAt: lookup.checkedAt,
   };
 }

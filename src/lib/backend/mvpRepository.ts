@@ -97,7 +97,7 @@ export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedIt
     comments: post.comments,
     viewerLiked: post.liked || activeLikes.has(post.id),
     viewerPromised: activePromises.has(post.id),
-    source: 'simulation',
+    source: 'demo',
   }));
 }
 

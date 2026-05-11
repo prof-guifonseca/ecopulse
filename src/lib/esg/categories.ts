@@ -51,9 +51,11 @@ export const ENVIRONMENTAL_CATEGORY_ICON: Record<EnvironmentalCategory, string> 
 };
 
 export const ENVIRONMENTAL_SOURCE_LABELS: Record<EnvironmentalPointSource, string> = {
-  simulation: 'Simulado',
+  official: 'Snapshot oficial',
   osm: 'OpenStreetMap',
   cache: 'Cache',
+  user: 'Comunidade',
+  demo: 'Demo',
 };
 
 export const MAP_POINT_TYPE_TO_ENVIRONMENTAL_CATEGORY: Record<MapPointType, EnvironmentalCategory> = {

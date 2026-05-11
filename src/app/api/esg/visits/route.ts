@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     const event = createEcoPulseEvent({
       type: 'map_visit_marked',
-      source: point.source === 'simulation' ? 'simulation' : point.source === 'cache' ? 'cache' : 'provider',
+      source: point.source === 'cache' ? 'cache' : point.source === 'demo' ? 'demo' : 'provider',
       payload: {
         pointId: point.id,
         source: point.source,

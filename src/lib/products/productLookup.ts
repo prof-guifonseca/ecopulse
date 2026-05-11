@@ -65,7 +65,8 @@ export function normalizeOpenFoodFactsProduct(
   const packagingTags = normalizeTags([...(product.packaging_tags ?? []), product.packaging ?? '']);
   const countries = normalizeTags(product.countries_tags ?? []);
   const novaGroup = normalizeNova(product.nova_group);
-  const preGradedScore = scoreFromEcoScore(product.ecoscore_grade);
+  const normalizedEcoScore = product.ecoscore_grade?.trim().toLowerCase() || null;
+  const preGradedScore = scoreFromEcoScore(normalizedEcoScore ?? undefined);
   const input: ScoreInput = {
     novaGroup,
     preGradedScore,
@@ -75,6 +76,15 @@ export function normalizeOpenFoodFactsProduct(
   };
   const score = deriveScore(input);
   const category = categoryFromOpenFoodFacts(product);
+  const checkedAt = new Date().toISOString();
+  const evidence = buildEvidence({
+    packagingTags,
+    countriesTags: countries,
+    novaGroup,
+    ecoscoreGrade: normalizedEcoScore,
+    image: Boolean(product.image_front_url),
+  });
+  const confidence = confidenceFromEvidence(evidence);
 
   return {
     id: `off:${barcode}`,
@@ -88,10 +98,14 @@ export function normalizeOpenFoodFactsProduct(
     emoji: emojiForCategory(category),
     score: score.score,
     breakdown: { ...score.breakdown },
-    tip: score.tip,
+    tip: confidence < 55 ? insufficientTip() : score.tip,
     rationale: ['Open Food Facts', ...score.rationale],
+    confidence,
+    evidence,
+    sourceUrl: `https://world.openfoodfacts.org/product/${barcode}`,
+    lastFetchedAt: checkedAt,
     imageUrl: product.image_front_url,
-    checkedAt: new Date().toISOString(),
+    checkedAt,
   };
 }
 
@@ -108,8 +122,8 @@ export function productLookupResultFromCatalog(product: Product): ProductLookupR
     id: product.id,
     barcode: product.barcode,
     found: true,
-    source: 'simulation',
-    provider: 'local-catalog',
+    source: 'cache',
+    provider: 'openfoodfacts',
     name: product.name,
     brand: product.brand,
     category: product.category,
@@ -117,7 +131,11 @@ export function productLookupResultFromCatalog(product: Product): ProductLookupR
     score: score.score,
     breakdown: { ...score.breakdown },
     tip: product.tip || score.tip,
-    rationale: ['Catálogo local de fallback', ...score.rationale],
+    rationale: ['Snapshot Open Food Facts', ...score.rationale],
+    confidence: product.confidence ?? 55,
+    evidence: product.evidence ?? emptyEvidence(),
+    sourceUrl: product.sourceUrl,
+    lastFetchedAt: product.sourceUpdatedAt ?? new Date().toISOString(),
     catalogProductId: product.id,
     checkedAt: new Date().toISOString(),
   };
@@ -143,8 +161,11 @@ function unknownProductResult(barcode: string): ProductLookupResult {
     emoji: '📦',
     score: score.score,
     breakdown: { ...score.breakdown },
-    tip: 'Dados insuficientes. Use como registro manual e revise alternativas no catálogo.',
+    tip: insufficientTip(),
     rationale: ['Barcode não encontrado em provedores abertos', ...score.rationale],
+    confidence: 15,
+    evidence: emptyEvidence(),
+    lastFetchedAt: new Date().toISOString(),
     checkedAt: new Date().toISOString(),
   };
 }
@@ -225,4 +246,56 @@ function emojiForCategory(category: string): string {
 
 function firstValue(value: string | undefined): string {
   return value?.split(',').map((item) => item.trim()).find(Boolean) ?? '';
+}
+
+function buildEvidence(input: {
+  packagingTags: string[];
+  countriesTags: string[];
+  novaGroup: 1 | 2 | 3 | 4 | null;
+  ecoscoreGrade: string | null;
+  image: boolean;
+}): ProductLookupResult['evidence'] {
+  const fields = [
+    input.packagingTags.length > 0 ? 'packaging' : null,
+    input.novaGroup ? 'nova_group' : null,
+    input.ecoscoreGrade && !['unknown', 'not-applicable'].includes(input.ecoscoreGrade)
+      ? 'ecoscore_grade'
+      : null,
+    input.image ? 'image_front_url' : null,
+    input.countriesTags.length > 0 ? 'countries_tags' : null,
+  ].filter((field): field is string => Boolean(field));
+
+  return {
+    packagingTags: input.packagingTags,
+    countriesTags: input.countriesTags,
+    novaGroup: input.novaGroup,
+    ecoscoreGrade: input.ecoscoreGrade,
+    image: input.image,
+    fields,
+  };
+}
+
+function confidenceFromEvidence(evidence: ProductLookupResult['evidence']): number {
+  let confidence = 30 + Math.min(evidence.fields.length, 5) * 8;
+  if (evidence.packagingTags.length > 0) confidence += 12;
+  if (evidence.novaGroup) confidence += 10;
+  if (scoreFromEcoScore(evidence.ecoscoreGrade ?? undefined)) confidence += 12;
+  if (evidence.image) confidence += 5;
+  if (evidence.countriesTags.includes('brazil')) confidence += 8;
+  return Math.min(confidence, 95);
+}
+
+function emptyEvidence(): ProductLookupResult['evidence'] {
+  return {
+    packagingTags: [],
+    countriesTags: [],
+    novaGroup: null,
+    ecoscoreGrade: null,
+    image: false,
+    fields: [],
+  };
+}
+
+function insufficientTip(): string {
+  return 'Dados insuficientes para avaliação completa. Use como registro e confira alternativas com mais evidências.';
 }

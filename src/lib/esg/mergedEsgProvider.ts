@@ -33,7 +33,7 @@ export async function searchEnvironmentalPlaces(
   }
 
   const localProvider = createLocalSimulationProvider();
-  if (provider === 'simulation') {
+  if (provider === 'official' || provider === 'demo' || provider === 'simulation') {
     return localProvider.search(normalizedInput);
   }
 

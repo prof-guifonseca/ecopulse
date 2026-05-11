@@ -28,6 +28,7 @@ import { cn } from '@/lib/cn';
  * the product modal until it closes).
  */
 const SCAN_RITUAL_MS = 1600;
+const DEMO_DATA_ENABLED = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === 'true';
 
 type BarcodeDetectorResult = { rawValue: string };
 type BarcodeDetectorCtor = new (options?: { formats?: string[] }) => {
@@ -59,6 +60,7 @@ export function ScannerPage() {
   const history = useScanHistoryStore((s) => s.history);
   const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
   const products = useMemo(() => getProductCatalog(), []);
+  const sampleProduct = products[0];
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
@@ -223,6 +225,11 @@ export function ScannerPage() {
     void lookupBarcode(barcodeInput, 'manual');
   };
 
+  const triggerSampleLookup = () => {
+    if (!sampleProduct || scanning) return;
+    void lookupBarcode(sampleProduct.barcode, 'barcode');
+  };
+
   const triggerScan = () => {
     if (scanning) return;
     hapticTap();
@@ -322,7 +329,7 @@ export function ScannerPage() {
           </Button>
         </form>
 
-        <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className={cn('mt-3 grid gap-2', DEMO_DATA_ENABLED ? 'grid-cols-3' : 'grid-cols-2')}>
           <Button
             variant={cameraActive ? 'ghost' : 'secondary'}
             size="md"
@@ -335,13 +342,25 @@ export function ScannerPage() {
           <Button
             variant="secondary"
             size="md"
-            onClick={triggerScan}
+            onClick={triggerSampleLookup}
             disabled={scanning}
             loading={scanning && !barcodeInput}
-          leftIcon={!scanning ? <Icon icon={Camera} size={15} /> : undefined}
-        >
-          {scanning ? 'Lendo…' : 'Simular scan'}
-        </Button>
+            leftIcon={!scanning ? <Icon icon={Sparkles} size={15} /> : undefined}
+          >
+            {scanning ? 'Lendo…' : 'Amostra real'}
+          </Button>
+          {DEMO_DATA_ENABLED ? (
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={triggerScan}
+              disabled={scanning}
+              loading={scanning && !barcodeInput}
+              leftIcon={!scanning ? <Icon icon={Camera} size={15} /> : undefined}
+            >
+              Demo scan
+            </Button>
+          ) : null}
         </div>
 
         <p className="mt-3 text-center t-caption">
@@ -368,7 +387,7 @@ export function ScannerPage() {
         </p>
       ) : null}
 
-      {/* Recent scans (persisted, simulated) */}
+      {/* Recent scans (persisted locally) */}
       {history.length > 0 ? (
         <section>
           <div className="mb-4 flex items-baseline justify-between">

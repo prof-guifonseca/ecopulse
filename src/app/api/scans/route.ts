@@ -44,5 +44,5 @@ async function resolveLookup(body: Record<string, unknown>): Promise<ProductLook
 
 function scanSourceFrom(value: unknown, lookup: ProductLookupResult): ScanResult['source'] {
   if (value === 'manual' || value === 'barcode') return value;
-  return lookup.source === 'user' ? 'manual' : lookup.source === 'simulation' ? 'simulation' : 'barcode';
+  return lookup.source === 'user' ? 'manual' : 'barcode';
 }

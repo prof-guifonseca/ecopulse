@@ -101,7 +101,7 @@ async function seedOnboardedState(page: Page) {
   });
 }
 
-async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'simulation' | 'cache'; gpsName?: string } = {}) {
+async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'official' | 'cache'; gpsName?: string } = {}) {
   const source = opts.source ?? 'osm';
   const gpsName = opts.gpsName ?? 'Recicla Centro OSM';
   await page.route('**/api/esg/places**', async (route) => {
@@ -113,13 +113,13 @@ async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'simulation' |
       body: JSON.stringify({
         source,
         generatedAt: new Date().toISOString(),
-        reason: source === 'simulation' ? 'osm-error:test' : undefined,
+        reason: source === 'official' ? 'osm-error:test' : undefined,
         points: [
           {
-            id: source === 'simulation' ? 'ldb-bat-centro' : 'osm:node:9001',
+            id: source === 'official' ? 'ldb-bat-centro' : 'osm:node:9001',
             source,
-            sourceId: source === 'simulation' ? 'simulation:ldb-bat-centro' : 'node/9001',
-            name: isGps ? gpsName : source === 'simulation' ? 'EcoPonto Pilhas Centro' : 'Recicla Centro OSM',
+            sourceId: source === 'official' ? 'official:ldb-bat-centro' : 'node/9001',
+            name: isGps ? gpsName : source === 'official' ? 'Multicoisas Catuaí - coleta de pilhas' : 'Recicla Centro OSM',
             category: 'batteries',
             categories: ['batteries', 'recycling'],
             address: 'Centro · Rua Sergipe, 489',
@@ -127,22 +127,26 @@ async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'simulation' |
             phone: '+55 43 99999-0000',
             lat: -23.311,
             lng: -51.161,
-            confidence: source === 'simulation' ? 65 : 91,
+            confidence: source === 'official' ? 84 : 91,
             tags: { test: 'true' },
-            sourceUrl: source === 'simulation' ? undefined : 'https://www.openstreetmap.org/node/9001',
+            sourceName: source === 'official' ? 'Prefeitura de Londrina / OpenStreetMap' : 'OpenStreetMap',
+            sourceUrl:
+              source === 'official'
+                ? 'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos'
+                : 'https://www.openstreetmap.org/node/9001',
           },
           {
-            id: source === 'simulation' ? 'ldb-rep-centro' : 'osm:node:9002',
+            id: source === 'official' ? 'ldb-rep-centro' : 'osm:node:9002',
             source,
-            sourceId: source === 'simulation' ? 'simulation:ldb-rep-centro' : 'node/9002',
-            name: 'Conserta Tudo OSM',
+            sourceId: source === 'official' ? 'official:ldb-rep-centro' : 'node/9002',
+            name: source === 'official' ? 'Ateliê de Costura' : 'Conserta Tudo OSM',
             category: 'repair',
             categories: ['repair'],
             address: 'Centro · Rua Espírito Santo, 410',
             openingHours: 'Mo-Fr 09:00-18:00',
             lat: -23.3138,
             lng: -51.1608,
-            confidence: source === 'simulation' ? 65 : 86,
+            confidence: source === 'official' ? 78 : 86,
             tags: { test: 'true' },
           },
         ],
@@ -170,6 +174,17 @@ async function mockProductLookup(page: Page) {
         breakdown: { carbono: 70, embalagem: 80, reciclabilidade: 80, origem: 75 },
         tip: 'Boa escolha para o ciclo diário.',
         rationale: ['Open Food Facts', 'Origem nacional'],
+        confidence: 82,
+        evidence: {
+          packagingTags: ['paper'],
+          countriesTags: ['brazil'],
+          novaGroup: 1,
+          ecoscoreGrade: 'b',
+          image: true,
+          fields: ['packaging', 'nova_group', 'ecoscore_grade', 'countries_tags'],
+        },
+        sourceUrl: 'https://world.openfoodfacts.org/product/7891000000001',
+        lastFetchedAt: new Date().toISOString(),
         checkedAt: new Date().toISOString(),
       }),
     });
@@ -240,20 +255,20 @@ test('map renders live ESG points, filters them, and restores modal focus', asyn
 
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
-  await expect(page.getByText(/OpenStreetMap · 86%/)).toBeVisible();
+  await expect(dialog.getByText(/OpenStreetMap · confiança 86%/)).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   await expect(placeButton).toBeFocused();
 });
 
-test('map falls back to simulated ESG points when the API reports simulation', async ({ page }) => {
+test('map falls back to the curated Londrina ESG snapshot when the API reports official data', async ({ page }) => {
   await seedOnboardedState(page);
-  await mockEsgPlaces(page, { source: 'simulation' });
+  await mockEsgPlaces(page, { source: 'official' });
   await gotoApp(page, '/map');
 
-  await expect(page.getByText('Simulado').first()).toBeVisible();
-  await expect(page.getByText('Pontos simulados ativos enquanto a fonte aberta responde.')).toBeVisible();
-  await expect(page.getByText('EcoPonto Pilhas Centro').first()).toBeVisible();
+  await expect(page.getByText('Snapshot oficial').first()).toBeVisible();
+  await expect(page.getByText('Snapshot oficial/curado ativo enquanto a fonte aberta responde.')).toBeVisible();
+  await expect(page.getByText('Multicoisas Catuaí - coleta de pilhas').first()).toBeVisible();
 });
 
 test('map can search near the mocked browser location', async ({ page }) => {
@@ -319,7 +334,7 @@ test('arena route renders the loadout test surface', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Testar loadout|Treino bloqueado/ })).toBeVisible();
 });
 
-test('scanner can search, lookup a barcode, simulate a fallback scan, and restore modal focus', async ({ page }) => {
+test('scanner can search, lookup a barcode, use a real sample, and restore modal focus', async ({ page }) => {
   await seedOnboardedState(page);
   await mockProductLookup(page);
   await gotoApp(page, '/scanner');
@@ -327,8 +342,8 @@ test('scanner can search, lookup a barcode, simulate a fallback scan, and restor
   await expect(page.getByRole('heading', { name: 'Scanner', level: 1 })).toBeVisible();
 
   const search = page.getByRole('textbox', { name: 'Buscar produtos' });
-  await search.fill('arroz');
-  await expect(page.getByText(/arroz/i).first()).toBeVisible();
+  await search.fill('coca');
+  await expect(page.getByText(/coca/i).first()).toBeVisible();
   await search.fill('');
 
   await page.getByRole('textbox', { name: 'Barcode do produto' }).fill('7891000000001');
@@ -339,9 +354,8 @@ test('scanner can search, lookup a barcode, simulate a fallback scan, and restor
   await page.keyboard.press('Escape');
   await expect(lookupDialog).toBeHidden();
 
-  const scanButton = page.getByRole('button', { name: 'Simular scan' });
+  const scanButton = page.getByRole('button', { name: 'Amostra real' });
   await scanButton.click();
-  await expect(page.getByRole('button', { name: /Lendo/ })).toBeVisible();
 
   const scanDialog = page.getByRole('dialog');
   await expect(scanDialog).toBeVisible({ timeout: 7_000 });
@@ -382,7 +396,8 @@ test('onboarding works when the demo seed is neutralized', async ({ page }) => {
   await expect(page).toHaveURL(/\/scanner\?welcome=1$/);
   await expect(page.getByText('Faça um scan para liberar a Home.')).toBeVisible();
 
-  await page.getByRole('button', { name: 'Simular scan' }).click();
+  await mockProductLookup(page);
+  await page.getByRole('button', { name: 'Amostra real' }).click();
   const firstRunDialog = page.getByRole('dialog');
   await expect(firstRunDialog).toBeVisible({ timeout: 7_000 });
   await page.keyboard.press('Escape');

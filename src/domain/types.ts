@@ -1,7 +1,7 @@
 import type { EnvironmentalPoint } from '@/lib/esg';
 import type { Score } from '@/types';
 
-export type DataSource = 'user' | 'provider' | 'cache' | 'simulation' | 'demo';
+export type DataSource = 'user' | 'provider' | 'cache' | 'official' | 'simulation' | 'demo';
 
 export interface EcoPulseUserProfile {
   id: string;
@@ -110,6 +110,17 @@ export interface ProductLookupResult {
   breakdown: Record<string, number>;
   tip: string;
   rationale: string[];
+  confidence: number;
+  evidence: {
+    packagingTags: string[];
+    countriesTags: string[];
+    novaGroup: 1 | 2 | 3 | 4 | null;
+    ecoscoreGrade: string | null;
+    image: boolean;
+    fields: string[];
+  };
+  sourceUrl?: string;
+  lastFetchedAt: string;
   catalogProductId?: string;
   imageUrl?: string;
   checkedAt: string;
