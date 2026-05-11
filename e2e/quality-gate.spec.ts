@@ -1,17 +1,104 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const seedSentinel = 'ecopulse:seeded:v1';
+async function resetAppState(page: Page) {
+  await page.addInitScript(() => {
+    localStorage.clear();
+  });
+}
 
-async function resetDemoState(page: Page, options: { disableDemoSeed?: boolean } = {}) {
-  await page.addInitScript(
-    ({ disableDemoSeed, sentinel }) => {
-      localStorage.clear();
-      if (disableDemoSeed) {
-        localStorage.setItem(sentinel, '1');
-      }
-    },
-    { disableDemoSeed: options.disableDemoSeed ?? false, sentinel: seedSentinel }
-  );
+async function seedOnboardedState(page: Page) {
+  await page.addInitScript(() => {
+    localStorage.clear();
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem(
+      'ecopulse:user',
+      JSON.stringify({
+        state: {
+          name: 'Lia',
+          tribe: 'recicladores',
+          regionId: 'londrina',
+          onboarded: true,
+          firstScanCompleted: true,
+          avatarBase: 'base2',
+          avatarLoadout: {
+            baseId: 'base2',
+            equippedGear: {},
+            activeSetId: null,
+          },
+        },
+        version: 5,
+      })
+    );
+    localStorage.setItem(
+      'ecopulse:game',
+      JSON.stringify({
+        state: {
+          dailyMissions: { scan: false, likes: 0, map: false, bonusClaimed: false },
+          lastMissionDay: today,
+          todaysMissionIds: ['scan-any', 'social-replicate', 'map-any'],
+          scannedProducts: [],
+          visitedPoints: [],
+          activeChallenges: [],
+          completedChallenges: [],
+          challengeProgress: {},
+          badges: [],
+          completedTutorials: [],
+          ownedShopItems: [],
+          realImpact: {
+            treesPlanted: 0,
+            batteriesKgEstimated: 0,
+            oilLitersEstimated: 0,
+            repairsCount: 0,
+            exchangesCount: 0,
+          },
+        },
+        version: 2,
+      })
+    );
+    localStorage.setItem(
+      'ecopulse:scanHistory',
+      JSON.stringify({ state: { history: [] }, version: 1 })
+    );
+    localStorage.setItem(
+      'ecopulse:social',
+      JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 })
+    );
+    localStorage.setItem(
+      'ecopulse:arena',
+      JSON.stringify({
+        state: {
+          wins: 0,
+          losses: 0,
+          defeatedOpponents: [],
+          lastBattle: null,
+          history: [],
+          arenaXp: 0,
+          arenaLevel: 1,
+          winStreak: 0,
+          bestStreak: 0,
+          rivalMastery: {},
+        },
+        version: 2,
+      })
+    );
+    localStorage.setItem(
+      'ecopulse:simulation',
+      JSON.stringify({
+        state: {
+          config: {
+            scenario: 'new-user',
+            seed: 'e2e-new-user',
+            regionId: 'londrina',
+            startedAt: `${today}T09:00:00.000Z`,
+            currentDay: today,
+          },
+          events: [],
+          cursor: 0,
+        },
+        version: 1,
+      })
+    );
+  });
 }
 
 async function gotoApp(page: Page, url: string) {
@@ -27,17 +114,16 @@ async function activateTab(page: Page, name: string, url: RegExp) {
   await page.waitForURL(url, { waitUntil: 'domcontentloaded' });
 }
 
-test('root redirects to the seeded home experience', async ({ page }) => {
-  await resetDemoState(page);
+test('root redirects a fresh install to onboarding', async ({ page }) => {
+  await resetAppState(page);
   await gotoApp(page, '/');
 
-  await expect(page).toHaveURL(/\/home$/);
-  await expect(page.getByRole('tab', { name: 'Início' })).toHaveAttribute('aria-current', 'page');
-  await expect(page.getByText(/Hoje · rotina diária/)).toBeVisible();
+  await expect(page).toHaveURL(/\/onboarding$/);
+  await expect(page.getByRole('heading', { name: 'Sustentabilidade na rotina.' })).toBeVisible();
 });
 
 test('bottom navigation reaches the primary screens', async ({ page }) => {
-  await resetDemoState(page);
+  await seedOnboardedState(page);
   await gotoApp(page, '/home');
 
   const routes = [
@@ -52,11 +138,11 @@ test('bottom navigation reaches the primary screens', async ({ page }) => {
   }
 
   await activateTab(page, 'Perfil', /\/profile$/);
-  await expect(page.getByRole('heading', { name: 'Arthur', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Lia', level: 1 })).toBeVisible();
 });
 
 test('arena route renders the loadout test surface', async ({ page }) => {
-  await resetDemoState(page);
+  await seedOnboardedState(page);
   await gotoApp(page, '/arena');
 
   await expect(page.getByRole('heading', { name: 'Teste de Loadout', level: 1 })).toBeVisible();
@@ -64,7 +150,7 @@ test('arena route renders the loadout test surface', async ({ page }) => {
 });
 
 test('scanner can search, simulate a scan, and restore modal focus', async ({ page }) => {
-  await resetDemoState(page);
+  await seedOnboardedState(page);
   await gotoApp(page, '/scanner');
 
   await expect(page.getByRole('heading', { name: 'Scanner', level: 1 })).toBeVisible();
@@ -100,7 +186,7 @@ test('scanner can search, simulate a scan, and restore modal focus', async ({ pa
 });
 
 test('onboarding works when the demo seed is neutralized', async ({ page }) => {
-  await resetDemoState(page, { disableDemoSeed: true });
+  await resetAppState(page);
   await gotoApp(page, '/onboarding');
 
   await expect(page.getByRole('heading', { name: 'Sustentabilidade na rotina.' })).toBeVisible();
@@ -116,4 +202,12 @@ test('onboarding works when the demo seed is neutralized', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/scanner\?welcome=1$/);
   await expect(page.getByText('Faça um scan para liberar a Home.')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Simular scan' }).click();
+  const firstRunDialog = page.getByRole('dialog');
+  await expect(firstRunDialog).toBeVisible({ timeout: 7_000 });
+  await page.keyboard.press('Escape');
+  await expect(firstRunDialog).toBeHidden();
+  await expect(page).toHaveURL(/\/home$/);
+  await expect(page.getByText(/Hoje · rotina diária/)).toBeVisible();
 });

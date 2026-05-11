@@ -2,24 +2,27 @@
 
 import Image from 'next/image';
 import { Heart, MessageCircle, CheckCircle2, Sparkles } from 'lucide-react';
-import { communityFeedImage, type FEED_POSTS } from '@/data';
+import { communityFeedImage } from '@/data';
+import type { SimulatedFeedPost } from '@/simulation';
 import { useLikePost } from '@/hooks/useLikePost';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { cn } from '@/lib/cn';
 import { useGameStore } from '@/store/gameStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { todayKey } from '@/lib/dailyReset';
 
 interface Props {
-  post: (typeof FEED_POSTS)[number];
+  post: SimulatedFeedPost;
   onOpenComments: () => void;
 }
 
 export function FeedPostCard({ post, onOpenComments }: Props) {
-  const { liked, toggle } = useLikePost(post.id);
-  const likeCount = post.likes + (liked ? 1 : 0);
+  const { liked: locallyLiked, toggle } = useLikePost(post.id);
+  const liked = post.viewerLiked || locallyLiked;
+  const likeCount = post.effectiveLikes;
   const firstComment = post.commentList[0];
   const image = communityFeedImage(post.imageKey);
 
@@ -28,14 +31,19 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const synthChallengeId = `feed-${post.id}-${todayKey()}`;
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
-  const tried = activeChallenges.includes(synthChallengeId) || completedChallenges.includes(synthChallengeId);
+  const tried = post.viewerPromised || activeChallenges.includes(synthChallengeId) || completedChallenges.includes(synthChallengeId);
   const showToast = useUIStore((s) => s.showToast);
+  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
 
   const tryThis = () => {
     if (tried) return;
     const game = useGameStore.getState();
     game.joinChallenge(synthChallengeId);
     game.incrementLikeMission();
+    recordSimulationEvent({
+      type: 'promise_created',
+      payload: { postId: post.id },
+    });
     showToast('Promessa simulada · prototype', 'success');
   };
 

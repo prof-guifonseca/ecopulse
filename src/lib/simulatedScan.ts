@@ -1,6 +1,8 @@
-import { PRODUCTS } from '@/data';
 import { deriveScore } from '@/lib/scoring';
 import type { ScanRecord } from '@/store/scanHistoryStore';
+import { useGameStore } from '@/store/gameStore';
+import { useSimulationStore } from '@/store/simulationStore';
+import { getDailyMissionTemplate, pickNextProduct } from '@/simulation';
 import type { Product } from '@/types';
 
 /**
@@ -13,11 +15,22 @@ import type { Product } from '@/types';
  * "Como calculamos" panel has real signals to show. The score will usually
  * match the catalog's hand-curated grade, but they're computed independently.
  */
-export function performSimulatedScan(recentlyScannedIds: string[]): ScanRecord {
-  const seen = new Set(recentlyScannedIds);
-  const unseen = PRODUCTS.filter((p) => !seen.has(p.id));
-  const pool = unseen.length > 0 ? unseen : PRODUCTS;
-  const product = pool[Math.floor(Math.random() * pool.length)];
+export function performSimulatedScan(
+  recentlyScannedIds: string[],
+  options: { firstRun?: boolean } = {}
+): ScanRecord {
+  const simulation = useSimulationStore.getState();
+  const game = useGameStore.getState();
+  const cursor = simulation.nextCursor();
+  const scanTemplateId = game.todaysMissionIds.find((id) => getDailyMissionTemplate(id)?.slot === 'scan');
+  const scanTemplate = getDailyMissionTemplate(scanTemplateId);
+  const product = pickNextProduct({
+    seed: simulation.config?.seed ?? 'ecopulse-local',
+    cursor,
+    recentlyScannedIds,
+    firstRun: options.firstRun,
+    minScore: scanTemplate?.filter?.minScore ?? null,
+  });
   return scanRecordFromProduct(product, 'simulator');
 }
 

@@ -2,6 +2,7 @@
 
 import { useSocialStore } from '@/store/socialStore';
 import { useGameStore } from '@/store/gameStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 
@@ -18,6 +19,7 @@ export function useLikePost(postId: string): { liked: boolean; toggle: () => voi
   const likesMission = useGameStore((s) => s.dailyMissions.likes);
   const markMission = useGameStore((s) => s.markMission);
   const showToast = useUIStore((s) => s.showToast);
+  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
 
   const liked = likedPosts.includes(postId);
 
@@ -25,6 +27,10 @@ export function useLikePost(postId: string): { liked: boolean; toggle: () => voi
     const becameLiked = toggleLike(postId);
     if (!becameLiked) return;
 
+    recordSimulationEvent({
+      type: 'post_liked',
+      payload: { postId },
+    });
     awardTokens(1);
     incrementLikeMission();
 

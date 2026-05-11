@@ -1,8 +1,12 @@
 'use client';
 
-import { FEED_POSTS } from '@/data';
+import { useMemo } from 'react';
+import { buildCommunityFeed, getCommunityPostCatalog } from '@/simulation';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
+import { useSocialStore } from '@/store/socialStore';
 import { useHydrated } from '@/hooks/useHydrated';
+import { todayKey } from '@/lib/dailyReset';
 import { PageShell } from '@/components/ui/PageShell';
 import { FeedPostCard } from './FeedPostCard';
 import { CommunitySkeleton } from './CommunitySkeleton';
@@ -10,6 +14,22 @@ import { CommunitySkeleton } from './CommunitySkeleton';
 export function CommunityPage() {
   const hydrated = useHydrated();
   const openModal = useUIStore((s) => s.openModal);
+  const likedPostIds = useSocialStore((s) => s.likedPosts);
+  const activeChallenges = useGameStore((s) => s.activeChallenges);
+  const completedChallenges = useGameStore((s) => s.completedChallenges);
+
+  const feed = useMemo(() => {
+    const day = todayKey();
+    const promisedPostIds = [...activeChallenges, ...completedChallenges]
+      .filter((id) => id.startsWith('feed-') && id.endsWith(`-${day}`))
+      .map((id) => id.slice('feed-'.length, -`-${day}`.length));
+
+    return buildCommunityFeed({
+      posts: getCommunityPostCatalog(),
+      likedPostIds,
+      promisedPostIds,
+    });
+  }, [activeChallenges, completedChallenges, likedPostIds]);
 
   if (!hydrated) return <CommunitySkeleton />;
 
@@ -21,7 +41,7 @@ export function CommunityPage() {
       </header>
 
       <div className="stagger space-y-5">
-        {FEED_POSTS.map((post) => (
+        {feed.map((post) => (
           <FeedPostCard
             key={post.id}
             post={post}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
+import { startNewUserSimulation } from '@/simulation/bootstrap';
 import type { TribeId } from '@/data/tribes';
 import { OnboardingStepVision } from './OnboardingStepVision';
 import { OnboardingStepPillars } from './OnboardingStepPillars';
@@ -37,6 +38,7 @@ export function OnboardingFlow() {
       avatarBase: DEFAULT_AVATAR_BASE,
       tribe,
     });
+    startNewUserSimulation({ name, tribe });
     router.replace('/scanner?welcome=1');
   };
 

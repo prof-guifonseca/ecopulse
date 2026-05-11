@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { ChevronRight, MapPin } from 'lucide-react';
-import { MAP_TYPE_LABELS, MAP_TYPE_ICON } from '@/data';
+import { MAP_TYPE_LABELS, MAP_TYPE_ICON, effectiveMapTypes } from '@/data';
 import { useCurrentRegion, latLngToPercent, distanceFromCenter } from '@/lib/region';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
+import { useUserStore } from '@/store/userStore';
+import { getDailyMissionTemplate, rankMapPoints } from '@/simulation';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { ListCard } from '@/components/ui/ListCard';
@@ -14,6 +16,7 @@ import { resolveIcon } from '@/lib/iconRegistry';
 import { RegionMap } from './LondrinaMap';
 import { cn } from '@/lib/cn';
 import type { MapPointType } from '@/types';
+import type { TribeId } from '@/data/tribes';
 
 const FILTERS: Array<'todos' | MapPointType> = [
   'todos',
@@ -33,10 +36,22 @@ export function MapPage() {
   const [panel, setPanel] = useState<'places' | 'events'>('places');
   const openModal = useUIStore((s) => s.openModal);
   const visited = useGameStore((s) => s.visitedPoints);
+  const todaysMissionIds = useGameStore((s) => s.todaysMissionIds);
+  const tribe = useUserStore((s) => s.tribe);
+
+  const preferredTypes = useMemo(() => {
+    const mapTemplateId = todaysMissionIds.find((id) => getDailyMissionTemplate(id)?.slot === 'map');
+    const template = getDailyMissionTemplate(mapTemplateId);
+    return template ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId) : undefined;
+  }, [todaysMissionIds, tribe]);
 
   const pins = useMemo(
-    () => (filter === 'todos' ? points : points.filter((point) => point.type === filter)),
-    [filter, points]
+    () =>
+      rankMapPoints(
+        filter === 'todos' ? points : points.filter((point) => point.type === filter),
+        { visitedPointIds: visited, preferredTypes }
+      ),
+    [filter, points, preferredTypes, visited]
   );
 
   return (
