@@ -29,7 +29,6 @@ function dataSourceFrom(value: unknown): DataSource {
   return value === 'provider' ||
     value === 'cache' ||
     value === 'official' ||
-    value === 'simulation' ||
     value === 'demo' ||
     value === 'user'
     ? value

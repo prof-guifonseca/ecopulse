@@ -1,4 +1,5 @@
 import type {
+  CommunityComment,
   CommunityFeedItem,
   EcoPulseEvent,
   ImpactEntry,
@@ -19,6 +20,7 @@ interface MvpStore {
   scans: ScanResult[];
   impactEntries: ImpactEntry[];
   communityReactions: CommunityReaction[];
+  communityComments: CommunityComment[];
 }
 
 const globalForMvp = globalThis as typeof globalThis & {
@@ -31,7 +33,9 @@ function store(): MvpStore {
     scans: [],
     impactEntries: [],
     communityReactions: [],
+    communityComments: [],
   };
+  globalForMvp.__ecopulseMvpStore.communityComments ??= [];
   return globalForMvp.__ecopulseMvpStore;
 }
 
@@ -86,6 +90,10 @@ export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedIt
   const reactions = s.communityReactions.filter((item) => item.userId === userId || item.userId === 'local-user');
   const activeLikes = new Set(reactions.filter((item) => item.reaction === 'like' && item.active).map((item) => item.postId));
   const activePromises = new Set(reactions.filter((item) => item.reaction === 'promise' && item.active).map((item) => item.postId));
+  const commentCounts = s.communityComments.reduce<Record<string, number>>((acc, comment) => {
+    acc[comment.postId] = (acc[comment.postId] ?? 0) + 1;
+    return acc;
+  }, {});
   const visitedPointIds = s.events
     .filter(isMapVisitEvent)
     .map((event) => event.payload.pointId);
@@ -95,6 +103,7 @@ export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedIt
     visitedPointIds,
     likedPostIds: [...activeLikes],
     promisedPostIds: [...activePromises],
+    commentCounts,
   }).map((post) => ({
     id: post.id,
     actorName: post.user.name,
@@ -103,11 +112,28 @@ export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedIt
     imageKey: post.imageKey,
     createdAt: post.time,
     likes: post.effectiveLikes,
-    comments: post.comments,
+    comments: post.commentCount,
+    commentCount: post.commentCount,
     viewerLiked: post.viewerLiked,
     viewerPromised: post.viewerPromised,
     source: post.source,
+    sourceLabel: post.sourceLabel,
+    sourceUrl: post.sourceUrl,
   }));
+}
+
+export async function saveCommunityComment(comment: CommunityComment): Promise<CommunityComment> {
+  const s = store();
+  s.communityComments = [comment, ...s.communityComments.filter((item) => item.id !== comment.id)].slice(0, 1000);
+  await persistToSupabase('community_comments', comment);
+  return comment;
+}
+
+export function listCommunityComments(postId: string): CommunityComment[] {
+  return store()
+    .communityComments
+    .filter((comment) => comment.postId === postId)
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }
 
 function isMapVisitEvent(event: EcoPulseEvent): event is EcoPulseEvent<'map_visit_marked'> {

@@ -1,10 +1,11 @@
 import { useGameStore } from '@/store/gameStore';
-import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { useUserStore } from '@/store/userStore';
 import { getMissionTemplate } from '@/data';
 import type { MissionTemplate } from '@/data/missionPool';
 import { getTribe, type TribeId } from '@/data/tribes';
+import { syncEvent } from '@/lib/client/mvpSync';
+import { todayKey } from '@/lib/dailyReset';
 import { awardTokens } from './gameActions';
 import { hapticSuccess } from './haptic';
 
@@ -161,10 +162,7 @@ export function tryClaimDailyBonus() {
   const done = Object.values(checks).filter(Boolean).length;
   if (done === 3 && !dm.bonusClaimed) {
     useGameStore.getState().claimBonus();
-    useSimulationStore.getState().recordEvent({
-      type: 'daily_bonus_claimed',
-      payload: { completedMissions: done },
-    });
+    syncEvent('daily_bonus_claimed', { day: todayKey() });
     awardTokens(25);
     useUIStore.getState().showToast('Bônus diário · +25 tokens', 'reward');
     useUIStore.getState().fireConfetti();

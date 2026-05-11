@@ -14,7 +14,7 @@ import {
   Shirt,
   type LucideIcon,
 } from 'lucide-react';
-import { LEGACY_DAILY_MISSIONS, getDailyMissionTemplate } from '@/simulation';
+import { getMissionTemplate } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { Avatar } from '@/components/shared/Avatar';
@@ -68,8 +68,6 @@ export function HomePage() {
   const progressPct = (action.completedCount / DAILY_MISSION_TARGET) * 100;
   const ActionIcon = ACTION_ICONS[action.kind];
 
-  // Build the 3 mission rows from the active simulation plan when populated;
-  // fallback to the legacy mission list otherwise.
   const rows = buildMissionRows(todaysMissionIds, dailyMissions, tribe);
 
   return (
@@ -177,25 +175,12 @@ function buildMissionRows(
   dailyMissions: { scan: boolean; likes: number; map: boolean },
   tribe: TribeId
 ): MissionRow[] {
-  if (!ids || ids.length === 0) {
-    return LEGACY_DAILY_MISSIONS.map((m) => ({
-      id: m.id,
-      title: m.title,
-      reward: m.reward,
-      iconName: m.iconName,
-      done:
-        m.check === 'scan'
-          ? dailyMissions.scan
-          : m.check === 'likes'
-            ? dailyMissions.likes >= (m.target ?? 2)
-            : dailyMissions.map,
-    }));
-  }
   const order: Array<'scan' | 'map' | 'social'> = ['scan', 'map', 'social'];
+  const activeIds = ids.length > 0 ? ids : ['scan-any', 'map-any', 'social-replicate'];
   return order
     .map((slot) => {
-      const tplId = ids.find((i) => getDailyMissionTemplate(i)?.slot === slot);
-      const tpl = getDailyMissionTemplate(tplId);
+      const tplId = activeIds.find((i) => getMissionTemplate(i)?.slot === slot);
+      const tpl = getMissionTemplate(tplId);
       if (!tpl) return null;
       const flavor = tpl.flavorByTribe[tribe] ?? tpl.flavorByTribe.guardioes;
       const done =

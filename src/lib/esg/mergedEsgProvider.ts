@@ -2,7 +2,7 @@ import { LONDRINA } from '@/data/regions/londrina';
 import { bboxFromCenter } from './geo';
 import { geocodePlace } from './nominatimProvider';
 import { createOverpassProvider } from './overpassProvider';
-import { createLocalSimulationProvider } from './localSimulationProvider';
+import { createOfficialSnapshotProvider } from './officialSnapshotProvider';
 import type { EsgPlaceSearchInput, EsgPlaceSearchResult } from './types';
 
 const CACHE_TTL_MS = 20 * 60 * 1000;
@@ -32,9 +32,9 @@ export async function searchEnvironmentalPlaces(
     };
   }
 
-  const localProvider = createLocalSimulationProvider();
-  if (provider === 'official' || provider === 'demo' || provider === 'simulation') {
-    return localProvider.search(normalizedInput);
+  const snapshotProvider = createOfficialSnapshotProvider();
+  if (provider === 'official' || provider === 'demo') {
+    return snapshotProvider.search(normalizedInput);
   }
 
   try {
@@ -49,12 +49,12 @@ export async function searchEnvironmentalPlaces(
       return result;
     }
     return {
-      ...(await localProvider.search(normalizedInput)),
+      ...(await snapshotProvider.search(normalizedInput)),
       reason: 'osm-empty-fallback',
     };
   } catch (error) {
     return {
-      ...(await localProvider.search(normalizedInput)),
+      ...(await snapshotProvider.search(normalizedInput)),
       reason: error instanceof Error ? `osm-error:${error.message}` : 'osm-error',
     };
   }

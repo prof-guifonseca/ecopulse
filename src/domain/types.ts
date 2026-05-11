@@ -145,8 +145,22 @@ export interface CommunityFeedItem {
   createdAt: string;
   likes: number;
   comments: number;
+  commentCount: number;
   viewerLiked: boolean;
   viewerPromised: boolean;
+  source: DataSource;
+  sourceLabel: string;
+  sourceUrl?: string;
+}
+
+export interface CommunityComment {
+  id: string;
+  postId: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  text: string;
+  createdAt: string;
   source: DataSource;
 }
 

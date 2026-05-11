@@ -10,7 +10,6 @@ import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { cn } from '@/lib/cn';
 import { useGameStore } from '@/store/gameStore';
-import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { todayKey } from '@/lib/dailyReset';
 import { syncCommunityReaction } from '@/lib/client/mvpSync';
@@ -24,6 +23,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const { liked: locallyLiked, toggle } = useLikePost(post.id);
   const liked = post.viewerLiked || locallyLiked;
   const likeCount = post.effectiveLikes;
+  const commentCount = post.commentCount ?? post.comments;
   const firstComment = post.commentList[0];
   const image = communityFeedImage(post.imageKey);
 
@@ -34,17 +34,12 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const completedChallenges = useGameStore((s) => s.completedChallenges);
   const tried = post.viewerPromised || activeChallenges.includes(synthChallengeId) || completedChallenges.includes(synthChallengeId);
   const showToast = useUIStore((s) => s.showToast);
-  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
 
   const tryThis = () => {
     if (tried) return;
     const game = useGameStore.getState();
     game.joinChallenge(synthChallengeId);
     game.incrementLikeMission();
-    recordSimulationEvent({
-      type: 'promise_created',
-      payload: { postId: post.id },
-    });
     syncCommunityReaction(post.id, 'promise', true);
     showToast('Promessa registrada', 'success');
   };
@@ -96,12 +91,11 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
             {likeCount}
           </Chip>
           <Chip
-            asStatic={post.comments === 0}
-            staticRole="presentation"
-            onClick={post.comments > 0 ? onOpenComments : undefined}
+            onClick={onOpenComments}
+            aria-label={`Comentários (${commentCount})`}
             leftIcon={<Icon icon={MessageCircle} size={14} />}
           >
-            {post.comments}
+            {commentCount}
           </Chip>
           <Chip
             active={tried}
@@ -121,7 +115,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
               <span className="font-semibold text-[var(--text-primary)]">{firstComment.user}</span>{' '}
               <span className="text-[var(--text-secondary)]">{firstComment.text}</span>
             </p>
-            {post.comments > 1 ? (
+            {commentCount > 1 ? (
               <p className="t-caption mt-0.5">Ver comentários</p>
             ) : null}
           </button>

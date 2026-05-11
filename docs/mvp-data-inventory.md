@@ -4,12 +4,12 @@ Este documento separa o que já é dado real/provedor, o que é cache/fallback e
 
 | Fluxo | Estado atual | Fonte principal | Fallback | Próximo passo |
 | --- | --- | --- | --- | --- |
-| Onboarding | Local-first realista | `ecopulse:user` + `ecopulse:simulation` | `new-user` local | Sincronizar perfil após login |
+| Onboarding | Local-first realista | `ecopulse:user` + ledger `ecopulse:simulation` | `new-user` local | Sincronizar perfil após login |
 | Scanner | Barcode/manual + amostra real | `/api/products/lookup` via Open Food Facts | snapshot Open Food Facts Brasil e registro manual | Persistir `scan_results` no Supabase |
 | Produtos | Provider aberto + snapshot real ampliado | Open Food Facts API v2 | snapshot versionado em `src/data/openFoodFactsProducts.ts` | Overrides editoriais de score |
 | Mapa ESG | Real com fonte aberta | `/api/esg/places` via OSM/Overpass/Nominatim | snapshot oficial/curado de Londrina | Cache persistente e verificação comunitária |
 | Visitas ESG | Evento auditável local/server | `/api/esg/visits` | Zustand/localStorage | Persistir visitas e confiança |
-| Comunidade | Feed derivado de scans, visitas e cards reais | stores locais + `/api/community/feed` | snapshot oficial/OFF | Persistir feed multiusuário |
+| Comunidade | Feed e comentários derivados de ações reais locais | stores locais + `/api/community/feed` e `/api/community/comments` | snapshot oficial/OFF | Persistir feed multiusuário |
 | Impacto | Estimado por evidências reais | histórico Open Food Facts + `realImpact` | fórmulas locais documentadas | Separar estimado/verificado no perfil |
 | Arena/avatar | Gamificação local | stores versionados | demo explícita | Não bloqueia MVP real |
 
@@ -28,5 +28,5 @@ Este documento separa o que já é dado real/provedor, o que é cache/fallback e
 - `cache` indica resultado reaproveitado.
 - `provider` indica dado vindo de API externa ou backend configurado.
 - `demo` indica fixture ou cenário explicitamente ativado.
-- `simulation` fica restrito ao ledger/ciclo local legado, não aos dados visíveis de produtos/mapa.
+- `simulation` fica restrito ao ledger/ciclo local legado, não aos dados visíveis de produtos, mapa, missões ou comunidade.
 - Dados sensíveis e tokens nunca são retornados pelas APIs públicas.

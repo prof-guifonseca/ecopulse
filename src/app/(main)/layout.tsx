@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useHydrated } from '@/hooks/useHydrated';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
-import { ensureDailyReset } from '@/lib/dailyReset';
+import { ensureDailyReset, ensureTodaysMissionsPopulated } from '@/lib/dailyReset';
 import { bootstrapSimulationIfNeeded } from '@/simulation/bootstrap';
 import { AppHeader } from '@/components/shared/AppHeader';
 import { BottomNav } from '@/components/shared/BottomNav';
@@ -33,6 +33,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     if (resetRan.current) return;
     resetRan.current = true;
     const outcome = ensureDailyReset();
+    ensureTodaysMissionsPopulated();
     if (outcome.streakChanged === 'continued') {
       showToast(`🔥 ${outcome.newStreak} dias seguidos`, 'reward');
     } else if (outcome.streakChanged === 'started') {

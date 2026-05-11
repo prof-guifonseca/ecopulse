@@ -1,5 +1,7 @@
 import type { ProductLookupResult, ScanResult } from '@/domain';
 import type { ScanRecord } from '@/store/scanHistoryStore';
+import { deriveScore } from '@/lib/scoring';
+import type { Product } from '@/types';
 
 export function scanRecordFromLookup(
   lookup: ProductLookupResult,
@@ -46,5 +48,41 @@ export function scanResultFromLookup(lookup: ProductLookupResult, source: ScanRe
     source,
     lookup,
     scannedAt: lookup.checkedAt,
+  };
+}
+
+export function scanRecordFromProduct(
+  product: Product,
+  source: ScanRecord['source'] = 'cache',
+  scannedAt: string = new Date().toISOString()
+): ScanRecord {
+  const result = deriveScore({
+    novaGroup: product.novaGroup,
+    preGradedScore: product.score,
+    packagingTags: product.packagingTags,
+    isLocal: product.isLocal,
+    hasKnownOrigin: true,
+  });
+
+  return {
+    id: product.id,
+    source,
+    barcode: product.barcode,
+    productId: product.id,
+    name: product.name,
+    brand: product.brand,
+    category: product.category,
+    emoji: product.emoji,
+    photoKey: product.photoKey,
+    score: result.score,
+    breakdown: result.breakdown,
+    tip: result.tip,
+    rationale: result.rationale,
+    confidence: product.confidence,
+    sourceName: product.sourceName,
+    sourceUrl: product.sourceUrl,
+    lastFetchedAt: product.sourceUpdatedAt,
+    evidence: product.evidence,
+    scannedAt,
   };
 }

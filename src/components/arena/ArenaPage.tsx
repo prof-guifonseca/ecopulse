@@ -14,7 +14,6 @@ import type {
   BattleSession,
 } from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
-import { useSimulationStore } from '@/store/simulationStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -30,6 +29,7 @@ import { ARENA_ARCHETYPE_LABELS } from '@/lib/arena/presentation';
 import { DOCTRINE_BY_RIVAL, DOCTRINE_LABEL } from '@/lib/doctrines';
 import { unlockBadge } from '@/lib/gameActions';
 import { hapticTap } from '@/lib/haptic';
+import { syncEvent } from '@/lib/client/mvpSync';
 import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/shared/Avatar';
 import { BattleStatChips } from '@/components/shared/BattleStatChips';
@@ -182,15 +182,7 @@ export function ArenaPage() {
       );
       const nextWins = arena.wins + (result.outcome === 'win' ? 1 : 0);
       arena.recordBattle(result, affinity.multiplier);
-      useSimulationStore.getState().recordEvent({
-        type: 'battle_completed',
-        payload: {
-          battleId: result.id,
-          opponentId: result.opponentId,
-          outcome: result.outcome,
-          rounds: result.rounds,
-        },
-      });
+      syncEvent('battle_completed', { battleId: result.id, outcome: result.outcome });
 
       const opponent = ARENA_OPPONENTS.find((item) => item.id === result.opponentId);
       if (result.outcome === 'win') {

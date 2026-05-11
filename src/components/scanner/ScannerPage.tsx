@@ -3,17 +3,15 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Camera, Keyboard, Search, Sparkles, Video } from 'lucide-react';
-import { getProductCatalog } from '@/simulation';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore, type ScanRecord } from '@/store/scanHistoryStore';
-import { useSimulationStore } from '@/store/simulationStore';
-import { performSimulatedScan } from '@/lib/simulatedScan';
 import { hapticTap } from '@/lib/haptic';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import type { ProductLookupResult } from '@/domain';
 import { syncScan } from '@/lib/client/mvpSync';
+import { listProductCatalog, pickRealSampleProduct } from '@/lib/products/catalog';
 import { scanRecordFromLookup } from '@/lib/products/scanRecord';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
@@ -58,9 +56,8 @@ export function ScannerPage() {
   const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
   const recordScan = useScanHistoryStore((s) => s.recordScan);
   const history = useScanHistoryStore((s) => s.history);
-  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
-  const products = useMemo(() => getProductCatalog(), []);
-  const sampleProduct = products[0];
+  const products = useMemo(() => listProductCatalog(), []);
+  const sampleProduct = useMemo(() => pickRealSampleProduct(), []);
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
@@ -89,20 +86,11 @@ export function ScannerPage() {
   }, [deferredQuery, products]);
 
   const completeScan = useCallback(
-    (record: ScanRecord, source: 'barcode' | 'manual' | 'simulator') => {
+    (record: ScanRecord, source: 'barcode' | 'manual' | 'demo') => {
       setLastBarcode(record.barcode);
       recordScan(record);
       useGameStore.getState().addScannedProduct(record.productId);
-      recordSimulationEvent({
-        type: 'scan_completed',
-        payload: {
-          productId: record.productId,
-          barcode: record.barcode,
-          score: record.score,
-          source: firstRun ? 'first-run' : source,
-        },
-      });
-      awardTokens(source === 'simulator' ? 10 : 12);
+      awardTokens(source === 'demo' ? 10 : 12);
       if (!missionScan) markMission('scan', true);
       const totalScans = useScanHistoryStore.getState().history.length;
       if (totalScans === 1) unlockBadge('first-scan');
@@ -122,7 +110,6 @@ export function ScannerPage() {
       missionScan,
       openModal,
       recordScan,
-      recordSimulationEvent,
     ]
   );
 
@@ -231,16 +218,24 @@ export function ScannerPage() {
   };
 
   const triggerScan = () => {
-    if (scanning) return;
+    if (scanning || !DEMO_DATA_ENABLED) return;
     hapticTap();
     setScanning(true);
     setLastBarcode(null);
     setLookupError(null);
 
-    setTimeout(() => {
-      const record = performSimulatedScan(history.map((h) => h.productId), { firstRun });
-      completeScan(record, 'simulator');
-      setScanning(false);
+    window.setTimeout(() => {
+      void import('@/demo/simulatedScan')
+        .then(({ performDemoScan }) => {
+          const record = performDemoScan(history.map((h) => h.productId), { firstRun });
+          completeScan(record, 'demo');
+        })
+        .catch(() => {
+          setLookupError('Demo indisponível.');
+        })
+        .finally(() => {
+          setScanning(false);
+        });
     }, SCAN_RITUAL_MS);
   };
 
