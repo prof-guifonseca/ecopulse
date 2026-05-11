@@ -3,6 +3,35 @@ import AxeBuilder from '@axe-core/playwright';
 
 const routes = ['/home', '/scanner', '/map', '/community', '/profile', '/arena', '/onboarding'] as const;
 
+async function mockEsgPlaces(page: Page) {
+  await page.route('**/api/esg/places**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        source: 'osm',
+        generatedAt: new Date().toISOString(),
+        points: [
+          {
+            id: 'osm:node:9001',
+            source: 'osm',
+            sourceId: 'node/9001',
+            name: 'Recicla Centro OSM',
+            category: 'batteries',
+            categories: ['batteries', 'recycling'],
+            address: 'Centro · Rua Sergipe, 489',
+            openingHours: 'Mo-Fr 08:00-18:00',
+            lat: -23.311,
+            lng: -51.161,
+            confidence: 91,
+            tags: { test: 'true' },
+          },
+        ],
+      }),
+    });
+  });
+}
+
 async function resetState(page: Page) {
   await page.addInitScript(() => {
     localStorage.clear();
@@ -95,6 +124,7 @@ for (const route of routes) {
     } else {
       await resetState(page);
     }
+    if (route === '/map') await mockEsgPlaces(page);
     await page.goto(route, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('body')).toBeVisible();
 

@@ -101,6 +101,56 @@ async function seedOnboardedState(page: Page) {
   });
 }
 
+async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'simulation' | 'cache'; gpsName?: string } = {}) {
+  const source = opts.source ?? 'osm';
+  const gpsName = opts.gpsName ?? 'Recicla Centro OSM';
+  await page.route('**/api/esg/places**', async (route) => {
+    const url = new URL(route.request().url());
+    const isGps = url.searchParams.has('lat');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        source,
+        generatedAt: new Date().toISOString(),
+        reason: source === 'simulation' ? 'osm-error:test' : undefined,
+        points: [
+          {
+            id: source === 'simulation' ? 'ldb-bat-centro' : 'osm:node:9001',
+            source,
+            sourceId: source === 'simulation' ? 'simulation:ldb-bat-centro' : 'node/9001',
+            name: isGps ? gpsName : source === 'simulation' ? 'EcoPonto Pilhas Centro' : 'Recicla Centro OSM',
+            category: 'batteries',
+            categories: ['batteries', 'recycling'],
+            address: 'Centro · Rua Sergipe, 489',
+            openingHours: 'Mo-Fr 08:00-18:00',
+            phone: '+55 43 99999-0000',
+            lat: -23.311,
+            lng: -51.161,
+            confidence: source === 'simulation' ? 65 : 91,
+            tags: { test: 'true' },
+            sourceUrl: source === 'simulation' ? undefined : 'https://www.openstreetmap.org/node/9001',
+          },
+          {
+            id: source === 'simulation' ? 'ldb-rep-centro' : 'osm:node:9002',
+            source,
+            sourceId: source === 'simulation' ? 'simulation:ldb-rep-centro' : 'node/9002',
+            name: 'Conserta Tudo OSM',
+            category: 'repair',
+            categories: ['repair'],
+            address: 'Centro · Rua Espírito Santo, 410',
+            openingHours: 'Mo-Fr 09:00-18:00',
+            lat: -23.3138,
+            lng: -51.1608,
+            confidence: source === 'simulation' ? 65 : 86,
+            tags: { test: 'true' },
+          },
+        ],
+      }),
+    });
+  });
+}
+
 async function gotoApp(page: Page, url: string) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 }
@@ -124,6 +174,7 @@ test('root redirects a fresh install to onboarding', async ({ page }) => {
 
 test('bottom navigation reaches the primary screens', async ({ page }) => {
   await seedOnboardedState(page);
+  await mockEsgPlaces(page);
   await gotoApp(page, '/home');
 
   const routes = [
@@ -139,6 +190,100 @@ test('bottom navigation reaches the primary screens', async ({ page }) => {
 
   await activateTab(page, 'Perfil', /\/profile$/);
   await expect(page.getByRole('heading', { name: 'Lia', level: 1 })).toBeVisible();
+});
+
+test('map renders live ESG points, filters them, and restores modal focus', async ({ page }) => {
+  await seedOnboardedState(page);
+  await mockEsgPlaces(page);
+  await gotoApp(page, '/map');
+
+  await expect(page.getByTestId('maplibre-surface')).toBeVisible();
+  await expect(page.getByText('Recicla Centro OSM').first()).toBeVisible();
+  await expect(page.getByText(/OpenStreetMap/).first()).toBeVisible();
+
+  await page.getByRole('button', { name: 'Reparo' }).click();
+  await expect(page.getByText('Conserta Tudo OSM').first()).toBeVisible();
+  await expect(page.getByText('Recicla Centro OSM')).toBeHidden();
+
+  const placeButton = page
+    .locator('li')
+    .filter({ hasText: 'Conserta Tudo OSM' })
+    .getByRole('button')
+    .first();
+  await placeButton.focus();
+  await placeButton.press('Enter');
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(page.getByText(/OpenStreetMap · 86%/)).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(placeButton).toBeFocused();
+});
+
+test('map falls back to simulated ESG points when the API reports simulation', async ({ page }) => {
+  await seedOnboardedState(page);
+  await mockEsgPlaces(page, { source: 'simulation' });
+  await gotoApp(page, '/map');
+
+  await expect(page.getByText('Simulado').first()).toBeVisible();
+  await expect(page.getByText('Pontos simulados ativos enquanto a fonte aberta responde.')).toBeVisible();
+  await expect(page.getByText('EcoPonto Pilhas Centro').first()).toBeVisible();
+});
+
+test('map can search near the mocked browser location', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition: (success: PositionCallback) =>
+          success({
+            coords: {
+              latitude: -23.31,
+              longitude: -51.16,
+              accuracy: 25,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+            },
+            timestamp: Date.now(),
+          } as GeolocationPosition),
+        watchPosition: () => 1,
+        clearWatch: () => undefined,
+      },
+    });
+  });
+  await seedOnboardedState(page);
+  await mockEsgPlaces(page, { gpsName: 'Perto do GPS OSM' });
+  await gotoApp(page, '/map');
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition: (success: PositionCallback) =>
+          success({
+            coords: {
+              latitude: -23.31,
+              longitude: -51.16,
+              accuracy: 25,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+            },
+            timestamp: Date.now(),
+          } as GeolocationPosition),
+        watchPosition: () => 1,
+        clearWatch: () => undefined,
+      },
+    });
+  });
+  await expect(page.getByText('Recicla Centro OSM').first()).toBeVisible();
+
+  await page.getByRole('button', { name: 'Usar localização' }).click();
+  await expect(page.getByText('Perto de você')).toBeVisible();
+  await expect(page.getByText('Perto do GPS OSM').first()).toBeVisible();
 });
 
 test('arena route renders the loadout test surface', async ({ page }) => {

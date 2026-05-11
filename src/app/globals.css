@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 :root {
   color-scheme: dark;
@@ -193,7 +194,7 @@
 }
 
 @keyframes staggerEnter {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 1; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -840,7 +841,7 @@ input, textarea, select {
   .stagger > * {
     animation: var(--animate-stagger-enter);
     animation-delay: calc(var(--stagger-step, 35ms) * var(--stagger-index, 0));
-    opacity: 0;
+    opacity: 1;
   }
   .stagger > *:nth-child(1) { --stagger-index: 0; }
   .stagger > *:nth-child(2) { --stagger-index: 1; }
