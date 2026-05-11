@@ -13,6 +13,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { todayKey } from '@/lib/dailyReset';
+import { syncCommunityReaction } from '@/lib/client/mvpSync';
 
 interface Props {
   post: SimulatedFeedPost;
@@ -44,7 +45,8 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
       type: 'promise_created',
       payload: { postId: post.id },
     });
-    showToast('Promessa simulada · prototype', 'success');
+    syncCommunityReaction(post.id, 'promise', true);
+    showToast('Promessa registrada', 'success');
   };
 
   return (

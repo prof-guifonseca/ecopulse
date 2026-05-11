@@ -1,4 +1,5 @@
 import type { MapPointType, Score } from '@/types';
+import type { EcoPulseEventType } from '@/domain';
 
 export type ScenarioId = 'new-user' | 'returning-week' | 'arthur-demo' | 'legacy-import';
 
@@ -10,16 +11,9 @@ export interface SimulationConfig {
   currentDay: string;
 }
 
-export type SimulationEventType =
-  | 'onboarded'
-  | 'scan_completed'
-  | 'map_visit_marked'
-  | 'post_liked'
-  | 'promise_created'
-  | 'daily_bonus_claimed'
-  | 'battle_completed';
+export type SimulationEventType = EcoPulseEventType;
 
-export type SimulationEventPayload = Record<string, string | number | boolean | null>;
+export type SimulationEventPayload = Record<string, string | number | boolean | null | undefined>;
 
 export interface SimulationEvent {
   id: string;

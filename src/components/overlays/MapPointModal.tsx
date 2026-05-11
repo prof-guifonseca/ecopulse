@@ -17,6 +17,7 @@ import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { useUserStore } from '@/store/userStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { syncMapVisit } from '@/lib/client/mvpSync';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconTile } from '@/components/ui/IconTile';
@@ -56,6 +57,7 @@ export function MapPointModal({ id }: Props) {
         confidence: point.confidence,
       },
     });
+    syncMapVisit(point);
     awardTokens(10);
 
     const game = useGameStore.getState();
