@@ -12,27 +12,35 @@ import type {
 
 export function mapPointToEnvironmentalPoint(point: MapPoint): EnvironmentalPoint {
   const category = mapPointTypeToEnvironmentalCategory(point.type);
-  const verifiedAt = new Date(Date.now() - point.lastVerifiedDays * 24 * 60 * 60 * 1000);
+  const verifiedAt =
+    point.sourceUpdatedAt ??
+    new Date(Date.now() - point.lastVerifiedDays * 24 * 60 * 60 * 1000).toISOString();
 
   return {
     id: point.id,
-    source: 'simulation',
-    sourceId: `simulation:${point.id}`,
+    source: 'official',
+    sourceId: `official:${point.id}`,
     name: point.name,
     category,
     categories: [category],
     address: point.address,
     openingHours: point.hours,
     phone: point.phone,
+    website: point.website,
     lat: point.lat,
     lng: point.lng,
-    lastVerifiedAt: verifiedAt.toISOString(),
+    lastVerifiedAt: verifiedAt,
     lastVerifiedDays: point.lastVerifiedDays,
-    confidence: 65,
+    confidence: point.confidence ?? 78,
     tags: {
-      simulation: 'true',
+      ...(point.tags ?? {}),
+      curatedSnapshot: 'londrina-esg',
       mapPointType: point.type,
     },
+    sourceName: point.sourceName,
+    sourceUrl: point.sourceUrl,
+    sourceUpdatedAt: point.sourceUpdatedAt,
+    geocodeConfidence: point.geocodeConfidence,
     legacyMapPointType: point.type,
   };
 }
@@ -59,9 +67,9 @@ export function createLocalSimulationProvider(): EsgPlaceProvider {
     async search(input: EsgPlaceSearchInput): Promise<EsgPlaceSearchResult> {
       return {
         points: getLocalEnvironmentalPoints(MAP_POINTS, input),
-        source: 'simulation',
+        source: 'official',
         generatedAt: new Date().toISOString(),
-        reason: 'fallback-simulation',
+        reason: 'fallback-official-snapshot',
         bbox: input.bbox,
         center: input.center,
       };

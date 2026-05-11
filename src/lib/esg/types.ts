@@ -12,7 +12,7 @@ export type EnvironmentalCategory =
   | 'bulk'
   | 'compost';
 
-export type EnvironmentalPointSource = 'simulation' | 'osm' | 'cache';
+export type EnvironmentalPointSource = 'official' | 'osm' | 'cache' | 'user' | 'demo';
 
 export interface EnvironmentalPoint {
   id: string;
@@ -32,6 +32,9 @@ export interface EnvironmentalPoint {
   confidence: number;
   tags: Record<string, string>;
   sourceUrl?: string;
+  sourceName?: string;
+  sourceUpdatedAt?: string;
+  geocodeConfidence?: number;
   legacyMapPointType?: MapPointType;
 }
 

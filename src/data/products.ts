@@ -1,716 +1,131 @@
-import type { Product } from '@/types';
+import { deriveScore } from '@/lib/scoring';
+import type { Product, Score } from '@/types';
+import { OPEN_FOOD_FACTS_PRODUCTS, OPEN_FOOD_FACTS_SNAPSHOT_META } from './openFoodFactsProducts';
 
-/**
- * Simulated product catalog. 45 entries covering Alimentos, Bebidas, Higiene,
- * Limpeza, Casa, Moda, Tecnologia, Bebê and Pet across the full A–E score
- * spectrum.
- *
- * Score distribution (intentionally weighted toward the middle so a typical
- * scan history feels realistic): A:8 · B:12 · C:14 · D:7 · E:4.
- *
- * Barcodes use the Brazilian EAN-13 prefix (789); the trailing digits are
- * fictional and don't carry a real GS1 assignment. The simulator picks from
- * this list; nothing in the app validates the check digit.
- */
+export interface OpenFoodFactsSnapshotProduct {
+  code: string;
+  productName: string;
+  brand: string;
+  categories: string;
+  categoriesTags: readonly string[];
+  packaging: string;
+  packagingTags: readonly string[];
+  countriesTags: readonly string[];
+  novaGroup: 1 | 2 | 3 | 4 | null;
+  ecoscoreGrade: string | null;
+  imageUrl?: string;
+  sourceUrl: string;
+  evidenceFields: readonly string[];
+}
 
-export const PRODUCTS: Product[] = [
-  // ============================================================
-  // SCORE A — 8 products
-  // ============================================================
-  {
-    id: 'p-a01',
-    barcode: '7891234500011',
-    name: 'Café Orgânico Serra Alta',
-    brand: 'Korin',
-    category: 'Alimentos',
-    emoji: '☕',
-    photoKey: 'coffeeBag',
-    packagingTags: ['paper', 'compostable'],
-    isLocal: true,
-    novaGroup: 1,
-    score: 'A',
-    breakdown: { carbono: 92, embalagem: 88, reciclabilidade: 90, origem: 95 },
-    tip: 'Embalagem compostável e produção local certificada.',
-  },
-  {
-    id: 'p-a02',
-    barcode: '7891234500028',
-    name: 'Sabonete Artesanal Lavanda',
-    brand: 'NaturaBio',
-    category: 'Higiene',
-    emoji: '🧼',
-    photoKey: 'soap',
-    packagingTags: ['paper'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'A',
-    breakdown: { carbono: 88, embalagem: 90, reciclabilidade: 85, origem: 92 },
-    tip: 'Ingredientes naturais, embalagem de papel reciclado.',
-  },
-  {
-    id: 'p-a03',
-    barcode: '7891234500035',
-    name: 'Mel Silvestre 350g',
-    brand: 'Mãe Terra',
-    category: 'Alimentos',
-    emoji: '🍯',
-    photoKey: 'honey',
-    packagingTags: ['glass'],
-    isLocal: true,
-    novaGroup: 1,
-    score: 'A',
-    breakdown: { carbono: 90, embalagem: 92, reciclabilidade: 95, origem: 88 },
-    tip: 'Pote de vidro reutilizável, produção apícola sustentável.',
-  },
-  {
-    id: 'p-a04',
-    barcode: '7891234500042',
-    name: 'Azeite Extra Virgem 500ml',
-    brand: 'Sebastião Filho',
-    category: 'Alimentos',
-    emoji: '🫒',
-    photoKey: 'oliveOil',
-    packagingTags: ['glass'],
-    isLocal: true,
-    novaGroup: 1,
-    score: 'A',
-    breakdown: { carbono: 84, embalagem: 92, reciclabilidade: 90, origem: 80 },
-    tip: 'Vidro reciclável, produção em fazenda mineira.',
-  },
-  {
-    id: 'p-a05',
-    barcode: '7891234500059',
-    name: 'Aveia em Flocos Integral',
-    brand: 'Quaker do Sul',
-    category: 'Alimentos',
-    emoji: '🌾',
-    photoKey: 'oats',
-    packagingTags: ['paper', 'cardboard'],
-    isLocal: true,
-    novaGroup: 1,
-    score: 'A',
-    breakdown: { carbono: 86, embalagem: 88, reciclabilidade: 90, origem: 82 },
-    tip: 'Caixa de papelão reciclável e cultivo nacional.',
-  },
-  {
-    id: 'p-a06',
-    barcode: '7891234500066',
-    name: 'Escova de Dente de Bambu',
-    brand: 'Vivere',
-    category: 'Higiene',
-    emoji: '🪥',
-    photoKey: 'toothbrush',
-    packagingTags: ['paper', 'cardboard'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'A',
-    breakdown: { carbono: 90, embalagem: 95, reciclabilidade: 92, origem: 78 },
-    tip: 'Cabo biodegradável, embalagem 100% papel.',
-  },
-  {
-    id: 'p-a07',
-    barcode: '7891234500073',
-    name: 'Sabão em Barra Vegetal',
-    brand: 'Insecta',
-    category: 'Limpeza',
-    emoji: '🧼',
-    photoKey: 'soap',
-    packagingTags: ['paper'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'A',
-    breakdown: { carbono: 92, embalagem: 90, reciclabilidade: 88, origem: 90 },
-    tip: 'Sem plástico, fórmula vegana, papel reciclado.',
-  },
-  {
-    id: 'p-a08',
-    barcode: '7891234500080',
-    name: 'Cesta de Vegetais Orgânicos',
-    brand: 'Orgânicos do Brasil',
-    category: 'Alimentos',
-    emoji: '🥬',
-    photoKey: 'vegetables',
-    packagingTags: ['cardboard'],
-    isLocal: true,
-    novaGroup: 1,
-    score: 'A',
-    breakdown: { carbono: 95, embalagem: 90, reciclabilidade: 90, origem: 95 },
-    tip: 'Direto do produtor, caixa retornável.',
-  },
+export const PRODUCTS: Product[] = OPEN_FOOD_FACTS_PRODUCTS.map((item) => {
+  const scoreInput = {
+    novaGroup: item.novaGroup,
+    preGradedScore: scoreFromEcoScore(item.ecoscoreGrade),
+    packagingTags: [...item.packagingTags],
+    isLocal: item.countriesTags.includes('brazil'),
+    hasKnownOrigin: item.countriesTags.length > 0,
+  };
+  const result = deriveScore(scoreInput);
+  const confidence = productConfidence(item);
 
-  // ============================================================
-  // SCORE B — 12 products
-  // ============================================================
-  {
-    id: 'p-b01',
-    barcode: '7891234500097',
-    name: 'Leite Vegetal de Aveia 1L',
-    brand: 'VegLife',
-    category: 'Bebidas',
-    emoji: '🥛',
-    photoKey: 'milk',
-    packagingTags: ['carton', 'tetra'],
-    isLocal: true,
-    novaGroup: 2,
-    score: 'B',
-    breakdown: { carbono: 78, embalagem: 72, reciclabilidade: 80, origem: 75 },
-    tip: 'Pegada hídrica baixa. Tetra Pak reciclável em coleta seletiva.',
-  },
-  {
-    id: 'p-b02',
-    barcode: '7891234500103',
-    name: 'Camiseta Algodão Reciclado',
-    brand: 'ReWear',
-    category: 'Moda',
-    emoji: '👕',
-    photoKey: 'tshirtRack',
-    packagingTags: ['paper'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'B',
-    breakdown: { carbono: 75, embalagem: 78, reciclabilidade: 70, origem: 78 },
-    tip: 'Fibras pós-consumo, produção ética nacional.',
-  },
-  {
-    id: 'p-b03',
-    barcode: '7891234500110',
-    name: 'Detergente Líquido Refil',
-    brand: 'BioClean',
-    category: 'Limpeza',
-    emoji: '🧴',
-    photoKey: 'detergent',
-    packagingTags: ['plastic', 'recyclable'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'B',
-    breakdown: { carbono: 70, embalagem: 75, reciclabilidade: 78, origem: 75 },
-    tip: 'Refil reduz 70% de plástico vs. embalagem cheia.',
-  },
-  {
-    id: 'p-b04',
-    barcode: '7891234500127',
-    name: 'Iogurte Natural Integral',
-    brand: 'Fazenda Atalaia',
-    category: 'Alimentos',
-    emoji: '🥛',
-    photoKey: 'milk',
-    packagingTags: ['plastic', 'recyclable'],
-    isLocal: true,
-    novaGroup: 2,
-    score: 'B',
-    breakdown: { carbono: 72, embalagem: 65, reciclabilidade: 70, origem: 80 },
-    tip: 'Pote PET reciclável, produção familiar.',
-  },
-  {
-    id: 'p-b05',
-    barcode: '7891234500134',
-    name: 'Granola Sem Açúcar 500g',
-    brand: 'Mãe Terra',
-    category: 'Alimentos',
-    emoji: '🥣',
-    photoKey: 'oats',
-    packagingTags: ['paper', 'plastic'],
-    isLocal: true,
-    novaGroup: 2,
-    score: 'B',
-    breakdown: { carbono: 76, embalagem: 70, reciclabilidade: 68, origem: 80 },
-    tip: 'Papel + janela plástica. Janela dificulta reciclagem.',
-  },
-  {
-    id: 'p-b06',
-    barcode: '7891234500141',
-    name: 'Shampoo em Barra Sólido',
-    brand: 'Sallve',
-    category: 'Higiene',
-    emoji: '🧴',
-    photoKey: 'shampoo',
-    packagingTags: ['paper'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'B',
-    breakdown: { carbono: 80, embalagem: 78, reciclabilidade: 75, origem: 70 },
-    tip: 'Sem garrafa plástica. Equivale a 3 frascos líquidos.',
-  },
-  {
-    id: 'p-b07',
-    barcode: '7891234500158',
-    name: 'Geleia de Frutas Vermelhas',
-    brand: 'Kissui',
-    category: 'Alimentos',
-    emoji: '🍓',
-    photoKey: 'honey',
-    packagingTags: ['glass'],
-    isLocal: true,
-    novaGroup: 3,
-    score: 'B',
-    breakdown: { carbono: 65, embalagem: 88, reciclabilidade: 90, origem: 72 },
-    tip: 'Pote de vidro com tampa metálica — ambos recicláveis.',
-  },
-  {
-    id: 'p-b08',
-    barcode: '7891234500165',
-    name: 'Calça Jeans Algodão Orgânico',
-    brand: 'Insecta',
-    category: 'Moda',
-    emoji: '👖',
-    photoKey: 'jeans',
-    packagingTags: ['paper'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'B',
-    breakdown: { carbono: 68, embalagem: 80, reciclabilidade: 60, origem: 85 },
-    tip: 'Algodão certificado, tingimento de baixo impacto.',
-  },
-  {
-    id: 'p-b09',
-    barcode: '7891234500172',
-    name: 'Cerveja Artesanal Pilsen 600ml',
-    brand: 'Brejas Cataratas',
-    category: 'Bebidas',
-    emoji: '🍺',
-    photoKey: 'glassBottle',
-    packagingTags: ['glass'],
-    isLocal: true,
-    novaGroup: 3,
-    score: 'B',
-    breakdown: { carbono: 62, embalagem: 92, reciclabilidade: 95, origem: 80 },
-    tip: 'Garrafa retornável, lúpulo nacional.',
-  },
-  {
-    id: 'p-b10',
-    barcode: '7891234500189',
-    name: 'Ração Pet Natural 3kg',
-    brand: 'Guabi Natural',
-    category: 'Pet',
-    emoji: '🐕',
-    photoKey: 'petFood',
-    packagingTags: ['paper', 'cardboard'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'B',
-    breakdown: { carbono: 70, embalagem: 75, reciclabilidade: 72, origem: 78 },
-    tip: 'Saco de papel reciclável, ingredientes nacionais.',
-  },
-  {
-    id: 'p-b11',
-    barcode: '7891234500196',
-    name: 'Manteiga Ghee Artesanal',
-    brand: 'Pura Vida',
-    category: 'Alimentos',
-    emoji: '🧈',
-    photoKey: 'glassBottle',
-    packagingTags: ['glass'],
-    isLocal: true,
-    novaGroup: 2,
-    score: 'B',
-    breakdown: { carbono: 65, embalagem: 88, reciclabilidade: 90, origem: 80 },
-    tip: 'Vidro retornável, sem lactose.',
-  },
-  {
-    id: 'p-b12',
-    barcode: '7891234500202',
-    name: 'Pasta de Amendoim Integral',
-    brand: 'Power One',
-    category: 'Alimentos',
-    emoji: '🥜',
-    photoKey: 'glassBottle',
-    packagingTags: ['plastic', 'recyclable'],
-    isLocal: true,
-    novaGroup: 2,
-    score: 'B',
-    breakdown: { carbono: 78, embalagem: 60, reciclabilidade: 70, origem: 80 },
-    tip: 'PET reciclável. Sem aditivos.',
-  },
+  return {
+    id: `off-${item.code}`,
+    barcode: item.code,
+    name: item.productName,
+    brand: item.brand,
+    category: categoryFromOpenFoodFacts(item),
+    emoji: emojiForCategory(item),
+    photoKey: photoKeyForCategory(item),
+    packagingTags: [...item.packagingTags],
+    isLocal: item.countriesTags.includes('brazil'),
+    novaGroup: item.novaGroup,
+    score: result.score,
+    breakdown: result.breakdown,
+    tip: tipFromEvidence(result.score, confidence),
+    sourceName: OPEN_FOOD_FACTS_SNAPSHOT_META.sourceName,
+    sourceUrl: item.sourceUrl,
+    sourceUpdatedAt: OPEN_FOOD_FACTS_SNAPSHOT_META.generatedAt,
+    confidence,
+    evidence: {
+      packagingTags: [...item.packagingTags],
+      countriesTags: [...item.countriesTags],
+      novaGroup: item.novaGroup,
+      ecoscoreGrade: item.ecoscoreGrade,
+      image: Boolean(item.imageUrl),
+      fields: [...item.evidenceFields],
+    },
+  } satisfies Product;
+});
 
-  // ============================================================
-  // SCORE C — 14 products
-  // ============================================================
-  {
-    id: 'p-c01',
-    barcode: '7891234500219',
-    name: 'Snack Bar Proteico',
-    brand: 'FitNut',
-    category: 'Alimentos',
-    emoji: '🍫',
-    photoKey: 'chocolate',
-    packagingTags: ['multilayer', 'plastic'],
-    isLocal: true,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 55, embalagem: 50, reciclabilidade: 35, origem: 58 },
-    tip: 'Embalagem mista (plástico + alumínio) dificulta reciclagem.',
-  },
-  {
-    id: 'p-c02',
-    barcode: '7891234500226',
-    name: 'Shampoo Tradicional 350ml',
-    brand: 'Phebo',
-    category: 'Higiene',
-    emoji: '🧴',
-    photoKey: 'shampoo',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'C',
-    breakdown: { carbono: 52, embalagem: 50, reciclabilidade: 55, origem: 65 },
-    tip: 'Plástico reciclável, mas com microplásticos na fórmula.',
-  },
-  {
-    id: 'p-c03',
-    barcode: '7891234500233',
-    name: 'Biscoito Recheado Chocolate',
-    brand: 'Marolo',
-    category: 'Alimentos',
-    emoji: '🍪',
-    photoKey: 'chocolate',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 48, embalagem: 50, reciclabilidade: 50, origem: 60 },
-    tip: 'Ultraprocessado em embalagem PP. Ingredientes nacionais.',
-  },
-  {
-    id: 'p-c04',
-    barcode: '7891234500240',
-    name: 'Suco de Laranja Caixinha',
-    brand: 'Del Valle',
-    category: 'Bebidas',
-    emoji: '🧃',
-    photoKey: 'aluminiumCan',
-    packagingTags: ['carton', 'tetra'],
-    isLocal: true,
-    novaGroup: 3,
-    score: 'C',
-    breakdown: { carbono: 50, embalagem: 55, reciclabilidade: 45, origem: 65 },
-    tip: 'Tetra Pak — reciclagem possível, mas baixa cobertura.',
-  },
-  {
-    id: 'p-c05',
-    barcode: '7891234500257',
-    name: 'Pasta de Dente Whitening',
-    brand: 'Colgate',
-    category: 'Higiene',
-    emoji: '🦷',
-    photoKey: 'toothbrush',
-    packagingTags: ['plastic', 'multilayer'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'C',
-    breakdown: { carbono: 50, embalagem: 40, reciclabilidade: 38, origem: 55 },
-    tip: 'Tubo multicamada raramente reciclado no BR.',
-  },
-  {
-    id: 'p-c06',
-    barcode: '7891234500264',
-    name: 'Cereal Matinal Açucarado',
-    brand: 'Nestlé Brasil',
-    category: 'Alimentos',
-    emoji: '🥣',
-    photoKey: 'oats',
-    packagingTags: ['cardboard', 'plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 45, embalagem: 60, reciclabilidade: 55, origem: 55 },
-    tip: 'Caixa reciclável + saco interno plástico. Ultraprocessado.',
-  },
-  {
-    id: 'p-c07',
-    barcode: '7891234500271',
-    name: 'Amaciante de Roupa 1L',
-    brand: 'Comfort',
-    category: 'Limpeza',
-    emoji: '🧴',
-    photoKey: 'detergent',
-    packagingTags: ['plastic'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'C',
-    breakdown: { carbono: 50, embalagem: 50, reciclabilidade: 55, origem: 50 },
-    tip: 'PEAD reciclável. Considere a versão concentrada para refil.',
-  },
-  {
-    id: 'p-c08',
-    barcode: '7891234500288',
-    name: 'Sorvete Cremoso 1L',
-    brand: 'Kibon',
-    category: 'Alimentos',
-    emoji: '🍦',
-    photoKey: 'milk',
-    packagingTags: ['cardboard', 'plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 50, embalagem: 50, reciclabilidade: 55, origem: 60 },
-    tip: 'Pote de papelão com cobertura plástica. Ultraprocessado.',
-  },
-  {
-    id: 'p-c09',
-    barcode: '7891234500295',
-    name: 'Energético Lata 250ml',
-    brand: 'Red Bull',
-    category: 'Bebidas',
-    emoji: '⚡',
-    photoKey: 'aluminiumCan',
-    packagingTags: ['metal', 'aluminium'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 38, embalagem: 75, reciclabilidade: 90, origem: 35 },
-    tip: 'Lata altamente reciclável. Mas é importado e ultraprocessado.',
-  },
-  {
-    id: 'p-c10',
-    barcode: '7891234500301',
-    name: 'Margarina Vegetal 500g',
-    brand: 'Qualy',
-    category: 'Alimentos',
-    emoji: '🧈',
-    photoKey: 'plasticBottle',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 45, embalagem: 55, reciclabilidade: 60, origem: 60 },
-    tip: 'PP reciclável. Óleo de palma com risco de desmatamento.',
-  },
-  {
-    id: 'p-c11',
-    barcode: '7891234500318',
-    name: 'Tênis Casual Sintético',
-    brand: 'Tricae',
-    category: 'Moda',
-    emoji: '👟',
-    photoKey: 'tshirtRack',
-    packagingTags: ['cardboard'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'C',
-    breakdown: { carbono: 50, embalagem: 70, reciclabilidade: 50, origem: 60 },
-    tip: 'Caixa reciclável, mas sintético derivado de petróleo.',
-  },
-  {
-    id: 'p-c12',
-    barcode: '7891234500325',
-    name: 'Refil de Sabonete Líquido',
-    brand: 'Lux',
-    category: 'Higiene',
-    emoji: '🧴',
-    photoKey: 'shampoo',
-    packagingTags: ['plastic', 'multilayer'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'C',
-    breakdown: { carbono: 55, embalagem: 50, reciclabilidade: 40, origem: 55 },
-    tip: 'Sachê multicamada — economiza vs garrafa, mas baixa reciclagem.',
-  },
-  {
-    id: 'p-c13',
-    barcode: '7891234500332',
-    name: 'Iogurte Grego Açucarado',
-    brand: 'Vigor',
-    category: 'Alimentos',
-    emoji: '🥛',
-    photoKey: 'milk',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: 3,
-    score: 'C',
-    breakdown: { carbono: 55, embalagem: 55, reciclabilidade: 60, origem: 70 },
-    tip: 'PS reciclável. Alto teor de açúcar.',
-  },
-  {
-    id: 'p-c14',
-    barcode: '7891234500349',
-    name: 'Lasagna Congelada',
-    brand: 'Sadia',
-    category: 'Alimentos',
-    emoji: '🍝',
-    photoKey: 'aluminiumCan',
-    packagingTags: ['cardboard', 'aluminium'],
-    isLocal: true,
-    novaGroup: 4,
-    score: 'C',
-    breakdown: { carbono: 45, embalagem: 60, reciclabilidade: 70, origem: 65 },
-    tip: 'Bandeja de alumínio reciclável. Ultraprocessado, alta cadeia de frio.',
-  },
-
-  // ============================================================
-  // SCORE D — 7 products
-  // ============================================================
-  {
-    id: 'p-d01',
-    barcode: '7891234500356',
-    name: 'Refrigerante Cola Zero 2L',
-    brand: 'Coca-Cola',
-    category: 'Bebidas',
-    emoji: '🥤',
-    photoKey: 'plasticBottle',
-    packagingTags: ['plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'D',
-    breakdown: { carbono: 30, embalagem: 35, reciclabilidade: 50, origem: 35 },
-    tip: 'PET reciclável, mas pegada hídrica e logística enormes.',
-  },
-  {
-    id: 'p-d02',
-    barcode: '7891234500363',
-    name: 'Camiseta Fast Fashion',
-    brand: 'QuickWear',
-    category: 'Moda',
-    emoji: '👚',
-    photoKey: 'tshirtRack',
-    packagingTags: ['plastic'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'D',
-    breakdown: { carbono: 28, embalagem: 30, reciclabilidade: 30, origem: 22 },
-    tip: 'Poliéster virgem importado, baixa durabilidade.',
-  },
-  {
-    id: 'p-d03',
-    barcode: '7891234500370',
-    name: 'Salgadinho de Milho 200g',
-    brand: 'Doritos',
-    category: 'Alimentos',
-    emoji: '🌽',
-    photoKey: 'chocolate',
-    packagingTags: ['multilayer', 'plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'D',
-    breakdown: { carbono: 32, embalagem: 25, reciclabilidade: 25, origem: 40 },
-    tip: 'Sachê metalizado raramente reciclado. Ultraprocessado.',
-  },
-  {
-    id: 'p-d04',
-    barcode: '7891234500387',
-    name: 'Smartphone Genérico',
-    brand: 'TechMax',
-    category: 'Tecnologia',
-    emoji: '📱',
-    photoKey: 'smartphone',
-    packagingTags: ['cardboard', 'plastic'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'D',
-    breakdown: { carbono: 25, embalagem: 60, reciclabilidade: 40, origem: 25 },
-    tip: 'Componentes raros, ciclo curto, descarte tóxico.',
-  },
-  {
-    id: 'p-d05',
-    barcode: '7891234500394',
-    name: 'Pilhas Alcalinas AA (4un)',
-    brand: 'Duracell',
-    category: 'Casa',
-    emoji: '🔋',
-    photoKey: 'battery',
-    packagingTags: ['plastic', 'cardboard'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'D',
-    breakdown: { carbono: 25, embalagem: 40, reciclabilidade: 30, origem: 30 },
-    tip: 'Descarte requer ponto de coleta especial. Prefira recarregáveis.',
-  },
-  {
-    id: 'p-d06',
-    barcode: '7891234500400',
-    name: 'Fralda Descartável Premium',
-    brand: 'Pampers',
-    category: 'Bebê',
-    emoji: '👶',
-    photoKey: 'diaper',
-    packagingTags: ['plastic', 'multilayer'],
-    isLocal: false,
-    novaGroup: null,
-    score: 'D',
-    breakdown: { carbono: 22, embalagem: 30, reciclabilidade: 15, origem: 30 },
-    tip: 'Não reciclável. Considere fraldas reutilizáveis.',
-  },
-  {
-    id: 'p-d07',
-    barcode: '7891234500417',
-    name: 'Café Solúvel 200g',
-    brand: 'Nescafé',
-    category: 'Bebidas',
-    emoji: '☕',
-    photoKey: 'aluminiumCan',
-    packagingTags: ['glass', 'plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'D',
-    breakdown: { carbono: 30, embalagem: 65, reciclabilidade: 75, origem: 30 },
-    tip: 'Vidro reciclável, mas alto processamento e logística global.',
-  },
-
-  // ============================================================
-  // SCORE E — 4 products
-  // ============================================================
-  {
-    id: 'p-e01',
-    barcode: '7891234500424',
-    name: 'Garrafa de Água 500ml',
-    brand: 'AquaPura',
-    category: 'Bebidas',
-    emoji: '💧',
-    photoKey: 'plasticBottle',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'E',
-    breakdown: { carbono: 15, embalagem: 10, reciclabilidade: 30, origem: 25 },
-    tip: 'PET de uso único, alto impacto. Prefira garrafa reutilizável.',
-  },
-  {
-    id: 'p-e02',
-    barcode: '7891234500431',
-    name: 'Cápsula de Café (10un)',
-    brand: 'Nespresso',
-    category: 'Bebidas',
-    emoji: '☕',
-    photoKey: 'aluminiumCan',
-    packagingTags: ['aluminium', 'plastic'],
-    isLocal: false,
-    novaGroup: 4,
-    score: 'E',
-    breakdown: { carbono: 12, embalagem: 18, reciclabilidade: 25, origem: 20 },
-    tip: 'Cápsula composta — reciclagem requer programa específico.',
-  },
-  {
-    id: 'p-e03',
-    barcode: '7891234500448',
-    name: 'Carne Bovina Importada 1kg',
-    brand: 'GlobalMeat',
-    category: 'Alimentos',
-    emoji: '🥩',
-    photoKey: 'plasticBottle',
-    packagingTags: ['plastic'],
-    isLocal: false,
-    novaGroup: 1,
-    score: 'E',
-    breakdown: { carbono: 8, embalagem: 25, reciclabilidade: 30, origem: 15 },
-    tip: 'Pegada de carbono altíssima. Considere proteínas vegetais.',
-  },
-  {
-    id: 'p-e04',
-    barcode: '7891234500455',
-    name: 'Saco Plástico Descartável',
-    brand: 'Genérico',
-    category: 'Casa',
-    emoji: '🛍️',
-    photoKey: 'plasticBottle',
-    packagingTags: ['plastic'],
-    isLocal: true,
-    novaGroup: null,
-    score: 'E',
-    breakdown: { carbono: 18, embalagem: 5, reciclabilidade: 15, origem: 30 },
-    tip: 'Uso único. Carregue sacolas reutilizáveis.',
-  },
-];
-
-/** Lookup helper used by the scan simulator and product detail modal. */
 export function findProductByBarcode(barcode: string): Product | undefined {
-  return PRODUCTS.find((p) => p.barcode === barcode);
+  return PRODUCTS.find((p) => p.barcode === barcode.replace(/\D/g, ''));
+}
+
+export function getOpenFoodFactsSnapshotMeta() {
+  return OPEN_FOOD_FACTS_SNAPSHOT_META;
+}
+
+export function productConfidence(item: OpenFoodFactsSnapshotProduct): number {
+  let confidence = 35;
+  confidence += Math.min(item.evidenceFields.length, 5) * 8;
+  if (item.packagingTags.length > 0) confidence += 12;
+  if (item.novaGroup) confidence += 10;
+  if (scoreFromEcoScore(item.ecoscoreGrade)) confidence += 12;
+  if (item.imageUrl) confidence += 5;
+  if (item.countriesTags.includes('brazil')) confidence += 8;
+  return Math.min(confidence, 95);
+}
+
+export function scoreFromEcoScore(value: string | null | undefined): Score | null {
+  const normalized = value?.trim().toUpperCase();
+  return normalized === 'A' || normalized === 'B' || normalized === 'C' || normalized === 'D' || normalized === 'E'
+    ? normalized
+    : null;
+}
+
+function tipFromEvidence(score: Score, confidence: number): string {
+  if (confidence < 55) return 'Dados insuficientes para avaliação completa. Use como indício, não como veredito.';
+  if (score === 'A') return 'Boa pegada ambiental segundo sinais abertos do Open Food Facts.';
+  if (score === 'B') return 'Sinais positivos. Compare embalagem e processamento antes da próxima compra.';
+  if (score === 'C') return 'Avaliação intermediária. Vale procurar versões com embalagem mais simples.';
+  if (score === 'D') return 'Sinais de maior impacto. Confira alternativas com melhor embalagem ou menor processamento.';
+  return 'Sinais críticos de impacto. Priorize uma alternativa com dados e embalagem melhores.';
+}
+
+function categoryFromOpenFoodFacts(item: OpenFoodFactsSnapshotProduct): string {
+  const tags = new Set(item.categoriesTags);
+  const raw = item.categories.split(',').map((part) => part.trim()).find(Boolean);
+  if (hasAny(tags, ['beverages', 'instant-beverages', 'sodas'])) return 'Bebidas';
+  if (hasAny(tags, ['dairies', 'milks', 'uht-milks', 'milk-powders'])) return 'Laticínios';
+  if (hasAny(tags, ['snacks', 'sweet-snacks', 'salty-snacks', 'biscuits-and-cakes'])) return 'Snacks';
+  if (hasAny(tags, ['fats', 'vegetable-oils', 'olive-oils', 'soybean-oils'])) return 'Óleos e gorduras';
+  if (hasAny(tags, ['breads', 'sliced-breads', 'cereals-and-potatoes'])) return 'Padaria';
+  if (hasAny(tags, ['condiments', 'sauces', 'mayonnaises'])) return 'Condimentos';
+  return raw || 'Alimentos';
+}
+
+function emojiForCategory(item: OpenFoodFactsSnapshotProduct): string {
+  const category = categoryFromOpenFoodFacts(item).toLowerCase();
+  if (category.includes('bebida')) return '🥤';
+  if (category.includes('latic')) return '🥛';
+  if (category.includes('snack')) return '🍫';
+  if (category.includes('óleo') || category.includes('gordura')) return '🫒';
+  if (category.includes('padaria')) return '🍞';
+  if (category.includes('condimento')) return '🥫';
+  return '🛒';
+}
+
+function photoKeyForCategory(item: OpenFoodFactsSnapshotProduct): Product['photoKey'] {
+  const category = categoryFromOpenFoodFacts(item).toLowerCase();
+  if (category.includes('bebida')) return 'aluminiumCan';
+  if (category.includes('latic')) return 'milk';
+  if (category.includes('snack')) return 'chocolate';
+  if (category.includes('óleo')) return 'oliveOil';
+  if (category.includes('padaria')) return 'oats';
+  return undefined;
+}
+
+function hasAny(tags: Set<string>, values: string[]): boolean {
+  return values.some((value) => tags.has(value));
 }

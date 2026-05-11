@@ -31,6 +31,18 @@ export interface ScanRecord {
   tip: string;
   /** Plain-language signals that drove the score. */
   rationale: string[];
+  confidence?: number;
+  sourceName?: string;
+  sourceUrl?: string;
+  lastFetchedAt?: string;
+  evidence?: {
+    packagingTags: string[];
+    countriesTags: string[];
+    novaGroup: 1 | 2 | 3 | 4 | null;
+    ecoscoreGrade: string | null;
+    image: boolean;
+    fields: string[];
+  };
   /** ISO timestamp. */
   scannedAt: string;
 }

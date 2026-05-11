@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { Locate, MapPin } from 'lucide-react';
-import Map, { Marker, NavigationControl, ScaleControl } from 'react-map-gl/maplibre';
+import Map, { NavigationControl, ScaleControl } from 'react-map-gl/maplibre';
 import { ENVIRONMENTAL_CATEGORY_ICON } from '@/lib/esg';
+import { latLngToPercent } from '@/lib/region';
 import { Icon } from '@/components/ui/Icon';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { cn } from '@/lib/cn';
@@ -22,6 +23,14 @@ export function MapCanvasClient({
   const visited = useMemo(() => new Set(visitedPointIds), [visitedPointIds]);
   const [mapError, setMapError] = useState(false);
   const center = focusCenter ?? region.center;
+  const visualPins = useMemo(
+    () =>
+      points.map((point) => ({
+        point,
+        position: latLngToPercent(region.bbox, { lat: point.lat, lng: point.lng }),
+      })),
+    [points, region.bbox]
+  );
 
   return (
     <div
@@ -46,33 +55,37 @@ export function MapCanvasClient({
       >
         <NavigationControl position="top-right" showCompass={false} />
         <ScaleControl position="bottom-left" unit="metric" />
-        {points.map((point) => {
+      </Map>
+
+      <div className="pointer-events-none absolute inset-0 z-10">
+        {visualPins.map(({ point, position }) => {
           const isVisited = visited.has(point.id);
           const Lucide = resolveIcon(ENVIRONMENTAL_CATEGORY_ICON[point.category]) ?? MapPin;
           return (
-            <Marker key={point.id} longitude={point.lng} latitude={point.lat} anchor="center">
-              <button
-                type="button"
-                onClick={() => onSelectPoint(point)}
-                className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-full border-strong backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95',
-                  isVisited
-                    ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                    : 'bg-[rgba(15,23,19,0.82)] text-[var(--accent-green)]'
-                )}
-                style={{
-                  boxShadow: isVisited
-                    ? '0 0 0 3px var(--tint-green-3), 0 10px 20px rgba(0,0,0,0.4)'
-                    : '0 8px 18px rgba(0,0,0,0.45)',
-                }}
-                aria-label={point.name}
-              >
-                <Icon icon={Lucide} size={16} />
-              </button>
-            </Marker>
+            <button
+              key={point.id}
+              type="button"
+              onClick={() => onSelectPoint(point)}
+              className={cn(
+                'pointer-events-auto absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-strong backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95',
+                isVisited
+                  ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
+                  : 'bg-[rgba(15,23,19,0.88)] text-[var(--accent-green)]'
+              )}
+              style={{
+                left: `${position.x}%`,
+                top: `${position.y}%`,
+                boxShadow: isVisited
+                  ? '0 0 0 3px var(--tint-green-3), 0 10px 20px rgba(0,0,0,0.4)'
+                  : '0 8px 18px rgba(0,0,0,0.45)',
+              }}
+              aria-label={`Selecionar ${point.name}`}
+            >
+              <Icon icon={Lucide} size={16} />
+            </button>
           );
         })}
-      </Map>
+      </div>
 
       <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-soft bg-scrim-card px-2.5 py-1 backdrop-blur-md">
         <Locate size={11} className="text-[var(--accent-gps)]" strokeWidth={2.4} />

@@ -106,7 +106,7 @@ export type MapPointType =
 
 export interface Product {
   id: string;
-  /** Fictional EAN-13 starting with 789 (BR prefix). Used by the scan simulator. */
+  /** Real barcode from Open Food Facts or a controlled demo/test fixture. */
   barcode: string;
   name: string;
   brand: string;
@@ -128,6 +128,18 @@ export interface Product {
     origem: number;
   };
   tip: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceUpdatedAt?: string;
+  confidence?: number;
+  evidence?: {
+    packagingTags: string[];
+    countriesTags: string[];
+    novaGroup: 1 | 2 | 3 | 4 | null;
+    ecoscoreGrade: string | null;
+    image: boolean;
+    fields: string[];
+  };
 }
 
 export interface MapPoint {
@@ -146,6 +158,13 @@ export interface MapPoint {
   lastVerifiedDays: number;
   /** Optional phone for the detail modal. */
   phone?: string;
+  website?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceUpdatedAt?: string;
+  geocodeConfidence?: number;
+  confidence?: number;
+  tags?: Record<string, string>;
 }
 
 export interface Tutorial {

@@ -26,7 +26,12 @@ export async function POST(request: Request) {
 }
 
 function dataSourceFrom(value: unknown): DataSource {
-  return value === 'provider' || value === 'cache' || value === 'simulation' || value === 'demo' || value === 'user'
+  return value === 'provider' ||
+    value === 'cache' ||
+    value === 'official' ||
+    value === 'simulation' ||
+    value === 'demo' ||
+    value === 'user'
     ? value
     : 'user';
 }

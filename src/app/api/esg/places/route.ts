@@ -49,6 +49,7 @@ function parseSearchParams(searchParams: URLSearchParams) {
 }
 
 function parseCenter(searchParams: URLSearchParams) {
+  if (!searchParams.has('lat') || !searchParams.has('lng')) return null;
   const lat = Number(searchParams.get('lat'));
   const lng = Number(searchParams.get('lng'));
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;

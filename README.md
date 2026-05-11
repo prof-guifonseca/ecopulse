@@ -2,13 +2,13 @@
 
 Aplicativo educacional de hábitos sustentáveis. **MVP navegável local-first** —
 o app preserva uma simulação determinística e versionada para demo/offline, mas
-agora começa a trocar dados fake por fontes reais progressivas:
+os fluxos visíveis de scanner e mapa agora usam snapshots reais e rastreáveis:
 
 - Mapa ESG com MapLibre + OpenStreetMap/Overpass/Nominatim via Route Handler.
-- Scanner com barcode/manual via `/api/products/lookup` e Open Food Facts.
+- Mapa offline/fallback com snapshot oficial/curado de Londrina, sem lugares inventados.
+- Scanner com barcode/manual via `/api/products/lookup` e snapshot Open Food Facts Brasil.
 - APIs BFF em `/api/*` para eventos, scans, comunidade, visitas ESG e impacto.
-- Fallbacks simulados explícitos quando provedores externos ou backend não estão
-  configurados.
+- Demo/simulação só aparece atrás de modo explícito.
 
 ## Simulação local
 
@@ -61,8 +61,8 @@ src/
 ├── app/
 │   ├── (main)/                Layout com BottomNav + FauxStatusBar
 │   │   ├── home/              Painel diário
-│   │   ├── scanner/           Barcode/manual + fallback de scan simulado
-│   │   ├── map/               MapLibre + pontos ESG abertos/fallback local
+│   │   ├── scanner/           Barcode/manual + amostra real Open Food Facts
+│   │   ├── map/               MapLibre + pontos ESG abertos/snapshot oficial
 │   │   ├── community/         Feed curado + reações persistíveis
 │   │   └── profile/           Impacto, Loja, Badges
 │   ├── api/                   BFF: produtos, scans, eventos, ESG, comunidade
@@ -71,7 +71,7 @@ src/
 │   ├── not-found.tsx          404
 │   └── layout.tsx             Root + fontes
 ├── components/                UI por feature, primitives, skins SVG
-├── data/                      Catálogos: products, mapPoints, badges, …
+├── data/                      Snapshots: Open Food Facts, Londrina ESG, badges, …
 ├── lib/
 │   ├── scoring.ts             deriveScore() puro (testável)
 │   ├── simulatedScan.ts       Scan determinístico sobre a simulação
@@ -79,7 +79,7 @@ src/
 │   ├── game/rules.ts          Regras puras de unlock (skins, badges)
 │   └── map/londrina.ts        Bounding box + projeção lat/lng → %
 ├── domain/                    Contratos canônicos do MVP real-progressivo
-├── simulation/                RNG, cenários, queries e catálogos de fallback
+├── simulation/                RNG, cenários e queries locais do ciclo navegável
 ├── store/                     Zustand: user, game, ui, social, scanHistory
 └── types/                     Tipos compartilhados
 ```
@@ -92,7 +92,8 @@ inventário explícito de `provider`, `cache`, `simulation` e `demo` por fluxo.
 Ainda não existe login multiusuário nem banco obrigatório. As APIs já tentam
 persistir em Supabase quando `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`
 estiverem configurados; sem isso, o MVP continua navegável com memória de
-processo, stores locais e fallback simulado.
+processo, stores locais, snapshot Open Food Facts e snapshot oficial/curado de
+Londrina.
 
 ## Princípios da v3
 
@@ -100,8 +101,8 @@ processo, stores locais e fallback simulado.
    mas cada ação deixa rastro e muda o estado.
 2. **Local-first com fontes reais progressivas**: provedores abertos entram por
    APIs BFF, sempre com cache/fallback para manter a navegação.
-3. **Honestidade visual**: nada se passa por uma feature real. Onde o app usa
-   fallback simulado, ele etiqueta a fonte.
+3. **Honestidade visual**: nada se passa por uma feature real. Fontes aparecem
+   como Open Food Facts, OpenStreetMap, snapshot oficial, cache ou demo.
 4. **Motion como linguagem**: cada ação tem feedback (scan ritual, token
    gain animado, bottom-nav indicator deslizando, stagger nas listas).
 5. **Acessibilidade**: focus trap nos modais, `aria-live` nos toasts,

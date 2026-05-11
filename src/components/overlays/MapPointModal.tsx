@@ -106,8 +106,11 @@ export function MapPointModal({ id }: Props) {
           <Row
             icon={ShieldCheck}
             label="Fonte"
-            value={`${ENVIRONMENTAL_SOURCE_LABELS[point.source]} · ${point.confidence}%`}
+            value={`${point.sourceName ?? ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança ${point.confidence}%`}
           />
+          {point.geocodeConfidence ? (
+            <Row icon={MapPin} label="Geocódigo" value={`confiança ${point.geocodeConfidence}%`} />
+          ) : null}
           <Row icon={CheckCircle2} label="Verificado" value={verificationLabel(point)} />
         </ListCard>
 
@@ -133,6 +136,11 @@ function resolvePoint(id: string): EnvironmentalPoint | null {
 }
 
 function verificationLabel(point: EnvironmentalPoint): string {
+  if (point.sourceUpdatedAt) {
+    return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
+      new Date(point.sourceUpdatedAt)
+    );
+  }
   if (point.lastVerifiedDays !== undefined) {
     return `há ${point.lastVerifiedDays} dia${point.lastVerifiedDays === 1 ? '' : 's'}`;
   }

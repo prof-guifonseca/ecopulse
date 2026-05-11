@@ -108,7 +108,7 @@ describe('ESG OpenStreetMap integration', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it('falls back to simulated points when the external provider fails', async () => {
+  it('falls back to the curated Londrina snapshot when the external provider fails', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => new Response('unavailable', { status: 503 }))
@@ -116,9 +116,10 @@ describe('ESG OpenStreetMap integration', () => {
 
     const result = await searchEnvironmentalPlaces({ bbox: LONDRINA.bbox, limit: 20 });
 
-    expect(result.source).toBe('simulation');
+    expect(result.source).toBe('official');
     expect(result.reason).toContain('osm-error');
     expect(result.points.length).toBeGreaterThan(0);
-    expect(result.points.every((point) => point.source === 'simulation')).toBe(true);
+    expect(result.points.every((point) => point.source === 'official')).toBe(true);
+    expect(result.points.every((point) => point.sourceUrl)).toBe(true);
   });
 });

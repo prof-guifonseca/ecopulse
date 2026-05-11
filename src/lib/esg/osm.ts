@@ -118,6 +118,7 @@ export function normalizeOsmElement(element: OsmElement): EnvironmentalPoint | n
     lng,
     confidence: confidenceFor(tags, category),
     tags,
+    sourceName: 'OpenStreetMap',
     sourceUrl: `https://www.openstreetmap.org/${element.type}/${element.id}`,
   };
 }
