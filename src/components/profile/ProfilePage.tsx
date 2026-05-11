@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MapPin, Pencil } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
@@ -73,10 +73,6 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
   const pct = Math.min(100, Math.round((xp / xpToNext) * 100));
   const stage = gardenStage(level, journey.current);
 
-  useEffect(() => {
-    setTab(initialTab);
-  }, [initialTab]);
-
   return (
     <PageShell spacing={5} className="max-w-full overflow-hidden">
       <Card as="header" tone="solid" padded={false} className="px-4 py-4">
@@ -118,7 +114,7 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
               {xp}/{xpToNext} XP
             </span>
           </div>
-          <ProgressBar value={pct} size="sm" />
+          <ProgressBar value={pct} size="sm" ariaLabel="Progresso de XP do perfil" />
         </div>
       </Card>
 

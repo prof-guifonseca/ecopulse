@@ -22,7 +22,7 @@ export function RegionMap({ region, children }: { region: Region; children?: Rea
     <div
       className="relative overflow-hidden rounded-[var(--radius-md)] border-soft"
       style={{ aspectRatio: '1 / 1' }}
-      role="img"
+      role="group"
       aria-label={`Mapa de ${region.name} · ${region.mapPoints.length} pontos sustentáveis`}
     >
       <Backdrop />
@@ -34,7 +34,7 @@ export function RegionMap({ region, children }: { region: Region; children?: Rea
           top: `${center.y}%`,
           transform: 'translate(-50%, -50%)',
         }}
-        aria-label="Sua localização"
+        aria-hidden
       >
         <span className="gps-halo animate-pin-pulse absolute inset-[-14px] rounded-full" />
         <span className="gps-dot relative block h-3 w-3 rounded-full" />

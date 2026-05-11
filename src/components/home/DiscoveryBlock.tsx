@@ -60,7 +60,7 @@ export function DiscoveryBlock() {
         </div>
 
         {(isActive || isDone) ? (
-          <ProgressBar value={completion} size="sm" className="mt-4" />
+          <ProgressBar value={completion} size="sm" className="mt-4" ariaLabel="Progresso do desafio em destaque" />
         ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3">

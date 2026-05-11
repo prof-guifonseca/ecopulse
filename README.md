@@ -19,7 +19,7 @@ Para reiniciar o estado da demo: **pressione e segure por 1.2s o logo
 
 ## Stack
 
-- Next.js 16.2.3 (App Router) + React 19
+- Next.js 16.2.6 (App Router) + React 19
 - TypeScript 5 (strict)
 - Tailwind CSS 4 (sem `tailwind.config`; tokens em `src/app/globals.css`)
 - Zustand 5 com `persist` em `localStorage`
@@ -35,6 +35,13 @@ npm install
 npm run dev    # next dev — http://localhost:3000
 npm run build  # next build
 npm run lint   # eslint
+npm run typecheck
+npm run test:unit
+npm run test:e2e
+npm run test:a11y
+npm run audit
+npm run check
+npm run overnight
 ```
 
 ## Estrutura
