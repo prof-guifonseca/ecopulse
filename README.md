@@ -1,9 +1,14 @@
 # EcoPulse
 
-Aplicativo educacional de hábitos sustentáveis. **100% MVP navegável local** —
-os dados vêm de uma simulação determinística e versionada sobre catálogos
-curados, persistida em `localStorage`. Sem backend, sem servidor, sem chamadas
-externas em runtime.
+Aplicativo educacional de hábitos sustentáveis. **MVP navegável local-first** —
+o app preserva uma simulação determinística e versionada para demo/offline, mas
+agora começa a trocar dados fake por fontes reais progressivas:
+
+- Mapa ESG com MapLibre + OpenStreetMap/Overpass/Nominatim via Route Handler.
+- Scanner com barcode/manual via `/api/products/lookup` e Open Food Facts.
+- APIs BFF em `/api/*` para eventos, scans, comunidade, visitas ESG e impacto.
+- Fallbacks simulados explícitos quando provedores externos ou backend não estão
+  configurados.
 
 ## Simulação local
 
@@ -22,11 +27,13 @@ volta para o onboarding.
 
 ## Stack
 
-- Next.js 16.2.6 (App Router) + React 19
+- Next.js 16.2.6 (App Router + Route Handlers) + React 19
 - TypeScript 5 (strict)
 - Tailwind CSS 4 (sem `tailwind.config`; tokens em `src/app/globals.css`)
 - Zustand 5 com `persist` em `localStorage`
 - Lucide React para ícones
+- MapLibre GL + react-map-gl para mapa ESG
+- Open Food Facts como provider inicial de produto por barcode
 
 > Leia [`AGENTS.md`](./AGENTS.md) antes de editar — Next 16 tem breaking
 > changes vs versões anteriores.
@@ -54,10 +61,11 @@ src/
 ├── app/
 │   ├── (main)/                Layout com BottomNav + FauxStatusBar
 │   │   ├── home/              Painel diário
-│   │   ├── scanner/           Simulador de scan + catálogo (45 produtos)
-│   │   ├── map/               Londrina · Centro (24 pontos GPS-style)
-│   │   ├── community/         Feed (14 posts simulados)
+│   │   ├── scanner/           Barcode/manual + fallback de scan simulado
+│   │   ├── map/               MapLibre + pontos ESG abertos/fallback local
+│   │   ├── community/         Feed curado + reações persistíveis
 │   │   └── profile/           Impacto, Loja, Badges
+│   ├── api/                   BFF: produtos, scans, eventos, ESG, comunidade
 │   ├── onboarding/            Fallback se o seed for limpo manualmente
 │   ├── error.tsx              Boundary de erro raiz
 │   ├── not-found.tsx          404
@@ -70,32 +78,30 @@ src/
 │   ├── demoSeed.ts            Cenário Arthur explícito (não default)
 │   ├── game/rules.ts          Regras puras de unlock (skins, badges)
 │   └── map/londrina.ts        Bounding box + projeção lat/lng → %
-├── simulation/                RNG, cenários, queries e catálogos simulados
+├── domain/                    Contratos canônicos do MVP real-progressivo
+├── simulation/                RNG, cenários, queries e catálogos de fallback
 ├── store/                     Zustand: user, game, ui, social, scanHistory
 └── types/                     Tipos compartilhados
 ```
 
-## O que NÃO existe nesse protótipo
+## Dados reais vs simulação
 
-- Backend, banco, autenticação.
-- Câmera real ou leitor de código de barras (removido na v3 — vide
-  `lib/simulatedScan.ts` e o ritual coreografado em `ScannerPage`).
-- Integração com Open Food Facts ou outras APIs externas em runtime.
-- Mapas com tile services (Mapbox/OSM) — o mapa de Londrina é SVG ilustrado
-  hand-crafted em `components/map/LondrinaBackdrop.tsx`.
-- Login, multi-usuário, sincronização entre dispositivos.
+Veja [`docs/mvp-data-inventory.md`](./docs/mvp-data-inventory.md) para o
+inventário explícito de `provider`, `cache`, `simulation` e `demo` por fluxo.
 
-Tudo o que você vê é uma simulação coerente. Os scores A–E são derivados
-de regras puras em `src/lib/scoring.ts` aplicadas ao catálogo expandido.
+Ainda não existe login multiusuário nem banco obrigatório. As APIs já tentam
+persistir em Supabase quando `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`
+estiverem configurados; sem isso, o MVP continua navegável com memória de
+processo, stores locais e fallback simulado.
 
 ## Princípios da v3
 
 1. **Primeira sessão precisa ser verdadeira o bastante** — o MVP começa vazio,
    mas cada ação deixa rastro e muda o estado.
-2. **Simulado estruturado supera fake solto**: zero dependência de rede,
-   100% offline, cenário previsível e pronto para virar backend.
-3. **Honestidade visual**: nada se passa por uma feature real. Onde o app
-   simula, ele etiqueta (ex: "Feed simulado · prototype").
+2. **Local-first com fontes reais progressivas**: provedores abertos entram por
+   APIs BFF, sempre com cache/fallback para manter a navegação.
+3. **Honestidade visual**: nada se passa por uma feature real. Onde o app usa
+   fallback simulado, ele etiqueta a fonte.
 4. **Motion como linguagem**: cada ação tem feedback (scan ritual, token
    gain animado, bottom-nav indicator deslizando, stagger nas listas).
 5. **Acessibilidade**: focus trap nos modais, `aria-live` nos toasts,

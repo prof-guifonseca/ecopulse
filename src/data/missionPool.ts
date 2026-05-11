@@ -130,10 +130,10 @@ const MISSION_POOL: MissionTemplate[] = [
     reward: 9,
     target: 1,
     flavorByTribe: {
-      guardioes: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa simulada · prototype.' },
-      recicladores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa simulada · prototype.' },
-      cultivadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa simulada · prototype.' },
-      reparadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa simulada · prototype.' },
+      guardioes: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
+      recicladores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
+      cultivadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
+      reparadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
     },
   },
 ];

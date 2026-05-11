@@ -151,6 +151,31 @@ async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'simulation' |
   });
 }
 
+async function mockProductLookup(page: Page) {
+  await page.route('**/api/products/lookup**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        id: 'off:7891000000001',
+        barcode: '7891000000001',
+        found: true,
+        source: 'provider',
+        provider: 'openfoodfacts',
+        name: 'Arroz Integral OSM',
+        brand: 'Cooperativa Teste',
+        category: 'Alimentos',
+        emoji: '🍚',
+        score: 'B',
+        breakdown: { carbono: 70, embalagem: 80, reciclabilidade: 80, origem: 75 },
+        tip: 'Boa escolha para o ciclo diário.',
+        rationale: ['Open Food Facts', 'Origem nacional'],
+        checkedAt: new Date().toISOString(),
+      }),
+    });
+  });
+}
+
 async function gotoApp(page: Page, url: string) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 }
@@ -294,8 +319,9 @@ test('arena route renders the loadout test surface', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Testar loadout|Treino bloqueado/ })).toBeVisible();
 });
 
-test('scanner can search, simulate a scan, and restore modal focus', async ({ page }) => {
+test('scanner can search, lookup a barcode, simulate a fallback scan, and restore modal focus', async ({ page }) => {
   await seedOnboardedState(page);
+  await mockProductLookup(page);
   await gotoApp(page, '/scanner');
 
   await expect(page.getByRole('heading', { name: 'Scanner', level: 1 })).toBeVisible();
@@ -304,6 +330,14 @@ test('scanner can search, simulate a scan, and restore modal focus', async ({ pa
   await search.fill('arroz');
   await expect(page.getByText(/arroz/i).first()).toBeVisible();
   await search.fill('');
+
+  await page.getByRole('textbox', { name: 'Barcode do produto' }).fill('7891000000001');
+  await page.getByRole('button', { name: 'Buscar' }).click();
+  const lookupDialog = page.getByRole('dialog');
+  await expect(lookupDialog).toBeVisible({ timeout: 7_000 });
+  await expect(lookupDialog.getByRole('heading', { name: 'Arroz Integral OSM' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(lookupDialog).toBeHidden();
 
   const scanButton = page.getByRole('button', { name: 'Simular scan' });
   await scanButton.click();

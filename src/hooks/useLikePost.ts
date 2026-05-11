@@ -5,6 +5,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import { syncCommunityReaction } from '@/lib/client/mvpSync';
 
 const LIKE_MISSION_TARGET = 5;
 
@@ -31,6 +32,7 @@ export function useLikePost(postId: string): { liked: boolean; toggle: () => voi
       type: 'post_liked',
       payload: { postId },
     });
+    syncCommunityReaction(postId, 'like', true);
     awardTokens(1);
     incrementLikeMission();
 

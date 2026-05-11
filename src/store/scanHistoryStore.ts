@@ -15,7 +15,7 @@ export interface ScanRecord {
   /** Stable id — usually the simulated EAN-13 barcode. */
   id: string;
   /** Source of the entry so the UI can label and badge it. */
-  source: 'simulator' | 'seed';
+  source: 'barcode' | 'manual' | 'provider' | 'cache' | 'simulator' | 'seed';
   /** Barcode string used to look the product up in the catalog. */
   barcode: string;
   /** Product id from src/data/products.ts. */

@@ -1,8 +1,8 @@
 'use client';
 
-import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Camera, Search, Sparkles } from 'lucide-react';
+import { Camera, Keyboard, Search, Sparkles, Video } from 'lucide-react';
 import { getProductCatalog } from '@/simulation';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
@@ -12,6 +12,9 @@ import { useSimulationStore } from '@/store/simulationStore';
 import { performSimulatedScan } from '@/lib/simulatedScan';
 import { hapticTap } from '@/lib/haptic';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
+import type { ProductLookupResult } from '@/domain';
+import { syncScan } from '@/lib/client/mvpSync';
+import { scanRecordFromLookup } from '@/lib/products/scanRecord';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -26,9 +29,18 @@ import { cn } from '@/lib/cn';
  */
 const SCAN_RITUAL_MS = 1600;
 
+type BarcodeDetectorResult = { rawValue: string };
+type BarcodeDetectorCtor = new (options?: { formats?: string[] }) => {
+  detect: (source: HTMLVideoElement) => Promise<BarcodeDetectorResult[]>;
+};
+
 export function ScannerPage() {
   const [query, setQuery] = useState('');
+  const [barcodeInput, setBarcodeInput] = useState('');
   const [scanning, setScanning] = useState(false);
+  const [lookupError, setLookupError] = useState<string | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
   const [lastBarcode, setLastBarcode] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
   const router = useRouter();
@@ -50,6 +62,8 @@ export function ScannerPage() {
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // After the first-run product modal closes, send the user home.
   useEffect(() => {
@@ -72,25 +86,21 @@ export function ScannerPage() {
     );
   }, [deferredQuery, products]);
 
-  const triggerScan = () => {
-    if (scanning) return;
-    hapticTap();
-    setScanning(true);
-    setLastBarcode(null);
-
-    setTimeout(() => {
-      const record = performSimulatedScan(history.map((h) => h.productId), { firstRun });
+  const completeScan = useCallback(
+    (record: ScanRecord, source: 'barcode' | 'manual' | 'simulator') => {
       setLastBarcode(record.barcode);
       recordScan(record);
+      useGameStore.getState().addScannedProduct(record.productId);
       recordSimulationEvent({
         type: 'scan_completed',
         payload: {
           productId: record.productId,
+          barcode: record.barcode,
           score: record.score,
-          source: firstRun ? 'first-run' : 'scanner',
+          source: firstRun ? 'first-run' : source,
         },
       });
-      awardTokens(10);
+      awardTokens(source === 'simulator' ? 10 : 12);
       if (!missionScan) markMission('scan', true);
       const totalScans = useScanHistoryStore.getState().history.length;
       if (totalScans === 1) unlockBadge('first-scan');
@@ -101,6 +111,128 @@ export function ScannerPage() {
       }
       fireConfetti();
       openModal({ kind: 'product', id: record.id });
+    },
+    [
+      fireConfetti,
+      firstRun,
+      markFirstScanCompleted,
+      markMission,
+      missionScan,
+      openModal,
+      recordScan,
+      recordSimulationEvent,
+    ]
+  );
+
+  const lookupBarcode = useCallback(
+    async (rawBarcode: string, source: 'barcode' | 'manual') => {
+      const barcode = rawBarcode.replace(/\D/g, '');
+      if (barcode.length < 6 || scanning) return;
+      hapticTap();
+      setScanning(true);
+      setLookupError(null);
+      setLastBarcode(null);
+
+      try {
+        const response = await fetch(`/api/products/lookup?barcode=${encodeURIComponent(barcode)}`);
+        if (!response.ok) throw new Error('lookup-failed');
+        const lookup = (await response.json()) as ProductLookupResult;
+        const record = scanRecordFromLookup(lookup, source);
+        completeScan(record, source);
+        syncScan(lookup, source);
+        showToast(lookup.found ? 'Produto identificado' : 'Registro manual criado', lookup.found ? 'success' : 'info');
+      } catch {
+        setLookupError('Não foi possível consultar o barcode agora.');
+        showToast('Consulta indisponível', 'info');
+      } finally {
+        setScanning(false);
+      }
+    },
+    [completeScan, scanning, showToast]
+  );
+
+  const stopCamera = useCallback(() => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setCameraActive(false);
+  }, []);
+
+  const startCamera = useCallback(async () => {
+    const Detector = (window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
+    if (!Detector || !navigator.mediaDevices?.getUserMedia) {
+      setCameraError('Leitor de câmera indisponível neste navegador.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      setCameraError(null);
+      setCameraActive(true);
+    } catch {
+      setCameraError('Permissão de câmera não concedida.');
+    }
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!cameraActive || !video || !streamRef.current) return;
+    video.srcObject = streamRef.current;
+    void video.play().catch(() => undefined);
+  }, [cameraActive]);
+
+  useEffect(() => {
+    if (!cameraActive || scanning) return;
+    const video = videoRef.current;
+    const Detector = (window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
+    if (!video || !Detector) return;
+
+    const detector = new Detector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
+    let cancelled = false;
+    let frame = 0;
+
+    const tick = async () => {
+      if (cancelled) return;
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        const codes = await detector.detect(video).catch(() => []);
+        const raw = codes[0]?.rawValue;
+        if (raw) {
+          cancelled = true;
+          stopCamera();
+          void lookupBarcode(raw, 'barcode');
+          return;
+        }
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    frame = window.requestAnimationFrame(tick);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [cameraActive, lookupBarcode, scanning, stopCamera]);
+
+  useEffect(() => () => stopCamera(), [stopCamera]);
+
+  const submitBarcode = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    void lookupBarcode(barcodeInput, 'manual');
+  };
+
+  const triggerScan = () => {
+    if (scanning) return;
+    hapticTap();
+    setScanning(true);
+    setLastBarcode(null);
+    setLookupError(null);
+
+    setTimeout(() => {
+      const record = performSimulatedScan(history.map((h) => h.productId), { firstRun });
+      completeScan(record, 'simulator');
       setScanning(false);
     }, SCAN_RITUAL_MS);
   };
@@ -153,20 +285,64 @@ export function ScannerPage() {
               filter: 'blur(0.5px)',
             }}
           />
+
+          {cameraActive ? (
+            <video
+              ref={videoRef}
+              muted
+              playsInline
+              className="absolute inset-0 h-full w-full rounded-[var(--radius-md)] object-cover opacity-80"
+              aria-label="Prévia da câmera para leitura de barcode"
+            />
+          ) : null}
         </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="mt-5"
-          onClick={triggerScan}
-          disabled={scanning}
-          loading={scanning}
-          leftIcon={!scanning ? <Icon icon={Camera} size={16} /> : undefined}
+        <form className="mt-5 flex gap-2" onSubmit={submitBarcode}>
+          <label className="sr-only" htmlFor="barcode-input">
+            Barcode do produto
+          </label>
+          <input
+            id="barcode-input"
+            value={barcodeInput}
+            onChange={(event) => setBarcodeInput(event.target.value)}
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="Digite o barcode"
+            className="min-w-0 flex-1 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+          />
+          <Button
+            variant="primary"
+            type="submit"
+            size="md"
+            loading={scanning}
+            disabled={barcodeInput.replace(/\D/g, '').length < 6 || scanning}
+            leftIcon={<Icon icon={Keyboard} size={15} />}
+          >
+            Buscar
+          </Button>
+        </form>
+
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Button
+            variant={cameraActive ? 'ghost' : 'secondary'}
+            size="md"
+            onClick={cameraActive ? stopCamera : startCamera}
+            disabled={scanning}
+            leftIcon={<Icon icon={Video} size={15} />}
+          >
+            {cameraActive ? 'Fechar câmera' : 'Usar câmera'}
+          </Button>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={triggerScan}
+            disabled={scanning}
+            loading={scanning && !barcodeInput}
+          leftIcon={!scanning ? <Icon icon={Camera} size={15} /> : undefined}
         >
           {scanning ? 'Lendo…' : 'Simular scan'}
         </Button>
+        </div>
 
         <p className="mt-3 text-center t-caption">
           {history.length} scan{history.length === 1 ? '' : 's'} · {missionScan ? 'missão ok' : 'pendente'}
@@ -175,6 +351,12 @@ export function ScannerPage() {
         {lastBarcode ? (
           <p className="mt-1 text-center t-caption text-[var(--accent-green)]">
             Lido: {lastBarcode}
+          </p>
+        ) : null}
+
+        {lookupError || cameraError ? (
+          <p className="mt-2 text-center t-caption text-[var(--accent-red)]">
+            {lookupError ?? cameraError}
           </p>
         ) : null}
       </div>
