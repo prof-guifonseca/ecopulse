@@ -1,12 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { buildCommunityFeed, getCommunityPostCatalog } from '@/simulation';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { useSocialStore } from '@/store/socialStore';
+import { useScanHistoryStore } from '@/store/scanHistoryStore';
+import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
 import { todayKey } from '@/lib/dailyReset';
+import { buildRealCommunityFeed } from '@/lib/community/realFeed';
 import { PageShell } from '@/components/ui/PageShell';
 import { FeedPostCard } from './FeedPostCard';
 import { CommunitySkeleton } from './CommunitySkeleton';
@@ -15,6 +17,9 @@ export function CommunityPage() {
   const hydrated = useHydrated();
   const openModal = useUIStore((s) => s.openModal);
   const likedPostIds = useSocialStore((s) => s.likedPosts);
+  const history = useScanHistoryStore((s) => s.history);
+  const viewerName = useUserStore((s) => s.name);
+  const visitedPointIds = useGameStore((s) => s.visitedPoints);
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
 
@@ -24,12 +29,14 @@ export function CommunityPage() {
       .filter((id) => id.startsWith('feed-') && id.endsWith(`-${day}`))
       .map((id) => id.slice('feed-'.length, -`-${day}`.length));
 
-    return buildCommunityFeed({
-      posts: getCommunityPostCatalog(),
+    return buildRealCommunityFeed({
+      scans: history,
+      visitedPointIds,
       likedPostIds,
       promisedPostIds,
+      viewerName,
     });
-  }, [activeChallenges, completedChallenges, likedPostIds]);
+  }, [activeChallenges, completedChallenges, history, likedPostIds, viewerName, visitedPointIds]);
 
   if (!hydrated) return <CommunitySkeleton />;
 

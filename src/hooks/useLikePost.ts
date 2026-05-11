@@ -26,13 +26,13 @@ export function useLikePost(postId: string): { liked: boolean; toggle: () => voi
 
   const toggle = () => {
     const becameLiked = toggleLike(postId);
+    syncCommunityReaction(postId, 'like', becameLiked);
     if (!becameLiked) return;
 
     recordSimulationEvent({
       type: 'post_liked',
       payload: { postId },
     });
-    syncCommunityReaction(postId, 'like', true);
     awardTokens(1);
     incrementLikeMission();
 

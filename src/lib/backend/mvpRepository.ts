@@ -1,10 +1,10 @@
-import { getCommunityPostCatalog } from '@/simulation';
 import type {
   CommunityFeedItem,
   EcoPulseEvent,
   ImpactEntry,
   ScanResult,
 } from '@/domain';
+import { buildRealServerCommunityFeed } from '@/lib/community/realFeed';
 
 interface CommunityReaction {
   postId: string;
@@ -82,23 +82,36 @@ export async function recordCommunityReaction(reaction: CommunityReaction): Prom
 }
 
 export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedItem[] {
-  const reactions = store().communityReactions.filter((item) => item.userId === userId || item.userId === 'local-user');
+  const s = store();
+  const reactions = s.communityReactions.filter((item) => item.userId === userId || item.userId === 'local-user');
   const activeLikes = new Set(reactions.filter((item) => item.reaction === 'like' && item.active).map((item) => item.postId));
   const activePromises = new Set(reactions.filter((item) => item.reaction === 'promise' && item.active).map((item) => item.postId));
+  const visitedPointIds = s.events
+    .filter(isMapVisitEvent)
+    .map((event) => event.payload.pointId);
 
-  return getCommunityPostCatalog().map((post) => ({
+  return buildRealServerCommunityFeed({
+    scans: s.scans,
+    visitedPointIds,
+    likedPostIds: [...activeLikes],
+    promisedPostIds: [...activePromises],
+  }).map((post) => ({
     id: post.id,
     actorName: post.user.name,
     actorAvatar: post.user.avatar,
     caption: post.caption,
     imageKey: post.imageKey,
     createdAt: post.time,
-    likes: post.likes + (activeLikes.has(post.id) && !post.liked ? 1 : 0),
+    likes: post.effectiveLikes,
     comments: post.comments,
-    viewerLiked: post.liked || activeLikes.has(post.id),
-    viewerPromised: activePromises.has(post.id),
-    source: 'demo',
+    viewerLiked: post.viewerLiked,
+    viewerPromised: post.viewerPromised,
+    source: post.source,
   }));
+}
+
+function isMapVisitEvent(event: EcoPulseEvent): event is EcoPulseEvent<'map_visit_marked'> {
+  return event.type === 'map_visit_marked';
 }
 
 async function persistToSupabase(table: string, row: unknown): Promise<void> {

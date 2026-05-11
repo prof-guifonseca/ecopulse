@@ -87,7 +87,7 @@ export function JourneySection() {
           )}
         </div>
       ) : (
-        <p className="t-caption">Você fechou todos os capítulos da jornada simulada.</p>
+        <p className="t-caption">Você fechou todos os capítulos da jornada local.</p>
       )}
     </Card>
   );

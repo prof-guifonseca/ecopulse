@@ -2,343 +2,1251 @@ import type { OpenFoodFactsSnapshotProduct } from './products';
 
 export const OPEN_FOOD_FACTS_SNAPSHOT_META = {
   sourceName: 'Open Food Facts',
-  sourceUrl:
-    'https://world.openfoodfacts.org/api/v2/search?countries_tags_en=Brazil&fields=code,product_name,product_name_pt,brands,categories,categories_tags,packaging,packaging_tags,countries_tags,nova_group,ecoscore_grade,image_front_url&page_size=30&sort_by=popularity_key',
-  generatedAt: '2026-05-11T00:00:00.000Z',
+  sourceUrl: 'https://world.openfoodfacts.org/api/v2/search?countries_tags_en=Brazil&fields=code%2Cproduct_name%2Cproduct_name_pt%2Cbrands%2Ccategories%2Ccategories_tags%2Cpackaging%2Cpackaging_tags%2Ccountries_tags%2Cnova_group%2Cecoscore_grade%2Cimage_front_url&page_size=80&sort_by=popularity_key',
+  generatedAt: '2026-05-11T15:30:22.497Z',
   license: 'Open Database License / Open Food Facts',
 } as const;
 
 export const OPEN_FOOD_FACTS_PRODUCTS = [
   {
-    code: '7891000412855',
-    productName: 'Alimento achocolatado em pó, NESCAU',
-    brand: 'Nestlé',
-    categories: 'Cocoa and its products, Cocoa and chocolate powders, en:instant-beverages',
-    categoriesTags: [
-      'beverages-and-beverages-preparations',
-      'cocoa-and-its-products',
-      'beverage-preparations',
-      'cocoa-and-chocolate-powders',
-      'instant-beverages',
+    "code": "7891000412855",
+    "productName": "Alimento achocolatado em pó, NESCAU",
+    "brand": "Nestlé",
+    "categories": "Cocoa and its products, Cocoa and chocolate powders, en:instant-beverages",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "cocoa-and-its-products",
+      "beverage-preparations",
+      "cocoa-and-chocolate-powders",
+      "instant-beverages"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'unknown',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/100/041/2855/front_en.41.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7891000412855',
-    evidenceFields: ['nova_group', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7894900701517',
-    productName: 'Coca Cola Zero Açúcar',
-    brand: 'CocaCola',
-    categories:
-      'Beverages and beverages preparations, Beverages, Carbonated drinks, Sodas, Colas, en:artificially-sweetened-beverages',
-    categoriesTags: [
-      'beverages-and-beverages-preparations',
-      'beverages',
-      'carbonated-drinks',
-      'artificially-sweetened-beverages',
-      'sodas',
-      'colas',
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
     ],
-    packaging: 'Plástico',
-    packagingTags: ['plastic'],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'not-applicable',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/490/070/1517/front_pt.18.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7894900701517',
-    evidenceFields: ['packaging', 'nova_group', 'image_front_url', 'countries_tags'],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/041/2855/front_en.41.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000412855",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
   {
-    code: '7893000394209',
-    productName: 'Cremosa com sal',
-    brand: 'Qualy',
-    categories:
-      'Alimentos y bebidas de origen vegetal,Alimentos de origen vegetal,Aceites y grasas,Untables,Untables vegetales,Untables salados,Grasas vegetales,Refrigerados,Grasas para untar,Margarinas,Margarinas con sal',
-    categoriesTags: [
-      'plant-based-foods-and-beverages',
-      'plant-based-foods',
-      'fats',
-      'spreads',
-      'plant-based-spreads',
-      'salted-spreads',
-      'vegetable-fats',
-      'refrigerated-foods',
-      'spreadable-fats',
-      'margarines',
-      'salted-margarines',
+    "code": "7894900701517",
+    "productName": "Coca Cola Zero Açúcar",
+    "brand": "CocaCola",
+    "categories": "Beverages and beverages preparations, Beverages, Carbonated drinks, Sodas, Colas, en:artificially-sweetened-beverages",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "beverages",
+      "carbonated-drinks",
+      "artificially-sweetened-beverages",
+      "sodas",
+      "colas"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['bolivia', 'brazil', 'france'],
-    novaGroup: 4,
-    ecoscoreGrade: 'b',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/300/039/4209/front_en.18.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7893000394209',
-    evidenceFields: ['nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7891000325858',
-    productName: 'LEITE PO NINHO INTEGRAL',
-    brand: 'Nestlé Ninho',
-    categories:
-      'Laticínios,en:Milks (liquid and powder),Leites,Produtos secos a serem rehidratados,Bebidas desidratadas,Leites integrais,en:Milk powders,en:Whole milk powder',
-    categoriesTags: [
-      'beverages-and-beverages-preparations',
-      'beverages',
-      'dairies',
-      'milks-liquid-and-powder',
-      'dried-products',
-      'milks',
-      'dried-products-to-be-rehydrated',
-      'dehydrated-beverages',
-      'whole-milks',
-      'milk-powders',
-      'whole-milk-powder',
+    "packaging": "Plástico",
+    "packagingTags": [
+      "plastic"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil'],
-    novaGroup: 1,
-    ecoscoreGrade: 'f',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/100/032/5858/front_pt.34.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7891000325858',
-    evidenceFields: ['nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7891203010056',
-    productName: 'Pão De Forma Panco Premium Pacote 500g',
-    brand: 'PANCO',
-    categories: 'Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Cereais e batatas,Pães,Pães de forma',
-    categoriesTags: ['plant-based-foods-and-beverages', 'plant-based-foods', 'cereals-and-potatoes', 'breads', 'sliced-breads'],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'a',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/120/301/0056/front_en.11.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7891203010056',
-    evidenceFields: ['nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '5601216120152',
-    productName: 'AZEITE EXT VIRGEM ANDORINHA',
-    brand: 'ANDORINHA',
-    categories:
-      'Alimentos e bebidas à base de plantas, Alimentos à base de plantas, Gorduras, Gorduras vegetals, Produtos de oliveira, Olios vegetais, Azeite de oliva, Azeites virgem extra, en:Virgin olive oils',
-    categoriesTags: [
-      'plant-based-foods-and-beverages',
-      'plant-based-foods',
-      'fats',
-      'vegetable-fats',
-      'olive-tree-products',
-      'vegetable-oils',
-      'olive-oils',
-      'extra-virgin-olive-oils',
-      'virgin-olive-oils',
+    "countriesTags": [
+      "brazil"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil'],
-    novaGroup: 2,
-    ecoscoreGrade: 'e',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/560/121/612/0152/front_pt.7.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/5601216120152',
-    evidenceFields: ['nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
+    "novaGroup": 4,
+    "ecoscoreGrade": "not-applicable",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/490/070/1517/front_pt.18.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7894900701517",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
   {
-    code: '7898024394181',
-    productName: 'Nutella 350g',
-    brand: 'Ferrero',
-    categories:
-      'Desayunos, Untables, Untables dulces, fr:Pâtes à tartiner, Cremas a base de avellanas, Cremas de chocolate, Cremas de cacao y avellanas',
-    categoriesTags: [
-      'breakfasts',
-      'spreads',
-      'sweet-spreads',
-      'pates-a-tartiner',
-      'hazelnut-spreads',
-      'chocolate-spreads',
-      'cocoa-and-hazelnuts-spreads',
+    "code": "7893000394209",
+    "productName": "Cremosa com sal",
+    "brand": "Qualy",
+    "categories": "Alimentos y bebidas de origen vegetal,Alimentos de origen vegetal,Aceites y grasas,Untables,Untables vegetales,Untables salados,Grasas vegetales,Refrigerados,Grasas para untar,Margarinas,Margarinas con sal",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "fats",
+      "spreads",
+      "plant-based-spreads",
+      "salted-spreads",
+      "vegetable-fats",
+      "refrigerated-foods",
+      "spreadable-fats",
+      "margarines",
+      "salted-margarines"
     ],
-    packaging: 'Vidrio',
-    packagingTags: ['glass'],
-    countriesTags: ['argentina', 'brazil', 'united-states'],
-    novaGroup: 4,
-    ecoscoreGrade: 'd',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/802/439/4181/front_en.6.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7898024394181',
-    evidenceFields: ['packaging', 'nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7898080640611',
-    productName: 'Leite UHT Integral',
-    brand: 'Italac',
-    categories: 'Laticínios, Leites, Leites homogeneizados, Leites UHT, Leites integrais, es:Leche entera esterilizada',
-    categoriesTags: ['dairies', 'milks', 'homogenized-milks', 'uht-milks', 'whole-milks', 'leche-entera-esterilizada'],
-    packaging: 'Tetra Pak,Boîte',
-    packagingTags: ['multilayer-composite', 'tetra-pak', 'box'],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'd',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/808/064/0611/front_en.19.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7898080640611',
-    evidenceFields: ['packaging', 'nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7894000050034',
-    productName: "hellmann's maionese",
-    brand: "Hellmann's",
-    categories: 'Condimentos,Molhos,Maioneses',
-    categoriesTags: ['condiments', 'sauces', 'mayonnaises'],
-    packaging: 'Plástico',
-    packagingTags: ['plastic'],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'd',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/400/005/0034/front_en.28.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7894000050034',
-    evidenceFields: ['packaging', 'nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7898215151708',
-    productName: 'Leite Integral Piracanjuba',
-    brand: 'Piracanjuba',
-    categories: 'Laticínios, Leites, Leites homogeneizados, Leites UHT, Leites integrais',
-    categoriesTags: ['dairies', 'milks', 'homogenized-milks', 'uht-milks', 'whole-milks'],
-    packaging: 'Papel,Cartão,Papel cartonado,Misto',
-    packagingTags: ['paper', 'cardboard', 'paperboard', 'misto'],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'c',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/821/515/1708/front_pt.38.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7898215151708',
-    evidenceFields: ['packaging', 'nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '7894900010015',
-    productName: 'Coca Cola LT 350ml',
-    brand: 'Coca-Cola',
-    categories: 'Beverages,Carbonated drinks,Sodas,Colas,Sweetened beverages,pt:Bebidas não alcólicas,pt:Refrigerantes',
-    categoriesTags: ['beverages-and-beverages-preparations', 'beverages', 'carbonated-drinks', 'sodas', 'colas', 'sweetened-beverages'],
-    packaging: 'Metais, Metais recicláveis, Alumínio, Lata',
-    packagingTags: ['metal', 'recyclable-metals', 'aluminium', 'can'],
-    countriesTags: ['brazil'],
-    novaGroup: 4,
-    ecoscoreGrade: 'not-applicable',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/490/001/0015/front_pt.45.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7894900010015',
-    evidenceFields: ['packaging', 'nova_group', 'image_front_url', 'countries_tags'],
-  },
-  {
-    code: '5601252231164',
-    productName: 'Azeite de Oliva Extravirgem Clássico',
-    brand: 'Gallo',
-    categories:
-      'Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Gorduras,Gorduras vegetals,Produtos de oliveira,Olios vegetais,Azeite de oliva,Azeites virgem extra,en:Virgin olive oils,Olive oils,Extra-virgin olive oils',
-    categoriesTags: [
-      'plant-based-foods-and-beverages',
-      'plant-based-foods',
-      'fats',
-      'vegetable-fats',
-      'olive-tree-products',
-      'vegetable-oils',
-      'olive-oils',
-      'extra-virgin-olive-oils',
-      'virgin-olive-oils',
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "bolivia",
+      "brazil",
+      "france"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil', 'france'],
-    novaGroup: null,
-    ecoscoreGrade: 'c',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/560/125/223/1164/front_pt.38.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/5601252231164',
-    evidenceFields: ['ecoscore_grade', 'image_front_url', 'countries_tags'],
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/300/039/4209/front_en.18.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7893000394209",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
   {
-    code: '7896004006277',
-    productName: 'Salgadinho De Batata Original Pringles Tubo 104g',
-    brand: 'PRINGLES',
-    categories:
-      'Snacks, Salty snacks, Appetizers, Chips and fries, Crisps, Salty snacks made from potato, Stacked extruded potato crisps',
-    categoriesTags: [
-      'plant-based-foods-and-beverages',
-      'plant-based-foods',
-      'snacks',
-      'cereals-and-potatoes',
-      'salty-snacks',
-      'appetizers',
-      'chips-and-fries',
-      'potatoes-and-their-products',
-      'crisps',
-      'salty-snacks-made-from-potato',
-      'stacked-extruded-potato-crisps',
+    "code": "7891000325858",
+    "productName": "LEITE PO NINHO INTEGRAL",
+    "brand": "Nestlé Ninho",
+    "categories": "Laticínios,en:Milks (liquid and powder),Leites,Produtos secos a serem rehidratados,Bebidas desidratadas,Leites integrais,en:Milk powders,en:Whole milk powder",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "beverages",
+      "dairies",
+      "milks-liquid-and-powder",
+      "dried-products",
+      "milks",
+      "dried-products-to-be-rehydrated",
+      "dehydrated-beverages",
+      "whole-milks",
+      "milk-powders",
+      "whole-milk-powder"
     ],
-    packaging: '',
-    packagingTags: [],
-    countriesTags: ['brazil'],
-    novaGroup: null,
-    ecoscoreGrade: 'b',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/600/400/6277/front_pt.24.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7896004006277',
-    evidenceFields: ['ecoscore_grade', 'image_front_url', 'countries_tags'],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 1,
+    "ecoscoreGrade": "f",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/032/5858/front_pt.34.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000325858",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
   {
-    code: '7622210596413',
-    productName: 'Wafers, barras recheadas e tabletes sortidos',
-    brand: 'LACTA',
-    categories:
-      'Snacks, Sweet snacks, Biscuits and cakes, Biscuits and crackers, Cocoa and its products, Confectioneries, Biscuits, Chocolate candies, Bonbons, en:bars',
-    categoriesTags: [
-      'snacks',
-      'sweet-snacks',
-      'biscuits-and-cakes',
-      'biscuits-and-crackers',
-      'cocoa-and-its-products',
-      'confectioneries',
-      'biscuits',
-      'chocolate-candies',
-      'bars',
-      'bonbons',
+    "code": "7891203010056",
+    "productName": "Pão De Forma Panco Premium Pacote 500g",
+    "brand": "PANCO",
+    "categories": "Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Cereais e batatas,Pães,Pães de forma",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "breads",
+      "sliced-breads"
     ],
-    packaging: 'Papel',
-    packagingTags: ['paper'],
-    countriesTags: ['brazil'],
-    novaGroup: null,
-    ecoscoreGrade: 'b',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/762/221/059/6413/front_pt.21.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7622210596413',
-    evidenceFields: ['packaging', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/120/301/0056/front_en.11.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891203010056",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
   {
-    code: '7891079000229',
-    productName: 'Nissin Lámen Galinha Caipira',
-    brand: 'Nissin',
-    categories:
-      'Plant-based foods and beverages,Plant-based foods,Cereals and potatoes,Cereals and their products,Dried products,Pastas,Dried products to be rehydrated,Noodles,Instant noodles',
-    categoriesTags: [
-      'plant-based-foods-and-beverages',
-      'plant-based-foods',
-      'cereals-and-potatoes',
-      'cereals-and-their-products',
-      'dried-products',
-      'pastas',
-      'dried-products-to-be-rehydrated',
-      'noodles',
-      'instant-noodles',
+    "code": "5601216120152",
+    "productName": "AZEITE EXT VIRGEM ANDORINHA",
+    "brand": "ANDORINHA",
+    "categories": "Alimentos e bebidas à base de plantas, Alimentos à base de plantas, Gorduras, Gorduras vegetals, Produtos de oliveira, Olios vegetais, Azeite de oliva, Azeites virgem extra, en:Virgin olive oils",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "fats",
+      "vegetable-fats",
+      "olive-tree-products",
+      "vegetable-oils",
+      "olive-oils",
+      "extra-virgin-olive-oils",
+      "virgin-olive-oils"
     ],
-    packaging: 'Pacote',
-    packagingTags: ['pack'],
-    countriesTags: ['brazil', 'france'],
-    novaGroup: 4,
-    ecoscoreGrade: 'b',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/789/107/900/0229/front_pt.7.400.jpg',
-    sourceUrl: 'https://world.openfoodfacts.org/product/7891079000229',
-    evidenceFields: ['packaging', 'nova_group', 'ecoscore_grade', 'image_front_url', 'countries_tags'],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 2,
+    "ecoscoreGrade": "e",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/560/121/612/0152/front_pt.7.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/5601216120152",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
   },
+  {
+    "code": "7892840819507",
+    "productName": "ACHOC PO TODDY",
+    "brand": "Toddy",
+    "categories": "Cocoa and its products, Cocoa and chocolate powders, en:instant-beverages",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "cocoa-and-its-products",
+      "beverage-preparations",
+      "cocoa-and-chocolate-powders",
+      "instant-beverages"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil",
+      "united-states"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/284/081/9507/front_en.22.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7892840819507",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7892840819170",
+    "productName": "Toddy Original 750g",
+    "brand": "Toddy",
+    "categories": "Beverages and beverages preparations,Cocoa and its products,Beverage preparations,Cocoa and chocolate powders,Instant beverages,Instant chocolate powders",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "cocoa-and-its-products",
+      "beverage-preparations",
+      "cocoa-and-chocolate-powders",
+      "instant-beverages",
+      "instant-chocolate-powders"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/284/081/9170/front_en.63.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7892840819170",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898024394181",
+    "productName": "Nutella 350g",
+    "brand": "Ferrero",
+    "categories": "Desayunos, Untables, Untables dulces, fr:Pâtes à tartiner, Cremas a base de avellanas, Cremas de chocolate, Cremas de cacao y avellanas",
+    "categoriesTags": [
+      "breakfasts",
+      "spreads",
+      "sweet-spreads",
+      "pates-a-tartiner",
+      "hazelnut-spreads",
+      "chocolate-spreads",
+      "cocoa-and-hazelnuts-spreads"
+    ],
+    "packaging": "Vidrio",
+    "packagingTags": [
+      "glass"
+    ],
+    "countriesTags": [
+      "argentina",
+      "brazil",
+      "united-states"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/802/439/4181/front_en.6.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898024394181",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896002360326",
+    "productName": "pullman tradicional pão",
+    "brand": "Pullman",
+    "categories": "Alimentos e bebidas à base de plantas, Alimentos à base de plantas, Cereais e Batatas, Pães, Pães de forma",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "breads",
+      "sliced-breads"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/600/236/0326/front_pt.30.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896002360326",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898080640611",
+    "productName": "Leite UHT Integral",
+    "brand": "Italac",
+    "categories": "Laticínios, Leites, Leites homogeneizados, Leites UHT, Leites integrais, es:Leche entera esterilizada",
+    "categoriesTags": [
+      "dairies",
+      "milks",
+      "homogenized-milks",
+      "uht-milks",
+      "whole-milks",
+      "leche-entera-esterilizada"
+    ],
+    "packaging": "Tetra Pak,Boîte",
+    "packagingTags": [
+      "multilayer-composite",
+      "tetra-pak",
+      "box"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/808/064/0611/front_en.19.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898080640611",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7894000050034",
+    "productName": "hellmann's maionese",
+    "brand": "Hellmann's",
+    "categories": "Condimentos,Molhos,Maioneses",
+    "categoriesTags": [
+      "condiments",
+      "sauces",
+      "mayonnaises"
+    ],
+    "packaging": "Plástico",
+    "packagingTags": [
+      "plastic"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/400/005/0034/front_en.28.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7894000050034",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898215151708",
+    "productName": "Leite Integral Piracanjuba",
+    "brand": "Piracanjuba",
+    "categories": "Laticínios, Leites, Leites homogeneizados, Leites UHT, Leites integrais",
+    "categoriesTags": [
+      "dairies",
+      "milks",
+      "homogenized-milks",
+      "uht-milks",
+      "whole-milks"
+    ],
+    "packaging": "Papel,Cartão,Papel cartonado,Misto",
+    "packagingTags": [
+      "paper",
+      "cardboard",
+      "paperboard",
+      "misto"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/821/515/1708/front_pt.38.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898215151708",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891000426210",
+    "productName": "Nescau Lata 350g",
+    "brand": "Nestlé",
+    "categories": "Achocolatados",
+    "categoriesTags": [
+      "achocolatados"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/042/6210/front_pt.25.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000426210",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896066301457",
+    "productName": "Pão De Forma Integral Wickbold Do Forno Pacote 500g",
+    "brand": "Wickbold",
+    "categories": "Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Cereais e Batatas,Pães,Breads,Cereals and their products,Plant-based foods",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "cereals-and-their-products",
+      "breads"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/606/630/1457/front_en.7.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896066301457",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896094910959",
+    "productName": "Adoçante dietético líquido",
+    "brand": "Zero Cal",
+    "categories": "Adoçantes,Artificial sugar substitutes",
+    "categoriesTags": [
+      "sweeteners",
+      "food-additives",
+      "sugar-substitutes",
+      "artificial-sugar-substitutes"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil",
+      "france"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/609/491/0959/front_pt.14.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896094910959",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891000379585",
+    "productName": "Nescau",
+    "brand": "Nestlé",
+    "categories": "en:Beverages and beverages preparations,en:Beverage preparations,Cacau e chocolate em pó,Bebidas instantâneas,en:chocolate-powders",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "cocoa-and-its-products",
+      "beverage-preparations",
+      "cocoa-and-chocolate-powders",
+      "instant-beverages",
+      "instant-chocolate-powders"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/037/9585/front_en.27.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000379585",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898215151784",
+    "productName": "Creme de Leite Piracanjuba",
+    "brand": "Piracanjuba",
+    "categories": "Dairies,Creams,Milks (liquid and powder),Milks,Homogenized milks,Pasteurised products,UHT Milks,UHT Creams,Whole milks",
+    "categoriesTags": [
+      "dairies",
+      "creams",
+      "milks-liquid-and-powder",
+      "milks",
+      "homogenized-milks",
+      "pasteurised-products",
+      "uht-milks",
+      "uht-creams",
+      "whole-milks"
+    ],
+    "packaging": "Caixinha",
+    "packagingTags": [
+      "caixinha"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/821/515/1784/front_pt.48.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898215151784",
+    "evidenceFields": [
+      "packaging",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7894900010015",
+    "productName": "Coca Cola LT 350ml",
+    "brand": "Coca-Cola",
+    "categories": "Beverages,Carbonated drinks,Sodas,Colas,Sweetened beverages,pt:Bebidas não alcólicas,pt:Refrigerantes",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "beverages",
+      "carbonated-drinks",
+      "sodas",
+      "colas",
+      "sweetened-beverages",
+      "bebidas-nao-alcolicas",
+      "refrigerantes"
+    ],
+    "packaging": "Metais, Metais recicláveis, Alumínio, Lata",
+    "packagingTags": [
+      "metal",
+      "recyclable-metals",
+      "aluminium",
+      "can"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "not-applicable",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/490/001/0015/front_pt.45.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7894900010015",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "5601252231164",
+    "productName": "Azeite de Oliva Extravirgem Clássico",
+    "brand": "Gallo",
+    "categories": "Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Gorduras,Gorduras vegetals,Produtos de oliveira,Olios vegetais,Azeite de oliva,Azeites virgem extra,en:Virgin olive oils,Olive oils,Extra-virgin olive oils",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "fats",
+      "vegetable-fats",
+      "olive-tree-products",
+      "vegetable-oils",
+      "olive-oils",
+      "extra-virgin-olive-oils",
+      "virgin-olive-oils"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil",
+      "france"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/560/125/223/1164/front_pt.38.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/5601252231164",
+    "evidenceFields": [
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898215152002",
+    "productName": "leite condensado Piracanjuba",
+    "brand": "Piracanjuba",
+    "categories": "Dairies,Condensed milks",
+    "categoriesTags": [
+      "dairies",
+      "condensed-milks"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/821/515/2002/front_en.8.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898215152002",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896004006277",
+    "productName": "Salgadinho De Batata Original Pringles Tubo 104g",
+    "brand": "PRINGLES",
+    "categories": "Snacks, Salty snacks, Appetizers, Chips and fries, Crisps, Salty snacks made from potato, Stacked extruded potato crisps",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "snacks",
+      "cereals-and-potatoes",
+      "salty-snacks",
+      "appetizers",
+      "chips-and-fries",
+      "potatoes-and-their-products",
+      "crisps",
+      "salty-snacks-made-from-potato",
+      "stacked-extruded-potato-crisps"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/600/400/6277/front_pt.24.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896004006277",
+    "evidenceFields": [
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7622210596413",
+    "productName": "Wafers, barras recheadas e tabletes sortidos",
+    "brand": "LACTA",
+    "categories": "Snacks, Sweet snacks, Biscuits and cakes, Biscuits and crackers, Cocoa and its products, Confectioneries, Biscuits, Chocolate candies, Bonbons, en:bars",
+    "categoriesTags": [
+      "snacks",
+      "sweet-snacks",
+      "biscuits-and-cakes",
+      "biscuits-and-crackers",
+      "cocoa-and-its-products",
+      "confectioneries",
+      "biscuits",
+      "chocolate-candies",
+      "bars",
+      "bonbons"
+    ],
+    "packaging": "Papel",
+    "packagingTags": [
+      "paper"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/762/221/059/6413/front_pt.21.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7622210596413",
+    "evidenceFields": [
+      "packaging",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891079000229",
+    "productName": "Nissin Lámen Galinha Caipira",
+    "brand": "Nissin",
+    "categories": "Plant-based foods and beverages,Plant-based foods,Cereals and potatoes,Cereals and their products,Dried products,Pastas,Dried products to be rehydrated,Noodles,Instant noodles",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "cereals-and-their-products",
+      "dried-products",
+      "pastas",
+      "dried-products-to-be-rehydrated",
+      "noodles",
+      "instant-noodles"
+    ],
+    "packaging": "Pacote",
+    "packagingTags": [
+      "pack"
+    ],
+    "countriesTags": [
+      "brazil",
+      "france"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/107/900/0229/front_pt.7.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891079000229",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898080640413",
+    "productName": "Leite Condensado",
+    "brand": "Italac",
+    "categories": "Leche condensada",
+    "categoriesTags": [
+      "dairies",
+      "condensed-milks"
+    ],
+    "packaging": "Tetra Pak",
+    "packagingTags": [
+      "tetra-pak"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/808/064/0413/front_pt.4.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898080640413",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891962051345",
+    "productName": "Pão de forma integral (36% Cereais integrais)",
+    "brand": "Visconti",
+    "categories": "Aliments et boissons à base de végétaux,Aliments d'origine végétale,Céréales et pommes de terre,Céréales et dérivés,Pains,Pains de mie,Pains complets,Pains de mie complet",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "cereals-and-their-products",
+      "breads",
+      "sliced-breads",
+      "wholemeal-breads",
+      "wholemeal-sliced-breads"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil",
+      "france"
+    ],
+    "novaGroup": 3,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/196/205/1345/front_en.17.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891962051345",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896036090244",
+    "productName": "Óleo De Soja Tipo 1",
+    "brand": "CARGILL BRASIL",
+    "categories": "Soybean oils",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "legumes-and-their-products",
+      "fats",
+      "vegetable-fats",
+      "vegetable-oils",
+      "legume-oils",
+      "soybean-oils"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 2,
+    "ecoscoreGrade": "d",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/603/609/0244/front_pt.11.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896036090244",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891107101621",
+    "productName": "SOYA Óleo de Soja",
+    "brand": "SOYA",
+    "categories": "Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Legumes e seus produtos,Gorduras,Gorduras vegetals,Olios vegetais,en:Legume oils,en:Soybean oils,Oleo-vegetal,Óleos vegetais,Óleos de cozinha,Gorduras vegetais",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "legumes-and-their-products",
+      "fats",
+      "vegetable-fats",
+      "vegetable-oils",
+      "legume-oils",
+      "soybean-oils",
+      "gorduras-vegetais",
+      "oleo-vegetal",
+      "oleos-de-cozinha",
+      "oleos-vegetais"
+    ],
+    "packaging": "Plástico",
+    "packagingTags": [
+      "plastic"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/110/710/1621/front_pt.31.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891107101621",
+    "evidenceFields": [
+      "packaging",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891000393284",
+    "productName": "Leite em pó integral instantâneo Ninho",
+    "brand": "Nestlé Ninho",
+    "categories": "Beverages and beverages preparations,Beverages,Dairies,Milks (liquid and powder),Dried products,Milks,Dried products to be rehydrated,Dehydrated beverages,Milk powders,pt:leite em pó",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "beverages",
+      "dairies",
+      "milks-liquid-and-powder",
+      "dried-products",
+      "milks",
+      "dried-products-to-be-rehydrated",
+      "dehydrated-beverages",
+      "milk-powders",
+      "leite-em-po"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "f",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/039/3284/front_pt.26.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000393284",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891000248768",
+    "productName": "Kit Kat",
+    "brand": "Nestlé",
+    "categories": "Chocolate confectioneries filled with wafer",
+    "categoriesTags": [
+      "snacks",
+      "sweet-snacks",
+      "cocoa-and-its-products",
+      "confectioneries",
+      "chocolate-candies",
+      "bonbons",
+      "chocolate-confectioneries-filled-with-wafer"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "bolivia",
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/024/8768/front_pt.36.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000248768",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898024395232",
+    "productName": "Nutella Ferrero",
+    "brand": "Ferrero",
+    "categories": "Desayunos,Untables,Untables dulces,fr:Pâtes à tartiner,Cremas a base de avellanas,Cremas de chocolate,Cremas de cacao y avellanas",
+    "categoriesTags": [
+      "breakfasts",
+      "spreads",
+      "sweet-spreads",
+      "pates-a-tartiner",
+      "hazelnut-spreads",
+      "chocolate-spreads",
+      "cocoa-and-hazelnuts-spreads"
+    ],
+    "packaging": "Plástico,PET,Tarro,en:PET - Transparent",
+    "packagingTags": [
+      "plastic",
+      "pet-1-polyethylene-terephthalate",
+      "jar",
+      "pet-transparent"
+    ],
+    "countriesTags": [
+      "bolivia",
+      "brazil",
+      "colombia",
+      "peru",
+      "spain"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/802/439/5232/front_en.5.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898024395232",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7894900700015",
+    "productName": "Coca Cola Zero Açúcar",
+    "brand": "Coca-Cola",
+    "categories": "Beverages, Specific products, Carbonated drinks, Products for specific diets, Products without gluten, Sodas, pt:Refrigerante, en:colas",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "beverages",
+      "specific-products",
+      "carbonated-drinks",
+      "products-for-specific-diets",
+      "products-without-gluten",
+      "sodas",
+      "colas",
+      "refrigerante"
+    ],
+    "packaging": "Metais, Metais recicláveis, Alumínio, Lata",
+    "packagingTags": [
+      "metal",
+      "recyclable-metals",
+      "aluminium",
+      "can"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "not-applicable",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/490/070/0015/front_pt.53.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7894900700015",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "78939318",
+    "productName": "Bombom Wafer Lacta Ouro Branco Pacote 20g",
+    "brand": "Nestlé",
+    "categories": "Snacks, Sweet snacks, Cocoa and its products, Confectioneries, Chocolate candies, en:bonbons",
+    "categoriesTags": [
+      "snacks",
+      "sweet-snacks",
+      "cocoa-and-its-products",
+      "confectioneries",
+      "chocolate-candies",
+      "bonbons"
+    ],
+    "packaging": "Plastic,PP - Polypropylene",
+    "packagingTags": [
+      "plastic",
+      "pp-polypropylene"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/000/007/893/9318/front_pt.25.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/78939318",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7894900530001",
+    "productName": "AGUA MIN CRYSTAL S/GAS 500ML",
+    "brand": "CRYSTAL",
+    "categories": "Bebidas, Águas, Águas de nascente, Água Mineral",
+    "categoriesTags": [
+      "beverages",
+      "waters",
+      "spring-waters",
+      "mineral-waters"
+    ],
+    "packaging": "Plástico",
+    "packagingTags": [
+      "plastic"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 1,
+    "ecoscoreGrade": "not-applicable",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/490/053/0001/front_pt.30.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7894900530001",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891095911486",
+    "productName": "Farofa De Mandioca Tradicional",
+    "brand": "YOKI",
+    "categories": "Lanches comida,Petiscos salgados,Aperitivos,Farofa-de-mandioca",
+    "categoriesTags": [
+      "snacks",
+      "salty-snacks",
+      "appetizers",
+      "farofa-de-mandioca"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil",
+      "germany"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/109/591/1486/front_en.22.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891095911486",
+    "evidenceFields": [
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896024761651",
+    "productName": "Biscoito doce maizena",
+    "brand": "piraquê",
+    "categories": "Biscoitos e Bolos,en:Biscuits and crackers,Biscoitos",
+    "categoriesTags": [
+      "snacks",
+      "sweet-snacks",
+      "biscuits-and-cakes",
+      "biscuits-and-crackers",
+      "biscuits"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/602/476/1651/front_en.3.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896024761651",
+    "evidenceFields": [
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7896066301778",
+    "productName": "Pão de Fôrma Integral - Wickbold - 550g",
+    "brand": "WICKBOLD",
+    "categories": "Alimentos e bebidas à base de plantas, Alimentos à base de plantas, Cereais e Batatas, Pães",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "breads"
+    ],
+    "packaging": "Plastic",
+    "packagingTags": [
+      "plastic"
+    ],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "unknown",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/606/630/1778/front_pt.23.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7896066301778",
+    "evidenceFields": [
+      "packaging",
+      "nova_group",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891000379691",
+    "productName": "Nescau",
+    "brand": "Nestlé",
+    "categories": "Beverages and beverages preparations,Cocoa and its products,Beverage preparations,Cocoa and chocolate powders,Instant beverages,Instant chocolate powders",
+    "categoriesTags": [
+      "beverages-and-beverages-preparations",
+      "cocoa-and-its-products",
+      "beverage-preparations",
+      "cocoa-and-chocolate-powders",
+      "instant-beverages",
+      "instant-chocolate-powders"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/100/037/9691/front_en.4.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891000379691",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7898080640222",
+    "productName": "Creme de Leite UHT Italac",
+    "brand": "Italac",
+    "categories": "Dairies,Creams,fr:Crèmes légères,pt:creme de leite",
+    "categoriesTags": [
+      "dairies",
+      "creams",
+      "cremes-legeres",
+      "creme-de-leite"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/808/064/0222/front_en.7.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7898080640222",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  },
+  {
+    "code": "7891962051338",
+    "productName": "Pão de forma tradicional",
+    "brand": "Visconti",
+    "categories": "Alimentos e bebidas à base de plantas,Alimentos à base de plantas,Cereais e batatas,Cereais e seus produtos,Pães,White breads,Sliced breads",
+    "categoriesTags": [
+      "plant-based-foods-and-beverages",
+      "plant-based-foods",
+      "cereals-and-potatoes",
+      "cereals-and-their-products",
+      "breads",
+      "sliced-breads",
+      "white-breads"
+    ],
+    "packaging": "",
+    "packagingTags": [],
+    "countriesTags": [
+      "brazil"
+    ],
+    "novaGroup": 3,
+    "ecoscoreGrade": "a",
+    "imageUrl": "https://images.openfoodfacts.org/images/products/789/196/205/1338/front_en.3.400.jpg",
+    "sourceUrl": "https://world.openfoodfacts.org/product/7891962051338",
+    "evidenceFields": [
+      "nova_group",
+      "ecoscore_grade",
+      "image_front_url",
+      "countries_tags"
+    ]
+  }
 ] as const satisfies readonly OpenFoodFactsSnapshotProduct[];

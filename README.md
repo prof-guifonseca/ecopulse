@@ -7,6 +7,7 @@ os fluxos visíveis de scanner e mapa agora usam snapshots reais e rastreáveis:
 - Mapa ESG com MapLibre + OpenStreetMap/Overpass/Nominatim via Route Handler.
 - Mapa offline/fallback com snapshot oficial/curado de Londrina, sem lugares inventados.
 - Scanner com barcode/manual via `/api/products/lookup` e snapshot Open Food Facts Brasil.
+- Comunidade com feed local derivado de scans, visitas ESG e cards editoriais de fontes reais.
 - APIs BFF em `/api/*` para eventos, scans, comunidade, visitas ESG e impacto.
 - Demo/simulação só aparece atrás de modo explícito.
 
@@ -63,7 +64,7 @@ src/
 │   │   ├── home/              Painel diário
 │   │   ├── scanner/           Barcode/manual + amostra real Open Food Facts
 │   │   ├── map/               MapLibre + pontos ESG abertos/snapshot oficial
-│   │   ├── community/         Feed curado + reações persistíveis
+│   │   ├── community/         Feed de atividade real/local + reações persistíveis
 │   │   └── profile/           Impacto, Loja, Badges
 │   ├── api/                   BFF: produtos, scans, eventos, ESG, comunidade
 │   ├── onboarding/            Fallback se o seed for limpo manualmente

@@ -6,11 +6,11 @@ Este documento separa o que já é dado real/provedor, o que é cache/fallback e
 | --- | --- | --- | --- | --- |
 | Onboarding | Local-first realista | `ecopulse:user` + `ecopulse:simulation` | `new-user` local | Sincronizar perfil após login |
 | Scanner | Barcode/manual + amostra real | `/api/products/lookup` via Open Food Facts | snapshot Open Food Facts Brasil e registro manual | Persistir `scan_results` no Supabase |
-| Produtos | Provider aberto + snapshot real | Open Food Facts API v2 | snapshot versionado em `src/data/openFoodFactsProducts.ts` | Overrides editoriais de score |
+| Produtos | Provider aberto + snapshot real ampliado | Open Food Facts API v2 | snapshot versionado em `src/data/openFoodFactsProducts.ts` | Overrides editoriais de score |
 | Mapa ESG | Real com fonte aberta | `/api/esg/places` via OSM/Overpass/Nominatim | snapshot oficial/curado de Londrina | Cache persistente e verificação comunitária |
 | Visitas ESG | Evento auditável local/server | `/api/esg/visits` | Zustand/localStorage | Persistir visitas e confiança |
-| Comunidade | Feed fixture com reações reais locais | `/api/community/reactions` + stores | posts curados | Feed derivado de eventos |
-| Impacto | Estimado por eventos | `realImpact` + `/api/impact/me` | fórmulas locais | Separar estimado/verificado no perfil |
+| Comunidade | Feed derivado de scans, visitas e cards reais | stores locais + `/api/community/feed` | snapshot oficial/OFF | Persistir feed multiusuário |
+| Impacto | Estimado por evidências reais | histórico Open Food Facts + `realImpact` | fórmulas locais documentadas | Separar estimado/verificado no perfil |
 | Arena/avatar | Gamificação local | stores versionados | demo explícita | Não bloqueia MVP real |
 
 ## Contratos canônicos

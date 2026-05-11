@@ -43,19 +43,19 @@ export function ChapterUnlockOverlay({ chapterId }: Props) {
 
   const plantTree = () => {
     if (tokens < PLANT_DONATION_TOKEN_COST) {
-      showToast('Tokens insuficientes para a doação simulada.', 'info');
+      showToast('Tokens insuficientes para registrar o plantio.', 'info');
       return;
     }
     if (!spendTokens(PLANT_DONATION_TOKEN_COST)) return;
-    // Doutrina 'raiz-funda' grants an extra simulated tree on the next donation.
+    // Doutrina 'raiz-funda' grants an extra local tree record on the next donation.
     const extra = adoptedDoctrines.includes('raiz-antiga:raiz-funda') ? 1 : 0;
     bumpRealImpact({ treesPlanted: 1 + extra });
     addOwnedShopItem('s6');
     fireConfetti();
     showToast(
       extra > 0
-        ? `Doação simulada · 2 árvores (Raiz funda)`
-        : 'Doação simulada · 1 árvore plantada',
+        ? `Registro local · 2 árvores (Raiz funda)`
+        : 'Registro local · 1 árvore',
       'reward',
       4200
     );
@@ -79,8 +79,8 @@ export function ChapterUnlockOverlay({ chapterId }: Props) {
           <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 p-4">
             <p className="t-eyebrow mb-1">Ritual da Floresta</p>
             <p className="t-body">
-              A jornada se fecha com um gesto: doar para que uma árvore real (simulada · prototype)
-              seja plantada. Sua escolha entra no contador da Floresta EcoPulse.
+              A jornada se fecha com um compromisso local de plantio. Sua escolha entra no
+              contador da Floresta EcoPulse até conectarmos uma instituição parceira.
             </p>
             <p className="t-caption mt-2">
               Floresta atual: {treesPlanted} {treesPlanted === 1 ? 'árvore' : 'árvores'}.
