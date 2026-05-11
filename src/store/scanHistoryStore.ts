@@ -12,13 +12,13 @@ import type { ScoreBreakdown } from '@/lib/scoring';
  * recent entries; older ones drop off the tail.
  */
 export interface ScanRecord {
-  /** Stable id — usually the simulated EAN-13 barcode. */
+  /** Stable id from the lookup/cache record. */
   id: string;
   /** Source of the entry so the UI can label and badge it. */
-  source: 'barcode' | 'manual' | 'provider' | 'cache' | 'simulator' | 'seed';
-  /** Barcode string used to look the product up in the catalog. */
+  source: 'barcode' | 'manual' | 'provider' | 'cache' | 'demo' | 'simulator' | 'seed';
+  /** Barcode string used to look the product up in Open Food Facts/cache. */
   barcode: string;
-  /** Product id from src/data/products.ts. */
+  /** Product id from the real product catalog or lookup result. */
   productId: string;
   name: string;
   brand: string;

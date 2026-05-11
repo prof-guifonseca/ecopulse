@@ -1,8 +1,8 @@
 # EcoPulse
 
 Aplicativo educacional de hábitos sustentáveis. **MVP navegável local-first** —
-o app preserva uma simulação determinística e versionada para demo/offline, mas
-os fluxos visíveis de scanner e mapa agora usam snapshots reais e rastreáveis:
+o app preserva um ledger local versionado para demo/offline, mas os fluxos
+visíveis de scanner, comunidade e mapa usam snapshots reais e rastreáveis:
 
 - Mapa ESG com MapLibre + OpenStreetMap/Overpass/Nominatim via Route Handler.
 - Mapa offline/fallback com snapshot oficial/curado de Londrina, sem lugares inventados.
@@ -16,10 +16,10 @@ os fluxos visíveis de scanner e mapa agora usam snapshots reais e rastreáveis:
 Na primeira abertura, a aplicação começa como um usuário novo:
 
 - `/` cai no onboarding.
-- O onboarding cria uma sessão `new-user` em `ecopulse:simulation`.
+- O onboarding cria um usuário local e um ledger `new-user` em `ecopulse:simulation`.
 - O primeiro scan guiado libera a Home e inicia o ciclo diário.
-- Scanner, missões, feed, mapa e arena registram eventos auditáveis no ledger
-  local da simulação.
+- Scanner, missões, feed e mapa resolvem dados por Open Food Facts, OpenStreetMap
+  ou snapshot oficial/curado; o ledger local fica como histórico/compatibilidade.
 
 O antigo Arthur segue disponível como cenário explícito `arthur-demo` para QA
 e apresentações, mas não é mais o default automático. Para reiniciar o estado:
@@ -73,10 +73,10 @@ src/
 │   └── layout.tsx             Root + fontes
 ├── components/                UI por feature, primitives, skins SVG
 ├── data/                      Snapshots: Open Food Facts, Londrina ESG, badges, …
+├── demo/                      Demo Arthur e scan demo, só por flag explícita
 ├── lib/
 │   ├── scoring.ts             deriveScore() puro (testável)
-│   ├── simulatedScan.ts       Scan determinístico sobre a simulação
-│   ├── demoSeed.ts            Cenário Arthur explícito (não default)
+│   ├── products/catalog.ts    Fachada real-first sobre Open Food Facts snapshot
 │   ├── game/rules.ts          Regras puras de unlock (skins, badges)
 │   └── map/londrina.ts        Bounding box + projeção lat/lng → %
 ├── domain/                    Contratos canônicos do MVP real-progressivo
@@ -88,7 +88,8 @@ src/
 ## Dados reais vs simulação
 
 Veja [`docs/mvp-data-inventory.md`](./docs/mvp-data-inventory.md) para o
-inventário explícito de `provider`, `cache`, `simulation` e `demo` por fluxo.
+inventário explícito de `provider`, `cache`, `official`, `simulation` legado e
+`demo` por fluxo.
 
 Ainda não existe login multiusuário nem banco obrigatório. As APIs já tentam
 persistir em Supabase quando `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`

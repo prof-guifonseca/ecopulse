@@ -20,6 +20,16 @@ export function syncCommunityReaction(postId: string, reaction: 'like' | 'promis
   void postJson('/api/community/reactions', { postId, reaction, active });
 }
 
+export function syncCommunityComment(comment: {
+  postId: string;
+  text: string;
+  userName: string;
+  userAvatar?: string;
+  userId?: string;
+}): void {
+  void postJson('/api/community/comments', comment);
+}
+
 async function postJson(path: string, body: unknown): Promise<void> {
   try {
     await fetch(path, {

@@ -19,9 +19,9 @@ import {
   simulateBattle,
 } from '@/lib/battle/rules';
 import { applyArenaBattleProgress } from '@/lib/arena/progress';
-import { scanRecordFromProduct } from '@/lib/simulatedScan';
-import { rollTodaysMissions } from './dailyReset';
-import { DOCTRINE_BY_RIVAL } from './doctrines';
+import { scanRecordFromProduct } from '@/lib/products/scanRecord';
+import { rollTodaysMissions } from '@/lib/dailyReset';
+import { DOCTRINE_BY_RIVAL } from '@/lib/doctrines';
 
 /**
  * One-shot demo state seeder. Idempotent via the `ecopulse:seeded:v1`

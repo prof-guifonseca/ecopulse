@@ -3,10 +3,8 @@ import { useUserStore } from '@/store/userStore';
 import { pickTodaysMissions } from '@/data';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { useArenaStore } from '@/store/arenaStore';
-import { useSimulationStore } from '@/store/simulationStore';
 import { selectEcoQualityIndex } from './ecoMultiplier';
 import { currentChapter } from './journey';
-import { buildDailyPlan } from '@/simulation/queries';
 import type { TribeId } from '@/data/tribes';
 
 export type StreakChange = 'none' | 'continued' | 'broken' | 'started';
@@ -92,17 +90,11 @@ export function rollTodaysMissions(day: string): string[] {
     defeatedRivals: arena.defeatedOpponents?.length ?? 0,
   });
 
-  const simulation = useSimulationStore.getState().config;
-  if (simulation) {
-    return buildDailyPlan({
-      seed: simulation.seed,
-      day,
-      tribe,
-      chapterId: chapter.id,
-    });
-  }
-
-  return pickTodaysMissions({ tribe, chapterId: chapter.id, seed: `${day}|${tribe}` });
+  return pickTodaysMissions({
+    tribe,
+    chapterId: chapter.id,
+    seed: `${day}|${tribe}|${user.regionId}`,
+  });
 }
 
 /** Ensure today's missions are populated even when the day-key didn't tick

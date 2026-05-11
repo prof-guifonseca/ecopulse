@@ -49,4 +49,32 @@ describe('real community feed', () => {
     });
     expect(feed[0].caption).toContain(product.barcode);
   });
+
+  it('applies local-first comment counts to real feed posts', () => {
+    const product = PRODUCTS[0];
+    const feed = buildRealCommunityFeed({
+      scans: [
+        {
+          id: 'scan-2',
+          barcode: product.barcode,
+          name: product.name,
+          brand: product.brand,
+          category: product.category,
+          score: product.score,
+          scannedAt: '2026-05-11T12:00:00.000Z',
+          confidence: product.confidence,
+          sourceName: product.sourceName,
+          sourceUrl: product.sourceUrl,
+        },
+      ],
+      visitedPointIds: [],
+      likedPostIds: [],
+      promisedPostIds: [],
+      commentCounts: { 'scan-scan-2': 2 },
+      viewerName: 'Ana',
+    });
+
+    expect(feed[0].comments).toBe(2);
+    expect(feed[0].commentCount).toBe(2);
+  });
 });

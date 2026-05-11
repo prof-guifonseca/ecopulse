@@ -11,6 +11,7 @@ export interface CommunityFeedPost extends FeedPost {
   source: DataSource;
   sourceLabel: string;
   sourceUrl?: string;
+  commentCount: number;
 }
 
 export interface CommunityScanActivity {
@@ -31,6 +32,7 @@ export interface CommunityFeedInput {
   visitedPointIds: readonly string[];
   likedPostIds: readonly string[];
   promisedPostIds: readonly string[];
+  commentCounts?: Readonly<Record<string, number>>;
   viewerName: string;
 }
 
@@ -41,7 +43,12 @@ export function buildRealCommunityFeed(input: CommunityFeedInput): CommunityFeed
   ].filter((post): post is CommunityFeedPost => Boolean(post));
 
   const fallback = userPosts.length > 0 ? [] : realStarterPosts();
-  return applyViewerState([...userPosts, ...fallback], input.likedPostIds, input.promisedPostIds);
+  return applyViewerState(
+    [...userPosts, ...fallback],
+    input.likedPostIds,
+    input.promisedPostIds,
+    input.commentCounts
+  );
 }
 
 export function buildRealServerCommunityFeed(input: {
@@ -49,6 +56,7 @@ export function buildRealServerCommunityFeed(input: {
   visitedPointIds: readonly string[];
   likedPostIds: readonly string[];
   promisedPostIds: readonly string[];
+  commentCounts?: Readonly<Record<string, number>>;
 }): CommunityFeedPost[] {
   return buildRealCommunityFeed({
     scans: input.scans.map((scan) => ({
@@ -71,6 +79,7 @@ export function buildRealServerCommunityFeed(input: {
     visitedPointIds: input.visitedPointIds,
     likedPostIds: input.likedPostIds,
     promisedPostIds: input.promisedPostIds,
+    commentCounts: input.commentCounts,
     viewerName: 'Você',
   });
 }
@@ -167,6 +176,7 @@ function basePost(input: {
     liked: false,
     imageKey: input.imageKey,
     commentList: [],
+    commentCount: 0,
     viewerLiked: false,
     effectiveLikes: 0,
     viewerPromised: false,
@@ -179,12 +189,15 @@ function basePost(input: {
 function applyViewerState(
   posts: CommunityFeedPost[],
   likedPostIds: readonly string[],
-  promisedPostIds: readonly string[]
+  promisedPostIds: readonly string[],
+  commentCounts: Readonly<Record<string, number>> = {}
 ): CommunityFeedPost[] {
   const liked = new Set(likedPostIds);
   const promised = new Set(promisedPostIds);
   return posts.map((post) => ({
     ...post,
+    comments: commentCounts[post.id] ?? post.comments,
+    commentCount: commentCounts[post.id] ?? post.commentCount,
     viewerLiked: liked.has(post.id),
     effectiveLikes: post.likes + (liked.has(post.id) ? 1 : 0),
     viewerPromised: promised.has(post.id),

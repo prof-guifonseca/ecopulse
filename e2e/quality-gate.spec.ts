@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 async function resetAppState(page: Page) {
   await page.addInitScript(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 }
 
@@ -195,6 +196,14 @@ async function gotoApp(page: Page, url: string) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 }
 
+async function activateButton(page: Page, name: string | RegExp) {
+  const button = page.getByRole('button', { name });
+  await expect(button).toBeVisible();
+  await button.focus();
+  await expect(button).toBeFocused();
+  await page.keyboard.press('Enter');
+}
+
 async function activateTab(page: Page, name: string, url: RegExp) {
   const tab = page.getByRole('tab', { name });
   await expect(tab).toBeVisible();
@@ -334,20 +343,40 @@ test('arena route renders the loadout test surface', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Testar loadout|Treino bloqueado/ })).toBeVisible();
 });
 
+test('community opens comments for real feed posts and records a local comment', async ({ page }) => {
+  await seedOnboardedState(page);
+  await gotoApp(page, '/community');
+
+  await expect(page.getByRole('heading', { name: 'Comunidade', level: 1 })).toBeVisible();
+  const commentsButton = page.getByRole('button', { name: /Comentários/ }).first();
+  await commentsButton.focus();
+  await expect(commentsButton).toBeFocused();
+  await page.keyboard.press('Enter');
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('Nenhum comentário ainda.')).toBeVisible();
+  await dialog.getByRole('textbox', { name: 'Novo comentário' }).fill('Fonte conferida e útil para Londrina.');
+  await dialog.getByRole('button', { name: 'Enviar' }).click();
+  await expect(dialog.getByText('Fonte conferida e útil para Londrina.')).toBeVisible();
+});
+
 test('scanner can search, lookup a barcode, use a real sample, and restore modal focus', async ({ page }) => {
   await seedOnboardedState(page);
   await mockProductLookup(page);
   await gotoApp(page, '/scanner');
 
   await expect(page.getByRole('heading', { name: 'Scanner', level: 1 })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Demo scan' })).toHaveCount(0);
 
   const search = page.getByRole('textbox', { name: 'Buscar produtos' });
   await search.fill('coca');
   await expect(page.getByText(/coca/i).first()).toBeVisible();
   await search.fill('');
 
-  await page.getByRole('textbox', { name: 'Barcode do produto' }).fill('7891000000001');
-  await page.getByRole('button', { name: 'Buscar' }).click();
+  const barcodeInput = page.getByRole('textbox', { name: 'Barcode do produto' });
+  await barcodeInput.fill('7891000000001');
+  await barcodeInput.press('Enter');
   const lookupDialog = page.getByRole('dialog');
   await expect(lookupDialog).toBeVisible({ timeout: 7_000 });
   await expect(lookupDialog.getByRole('heading', { name: 'Arroz Integral OSM' })).toBeVisible();
@@ -355,7 +384,9 @@ test('scanner can search, lookup a barcode, use a real sample, and restore modal
   await expect(lookupDialog).toBeHidden();
 
   const scanButton = page.getByRole('button', { name: 'Amostra real' });
-  await scanButton.click();
+  await scanButton.focus();
+  await expect(scanButton).toBeFocused();
+  await page.keyboard.press('Enter');
 
   const scanDialog = page.getByRole('dialog');
   await expect(scanDialog).toBeVisible({ timeout: 7_000 });
@@ -368,7 +399,8 @@ test('scanner can search, lookup a barcode, use a real sample, and restore modal
     .getByRole('button')
     .first();
   await firstCatalogItem.focus();
-  await firstCatalogItem.press('Enter');
+  await expect(firstCatalogItem).toBeFocused();
+  await page.keyboard.press('Enter');
 
   const catalogDialog = page.getByRole('dialog');
   await expect(catalogDialog).toBeVisible();
@@ -384,20 +416,20 @@ test('onboarding works when the demo seed is neutralized', async ({ page }) => {
 
   await expect(page.getByRole('heading', { name: 'Sustentabilidade na rotina.' })).toBeVisible();
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => undefined);
-  await page.getByRole('button', { name: 'Continuar' }).click();
+  await activateButton(page, 'Continuar');
   await expect(page.getByRole('heading', { name: 'Três gestos.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Continuar' }).click();
+  await activateButton(page, 'Continuar');
   await expect(page.getByRole('heading', { name: 'Onde você se reconhece?' })).toBeVisible();
-  await page.getByRole('button', { name: /Recicladores/ }).click();
-  await page.getByRole('button', { name: 'Continuar' }).click();
+  await activateButton(page, /Recicladores/);
+  await activateButton(page, 'Continuar');
   await page.getByRole('textbox', { name: 'Seu primeiro nome' }).fill('Lia');
-  await page.getByRole('button', { name: 'Começar' }).click();
+  await activateButton(page, 'Começar');
 
   await expect(page).toHaveURL(/\/scanner\?welcome=1$/);
   await expect(page.getByText('Faça um scan para liberar a Home.')).toBeVisible();
 
   await mockProductLookup(page);
-  await page.getByRole('button', { name: 'Amostra real' }).click();
+  await activateButton(page, 'Amostra real');
   const firstRunDialog = page.getByRole('dialog');
   await expect(firstRunDialog).toBeVisible({ timeout: 7_000 });
   await page.keyboard.press('Escape');

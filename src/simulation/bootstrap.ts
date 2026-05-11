@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_REGION_ID } from '@/data';
+import { DEFAULT_REGION_ID, pickTodaysMissions } from '@/data';
 import type { TribeId } from '@/data/tribes';
 import { useArenaStore } from '@/store/arenaStore';
 import { useGameStore } from '@/store/gameStore';
@@ -10,7 +10,6 @@ import { useUserStore } from '@/store/userStore';
 import { selectEcoQualityIndex } from '@/lib/ecoMultiplier';
 import { currentChapter } from '@/lib/journey';
 import { todayKey } from '@/lib/dailyReset';
-import { buildDailyPlan } from './queries';
 import { deterministicId } from './rng';
 import type { ScenarioId, SimulationConfig } from './types';
 
@@ -70,11 +69,10 @@ export function startNewUserSimulation(input: {
   const game = useGameStore.getState();
   game.resetDailyMissions(today);
   game.setTodaysMissionIds(
-    buildDailyPlan({
-      seed,
-      day: today,
+    pickTodaysMissions({
       tribe: input.tribe,
       chapterId: 'semente',
+      seed: `${today}|${input.tribe}|${regionId}`,
     })
   );
 }
@@ -98,14 +96,12 @@ export function ensureDailyPlanForCurrentState(day: string = todayKey()): void {
   if (game.todaysMissionIds.length > 0) return;
 
   const user = useUserStore.getState();
-  const simulation = useSimulationStore.getState().config;
   const tribe = (user.tribe ?? 'guardioes') as TribeId;
   game.setTodaysMissionIds(
-    buildDailyPlan({
-      seed: simulation?.seed ?? createSimulationSeed('legacy-import', user.name, tribe, day),
-      day,
+    pickTodaysMissions({
       tribe,
       chapterId: currentChapterId(),
+      seed: `${day}|${tribe}|${user.regionId || DEFAULT_REGION_ID}`,
     })
   );
 }

@@ -3,8 +3,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DailyMissionsProgress, Score } from '@/types';
-import { getMapPointCatalog } from '@/simulation';
-import { environmentalImpactDeltaForPoint, getRegisteredEnvironmentalPoint } from '@/lib/esg';
+import {
+  environmentalImpactDeltaForPoint,
+  getOfficialEnvironmentalPointById,
+  getRegisteredEnvironmentalPoint,
+} from '@/lib/esg';
 import { createSafeJSONStorage, readLegacyState } from './storage';
 
 export interface RealImpact {
@@ -43,7 +46,7 @@ interface GameState {
   todaysMissionIds: string[];
   /** Score of the most recent scan — used to validate scan-quality missions. */
   lastScanScore: Score | null;
-  /** Floresta EcoPulse — endgame meta counter (simulated). */
+  /** Floresta EcoPulse — local-first impact counter. */
   realImpact: RealImpact;
 
   addScannedProduct: (id: string) => void;
@@ -82,23 +85,10 @@ const DEFAULT_GAME = {
 
 /** Maps a visited map-point id to the realImpact delta that visit produces. */
 function realImpactDeltaForVisit(pointId: string): Partial<RealImpact> {
-  const environmentalPoint = getRegisteredEnvironmentalPoint(pointId);
+  const environmentalPoint =
+    getRegisteredEnvironmentalPoint(pointId) ?? getOfficialEnvironmentalPointById(pointId);
   if (environmentalPoint) return environmentalImpactDeltaForPoint(environmentalPoint);
-
-  const point = getMapPointCatalog().find((p) => p.id === pointId);
-  if (!point) return {};
-  switch (point.type) {
-    case 'baterias':
-      return { batteriesKgEstimated: 0.5 };
-    case 'oleo':
-      return { oilLitersEstimated: 1 };
-    case 'reparo':
-      return { repairsCount: 1 };
-    case 'trocas':
-      return { exchangesCount: 1 };
-    default:
-      return {};
-  }
+  return {};
 }
 
 function applyImpactDelta(prev: RealImpact, delta: Partial<RealImpact>): RealImpact {

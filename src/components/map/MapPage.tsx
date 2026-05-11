@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { ChevronRight, Database, LocateFixed, MapPin, RefreshCw, Search } from 'lucide-react';
-import { effectiveMapTypes } from '@/data';
-import { getDailyMissionTemplate } from '@/simulation';
+import { effectiveMapTypes, getMissionTemplate } from '@/data';
 import { useCurrentRegion } from '@/lib/region';
 import { approximateDistanceM } from '@/lib/region';
 import { useUIStore } from '@/store/uiStore';
@@ -66,8 +65,8 @@ export function MapPage() {
   );
 
   const preferredCategories = useMemo(() => {
-    const mapTemplateId = todaysMissionIds.find((id) => getDailyMissionTemplate(id)?.slot === 'map');
-    const template = getDailyMissionTemplate(mapTemplateId);
+    const mapTemplateId = todaysMissionIds.find((id) => getMissionTemplate(id)?.slot === 'map');
+    const template = getMissionTemplate(mapTemplateId);
     return template
       ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId)?.map(mapPointTypeToEnvironmentalCategory)
       : undefined;

@@ -5,7 +5,7 @@ import {
   ENVIRONMENTAL_CATEGORY_DETAIL_LABELS,
   ENVIRONMENTAL_CATEGORY_ICON,
   ENVIRONMENTAL_SOURCE_LABELS,
-  getLocalEnvironmentalPointById,
+  getOfficialEnvironmentalPointById,
   getRegisteredEnvironmentalPoint,
   mapPointTypeForEnvironmentalPoint,
   type EnvironmentalPoint,
@@ -13,7 +13,6 @@ import {
 import { effectiveMapTypes, getMissionTemplate } from '@/data';
 import type { TribeId } from '@/data/tribes';
 import { useGameStore } from '@/store/gameStore';
-import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { useUserStore } from '@/store/userStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
@@ -37,7 +36,6 @@ export function MapPointModal({ id }: Props) {
   const visited = useGameStore((s) => s.visitedPoints.includes(id));
   const addVisited = useGameStore((s) => s.addVisitedPoint);
   const showToast = useUIStore((s) => s.showToast);
-  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
 
   if (!point) return null;
 
@@ -46,17 +44,6 @@ export function MapPointModal({ id }: Props) {
 
   const visit = () => {
     addVisited(id);
-    recordSimulationEvent({
-      type: 'map_visit_marked',
-      payload: {
-        pointId: point.id,
-        source: point.source,
-        category: point.category,
-        lat: point.lat,
-        lng: point.lng,
-        confidence: point.confidence,
-      },
-    });
     syncMapVisit(point);
     awardTokens(10);
 
@@ -132,7 +119,7 @@ export function MapPointModal({ id }: Props) {
 }
 
 function resolvePoint(id: string): EnvironmentalPoint | null {
-  return getRegisteredEnvironmentalPoint(id) ?? getLocalEnvironmentalPointById(id);
+  return getRegisteredEnvironmentalPoint(id) ?? getOfficialEnvironmentalPointById(id);
 }
 
 function verificationLabel(point: EnvironmentalPoint): string {

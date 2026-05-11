@@ -57,12 +57,12 @@ export function getLocalEnvironmentalPoints(
     .slice(0, input.limit ?? 80);
 }
 
-export function getLocalEnvironmentalPointById(id: string): EnvironmentalPoint | null {
+export function getOfficialEnvironmentalPointById(id: string): EnvironmentalPoint | null {
   const point = MAP_POINTS.find((item) => item.id === id);
   return point ? mapPointToEnvironmentalPoint(point) : null;
 }
 
-export function createLocalSimulationProvider(): EsgPlaceProvider {
+export function createOfficialSnapshotProvider(): EsgPlaceProvider {
   return {
     async search(input: EsgPlaceSearchInput): Promise<EsgPlaceSearchResult> {
       return {

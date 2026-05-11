@@ -1,6 +1,6 @@
 export * from './categories';
 export * from './geo';
-export * from './localSimulationProvider';
+export * from './officialSnapshotProvider';
 export * from './mergedEsgProvider';
 export * from './nominatimProvider';
 export * from './osm';

@@ -1,8 +1,11 @@
 'use client';
 
 import { Info, Lightbulb, Plus } from 'lucide-react';
-import { getProductCatalog } from '@/simulation';
-import { BREAKDOWN_LABELS, findAlternatives } from '@/lib/scanner';
+import { BREAKDOWN_LABELS } from '@/lib/scanner';
+import {
+  findCatalogProductById,
+  findProductAlternatives,
+} from '@/lib/products/catalog';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
@@ -68,11 +71,8 @@ export function ProductDetailModal({ id }: Props) {
   if (!view) return null;
 
   const isFromHistory = view.source === 'scan';
-  const catalog = getProductCatalog();
-  const catalogProduct = catalog.find((p) => p.id === view.catalogId);
-  const alternatives = catalogProduct
-    ? findAlternatives(catalogProduct, catalog)
-    : [];
+  const catalogProduct = findCatalogProductById(view.catalogId);
+  const alternatives = catalogProduct ? findProductAlternatives(catalogProduct) : [];
 
   const addToHistoryFromCatalog = () => {
     addScanned(view.catalogId);
@@ -214,7 +214,7 @@ function resolveView(
       evidenceFields: scan.evidence?.fields,
     };
   }
-  const catalogProduct = getProductCatalog().find((p) => p.id === id);
+  const catalogProduct = findCatalogProductById(id);
   if (!catalogProduct) return null;
   return {
     source: 'catalog',
