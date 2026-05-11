@@ -1,97 +1,297 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { ChevronRight, MapPin } from 'lucide-react';
-import { MAP_TYPE_LABELS, MAP_TYPE_ICON, effectiveMapTypes } from '@/data';
-import { useCurrentRegion, latLngToPercent, distanceFromCenter } from '@/lib/region';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { ChevronRight, Database, LocateFixed, MapPin, RefreshCw, Search } from 'lucide-react';
+import { effectiveMapTypes } from '@/data';
+import { getDailyMissionTemplate } from '@/simulation';
+import { useCurrentRegion } from '@/lib/region';
+import { approximateDistanceM } from '@/lib/region';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
-import { getDailyMissionTemplate, rankMapPoints } from '@/simulation';
+import {
+  ENVIRONMENTAL_CATEGORIES,
+  ENVIRONMENTAL_CATEGORY_ICON,
+  ENVIRONMENTAL_CATEGORY_LABELS,
+  ENVIRONMENTAL_SOURCE_LABELS,
+  formatDistanceMeters,
+  getLocalEnvironmentalPoints,
+  mapPointTypeToEnvironmentalCategory,
+  rankEnvironmentalPoints,
+  rememberEnvironmentalPoints,
+  type EnvironmentalCategory,
+  type EnvironmentalPoint,
+  type EnvironmentalPointSource,
+  type EsgPlaceSearchResult,
+} from '@/lib/esg';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
+import { Button } from '@/components/ui/Button';
 import { resolveIcon } from '@/lib/iconRegistry';
-import { RegionMap } from './LondrinaMap';
 import { cn } from '@/lib/cn';
-import type { MapPointType } from '@/types';
+import { MapCanvas } from './MapCanvas';
+import type { LatLng, RegionBBox } from '@/lib/region/types';
 import type { TribeId } from '@/data/tribes';
 
-const FILTERS: Array<'todos' | MapPointType> = [
-  'todos',
-  'baterias',
-  'eletronicos',
-  'oleo',
-  'trocas',
-  'granel',
-  'reparo',
-];
+const FILTERS: Array<'todos' | EnvironmentalCategory> = ['todos', ...ENVIRONMENTAL_CATEGORIES];
+const LIVE_DISCOVERY_ENABLED = process.env.NEXT_PUBLIC_ENABLE_LIVE_ESG_DISCOVERY !== 'false';
+
+type LoadStatus = 'ready' | 'loading' | 'fallback' | 'error';
 
 export function MapPage() {
   const region = useCurrentRegion();
-  const points = region.mapPoints;
   const events = region.events;
-  const [filter, setFilter] = useState<'todos' | MapPointType>('todos');
+  const [allPoints, setAllPoints] = useState<EnvironmentalPoint[]>(() =>
+    getLocalEnvironmentalPoints(region.mapPoints)
+  );
+  const [filter, setFilter] = useState<'todos' | EnvironmentalCategory>('todos');
   const [panel, setPanel] = useState<'places' | 'events'>('places');
+  const [status, setStatus] = useState<LoadStatus>('ready');
+  const [dataSource, setDataSource] = useState<EnvironmentalPointSource>('simulation');
+  const [sourceReason, setSourceReason] = useState<string | null>(null);
+  const [focusCenter, setFocusCenter] = useState<LatLng | undefined>(undefined);
+  const [scopeLabel, setScopeLabel] = useState(region.blurb);
+  const [locationQuery, setLocationQuery] = useState('');
   const openModal = useUIStore((s) => s.openModal);
+  const showToast = useUIStore((s) => s.showToast);
   const visited = useGameStore((s) => s.visitedPoints);
   const todaysMissionIds = useGameStore((s) => s.todaysMissionIds);
   const tribe = useUserStore((s) => s.tribe);
 
-  const preferredTypes = useMemo(() => {
+  const fallbackPoints = useMemo(
+    () => getLocalEnvironmentalPoints(region.mapPoints, { limit: 120 }),
+    [region.mapPoints]
+  );
+
+  const preferredCategories = useMemo(() => {
     const mapTemplateId = todaysMissionIds.find((id) => getDailyMissionTemplate(id)?.slot === 'map');
     const template = getDailyMissionTemplate(mapTemplateId);
-    return template ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId) : undefined;
+    return template
+      ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId)?.map(mapPointTypeToEnvironmentalCategory)
+      : undefined;
   }, [todaysMissionIds, tribe]);
 
-  const pins = useMemo(
-    () =>
-      rankMapPoints(
-        filter === 'todos' ? points : points.filter((point) => point.type === filter),
-        { visitedPointIds: visited, preferredTypes }
-      ),
-    [filter, points, preferredTypes, visited]
+  const pins = useMemo(() => {
+    const visible = filter === 'todos' ? allPoints : allPoints.filter((point) => point.category === filter);
+    return rankEnvironmentalPoints(visible, {
+      visitedPointIds: visited,
+      preferredCategories,
+      center: focusCenter ?? region.center,
+    });
+  }, [allPoints, filter, focusCenter, preferredCategories, region.center, visited]);
+
+  const requestPlaces = useCallback(
+    async (opts: {
+      bbox?: RegionBBox;
+      center?: LatLng;
+      query?: string;
+      label: string;
+      signal?: AbortSignal;
+    }) => {
+      if (!LIVE_DISCOVERY_ENABLED) {
+        setAllPoints(fallbackPoints);
+        setDataSource('simulation');
+        setSourceReason('live-disabled');
+        setStatus('fallback');
+        return;
+      }
+
+      setStatus('loading');
+      setSourceReason(null);
+      const params = new URLSearchParams({
+        regionId: region.id,
+        limit: '80',
+        categories: ENVIRONMENTAL_CATEGORIES.join(','),
+      });
+      if (opts.bbox) {
+        params.set('bbox', `${opts.bbox.south},${opts.bbox.west},${opts.bbox.north},${opts.bbox.east}`);
+      }
+      if (opts.center) {
+        params.set('lat', String(opts.center.lat));
+        params.set('lng', String(opts.center.lng));
+        params.set('radiusMeters', '4500');
+      }
+      if (opts.query) params.set('q', opts.query);
+
+      try {
+        const response = await fetch(`/api/esg/places?${params.toString()}`, {
+          signal: opts.signal,
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = (await response.json()) as EsgPlaceSearchResult;
+        const nextPoints = Array.isArray(result.points) && result.points.length > 0 ? result.points : fallbackPoints;
+        rememberEnvironmentalPoints(nextPoints);
+        setAllPoints(nextPoints);
+        setDataSource(result.source);
+        setSourceReason(result.reason ?? null);
+        setFocusCenter(result.center ?? opts.center);
+        setScopeLabel(opts.label);
+        setStatus(result.source === 'simulation' ? 'fallback' : 'ready');
+      } catch (error) {
+        if (opts.signal?.aborted) return;
+        rememberEnvironmentalPoints(fallbackPoints);
+        setAllPoints(fallbackPoints);
+        setDataSource('simulation');
+        setSourceReason(error instanceof Error ? error.message : 'request-error');
+        setStatus('error');
+      }
+    },
+    [fallbackPoints, region.id]
+  );
+
+  useEffect(() => {
+    rememberEnvironmentalPoints(fallbackPoints);
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      void requestPlaces({
+        bbox: region.bbox,
+        label: region.blurb,
+        signal: controller.signal,
+      });
+    }, 0);
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [fallbackPoints, region.bbox, region.blurb, requestPlaces]);
+
+  const openPoint = useCallback(
+    (point: EnvironmentalPoint) => {
+      rememberEnvironmentalPoints([point]);
+      openModal({ kind: 'mapPoint', id: point.id });
+    },
+    [openModal]
+  );
+
+  const refresh = useCallback(() => {
+    void requestPlaces({
+      bbox: focusCenter ? undefined : region.bbox,
+      center: focusCenter,
+      label: scopeLabel,
+    });
+  }, [focusCenter, region.bbox, requestPlaces, scopeLabel]);
+
+  const locateNearby = useCallback(() => {
+    if (!navigator.geolocation) {
+      showToast('Localização indisponível', 'info');
+      return;
+    }
+    setStatus('loading');
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setFocusCenter(center);
+        void requestPlaces({
+          center,
+          label: 'Perto de você',
+        });
+      },
+      () => {
+        setStatus('ready');
+        showToast('Não foi possível acessar a localização', 'info');
+      },
+      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 8000 }
+    );
+  }, [requestPlaces, showToast]);
+
+  const submitSearch = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const query = locationQuery.trim();
+      if (query.length < 3) return;
+      void requestPlaces({
+        query,
+        label: query,
+      });
+    },
+    [locationQuery, requestPlaces]
   );
 
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Mapa</h1>
-        <p className="mt-1 t-caption">{region.blurb}</p>
+        <p className="mt-1 t-caption">{scopeLabel}</p>
       </header>
 
-      <RegionMap region={region}>
-        {pins.map((point) => {
-          const isVisited = visited.includes(point.id);
-          const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
-          const { x, y } = latLngToPercent(region.bbox, { lat: point.lat, lng: point.lng });
-          return (
-            <button
-              key={point.id}
-              onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
-              className="absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-strong backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95"
-              style={{
-                left: `${x}%`,
-                top: `${y}%`,
-                background: isVisited ? 'var(--accent-green)' : 'rgba(15,23,19,0.78)',
-                boxShadow: isVisited
-                  ? '0 0 0 3px var(--tint-green-3), 0 10px 20px rgba(0,0,0,0.4)'
-                  : '0 8px 18px rgba(0,0,0,0.45)',
-                color: isVisited ? 'var(--on-primary)' : 'var(--accent-green)',
-              }}
-              aria-label={point.name}
-            >
-              <Icon icon={Lucide} size={16} />
-            </button>
-          );
-        })}
-      </RegionMap>
+      <MapCanvas
+        region={region}
+        points={pins}
+        visitedPointIds={visited}
+        focusCenter={focusCenter}
+        onSelectPoint={openPoint}
+      />
+
+      <form className="flex gap-2" onSubmit={submitSearch}>
+        <label className="sr-only" htmlFor="map-location-search">
+          Buscar localidade
+        </label>
+        <input
+          id="map-location-search"
+          value={locationQuery}
+          onChange={(event) => setLocationQuery(event.target.value)}
+          className="min-w-0 flex-1 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 text-sm text-[var(--text-primary)] outline-none transition-colors placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+          placeholder="Londrina, bairro ou endereço"
+          autoComplete="off"
+        />
+        <Button
+          variant="secondary"
+          type="submit"
+          size="md"
+          leftIcon={<Icon icon={Search} size={15} />}
+          disabled={locationQuery.trim().length < 3 || status === 'loading'}
+        >
+          Buscar
+        </Button>
+      </form>
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={locateNearby}
+          leftIcon={<Icon icon={LocateFixed} size={14} />}
+          disabled={status === 'loading'}
+        >
+          Usar localização
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={refresh}
+          leftIcon={<Icon icon={RefreshCw} size={14} />}
+          loading={status === 'loading'}
+        >
+          Atualizar
+        </Button>
+        <Chip
+          asStatic
+          staticRole="note"
+          leftIcon={<Icon icon={Database} size={13} />}
+          className="shrink-0"
+        >
+          {status === 'loading' ? 'Atualizando' : ENVIRONMENTAL_SOURCE_LABELS[dataSource]}
+        </Chip>
+      </div>
+
+      {sourceReason ? (
+        <p className="t-caption -mt-2 text-[var(--text-muted)]">
+          {dataSource === 'simulation' || status === 'fallback' || status === 'error'
+            ? 'Pontos simulados ativos enquanto a fonte aberta responde.'
+            : 'Resultado reaproveitado de consulta recente.'}
+        </p>
+      ) : null}
 
       <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FILTERS.map((currentFilter) => {
           const iconName =
-            currentFilter === 'todos' ? 'mapPin' : MAP_TYPE_ICON[currentFilter as MapPointType];
+            currentFilter === 'todos' ? 'mapPin' : ENVIRONMENTAL_CATEGORY_ICON[currentFilter];
           const Lucide = resolveIcon(iconName);
           return (
             <Chip
@@ -101,7 +301,7 @@ export function MapPage() {
               leftIcon={Lucide ? <Icon icon={Lucide} size={13} /> : null}
               className="shrink-0 whitespace-nowrap"
             >
-              {MAP_TYPE_LABELS[currentFilter]}
+              {currentFilter === 'todos' ? 'Todos' : ENVIRONMENTAL_CATEGORY_LABELS[currentFilter]}
             </Chip>
           );
         })}
@@ -130,12 +330,15 @@ export function MapPage() {
       {panel === 'places' ? (
         <ListCard className="stagger">
           {pins.map((point) => {
-            const Lucide = resolveIcon(MAP_TYPE_ICON[point.type]) ?? MapPin;
+            const Lucide = resolveIcon(ENVIRONMENTAL_CATEGORY_ICON[point.category]) ?? MapPin;
             const isVisited = visited.includes(point.id);
+            const distance = formatDistanceMeters(
+              approximateDistanceM(focusCenter ?? region.center, { lat: point.lat, lng: point.lng })
+            );
             return (
               <li key={point.id}>
                 <button
-                  onClick={() => openModal({ kind: 'mapPoint', id: point.id })}
+                  onClick={() => openPoint(point)}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
                 >
                   <span
@@ -151,7 +354,10 @@ export function MapPage() {
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{point.name}</h3>
                     <p className="t-caption truncate">
-                      {distanceFromCenter(region, { lat: point.lat, lng: point.lng })} · {point.address}
+                      {distance} · {point.address}
+                    </p>
+                    <p className="t-micro mt-0.5 tracking-normal text-[var(--text-muted)]">
+                      {ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança {point.confidence}%
                     </p>
                   </div>
                   <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />

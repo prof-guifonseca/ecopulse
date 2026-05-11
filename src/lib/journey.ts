@@ -1,4 +1,5 @@
 import { getMapPointCatalog } from '@/simulation';
+import { getRegisteredEnvironmentalPoint, mapPointTypeForEnvironmentalPoint } from '@/lib/esg';
 import type { MapPointType, Score } from '@/types';
 import type { GardenStage } from './garden';
 
@@ -111,8 +112,11 @@ export interface GateMiss {
 function visitsByType(visitedPointIds: string[]): Record<MapPointType, number> {
   const counts: Record<string, number> = {};
   for (const id of visitedPointIds) {
-    const point = getMapPointCatalog().find((p) => p.id === id);
-    if (point) counts[point.type] = (counts[point.type] ?? 0) + 1;
+    const environmentalPoint = getRegisteredEnvironmentalPoint(id);
+    const type = environmentalPoint
+      ? mapPointTypeForEnvironmentalPoint(environmentalPoint)
+      : getMapPointCatalog().find((p) => p.id === id)?.type;
+    if (type) counts[type] = (counts[type] ?? 0) + 1;
   }
   return counts as Record<MapPointType, number>;
 }
