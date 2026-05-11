@@ -9,6 +9,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    exclude: ['**/node_modules/**', '**/.next/**', '**/.claude/**'],
+    exclude: ['**/node_modules/**', '**/.next/**', '**/.claude/**', 'e2e/**'],
   },
 });

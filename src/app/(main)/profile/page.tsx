@@ -20,7 +20,7 @@ export default async function Page({
   const tab = (await searchParams).tab;
   const initialTab = parseProfileTab(tab);
 
-  return <ProfilePage initialTab={initialTab} />;
+  return <ProfilePage key={initialTab ?? 'impact'} initialTab={initialTab} />;
 }
 
 function parseProfileTab(tab: ProfileSearchParams['tab']): ProfileTab | undefined {

@@ -6,27 +6,46 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:all": "playwright test --project=chromium --project=firefox --project=webkit",
+    "test:a11y": "playwright test --project=a11y",
+    "analyze": "next experimental-analyze --output",
+    "audit": "npm audit --audit-level=moderate",
+    "snyk": "snyk test --dev --severity-threshold=medium",
+    "snyk:code": "snyk code test --severity-threshold=medium",
+    "check": "npm run lint && npm run typecheck && npm run test:unit && npm run build && npm run test:e2e && npm run audit",
+    "overnight": "node scripts/overnight.mjs"
   },
   "dependencies": {
+    "@sentry/nextjs": "10.52.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.8.0",
-    "next": "16.2.3",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "tailwind-merge": "^3.5.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.3",
+    "@eslint/compat": "^2.1.0",
+    "@playwright/test": "1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.3",
+    "eslint": "10.3.0",
+    "eslint-config-next": "16.2.6",
+    "snyk": "1.1304.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.5"
+  },
+  "overrides": {
+    "postcss": "8.5.14"
   }
 }

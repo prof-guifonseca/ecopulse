@@ -1,10 +1,11 @@
 import { defineConfig, globalIgnores } from "eslint/config";
+import { fixupConfigRules } from "@eslint/compat";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
+  ...fixupConfigRules(nextVitals),
+  ...fixupConfigRules(nextTs),
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -12,6 +13,8 @@ const eslintConfig = defineConfig([
     ".claude/**",
     "out/**",
     "build/**",
+    "playwright-report/**",
+    "test-results/**",
     "next-env.d.ts",
   ]),
 ]);
