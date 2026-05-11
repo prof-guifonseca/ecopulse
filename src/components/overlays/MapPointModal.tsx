@@ -1,10 +1,12 @@
 'use client';
 
 import { CheckCircle2, Clock, MapPin, Phone, Ruler } from 'lucide-react';
-import { MAP_POINTS, MAP_DETAIL_LABELS, MAP_TYPE_ICON, getMissionTemplate } from '@/data';
+import { MAP_DETAIL_LABELS, MAP_TYPE_ICON, getMissionTemplate } from '@/data';
+import { getMapPointCatalog } from '@/simulation';
 import { visitMeetsTemplate } from '@/data/missionPool';
 import type { TribeId } from '@/data/tribes';
 import { useGameStore } from '@/store/gameStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import { useUIStore } from '@/store/uiStore';
 import { useUserStore } from '@/store/userStore';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
@@ -22,11 +24,12 @@ interface Props {
 }
 
 export function MapPointModal({ id }: Props) {
-  const point = MAP_POINTS.find((p) => p.id === id);
+  const point = getMapPointCatalog().find((p) => p.id === id);
   const closeModal = useUIStore((s) => s.closeModal);
   const visited = useGameStore((s) => s.visitedPoints.includes(id));
   const addVisited = useGameStore((s) => s.addVisitedPoint);
   const showToast = useUIStore((s) => s.showToast);
+  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
 
   if (!point) return null;
 
@@ -34,6 +37,13 @@ export function MapPointModal({ id }: Props) {
 
   const visit = () => {
     addVisited(id);
+    recordSimulationEvent({
+      type: 'map_visit_marked',
+      payload: {
+        pointId: point.id,
+        type: point.type,
+      },
+    });
     awardTokens(10);
     const game = useGameStore.getState();
     const { visitedPoints, dailyMissions, markMission, todaysMissionIds } = game;

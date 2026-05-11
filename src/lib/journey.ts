@@ -1,4 +1,4 @@
-import { MAP_POINTS } from '@/data';
+import { getMapPointCatalog } from '@/simulation';
 import type { MapPointType, Score } from '@/types';
 import type { GardenStage } from './garden';
 
@@ -111,7 +111,7 @@ export interface GateMiss {
 function visitsByType(visitedPointIds: string[]): Record<MapPointType, number> {
   const counts: Record<string, number> = {};
   for (const id of visitedPointIds) {
-    const point = MAP_POINTS.find((p) => p.id === id);
+    const point = getMapPointCatalog().find((p) => p.id === id);
     if (point) counts[point.type] = (counts[point.type] ?? 0) + 1;
   }
   return counts as Record<MapPointType, number>;

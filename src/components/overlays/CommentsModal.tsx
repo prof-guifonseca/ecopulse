@@ -1,6 +1,6 @@
 'use client';
 
-import { FEED_POSTS } from '@/data';
+import { getCommunityPostCatalog } from '@/simulation';
 import { useUIStore } from '@/store/uiStore';
 import { ModalShell } from './ModalShell';
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function CommentsModal({ id }: Props) {
-  const post = FEED_POSTS.find((p) => p.id === id);
+  const post = getCommunityPostCatalog().find((p) => p.id === id);
   const closeModal = useUIStore((s) => s.closeModal);
   if (!post) return null;
 

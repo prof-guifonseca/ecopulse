@@ -1,7 +1,7 @@
 'use client';
 
 import { Info, Lightbulb, Plus } from 'lucide-react';
-import { PRODUCTS } from '@/data';
+import { getProductCatalog } from '@/simulation';
 import { BREAKDOWN_LABELS, findAlternatives } from '@/lib/scanner';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -64,9 +64,10 @@ export function ProductDetailModal({ id }: Props) {
   if (!view) return null;
 
   const isFromHistory = view.source === 'scan';
-  const catalogProduct = PRODUCTS.find((p) => p.id === view.catalogId);
+  const catalog = getProductCatalog();
+  const catalogProduct = catalog.find((p) => p.id === view.catalogId);
   const alternatives = catalogProduct
-    ? findAlternatives(catalogProduct, PRODUCTS)
+    ? findAlternatives(catalogProduct, catalog)
     : [];
 
   const addToHistoryFromCatalog = () => {
@@ -190,7 +191,7 @@ function resolveView(
       rationale: scan.rationale,
     };
   }
-  const catalogProduct = PRODUCTS.find((p) => p.id === id);
+  const catalogProduct = getProductCatalog().find((p) => p.id === id);
   if (!catalogProduct) return null;
   return {
     source: 'catalog',

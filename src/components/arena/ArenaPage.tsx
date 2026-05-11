@@ -14,6 +14,7 @@ import type {
   BattleSession,
 } from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -181,6 +182,15 @@ export function ArenaPage() {
       );
       const nextWins = arena.wins + (result.outcome === 'win' ? 1 : 0);
       arena.recordBattle(result, affinity.multiplier);
+      useSimulationStore.getState().recordEvent({
+        type: 'battle_completed',
+        payload: {
+          battleId: result.id,
+          opponentId: result.opponentId,
+          outcome: result.outcome,
+          rounds: result.rounds,
+        },
+      });
 
       const opponent = ARENA_OPPONENTS.find((item) => item.id === result.opponentId);
       if (result.outcome === 'win') {

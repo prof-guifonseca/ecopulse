@@ -7,7 +7,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useSocialStore } from '@/store/socialStore';
 import { useUserStore } from '@/store/userStore';
 import { useHydrated } from '@/hooks/useHydrated';
-import { clearDemoSeed } from '@/lib/demoSeed';
+import { resetSimulationState } from '@/simulation/bootstrap';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
 
@@ -46,13 +46,12 @@ export function AppHeader() {
     summaryText = `${tokensToday}`;
   }
 
-  // Long-press the logo (1.2s) to wipe the demo state and re-seed.
-  // Hidden affordance — only useful for the person showing the demo.
+  // Long-press the logo (1.2s) to wipe local simulation state.
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startLongPress = () => {
     longPressTimer.current = setTimeout(() => {
-      if (confirm('Reiniciar demo? Apaga estado salvo e recarrega Arthur do zero.')) {
-        clearDemoSeed();
+      if (confirm('Reiniciar simulação? Apaga o estado local e volta para o onboarding.')) {
+        resetSimulationState();
       }
     }, 1200);
   };
@@ -75,7 +74,7 @@ export function AppHeader() {
           onPointerUp={cancelLongPress}
           onPointerLeave={cancelLongPress}
           onPointerCancel={cancelLongPress}
-          title="Pressione 1.2s para reiniciar a demo"
+          title="Pressione 1.2s para reiniciar a simulação"
         >
           <span
             aria-hidden

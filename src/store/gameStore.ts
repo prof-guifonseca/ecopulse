@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DailyMissionsProgress, Score } from '@/types';
-import { MAP_POINTS } from '@/data';
+import { getMapPointCatalog } from '@/simulation';
 import { createSafeJSONStorage, readLegacyState } from './storage';
 
 export interface RealImpact {
@@ -81,7 +81,7 @@ const DEFAULT_GAME = {
 
 /** Maps a visited map-point id to the realImpact delta that visit produces. */
 function realImpactDeltaForVisit(pointId: string): Partial<RealImpact> {
-  const point = MAP_POINTS.find((p) => p.id === pointId);
+  const point = getMapPointCatalog().find((p) => p.id === pointId);
   if (!point) return {};
   switch (point.type) {
     case 'baterias':

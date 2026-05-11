@@ -3,11 +3,12 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Camera, Search, Sparkles } from 'lucide-react';
-import { PRODUCTS } from '@/data';
+import { getProductCatalog } from '@/simulation';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore, type ScanRecord } from '@/store/scanHistoryStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import { performSimulatedScan } from '@/lib/simulatedScan';
 import { hapticTap } from '@/lib/haptic';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
@@ -44,6 +45,8 @@ export function ScannerPage() {
   const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
   const recordScan = useScanHistoryStore((s) => s.recordScan);
   const history = useScanHistoryStore((s) => s.history);
+  const recordSimulationEvent = useSimulationStore((s) => s.recordEvent);
+  const products = useMemo(() => getProductCatalog(), []);
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
@@ -59,15 +62,15 @@ export function ScannerPage() {
 
   const filtered = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
-    if (!normalizedQuery) return PRODUCTS;
-    return PRODUCTS.filter(
+    if (!normalizedQuery) return products;
+    return products.filter(
       (product) =>
         product.name.toLowerCase().includes(normalizedQuery) ||
         product.brand.toLowerCase().includes(normalizedQuery) ||
         product.category.toLowerCase().includes(normalizedQuery) ||
         product.barcode.includes(normalizedQuery)
     );
-  }, [deferredQuery]);
+  }, [deferredQuery, products]);
 
   const triggerScan = () => {
     if (scanning) return;
@@ -76,9 +79,17 @@ export function ScannerPage() {
     setLastBarcode(null);
 
     setTimeout(() => {
-      const record = performSimulatedScan(history.map((h) => h.productId));
+      const record = performSimulatedScan(history.map((h) => h.productId), { firstRun });
       setLastBarcode(record.barcode);
       recordScan(record);
+      recordSimulationEvent({
+        type: 'scan_completed',
+        payload: {
+          productId: record.productId,
+          score: record.score,
+          source: firstRun ? 'first-run' : 'scanner',
+        },
+      });
       awardTokens(10);
       if (!missionScan) markMission('scan', true);
       const totalScans = useScanHistoryStore.getState().history.length;
@@ -212,7 +223,7 @@ export function ScannerPage() {
       <section>
         <div className="mb-4 flex items-baseline justify-between">
           <h2 className="t-title">Catálogo</h2>
-          <span className="t-caption">{PRODUCTS.length} produtos</span>
+          <span className="t-caption">{products.length} produtos</span>
         </div>
         <div className="input-shell flex items-center gap-3 px-4 py-3">
           <Icon icon={Search} size={18} className="text-[var(--text-muted)]" />

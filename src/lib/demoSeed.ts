@@ -12,6 +12,7 @@ import { useUserStore } from '@/store/userStore';
 import { useGameStore } from '@/store/gameStore';
 import { useArenaStore } from '@/store/arenaStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
+import { useSimulationStore } from '@/store/simulationStore';
 import {
   createPlayerFighter,
   opponentToFighter,
@@ -35,6 +36,7 @@ import { DOCTRINE_BY_RIVAL } from './doctrines';
  */
 
 const SEED_SENTINEL = 'ecopulse:seeded:v1';
+const ARTHUR_DEMO_SEED = 'arthur-demo-v1';
 
 export function isDemoSeeded(): boolean {
   if (typeof window === 'undefined') return true; // SSR: pretend seeded
@@ -49,14 +51,20 @@ export function clearDemoSeed(): void {
   localStorage.removeItem('ecopulse:arena');
   localStorage.removeItem('ecopulse:scanHistory');
   localStorage.removeItem('ecopulse:social');
+  localStorage.removeItem('ecopulse:simulation');
   // Force a reload so all stores re-hydrate fresh.
   window.location.reload();
 }
 
 export function seedDemoStateIfEmpty(): void {
+  seedArthurDemoScenario();
+}
+
+export function seedArthurDemoScenario(): void {
   if (typeof window === 'undefined') return;
   if (localStorage.getItem(SEED_SENTINEL) === '1') {
     seedArenaDemoIfEmpty();
+    ensureArthurSimulationConfig();
     return;
   }
 
@@ -181,6 +189,20 @@ export function seedDemoStateIfEmpty(): void {
   seedArenaDemoIfEmpty();
 
   localStorage.setItem(SEED_SENTINEL, '1');
+  ensureArthurSimulationConfig();
+}
+
+function ensureArthurSimulationConfig(): void {
+  const simulation = useSimulationStore.getState();
+  if (simulation.config?.scenario === 'arthur-demo') return;
+  const today = new Date().toISOString().slice(0, 10);
+  simulation.startSimulation({
+    scenario: 'arthur-demo',
+    seed: ARTHUR_DEMO_SEED,
+    regionId: DEFAULT_REGION_ID,
+    startedAt: new Date().toISOString(),
+    currentDay: today,
+  });
 }
 
 function seedArenaDemoIfEmpty(): void {

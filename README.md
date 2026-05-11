@@ -1,21 +1,24 @@
 # EcoPulse
 
-Aplicativo educacional de hábitos sustentáveis. **100% protótipo navegável** —
-todos os dados são simulados e vivem no localStorage. Sem backend, sem
-servidor, sem chamadas externas em runtime.
+Aplicativo educacional de hábitos sustentáveis. **100% MVP navegável local** —
+os dados vêm de uma simulação determinística e versionada sobre catálogos
+curados, persistida em `localStorage`. Sem backend, sem servidor, sem chamadas
+externas em runtime.
 
-## Modo demo
+## Simulação local
 
-Na primeira abertura, a aplicação semeia automaticamente um perfil vivido:
+Na primeira abertura, a aplicação começa como um usuário novo:
 
-- **Arthur**, Guardião Verde, nível 7, 480 Eco-Tokens, sequência de 12 dias.
-- 23 scans no histórico distribuídos pelos últimos 6 dias.
-- 8 conquistas de 13, 6 SkinPacks de 12, 5 pontos visitados em Londrina.
-- 1 desafio em andamento (3/7 dias) e 2 já concluídos.
-- 4 tutoriais marcados como vistos, missão diária de scan já feita.
+- `/` cai no onboarding.
+- O onboarding cria uma sessão `new-user` em `ecopulse:simulation`.
+- O primeiro scan guiado libera a Home e inicia o ciclo diário.
+- Scanner, missões, feed, mapa e arena registram eventos auditáveis no ledger
+  local da simulação.
 
-Para reiniciar o estado da demo: **pressione e segure por 1.2s o logo
-"EcoPulse"** no header. Confirma e o seed roda do zero.
+O antigo Arthur segue disponível como cenário explícito `arthur-demo` para QA
+e apresentações, mas não é mais o default automático. Para reiniciar o estado:
+**pressione e segure por 1.2s o logo "EcoPulse"** no header. Confirma e o app
+volta para o onboarding.
 
 ## Stack
 
@@ -63,10 +66,11 @@ src/
 ├── data/                      Catálogos: products, mapPoints, badges, …
 ├── lib/
 │   ├── scoring.ts             deriveScore() puro (testável)
-│   ├── simulatedScan.ts       Picker do scanner sobre o catálogo
-│   ├── demoSeed.ts            Hidrata o estado do Arthur (idempotente)
+│   ├── simulatedScan.ts       Scan determinístico sobre a simulação
+│   ├── demoSeed.ts            Cenário Arthur explícito (não default)
 │   ├── game/rules.ts          Regras puras de unlock (skins, badges)
 │   └── map/londrina.ts        Bounding box + projeção lat/lng → %
+├── simulation/                RNG, cenários, queries e catálogos simulados
 ├── store/                     Zustand: user, game, ui, social, scanHistory
 └── types/                     Tipos compartilhados
 ```
@@ -86,10 +90,10 @@ de regras puras em `src/lib/scoring.ts` aplicadas ao catálogo expandido.
 
 ## Princípios da v3
 
-1. **Primeiros 5 segundos vencem ou perdem a demo** — por isso o seed do
-   Arthur é tão denso.
-2. **Simulado supera real para esse contexto**: zero dependência de rede,
-   100% offline, demo previsível.
+1. **Primeira sessão precisa ser verdadeira o bastante** — o MVP começa vazio,
+   mas cada ação deixa rastro e muda o estado.
+2. **Simulado estruturado supera fake solto**: zero dependência de rede,
+   100% offline, cenário previsível e pronto para virar backend.
 3. **Honestidade visual**: nada se passa por uma feature real. Onde o app
    simula, ele etiqueta (ex: "Feed simulado · prototype").
 4. **Motion como linguagem**: cada ação tem feedback (scan ritual, token
