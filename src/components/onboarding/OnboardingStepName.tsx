@@ -57,9 +57,9 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
         </div>
 
         <div className="space-y-3">
-          <h1 className="t-display">Seu nome</h1>
+          <h1 className="t-display">Crie seu perfil.</h1>
           <p className="t-body max-w-[26ch] text-[var(--text-secondary)]">
-            Pode trocar depois.
+            Depois do primeiro scan, o app libera missões, impacto e comunidade.
           </p>
         </div>
 

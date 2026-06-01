@@ -218,7 +218,7 @@ test('root redirects a fresh install to onboarding', async ({ page }) => {
   await gotoApp(page, '/');
 
   await expect(page).toHaveURL(/\/onboarding$/);
-  await expect(page.getByRole('heading', { name: 'Sustentabilidade na rotina.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'EcoPulse' })).toBeVisible();
 });
 
 test('bottom navigation reaches the primary screens', async ({ page }) => {
@@ -414,19 +414,19 @@ test('onboarding works when the demo seed is neutralized', async ({ page }) => {
   await resetAppState(page);
   await gotoApp(page, '/onboarding');
 
-  await expect(page.getByRole('heading', { name: 'Sustentabilidade na rotina.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'EcoPulse' })).toBeVisible();
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => undefined);
   await activateButton(page, 'Continuar');
-  await expect(page.getByRole('heading', { name: 'Três gestos.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Da dúvida à ação.' })).toBeVisible();
   await activateButton(page, 'Continuar');
-  await expect(page.getByRole('heading', { name: 'Onde você se reconhece?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Escolha sua causa.' })).toBeVisible();
   await activateButton(page, /Recicladores/);
   await activateButton(page, 'Continuar');
   await page.getByRole('textbox', { name: 'Seu primeiro nome' }).fill('Lia');
   await activateButton(page, 'Começar');
 
   await expect(page).toHaveURL(/\/scanner\?welcome=1$/);
-  await expect(page.getByText('Faça um scan para liberar a Home.')).toBeVisible();
+  await expect(page.getByText('Primeiro passo: escaneie uma amostra real para liberar missões e impacto.')).toBeVisible();
 
   await mockProductLookup(page);
   await activateButton(page, 'Amostra real');

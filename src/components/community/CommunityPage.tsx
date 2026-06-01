@@ -41,7 +41,7 @@ export function CommunityPage() {
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Comunidade</h1>
-        <p className="mt-1 t-caption">Londrina</p>
+        <p className="mt-1 t-caption">Ações locais viram feed, comentários e prova de engajamento.</p>
       </header>
 
       <div className="stagger space-y-5">

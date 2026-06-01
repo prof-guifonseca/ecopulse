@@ -243,6 +243,9 @@ export function ScannerPage() {
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Scanner</h1>
+        <p className="mt-1 t-caption">
+          Consulta real por barcode, amostra Open Food Facts ou registro manual.
+        </p>
       </header>
 
       {/* Scan instrument — the ritual lives here */}
@@ -378,7 +381,7 @@ export function ScannerPage() {
       {firstRun ? (
         <p className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
-          Faça um scan para liberar a Home.
+          Primeiro passo: escaneie uma amostra real para liberar missões e impacto.
         </p>
       ) : null}
 

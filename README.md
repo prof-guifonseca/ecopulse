@@ -26,6 +26,13 @@ e apresentações, mas não é mais o default automático. Para reiniciar o esta
 **pressione e segure por 1.2s o logo "EcoPulse"** no header. Confirma e o app
 volta para o onboarding.
 
+## Pitch
+
+- `/pitch` é a superfície curta para banca: problema, solução, protótipo,
+  impacto e roteiro de fala em 5 minutos.
+- `/onboarding` inicia a demonstração guiada do protótipo: visão, três ações,
+  tribo, perfil e primeiro scan real.
+
 ## Stack
 
 - Next.js 16.2.6 (App Router + Route Handlers) + React 19

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const routes = ['/home', '/scanner', '/map', '/community', '/profile', '/arena', '/onboarding'] as const;
+const routes = ['/home', '/scanner', '/map', '/community', '/profile', '/arena', '/onboarding', '/pitch'] as const;
 
 async function mockEsgPlaces(page: Page) {
   await page.route('**/api/esg/places**', async (route) => {

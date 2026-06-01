@@ -43,9 +43,9 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
 
       <main className="animate-fade-in relative flex flex-1 flex-col gap-5">
         <div className="space-y-2">
-          <h1 className="t-display">Onde você se reconhece?</h1>
+          <h1 className="t-display">Escolha sua causa.</h1>
           <p className="t-body text-[var(--text-secondary)] max-w-[34ch]">
-            Identidade lateral. Não muda força, muda sabor: missões, rival patrono e gear afim.
+            A tribo personaliza o tom das missões sem mudar as regras. Cada pessoa começa por onde consegue agir.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
         </ul>
 
         <p className="t-micro text-[var(--text-muted)]">
-          Mais regiões em breve · por enquanto: Londrina (PR).
+          Piloto inicial em Londrina (PR), com dados abertos e pontos curados.
         </p>
       </main>
 

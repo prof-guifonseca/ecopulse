@@ -49,6 +49,12 @@ const ACTION_ICONS: Record<DailyActionKind, LucideIcon> = {
   complete: Shirt,
 };
 
+const DAILY_PROOF_STEPS: Array<{ icon: LucideIcon; label: string; value: string }> = [
+  { icon: ScanLine, label: 'Produto', value: 'impacto lido' },
+  { icon: MapPin, label: 'Cidade', value: 'ponto confiável' },
+  { icon: Heart, label: 'Comunidade', value: 'ação replicável' },
+];
+
 export function HomePage() {
   useJourneyTransition();
   const hydrated = useHydrated();
@@ -97,6 +103,8 @@ export function HomePage() {
           </div>
         </Card>
       </section>
+
+      <DailyProofPanel />
 
       <FlorestaCounterStrip />
 
@@ -159,6 +167,38 @@ export function HomePage() {
         <ActionButton action={action} />
       </Card>
     </PageShell>
+  );
+}
+
+function DailyProofPanel() {
+  return (
+    <section className="rounded-[var(--radius-md)] border-active bg-[linear-gradient(135deg,var(--tint-green-2),var(--tint-1))] p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="t-eyebrow text-[var(--accent-green)]">Jornada EcoPulse</p>
+          <h2 className="mt-1 t-title">Uma escolha consciente precisa virar ação visível.</h2>
+        </div>
+        <span className="shrink-0 rounded-full border border-[var(--line-active)] px-2.5 py-1 t-micro text-[var(--accent-green)]">
+          3 passos
+        </span>
+      </div>
+      <ol className="mt-4 grid grid-cols-3 gap-2">
+        {DAILY_PROOF_STEPS.map((step, index) => (
+          <li key={step.label} className="min-w-0 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-3 py-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-xs)] bg-tint-green-2 text-[var(--accent-green)]">
+                <Icon icon={step.icon} size={13} />
+              </span>
+              <span className="t-micro text-[var(--text-muted)]">0{index + 1}</span>
+            </div>
+            <p className="mt-2 truncate t-micro text-[var(--text-primary)]">{step.label}</p>
+            <p className="mt-1 text-[0.66rem] font-medium leading-tight text-[var(--text-muted)]">
+              {step.value}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 

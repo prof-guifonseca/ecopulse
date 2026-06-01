@@ -13,18 +13,18 @@ interface Props {
 const PILLARS = [
   {
     icon: ScanLine,
-    title: 'Scanner',
-    body: 'Veja o impacto do produto.',
+    title: 'Escaneie',
+    body: 'O produto vira uma leitura simples de impacto e confiança.',
   },
   {
     icon: MapPin,
-    title: 'Mapa',
-    body: 'Encontre pontos próximos.',
+    title: 'Localize',
+    body: 'O mapa mostra descarte, reparo e consumo consciente em Londrina.',
   },
   {
     icon: Users,
-    title: 'Comunidade',
-    body: 'Acompanhe a turma.',
+    title: 'Compartilhe',
+    body: 'Scans e visitas alimentam missões, feed e progresso da turma.',
   },
 ] as const;
 
@@ -53,7 +53,12 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
       </header>
 
       <main className="animate-fade-in relative flex flex-1 flex-col justify-center gap-7">
-        <h1 className="t-mega">Três gestos.</h1>
+        <div className="space-y-2">
+          <h1 className="t-display">Da dúvida à ação.</h1>
+          <p className="t-body max-w-[32ch] text-[var(--text-secondary)]">
+            A banca precisa entender rápido: o EcoPulse junta decisão de compra, cidade e comunidade em uma rotina.
+          </p>
+        </div>
 
         <ul className="space-y-4">
           {PILLARS.map((p) => (

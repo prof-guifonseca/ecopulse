@@ -1,14 +1,19 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin, ScanLine, Sparkles, Users } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { unsplashUrl } from '@/lib/unsplash';
 
 interface Props {
   onNext: () => void;
 }
+
+const PROOF_POINTS = [
+  { icon: ScanLine, label: 'Produto', value: 'score ambiental' },
+  { icon: MapPin, label: 'Cidade', value: 'pontos reais' },
+  { icon: Users, label: 'Turma', value: 'ações visíveis' },
+] as const;
 
 export function OnboardingStepVision({ onNext }: Props) {
   return (
@@ -16,28 +21,49 @@ export function OnboardingStepVision({ onNext }: Props) {
       {/* Photographic background — full bleed inside the device shell */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <Image
-          src={unsplashUrl('forest', { w: 900, h: 1600, q: 70 })}
+          src="/community/feed/f14-arthur-thomas-trail-cleanup.png"
           alt=""
           fill
           priority
           sizes="(max-width: 430px) 100vw, 430px"
-          className="object-cover"
-          style={{ filter: 'blur(2px) saturate(1.05)' }}
+          className="object-cover object-[58%_50%]"
+          style={{ filter: 'saturate(1.04)' }}
         />
         <div className="photo-fade absolute inset-0" />
       </div>
 
       <header className="relative">
-        <p className="t-eyebrow">EcoPulse</p>
+        <p className="t-eyebrow">Desafio Liga Jovem</p>
       </header>
 
       <main className="animate-fade-in relative flex flex-1 flex-col justify-end gap-6">
         <div className="space-y-4">
-          <h1 className="t-display">Sustentabilidade na rotina.</h1>
-          <p className="t-body max-w-[28ch] text-[var(--text-secondary)]">
-            Ações simples. Impacto visível.
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-black/20 px-3 py-1.5 text-[var(--accent-green)] backdrop-blur-md">
+            <Icon icon={Sparkles} size={14} />
+            <span className="t-micro">Protótipo navegável</span>
+          </div>
+          <h1 className="text-[2.85rem] font-black leading-[0.92] tracking-normal text-[var(--text-primary)] sm:text-[3.45rem]">
+            EcoPulse
+          </h1>
+          <p className="t-body max-w-[31ch] text-[var(--text-secondary)]">
+            Sustentabilidade na rotina: escaneie produtos, encontre pontos confiáveis e transforme ações em impacto.
           </p>
         </div>
+
+        <ul className="grid grid-cols-3 gap-2">
+          {PROOF_POINTS.map((item) => (
+            <li
+              key={item.label}
+              className="rounded-[var(--radius-sm)] border border-white/10 bg-black/20 px-3 py-3 backdrop-blur-md"
+            >
+              <Icon icon={item.icon} size={16} className="text-[var(--accent-green)]" />
+              <p className="mt-2 t-micro text-[var(--text-primary)]">{item.label}</p>
+              <p className="mt-1 text-[0.66rem] font-medium leading-tight text-[var(--text-muted)]">
+                {item.value}
+              </p>
+            </li>
+          ))}
+        </ul>
       </main>
 
       <Button

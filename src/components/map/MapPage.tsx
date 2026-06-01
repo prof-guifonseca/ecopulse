@@ -216,7 +216,9 @@ export function MapPage() {
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Mapa</h1>
-        <p className="mt-1 t-caption">{scopeLabel}</p>
+        <p className="mt-1 t-caption">
+          {scopeLabel} · pontos com fonte, distância e confiança.
+        </p>
       </header>
 
       <MapCanvas
