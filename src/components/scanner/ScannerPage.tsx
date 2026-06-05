@@ -7,6 +7,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore, type ScanRecord } from '@/store/scanHistoryStore';
+import { useBarcodeScanner } from '@/hooks/useBarcodeScanner';
 import { hapticTap } from '@/lib/haptic';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import type { ProductLookupResult } from '@/domain';
@@ -28,18 +29,11 @@ import { cn } from '@/lib/cn';
 const SCAN_RITUAL_MS = 1600;
 const DEMO_DATA_ENABLED = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === 'true';
 
-type BarcodeDetectorResult = { rawValue: string };
-type BarcodeDetectorCtor = new (options?: { formats?: string[] }) => {
-  detect: (source: HTMLVideoElement) => Promise<BarcodeDetectorResult[]>;
-};
-
 export function ScannerPage() {
   const [query, setQuery] = useState('');
   const [barcodeInput, setBarcodeInput] = useState('');
   const [scanning, setScanning] = useState(false);
   const [lookupError, setLookupError] = useState<string | null>(null);
-  const [cameraActive, setCameraActive] = useState(false);
-  const [cameraError, setCameraError] = useState<string | null>(null);
   const [lastBarcode, setLastBarcode] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
   const router = useRouter();
@@ -61,8 +55,6 @@ export function ScannerPage() {
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
 
   // After the first-run product modal closes, send the user home.
   useEffect(() => {
@@ -140,72 +132,15 @@ export function ScannerPage() {
     [completeScan, scanning, showToast]
   );
 
-  const stopCamera = useCallback(() => {
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    setCameraActive(false);
-  }, []);
-
-  const startCamera = useCallback(async () => {
-    const Detector = (window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
-    if (!Detector || !navigator.mediaDevices?.getUserMedia) {
-      setCameraError('Leitor de câmera indisponível neste navegador.');
-      return;
-    }
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' } },
-        audio: false,
-      });
-      streamRef.current = stream;
-      setCameraError(null);
-      setCameraActive(true);
-    } catch {
-      setCameraError('Permissão de câmera não concedida.');
-    }
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!cameraActive || !video || !streamRef.current) return;
-    video.srcObject = streamRef.current;
-    void video.play().catch(() => undefined);
-  }, [cameraActive]);
-
-  useEffect(() => {
-    if (!cameraActive || scanning) return;
-    const video = videoRef.current;
-    const Detector = (window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
-    if (!video || !Detector) return;
-
-    const detector = new Detector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
-    let cancelled = false;
-    let frame = 0;
-
-    const tick = async () => {
-      if (cancelled) return;
-      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-        const codes = await detector.detect(video).catch(() => []);
-        const raw = codes[0]?.rawValue;
-        if (raw) {
-          cancelled = true;
-          stopCamera();
-          void lookupBarcode(raw, 'barcode');
-          return;
-        }
-      }
-      frame = window.requestAnimationFrame(tick);
-    };
-
-    frame = window.requestAnimationFrame(tick);
-    return () => {
-      cancelled = true;
-      window.cancelAnimationFrame(frame);
-    };
-  }, [cameraActive, lookupBarcode, scanning, stopCamera]);
-
-  useEffect(() => () => stopCamera(), [stopCamera]);
+  const {
+    videoRef: cameraRef,
+    active: cameraActive,
+    error: cameraError,
+    start: startCamera,
+    stop: stopCamera,
+  } = useBarcodeScanner({
+    onDetect: (raw) => void lookupBarcode(raw, 'barcode'),
+  });
 
   const submitBarcode = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -293,7 +228,7 @@ export function ScannerPage() {
 
           {cameraActive ? (
             <video
-              ref={videoRef}
+              ref={cameraRef}
               muted
               playsInline
               className="absolute inset-0 h-full w-full rounded-[var(--radius-md)] object-cover opacity-80"
