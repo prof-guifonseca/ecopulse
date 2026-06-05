@@ -1,7 +1,8 @@
 {
   "name": "EcoPulse — Sustentabilidade é Lifestyle",
   "short_name": "EcoPulse",
-  "description": "Hábitos sustentáveis com impacto real. Protótipo navegável.",
+  "description": "Hábitos sustentáveis com impacto real.",
+  "id": "/home",
   "start_url": "/home",
   "scope": "/",
   "display": "standalone",
@@ -17,7 +18,25 @@
       "src": "/icons/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

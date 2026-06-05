@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -14,8 +15,12 @@ export const metadata: Metadata = {
   applicationName: 'EcoPulse',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: [{ url: '/icons/icon.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/icons/icon.svg', type: 'image/svg+xml' }],
+    icon: [
+      { url: '/icons/icon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/icon-180.png', sizes: '180x180', type: 'image/png' }],
   },
   appleWebApp: {
     capable: true,
@@ -38,7 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       className={`${inter.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorkerRegistrar />
+      </body>
     </html>
   );
 }

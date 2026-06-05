@@ -9,6 +9,7 @@ import { ensureDailyReset, ensureTodaysMissionsPopulated } from '@/lib/dailyRese
 import { bootstrapSimulationIfNeeded } from '@/simulation/bootstrap';
 import { AppHeader } from '@/components/shared/AppHeader';
 import { BottomNav } from '@/components/shared/BottomNav';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { Overlays } from '@/components/overlays/Overlays';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -54,6 +55,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           {children}
         </div>
       </main>
+      <InstallPrompt />
       <BottomNav />
       <Overlays />
     </div>

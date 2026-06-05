@@ -1,6 +1,7 @@
 import { Leaf, Recycle, SearchCheck } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { ConfidenceTag } from '@/components/shared/ConfidenceTag';
 import type { LucideIcon } from 'lucide-react';
 import type { ScanRecord } from '@/store/scanHistoryStore';
 
@@ -20,13 +21,23 @@ export function ImpactPanel({ history }: { history: ScanRecord[] }) {
           Open Food Facts
         </span>
       </div>
+      <div className="mb-3 flex items-center gap-2">
+        <ConfidenceTag kind="estimated" />
+        <span className="t-micro text-[var(--text-muted)]">
+          impacto estimado por evidências dos produtos
+        </span>
+      </div>
       <div className="grid grid-cols-3 divide-x divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border-soft bg-tint-1">
         <ImpactMetric icon={SearchCheck} value={String(scannedCount)} label="avaliados" />
         <ImpactMetric icon={Recycle} value={String(withEvidence)} label="com evidência" />
         <ImpactMetric icon={Leaf} value={`${confidence}%`} label="confiança" reward />
       </div>
       <p className="mt-3 t-caption text-[var(--text-muted)]">
-        Métricas baseadas em barcodes reais, snapshot/cache Open Food Facts e campos de evidência disponíveis.
+        <span className="text-[var(--text-secondary)]">Avaliados</span> e{' '}
+        <span className="text-[var(--text-secondary)]">com evidência</span> são contagens reais dos
+        seus scans (barcodes Open Food Facts/cache); a{' '}
+        <span className="text-[var(--text-secondary)]">confiança</span> é uma estimativa agregada
+        dos campos de evidência disponíveis.
       </p>
     </Card>
   );

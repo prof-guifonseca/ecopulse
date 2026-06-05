@@ -15,6 +15,7 @@ import { unsplashUrl, type UnsplashKey } from '@/lib/unsplash';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconTile } from '@/components/ui/IconTile';
+import { ShareButton } from '@/components/share/ShareButton';
 import { ModalShell } from './ModalShell';
 import type { Product, Score } from '@/types';
 
@@ -170,9 +171,31 @@ export function ProductDetailModal({ id }: Props) {
         ) : null}
 
         {isFromHistory ? (
-            <Button variant="secondary" size="lg" fullWidth className="mt-6" onClick={closeModal}>
-            Fechar
-          </Button>
+          <div className="mt-6 w-full space-y-2">
+            <ShareButton
+              data={{
+                eyebrow: 'Avaliei um produto',
+                title: view.name,
+                stats: [
+                  { value: view.score, label: 'nota' },
+                  ...(view.confidence
+                    ? [{ value: `${view.confidence}%`, label: 'confiança' }]
+                    : []),
+                ],
+                caption: 'Avaliado no scanner do EcoPulse.',
+                accent: view.score === 'A' || view.score === 'B' ? 'green' : 'gold',
+              }}
+              fileName="ecopulse-nota.png"
+              shareText={`Avaliei ${view.name} no EcoPulse: nota ${view.score}`}
+              variant="primary"
+              size="lg"
+              fullWidth
+              label="Compartilhar nota"
+            />
+            <Button variant="secondary" size="lg" fullWidth onClick={closeModal}>
+              Fechar
+            </Button>
+          </div>
         ) : (
           <Button
             variant="primary"

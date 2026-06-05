@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@sentry/nextjs": "10.52.0",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
     "clsx": "^2.1.1",
     "lucide-react": "^1.8.0",
     "maplibre-gl": "5.24.0",
