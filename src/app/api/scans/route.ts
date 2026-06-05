@@ -1,6 +1,7 @@
 import { createEcoPulseEvent } from '@/domain';
 import type { ProductLookupResult, ScanResult } from '@/domain';
 import { saveEvent, saveScan } from '@/lib/backend/mvpRepository';
+import { resolveUserId } from '@/lib/backend/supabaseAuth';
 import { lookupProductByBarcode } from '@/lib/products/productLookup';
 import { scanResultFromLookup } from '@/lib/products/scanRecord';
 
@@ -12,12 +13,14 @@ export async function POST(request: Request) {
     const lookup = await resolveLookup(body);
     if (!lookup) return Response.json({ error: 'invalid_scan' }, { status: 400 });
 
+    const userId = await resolveUserId(request);
     const scan = scanResultFromLookup(lookup, scanSourceFrom(body.source, lookup));
-    await saveScan(scan);
+    await saveScan(scan, userId);
     await saveEvent(
       createEcoPulseEvent({
         type: 'scan_completed',
         source: lookup.source,
+        userId,
         payload: {
           productId: scan.productId,
           barcode: scan.barcode,

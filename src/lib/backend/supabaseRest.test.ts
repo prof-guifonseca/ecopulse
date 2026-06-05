@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildSupabaseRow, isSupabaseConfigured, persistRow } from './supabaseRest';
+import { buildSupabaseRow, isSupabaseConfigured, persistRow, supabaseSelectData } from './supabaseRest';
 
 describe('supabaseRest', () => {
   afterEach(() => {
@@ -99,6 +99,32 @@ describe('supabaseRest', () => {
       );
 
       await expect(persistRow('events', { id: 'e1' })).resolves.toBeUndefined();
+    });
+  });
+
+  describe('supabaseSelectData', () => {
+    it('returns [] without fetching when unconfigured', async () => {
+      vi.stubEnv('SUPABASE_URL', '');
+      vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '');
+      const fetchMock = vi.fn();
+      vi.stubGlobal('fetch', fetchMock);
+
+      await expect(supabaseSelectData('events', 'user_id=eq.u1')).resolves.toEqual([]);
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('unwraps each row.data when configured', async () => {
+      vi.stubEnv('SUPABASE_URL', 'https://x.supabase.co');
+      vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'svc');
+      const fetchMock = vi.fn(async () =>
+        Response.json([{ data: { id: 'e1' } }, { data: { id: 'e2' } }]),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+
+      const rows = await supabaseSelectData<{ id: string }>('events', 'user_id=eq.u1');
+      expect(rows).toEqual([{ id: 'e1' }, { id: 'e2' }]);
+      const [url] = fetchMock.mock.calls[0] as unknown as [string];
+      expect(url).toContain('/rest/v1/events?select=data&user_id=eq.u1');
     });
   });
 });

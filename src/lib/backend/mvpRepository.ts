@@ -51,10 +51,10 @@ export function listEvents(userId = 'local-user'): EcoPulseEvent[] {
   return store().events.filter((event) => event.userId === userId || event.userId === 'local-user');
 }
 
-export async function saveScan(scan: ScanResult): Promise<ScanResult> {
+export async function saveScan(scan: ScanResult, userId = 'local-user'): Promise<ScanResult> {
   const s = store();
   s.scans = [scan, ...s.scans.filter((item) => item.id !== scan.id)].slice(0, 200);
-  await persistRow('scan_results', scan);
+  await persistRow('scan_results', { ...scan, userId });
   return scan;
 }
 
@@ -62,10 +62,10 @@ export function listScans(): ScanResult[] {
   return store().scans;
 }
 
-export async function saveImpactEntry(entry: ImpactEntry): Promise<ImpactEntry> {
+export async function saveImpactEntry(entry: ImpactEntry, userId = 'local-user'): Promise<ImpactEntry> {
   const s = store();
   s.impactEntries = [entry, ...s.impactEntries.filter((item) => item.id !== entry.id)].slice(0, 500);
-  await persistRow('impact_entries', entry);
+  await persistRow('impact_entries', { ...entry, userId });
   return entry;
 }
 

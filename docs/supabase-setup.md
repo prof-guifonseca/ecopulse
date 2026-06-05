@@ -53,14 +53,31 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 ```
 
-## 5. Próximo passo — Fase B (login anônimo + multiusuário)
+## 5. Fase B — login anônimo + escrita por usuário (já no código, gated)
 
-Já preparado no schema/RLS. Falta plugar (melhor verificar ao vivo com as chaves):
-- Login **anônimo** do Supabase (`signInAnonymously`) no client, atrás das envs.
-- Trocar o `user_id` fixo `'local-user'` pelo `auth.uid()` real (RLS já cobre).
-- Migração `localStorage` → nuvem no primeiro login.
-- Leitura multiusuário (feed/leaderboards) e, opcionalmente, Realtime no feed.
+Plugado e gated por `NEXT_PUBLIC_SUPABASE_*` (cliente) e `isSupabaseConfigured()`
+(servidor). Com as chaves do passo 1 + as `NEXT_PUBLIC_SUPABASE_*` no `.env`:
 
-Contratos canônicos em [`src/domain/types.ts`](../src/domain/types.ts); o ponto
-de integração é [`src/lib/backend/mvpRepository.ts`](../src/lib/backend/mvpRepository.ts)
-+ [`src/lib/backend/supabaseRest.ts`](../src/lib/backend/supabaseRest.ts).
+- **Login anônimo** ([`src/lib/client/supabaseBrowser.ts`](../src/lib/client/supabaseBrowser.ts)
+  + [`SupabaseAuthInit`](../src/components/auth/SupabaseAuthInit.tsx)): cada
+  visitante ganha um `auth.users` real, sem fricção, no carregamento.
+- **Escrita por usuário**: o cliente manda o access token; o BFF resolve o
+  `user_id` real via [`resolveUserId`](../src/lib/backend/supabaseAuth.ts)
+  (token verificado no GoTrue, com fallback seguro para `local-user`) e marca as
+  linhas (scans, eventos, impacto, reações, comentários) com esse id.
+
+> ⚠️ **Pendente de verificação ao vivo** (não dá para testar sem as chaves): o
+> round-trip de auth e a escrita por usuário foram escritos gated e cobertos por
+> testes unitários, mas só dá para confirmar o comportamento real ligando o
+> projeto. A **CI fica verde por estar desligado**, não por provar o fluxo online.
+
+## 6. O que falta (passo final, melhor a 4 mãos com as chaves)
+
+- **Leitura multiusuário**: as rotas ainda leem da memória de processo. O helper
+  [`supabaseSelectData`](../src/lib/backend/supabaseRest.ts) já está pronto e
+  testado para trocar as leituras de `mvpRepository` (feed/leaderboards/`/me`)
+  por consultas ao Postgres com escopo por usuário.
+- **Migração `localStorage` → nuvem** no primeiro login (replay do histórico local).
+- **Realtime** no feed (opcional, grátis).
+
+Contratos canônicos em [`src/domain/types.ts`](../src/domain/types.ts).

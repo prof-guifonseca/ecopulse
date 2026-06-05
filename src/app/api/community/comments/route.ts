@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import type { CommunityComment } from '@/domain';
 import { listCommunityComments, saveCommunityComment } from '@/lib/backend/mvpRepository';
+import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     const body = (await request.json()) as Record<string, unknown>;
     const postId = typeof body.postId === 'string' ? body.postId.trim() : '';
     const text = typeof body.text === 'string' ? body.text.trim().slice(0, 500) : '';
-    const userId = typeof body.userId === 'string' ? body.userId.trim() : 'local-user';
+    const userId = await resolveUserId(request);
     const userName = typeof body.userName === 'string' ? body.userName.trim().slice(0, 80) : 'Você';
     const userAvatar = typeof body.userAvatar === 'string' ? body.userAvatar.trim().slice(0, 8) : '🌱';
 
