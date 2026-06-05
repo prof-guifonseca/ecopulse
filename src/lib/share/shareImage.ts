@@ -7,6 +7,9 @@ interface ShareOptions {
   fileName: string;
   title?: string;
   text?: string;
+  /** Shareable landing URL (with link-unfurl OG image). Included in the native
+   *  share sheet and copied to the clipboard on the download fallback. */
+  url?: string;
 }
 
 function downloadBlob(blob: Blob, fileName: string) {
@@ -29,7 +32,7 @@ export async function shareOrDownload(blob: Blob, options: ShareOptions): Promis
 
   if (typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
     try {
-      await nav.share({ files: [file], title: options.title, text: options.text });
+      await nav.share({ files: [file], title: options.title, text: options.text, url: options.url });
       return 'shared';
     } catch (error) {
       // Usuário cancelou a folha de compartilhamento: não força download.
@@ -39,5 +42,12 @@ export async function shareOrDownload(blob: Blob, options: ShareOptions): Promis
   }
 
   downloadBlob(blob, options.fileName);
+  if (options.url) {
+    try {
+      await navigator.clipboard?.writeText(options.url);
+    } catch {
+      // Clipboard pode estar indisponível; o download do cartão já aconteceu.
+    }
+  }
   return 'downloaded';
 }
