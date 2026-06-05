@@ -1,4 +1,6 @@
 import type { LatLng, RegionBBox } from '@/lib/region/types';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
+import { ECOPULSE_CONTACT_URL, ECOPULSE_USER_AGENT } from '@/lib/userAgent';
 
 interface NominatimPlace {
   display_name?: string;
@@ -31,8 +33,8 @@ export async function geocodePlace(
   if (value.length < 3) return null;
 
   const endpoint = options.endpoint ?? DEFAULT_NOMINATIM_ENDPOINT;
-  const userAgent = options.userAgent ?? 'EcoPulse/0.1 (+https://ecopulse.local)';
-  const referer = options.referer ?? 'https://ecopulse.local';
+  const userAgent = options.userAgent ?? ECOPULSE_USER_AGENT;
+  const referer = options.referer ?? ECOPULSE_CONTACT_URL;
   const fetcher = options.fetcher ?? fetch;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? 3500);
@@ -44,7 +46,7 @@ export async function geocodePlace(
     url.searchParams.set('countrycodes', 'br');
     url.searchParams.set('q', value);
 
-    const response = await fetcher(url, {
+    const response = await fetchWithRetry(fetcher, url, {
       headers: {
         'User-Agent': userAgent,
         Referer: referer,

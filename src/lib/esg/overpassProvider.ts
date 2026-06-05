@@ -1,6 +1,8 @@
 import { bboxFromCenter } from './geo';
 import { buildOverpassQuery, normalizeOverpassResponse, type OverpassResponse } from './osm';
 import type { EsgPlaceProvider, EsgPlaceSearchInput, EsgPlaceSearchResult } from './types';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
+import { ECOPULSE_CONTACT_URL, ECOPULSE_USER_AGENT } from '@/lib/userAgent';
 
 const DEFAULT_OVERPASS_ENDPOINT = 'https://overpass-api.de/api/interpreter';
 const DEFAULT_TIMEOUT_MS = 4500;
@@ -16,8 +18,8 @@ interface OverpassProviderOptions {
 export function createOverpassProvider(options: OverpassProviderOptions = {}): EsgPlaceProvider {
   const endpoint = options.endpoint ?? DEFAULT_OVERPASS_ENDPOINT;
   const fetcher = options.fetcher ?? fetch;
-  const userAgent = options.userAgent ?? 'EcoPulse/0.1 (+https://ecopulse.local)';
-  const referer = options.referer ?? 'https://ecopulse.local';
+  const userAgent = options.userAgent ?? ECOPULSE_USER_AGENT;
+  const referer = options.referer ?? ECOPULSE_CONTACT_URL;
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 
   return {
@@ -32,7 +34,7 @@ export function createOverpassProvider(options: OverpassProviderOptions = {}): E
 
       try {
         const query = buildOverpassQuery({ ...input, bbox });
-        const response = await fetcher(endpoint, {
+        const response = await fetchWithRetry(fetcher, endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
