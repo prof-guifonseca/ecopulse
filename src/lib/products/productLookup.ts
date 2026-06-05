@@ -2,6 +2,8 @@ import { findProductByBarcode } from '@/data/products';
 import type { ProductLookupResult } from '@/domain';
 import { deriveScore, type ScoreInput } from '@/lib/scoring';
 import type { Product, Score } from '@/types';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
+import { ECOPULSE_USER_AGENT } from '@/lib/userAgent';
 
 interface OpenFoodFactsProduct {
   code?: string;
@@ -189,11 +191,12 @@ async function lookupOpenFoodFacts(
     'ecoscore_grade',
     'image_front_url',
   ].join(',');
-  const response = await fetch(
+  const response = await fetchWithRetry(
+    fetch,
     `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(barcode)}.json?fields=${fields}`,
     {
       headers: {
-        'user-agent': options.userAgent ?? process.env.OPEN_FOOD_FACTS_USER_AGENT ?? 'EcoPulse/0.1',
+        'user-agent': options.userAgent ?? process.env.OPEN_FOOD_FACTS_USER_AGENT ?? ECOPULSE_USER_AGENT,
       },
       signal: options.signal,
     }

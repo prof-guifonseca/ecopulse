@@ -3,7 +3,7 @@
 // projeto builda com Turbopack. Sem push (não há backend/VAPID): só os ciclos
 // install / activate / fetch.
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = `ecopulse-shell-${VERSION}`; // app shell: rotas, _next/static, ícones
 const DATA = `ecopulse-data-${VERSION}`; // respostas das APIs (capadas)
 const MEDIA = `ecopulse-media-${VERSION}`; // tiles do mapa + imagens externas (capadas)
@@ -53,8 +53,9 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-  // Tiles do mapa (OpenStreetMap): imutáveis por z/x/y → cache-first.
-  if (url.hostname === 'tile.openstreetmap.org') {
+  // Basemap tiles/glyphs/sprites (OpenFreeMap, com fallback OSM raster):
+  // imutáveis por z/x/y → cache-first.
+  if (url.hostname === 'tiles.openfreemap.org' || url.hostname === 'tile.openstreetmap.org') {
     event.respondWith(cacheFirst(request, MEDIA, MEDIA_MAX));
     return;
   }
