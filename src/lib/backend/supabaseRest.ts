@@ -67,3 +67,25 @@ export async function persistRow(table: string, obj: object): Promise<void> {
     // O MVP precisa seguir navegável mesmo sem Supabase configurado/disponível.
   }
 }
+
+interface StoredRow {
+  data: unknown;
+}
+
+/**
+ * Reads rows from a table via PostgREST and returns each row's `data` payload
+ * (the original contract object). `query` is a PostgREST query string, e.g.
+ * `user_id=eq.<id>&order=created_at.desc&limit=200`. Returns [] when not
+ * configured or on failure, so callers fall back to the in-memory store.
+ */
+export async function supabaseSelectData<T>(table: string, query: string): Promise<T[]> {
+  if (!isSupabaseConfigured()) return [];
+  try {
+    const res = await fetch(`${endpoint(table)}?select=data&${query}`, { headers: headers() });
+    if (!res.ok) return [];
+    const rows = (await res.json()) as StoredRow[];
+    return rows.map((row) => row.data as T);
+  } catch {
+    return [];
+  }
+}

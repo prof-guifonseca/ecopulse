@@ -2,6 +2,7 @@ import { createEcoPulseEvent } from '@/domain';
 import type { ImpactEntry } from '@/domain';
 import { environmentalImpactDeltaForPoint, type EnvironmentalPoint } from '@/lib/esg';
 import { saveEvent, saveImpactEntry } from '@/lib/backend/mvpRepository';
+import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,8 +14,10 @@ export async function POST(request: Request) {
       return Response.json({ error: 'invalid_point' }, { status: 400 });
     }
 
+    const userId = await resolveUserId(request);
     const event = createEcoPulseEvent({
       type: 'map_visit_marked',
+      userId,
       source:
         point.source === 'cache' || point.source === 'demo' || point.source === 'official' || point.source === 'user'
           ? point.source
@@ -31,7 +34,7 @@ export async function POST(request: Request) {
     await saveEvent(event);
 
     const entries = impactEntriesForPoint(point, event.id);
-    await Promise.all(entries.map(saveImpactEntry));
+    await Promise.all(entries.map((entry) => saveImpactEntry(entry, userId)));
     return Response.json({ event, impactEntries: entries }, { status: 201 });
   } catch {
     return Response.json({ error: 'invalid_json' }, { status: 400 });

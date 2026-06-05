@@ -1,5 +1,6 @@
 import { createEcoPulseEvent } from '@/domain';
 import { recordCommunityReaction, saveEvent } from '@/lib/backend/mvpRepository';
+import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,16 +12,18 @@ export async function POST(request: Request) {
     const active = typeof body.active === 'boolean' ? body.active : true;
     if (!postId || !reaction) return Response.json({ error: 'invalid_reaction' }, { status: 400 });
 
+    const userId = await resolveUserId(request);
     const saved = await recordCommunityReaction({
       postId,
       reaction,
       active,
-      userId: typeof body.userId === 'string' ? body.userId : 'local-user',
+      userId,
       updatedAt: new Date().toISOString(),
     });
     await saveEvent(
       createEcoPulseEvent({
         type: 'community_reaction_recorded',
+        userId,
         payload: { postId, reaction, active },
       })
     );

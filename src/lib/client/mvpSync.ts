@@ -1,5 +1,6 @@
 import type { EcoPulseEventPayloads, EcoPulseEventType, ProductLookupResult } from '@/domain';
 import type { EnvironmentalPoint } from '@/lib/esg';
+import { getAccessToken } from './supabaseBrowser';
 
 export function syncEvent<TType extends EcoPulseEventType>(
   type: TType,
@@ -32,9 +33,13 @@ export function syncCommunityComment(comment: {
 
 async function postJson(path: string, body: unknown): Promise<void> {
   try {
+    const token = getAccessToken();
     await fetch(path, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
       body: JSON.stringify(body),
     });
   } catch {

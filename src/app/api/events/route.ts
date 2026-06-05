@@ -1,5 +1,6 @@
 import { createEcoPulseEvent, eventPayloadLooksValid, isEcoPulseEventType, type DataSource } from '@/domain';
 import { saveEvent } from '@/lib/backend/mvpRepository';
+import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     const event = createEcoPulseEvent({
       type,
       payload: payload as never,
-      userId: typeof body.userId === 'string' ? body.userId : 'local-user',
+      userId: await resolveUserId(request),
       source: dataSourceFrom(body.source),
     });
     await saveEvent(event);
