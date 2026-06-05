@@ -7,6 +7,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useUIStore } from '@/store/uiStore';
 import { renderShareCardBlob, type ShareCardData } from '@/lib/share/renderCard';
 import { shareOrDownload } from '@/lib/share/shareImage';
+import { buildSharePath } from '@/lib/share/shareLink';
 
 interface Props {
   data: ShareCardData;
@@ -39,13 +40,15 @@ export function ShareButton({
     setBusy(true);
     try {
       const blob = await renderShareCardBlob(data);
+      const shareUrl = new URL(buildSharePath(data), window.location.origin).toString();
       const outcome = await shareOrDownload(blob, {
         fileName,
         title: 'EcoPulse',
         text: shareText,
+        url: shareUrl,
       });
       if (outcome === 'downloaded') {
-        showToast('Cartão salvo para compartilhar', 'info');
+        showToast('Cartão salvo e link copiado', 'info');
       }
     } catch {
       showToast('Não foi possível gerar o cartão', 'info');
