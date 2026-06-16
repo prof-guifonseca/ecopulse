@@ -8,6 +8,7 @@ import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { useUserStore } from '@/store/userStore';
 import { selectEcoQualityIndex } from '@/lib/ecoMultiplier';
 import { CHAPTERS, chapterProgress, type ChapterId } from '@/lib/journey';
+import { cn } from '@/lib/cn';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 
@@ -52,14 +53,14 @@ export function JourneySection() {
           return (
             <li
               key={c.id}
-              className={
-                'flex shrink-0 items-center gap-1.5 rounded-full border-soft px-2.5 py-1 ' +
-                (isCurrent
+              className={cn(
+                'flex shrink-0 items-center gap-1.5 rounded-full border-soft px-2.5 py-1',
+                isCurrent
                   ? 'bg-tint-green-3 text-[var(--accent-green)] border-active'
                   : isPast
                     ? 'bg-tint-1 text-[var(--text-secondary)]'
-                    : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]')
-              }
+                    : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+              )}
             >
               <Icon icon={I} size={12} />
               <span className="t-micro">{c.label}</span>
