@@ -1,5 +1,6 @@
 import { createEcoPulseEvent } from '@/domain';
 import type { ProductLookupResult, ScanResult } from '@/domain';
+import { asProductId } from '@/types';
 import { saveEvent, saveScan } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
 import { lookupProductByBarcode } from '@/lib/products/productLookup';
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
         source: lookup.source,
         userId,
         payload: {
-          productId: scan.productId,
+          productId: asProductId(scan.productId),
           barcode: scan.barcode,
           score: scan.score,
           source: scan.source,

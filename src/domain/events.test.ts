@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { asProductId } from '@/types';
 import { createEcoPulseEvent, eventPayloadLooksValid, isEcoPulseEventType } from './events';
 
 describe('EcoPulse domain events', () => {
@@ -8,7 +9,7 @@ describe('EcoPulse domain events', () => {
       at: '2026-05-11T09:00:00.000Z',
       source: 'provider',
       payload: {
-        productId: 'off:7891000000001',
+        productId: asProductId('off:7891000000001'),
         barcode: '7891000000001',
         score: 'B',
         source: 'barcode',

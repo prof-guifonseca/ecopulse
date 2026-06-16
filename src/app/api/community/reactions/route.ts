@@ -1,6 +1,7 @@
 import { createEcoPulseEvent } from '@/domain';
 import { recordCommunityReaction, saveEvent } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
+import { asPostId } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
       createEcoPulseEvent({
         type: 'community_reaction_recorded',
         userId,
-        payload: { postId, reaction, active },
+        payload: { postId: asPostId(postId), reaction, active },
       })
     );
     return Response.json({ reaction: saved }, { status: 201 });

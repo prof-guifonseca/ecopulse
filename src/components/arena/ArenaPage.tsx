@@ -13,6 +13,7 @@ import type {
   BattleResult,
   BattleSession,
 } from '@/types';
+import { asBattleId } from '@/types';
 import { useArenaStore } from '@/store/arenaStore';
 import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
@@ -182,7 +183,7 @@ export function ArenaPage() {
       );
       const nextWins = arena.wins + (result.outcome === 'win' ? 1 : 0);
       arena.recordBattle(result, affinity.multiplier);
-      syncEvent('battle_completed', { battleId: result.id, outcome: result.outcome });
+      syncEvent('battle_completed', { battleId: asBattleId(result.id), outcome: result.outcome });
 
       const opponent = ARENA_OPPONENTS.find((item) => item.id === result.opponentId);
       if (result.outcome === 'win') {

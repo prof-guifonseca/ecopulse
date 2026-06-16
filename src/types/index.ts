@@ -1,6 +1,15 @@
 // EcoPulse — shared TypeScript types
 
-export type Score = 'A' | 'B' | 'C' | 'D' | 'E';
+export * from './ids';
+
+/** Canonical eco-score scale, best (A) → worst (E). Single source of truth. */
+export const SCORES = ['A', 'B', 'C', 'D', 'E'] as const;
+export type Score = (typeof SCORES)[number];
+
+/** Boundary guard: narrows untrusted input to a valid {@link Score}. */
+export function isScore(value: unknown): value is Score {
+  return typeof value === 'string' && (SCORES as readonly string[]).includes(value);
+}
 export type BadgeTier = 'bronze' | 'silver' | 'gold' | 'epic';
 export type OutfitTier = 'common' | 'rare' | 'epic';
 export type OutfitSlot =

@@ -1,3 +1,5 @@
+import { assertNever } from '@/lib/assertNever';
+import { isScore } from '@/types';
 import type { DataSource, EcoPulseEvent, EcoPulseEventPayloads, EcoPulseEventType } from './types';
 
 export const ECOPULSE_EVENT_TYPES: EcoPulseEventType[] = [
@@ -44,7 +46,7 @@ export function eventPayloadLooksValid(type: EcoPulseEventType, payload: unknown
     case 'onboarded':
       return typeof item.name === 'string' && typeof item.tribe === 'string' && typeof item.regionId === 'string';
     case 'scan_completed':
-      return typeof item.productId === 'string' && typeof item.score === 'string';
+      return typeof item.productId === 'string' && isScore(item.score);
     case 'product_lookup_completed':
       return typeof item.barcode === 'string' && typeof item.provider === 'string' && typeof item.found === 'boolean';
     case 'map_visit_marked':
@@ -62,6 +64,8 @@ export function eventPayloadLooksValid(type: EcoPulseEventType, payload: unknown
       return typeof item.battleId === 'string' && typeof item.outcome === 'string';
     case 'impact_recorded':
       return typeof item.metric === 'string' && typeof item.value === 'number' && typeof item.unit === 'string';
+    default:
+      return assertNever(type);
   }
 }
 

@@ -1,5 +1,6 @@
 import { createEcoPulseEvent } from '@/domain';
 import { saveEvent } from '@/lib/backend/mvpRepository';
+import { asPointId } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
       type: 'esg_point_verified',
       source: 'user',
       payload: {
-        pointId,
+        pointId: asPointId(pointId),
         status: status as 'visited' | 'closed' | 'incorrect' | 'suggested',
         note,
       },
