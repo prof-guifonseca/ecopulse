@@ -57,6 +57,16 @@ module.exports = {
         dependencyTypesNot: ['type-only'],
       },
     },
+    {
+      name: 'no-external-analytics-sdks',
+      comment:
+        'Telemetry is anonymous + local-only (P7): usage lives in usageCountersStore, never leaves the device. A school project with minors must not ship a third-party analytics/tracking SDK. (Enforced in the module graph rather than ESLint to avoid weakening the per-directory import firewall, which also uses no-restricted-imports.)',
+      severity: 'error',
+      from: { path: '^src/' },
+      to: {
+        path: 'node_modules/(posthog-js|posthog-node|posthog|@posthog|mixpanel-browser|mixpanel|@amplitude|amplitude-js|@segment|analytics-node|react-ga|react-ga4|plausible-tracker|@vercel/analytics|@google-analytics|gtag)(/|$)',
+      },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },

@@ -22,6 +22,10 @@ export interface CommandContext {
   /** Observe a durability gap without throwing — local-first keeps the
    *  optimistic store state; the future outbox/sync will re-deliver. */
   onAppendFailure?: (error: AppError, event: EcoPulseEvent) => void;
+  /** Cross-cutting observation of a successful command — anonymous usage
+   *  telemetry (P7) attaches here, exactly once. Dormant until live flows are
+   *  routed through this seam (PR-5); the composition root wires it. */
+  onCommandExecuted?: (event: EcoPulseEvent) => void;
 }
 
 /**
@@ -41,7 +45,11 @@ export async function executeCommand<Deps, Input, Output>(
 
   const { output, event } = result.value;
   const appended = await ctx.eventStore.append(event);
-  if (!appended.ok) ctx.onAppendFailure?.(appended.error, event);
+  if (appended.ok) {
+    ctx.onCommandExecuted?.(event);
+  } else {
+    ctx.onAppendFailure?.(appended.error, event);
+  }
 
   return ok(output);
 }
