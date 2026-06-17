@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
+import { ErrorState } from '@/components/ui/AsyncState';
 
 export default function MainError({
   error,
@@ -10,32 +12,13 @@ export default function MainError({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Report to Sentry (the group boundary used to swallow these — only
+    // global-error.tsx reported), and log in dev for fast local triage.
+    Sentry.captureException(error);
     if (process.env.NODE_ENV !== 'production') {
       console.error('[ecopulse] (main) error boundary:', error);
     }
   }, [error]);
 
-  return (
-    <div
-      className="flex h-full w-full flex-col items-center justify-center gap-3 px-6 text-center"
-      role="alert"
-    >
-      <p className="t-eyebrow">Algo travou</p>
-      <h2 className="t-headline">Algo travou.</h2>
-      <p className="t-body-sm" style={{ maxWidth: 280 }}>
-        Tente de novo.
-      </p>
-      <button
-        type="button"
-        onClick={reset}
-        className="mt-2 inline-flex h-10 items-center justify-center rounded-[var(--radius-sm)] px-5 text-sm font-semibold"
-        style={{
-          background: 'var(--gradient-primary)',
-          color: 'var(--primary-foreground)',
-        }}
-      >
-        Tentar de novo
-      </button>
-    </div>
-  );
+  return <ErrorState onRetry={reset} />;
 }

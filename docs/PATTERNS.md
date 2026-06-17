@@ -59,8 +59,28 @@ that isn't a `{ state }` envelope, so a malformed shape never reaches a store.
 ## Planned (each lands with its reference + gate)
 
 - **P4 — `useAsync`** (adopts the orphaned `src/lib/net/fetchRetry.ts`). Gate: ban bare `fetch(` in client dirs.
-- **P5 — Loading/Empty/Error primitives + per-segment `error.tsx`**. Gate: structural test that every `(main)` segment has an `error.tsx`.
 - **P7 — Telemetry on the event backbone** (anonymous, no PII; reuses `EcoPulseEvent`). Gate: TS payloads only (no free-form) + ESLint deny-list of external analytics SDKs.
+
+## P5 — Async-state presentation primitives · _landed_
+
+Loading, empty, and error look and read the same everywhere instead of being
+hand-rolled per page. Three pure presentational primitives —
+`Loading` / `EmptyState` / `ErrorState` (`src/components/ui/AsyncState.tsx`,
+props-only, no store, so they compose into both server boundaries and client
+features). Hydration-gated screens render a skeleton until the persisted stores
+rehydrate (the existing `useHydrated`), so the UI never flashes pre-hydration
+store defaults.
+
+- Primitives: `src/components/ui/AsyncState.tsx`
+- References: `(main)/loading.tsx` + `(main)/error.tsx` (the group boundaries;
+  `error.tsx` now also reports to Sentry); `ProfilePage` hydration skeleton;
+  `EmptyState` on the Scanner catalog + Map filtered list.
+- Boundaries are GROUP-level by design — every `(main)` page is a thin client
+  component with no server-side data fetch, so per-segment `error.tsx`/`loading.tsx`
+  would be inert files. The gate freezes the shared pair instead.
+- Gates: structural test that the `(main)` group keeps `error.tsx` + `loading.tsx`
+  (`src/app/(main)/boundaries.test.ts`); the a11y suite waits for hydration
+  (`aria-busy` clear) so it scans the settled UI deterministically.
 
 ## P6 — Anti-Corruption Layer / Adapter (open data) · _landed_
 

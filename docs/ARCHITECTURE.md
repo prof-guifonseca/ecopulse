@@ -48,6 +48,8 @@ are the only place side effects live.
 | API routes parse input, never cast it (`as Record<…>` banned) (P3) | **ESLint** | `src/app/api/**` rule (`eslint.config.mjs`) |
 | Written tables stay in sync with the SQL migration (P3) | **CI** | `npm run schema:check` (`scripts/check-schema.mjs`) |
 | Raw provider shapes never escape `adapters/` (P6) | **CI** | `raw-provider-shapes-stay-in-adapters` (`.dependency-cruiser.cjs`) |
+| The `(main)` group keeps its error + loading boundaries (P5) | **CI** | `src/app/(main)/boundaries.test.ts` |
+| Hydration-gated screens never flash store defaults (P5) | **convention + a11y wait** | `useHydrated` + `AsyncState` primitives |
 
 `npm run lint && typecheck && format:check && tokens:check && schema:check && type-coverage && depcruise && test:coverage && build && test:e2e && test:a11y && audit` is the full gate; CI runs it on every PR.
 
