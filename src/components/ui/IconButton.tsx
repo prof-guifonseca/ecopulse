@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/cn';
 
@@ -31,12 +31,21 @@ interface Props
 
 /**
  * IconButton — circular icon-only button. Always set `aria-label` — the icon
- * is decorative.
+ * is decorative. forwardRef so it can back a Radix `asChild` slot (e.g.
+ * Dialog.Close).
  */
-export function IconButton({ icon, size, variant, className, type = 'button', ...props }: Props) {
+export const IconButton = forwardRef<HTMLButtonElement, Props>(function IconButton(
+  { icon, size, variant, className, type = 'button', ...props },
+  ref,
+) {
   return (
-    <button type={type} className={cn(iconButtonVariants({ size, variant }), className)} {...props}>
+    <button
+      ref={ref}
+      type={type}
+      className={cn(iconButtonVariants({ size, variant }), className)}
+      {...props}
+    >
       {icon}
     </button>
   );
-}
+});

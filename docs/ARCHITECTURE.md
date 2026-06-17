@@ -58,24 +58,27 @@ existing call sites resolve unchanged; they are removed once swept (see below).
 
 ## shadcn migration status
 
-- **Done**: `components.json`; the token system; `class-variance-authority`
+- **Done**: `components.json`; the shadcn token system (canonical names are the
+  sole source of truth — the legacy aliases were swept out); `class-variance-authority`
   as the variant mechanism across the `ui` primitives (`Button`, `Card`,
   `IconButton`, `IconTile`, `ListCard`, `Tile`, `ScoreBadge`) + `Badge`;
-  `asChild`/Slot on `Button`.
-- **Deferred (needs a supervised session — interaction-regression risk)**:
-  - Radix-backed interactive primitives: `Modal → Dialog/Drawer` (custom
-    drag-dismiss + tested focus trap), `Tabs → Radix Tabs`, `Toasts → sonner`.
-  - The repo-wide `var()`/arbitrary-value sweep + promoting the arbitrary-value
-    ban to `error` on `ui`/`shared`, then deleting the legacy token aliases.
-    Blocked on adding semantic token slots for the values that have none yet
-    (gold tints, `color-mix` surfaces).
+  `asChild`/Slot on `Button`; **`Toasts → sonner`** (the store's `showToast`
+  routes to sonner; `<Toaster>` is themed to the editorial card).
+- **Kept custom, by design (not deferred)**:
+  - **`Modal`** stays a hand-rolled portal with its own focus trap / Escape /
+    focus-return. A Radix Dialog migration was attempted and reverted: Radix's
+    focus-restore lifecycle is driven by its `open` state, which conflicts with
+    this app's store-driven *external* unmount (`uiStore.modal = null`), breaking
+    the e2e focus-return guarantees. The custom Modal is a11y-complete and
+    covered by those e2e tests, so it is the better choice here.
+  - **`Tabs`** stays custom: the usage is a panel-less segmented control, so
+    Radix Tabs would emit a dangling `aria-controls` (an a11y regression).
 
 ## Known tech debt (reported, not blocking)
 
-- **4 circular dependencies** (`depcruise` warns): `lib/esg/* ↔ store/gameStore`,
-  `data/products ↔ openFoodFactsProducts`, `map/MapCanvas ↔ MapCanvasClient`.
-  Break them, then promote `no-circular` to `error`.
-- **Coverage floor is a ratchet** at ~50% of the functional core; target is 80%.
-  Raise the thresholds in `vitest.config.ts` as tests are added.
+- **Coverage floor is a ratchet** at lines 85 / functions 85 / branches 72 of
+  the functional core (currently ~90% lines); raise toward 100% as the IO shell
+  gains tests.
 - **Pre-commit `eslint-plugin-boundaries`** was rejected (broken v6 resolver);
-  import boundaries are enforced by `no-restricted-imports` + `depcruise`.
+  import boundaries are enforced by `no-restricted-imports` + `depcruise`
+  (`no-circular` is now `error` — the graph is fully acyclic).
