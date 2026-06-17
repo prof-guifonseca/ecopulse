@@ -8,11 +8,13 @@ import { useUIStore } from '@/store/uiStore';
 import { useArenaStore } from '@/store/arenaStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { useCurrentRegion } from '@/lib/region';
+import { useHydrated } from '@/hooks/useHydrated';
 import { GEAR_SETS } from '@/data';
 import { Avatar } from '@/components/shared/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Tabs } from '@/components/ui/Tabs';
+import { Loading } from '@/components/ui/AsyncState';
 import { PageShell } from '@/components/ui/PageShell';
 import { Card } from '@/components/ui/Card';
 import { gardenStage, GARDEN_LABEL } from '@/lib/garden';
@@ -39,6 +41,7 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
+  const hydrated = useHydrated();
   const [tab, setTab] = useState<TabValue>(initialTab);
   const name = useUserStore((s) => s.name);
   const avatarLoadout = useUserStore((s) => s.avatarLoadout);
@@ -56,6 +59,18 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
   const defeated = useArenaStore((s) => s.defeatedOpponents);
   const history = useScanHistoryStore((s) => s.history);
   const region = useCurrentRegion();
+
+  // Gate on hydration so the profile never paints pre-rehydration store
+  // defaults (name/level/xp/tokens/badges) and pops to real values — the same
+  // guard Home/Community/Arena already use. All hooks run above this return.
+  if (!hydrated) {
+    return (
+      <PageShell spacing={5}>
+        <Loading label="Carregando perfil…" />
+      </PageShell>
+    );
+  }
+
   const tribeId = (tribe ?? 'guardioes') as TribeId;
   const tribeLabel = TRIBES[tribeId]?.label ?? 'Guardiões';
   const activeSet = GEAR_SETS.find((item) => item.id === avatarLoadout.activeSetId);

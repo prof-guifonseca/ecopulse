@@ -142,6 +142,11 @@ for (const route of routes) {
     if (route === '/map') await mockEsgPlaces(page);
     await page.goto(route, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('body')).toBeVisible();
+    // Scan the hydrated UI, not a transient pre-hydration frame: hydration-gated
+    // screens (Home/Community/Arena/Profile) briefly render a loading skeleton
+    // (role=status, aria-busy) before swapping in content. Wait for any such
+    // busy indicator to clear so axe measures the settled page deterministically.
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
 
     const results = await new AxeBuilder({ page }).analyze();
     const blockingViolations = results.violations.filter((violation) =>

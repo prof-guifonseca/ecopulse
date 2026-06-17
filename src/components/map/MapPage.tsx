@@ -25,6 +25,7 @@ import {
 } from '@/lib/esg';
 import { Icon } from '@/components/ui/Icon';
 import { Chip } from '@/components/ui/Chip';
+import { EmptyState } from '@/components/ui/AsyncState';
 import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { Button } from '@/components/ui/Button';
@@ -334,51 +335,58 @@ export function MapPage() {
       </div>
 
       {panel === 'places' ? (
-        <ListCard className="stagger">
-          {pins.map((point) => {
-            const Lucide = resolveIcon(ENVIRONMENTAL_CATEGORY_ICON[point.category]) ?? MapPin;
-            const isVisited = visited.includes(point.id);
-            const distance = formatDistanceMeters(
-              approximateDistanceM(focusCenter ?? region.center, {
-                lat: point.lat,
-                lng: point.lng,
-              }),
-            );
-            return (
-              <li key={point.id}>
-                <button
-                  onClick={() => openPoint(point)}
-                  className="hover:bg-tint-2 flex w-full items-center gap-3 px-4 py-3 text-left transition-colors"
-                >
-                  <span
-                    className={cn(
-                      'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
-                      isVisited
-                        ? 'border-active bg-tint-green-2 text-[var(--primary)]'
-                        : 'border-soft bg-tint-2 text-[var(--text-secondary)]',
-                    )}
+        pins.length === 0 ? (
+          <EmptyState
+            title="Nenhum ponto neste filtro"
+            description="Tente outro filtro, busque outra região ou atualize a lista."
+          />
+        ) : (
+          <ListCard className="stagger">
+            {pins.map((point) => {
+              const Lucide = resolveIcon(ENVIRONMENTAL_CATEGORY_ICON[point.category]) ?? MapPin;
+              const isVisited = visited.includes(point.id);
+              const distance = formatDistanceMeters(
+                approximateDistanceM(focusCenter ?? region.center, {
+                  lat: point.lat,
+                  lng: point.lng,
+                }),
+              );
+              return (
+                <li key={point.id}>
+                  <button
+                    onClick={() => openPoint(point)}
+                    className="hover:bg-tint-2 flex w-full items-center gap-3 px-4 py-3 text-left transition-colors"
                   >
-                    <Icon icon={Lucide} size={16} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="t-title truncate">{point.name}</h3>
-                    <p className="t-caption truncate">
-                      {distance} · {point.address}
-                    </p>
-                    <p className="t-micro mt-0.5 tracking-normal text-[var(--muted-foreground)]">
-                      {ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança {point.confidence}%
-                    </p>
-                  </div>
-                  <Icon
-                    icon={ChevronRight}
-                    size={16}
-                    className="shrink-0 text-[var(--muted-foreground)]"
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ListCard>
+                    <span
+                      className={cn(
+                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
+                        isVisited
+                          ? 'border-active bg-tint-green-2 text-[var(--primary)]'
+                          : 'border-soft bg-tint-2 text-[var(--text-secondary)]',
+                      )}
+                    >
+                      <Icon icon={Lucide} size={16} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="t-title truncate">{point.name}</h3>
+                      <p className="t-caption truncate">
+                        {distance} · {point.address}
+                      </p>
+                      <p className="t-micro mt-0.5 tracking-normal text-[var(--muted-foreground)]">
+                        {ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança {point.confidence}%
+                      </p>
+                    </div>
+                    <Icon
+                      icon={ChevronRight}
+                      size={16}
+                      className="shrink-0 text-[var(--muted-foreground)]"
+                    />
+                  </button>
+                </li>
+              );
+            })}
+          </ListCard>
+        )
       ) : (
         <ListCard>
           {events.map((event) => (

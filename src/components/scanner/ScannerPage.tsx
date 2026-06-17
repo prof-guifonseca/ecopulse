@@ -24,6 +24,7 @@ import { listProductCatalog, pickRealSampleProduct } from '@/lib/products/catalo
 import { scanRecordFromLookup } from '@/lib/products/scanRecord';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/AsyncState';
 import { Icon } from '@/components/ui/Icon';
 import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
@@ -384,9 +385,11 @@ export function ScannerPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <p className="t-body-sm mt-4 text-center">
-            Nada encontrado para &ldquo;{query.trim()}&rdquo;.
-          </p>
+          <EmptyState
+            className="mt-4"
+            title="Nada encontrado"
+            description={`Nenhum produto para “${query.trim()}”.`}
+          />
         ) : (
           <ListCard tone="flat" className="stagger mt-4">
             {filtered.map((product) => (
