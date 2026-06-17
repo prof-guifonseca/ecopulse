@@ -6,7 +6,8 @@ Status: accepted (2026-06-17) · Phase 2, PR-1
 
 Imperative state mutations were ad-hoc: each `src/lib/*Actions.ts` read several
 Zustand stores via `getState()`, mutated them with no contract, no typed
-failure, and (in `performScan`) `throw`. Persistence was fire-and-forget —
+failure, and (in `performScan` — the dead module since removed in PR-5) `throw`.
+Persistence was fire-and-forget —
 `mvpSync.postJson` and `supabaseRest.persistRow` swallowed errors, so a failed
 write was invisible (silent data-loss risk). There was no seam to attach
 cross-cutting concerns (telemetry, future retry) exactly once.

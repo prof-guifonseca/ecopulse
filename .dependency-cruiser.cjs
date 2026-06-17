@@ -58,6 +58,14 @@ module.exports = {
       },
     },
     {
+      name: 'no-deep-imports-into-barreled-features',
+      comment:
+        "A feature that exposes a public barrel (index.ts) is imported THROUGH it, never by reaching into its internals — types included (the barrel re-exports them). Scoped to the features that actually have a stable, framework-free barrel today (esg); enrolling a feature here is the deliberate act of declaring its public surface. (A feature whose barrel is 'use client' — e.g. region — could not serve type-only server consumers and would need a types carve-out before being enrolled.)",
+      severity: 'error',
+      from: { pathNot: ['^src/lib/esg/'] },
+      to: { path: ['^src/lib/esg/(?!index)'] },
+    },
+    {
       name: 'no-external-analytics-sdks',
       comment:
         'Telemetry is anonymous + local-only (P7): usage lives in usageCountersStore, never leaves the device. A school project with minors must not ship a third-party analytics/tracking SDK. (Enforced in the module graph rather than ESLint to avoid weakening the per-directory import firewall, which also uses no-restricted-imports.)',

@@ -1,10 +1,7 @@
 import { MAP_POINTS } from '@/data/mapPoints';
 import { PRODUCTS } from '@/data/products';
 import type { DataSource, ScanResult } from '@/domain';
-import {
-  ENVIRONMENTAL_CATEGORY_LABELS,
-  mapPointTypeToEnvironmentalCategory,
-} from '@/lib/esg/categories';
+import { ENVIRONMENTAL_CATEGORY_LABELS, mapPointTypeToEnvironmentalCategory } from '@/lib/esg';
 import type { FeedPost, Score } from '@/types';
 
 export interface CommunityFeedPost extends FeedPost {
