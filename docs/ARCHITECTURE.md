@@ -43,8 +43,12 @@ are the only place side effects live.
 | Functional-core test coverage ≥ floor | **CI** | `vitest` thresholds (`vitest.config.ts`) |
 | Module graph: layer boundaries + cycle report | **CI** | `npm run depcruise` |
 | Commit messages are conventional | **pre-commit** | commitlint |
+| Commands never import the store runtime / never `throw` (P1) | **ESLint** | `commands/**` rules (`eslint.config.mjs`) |
+| Commands depend on ports, never on adapters (P2) | **CI** | `commands-use-ports-not-adapters` (`.dependency-cruiser.cjs`) |
 
 `npm run lint && typecheck && format:check && tokens:check && type-coverage && depcruise && test:coverage && build && test:e2e && test:a11y && audit` is the full gate; CI runs it on every PR.
+
+The **generative** patterns (how to build features + move data) live in [docs/PATTERNS.md](PATTERNS.md); architecture decisions in [docs/adr/](adr/).
 
 ## Design tokens
 

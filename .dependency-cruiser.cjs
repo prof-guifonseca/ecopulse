@@ -32,6 +32,14 @@ module.exports = {
       },
     },
     {
+      name: 'commands-use-ports-not-adapters',
+      comment:
+        'Commands (P1) depend on the ports (interfaces), never on concrete adapters — dependency inversion. The composition root wires the adapter.',
+      severity: 'error',
+      from: { path: '^src/lib/(commands|.*/commands)/' },
+      to: { path: ['^src/lib/persistence/', '^src/lib/backend/'] },
+    },
+    {
       name: 'data-has-no-framework',
       comment: 'Static data must not import React, Next, or the store at runtime.',
       severity: 'error',

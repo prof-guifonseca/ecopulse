@@ -157,6 +157,35 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // Commands (P1) are pure orchestration: they receive store actions via
+  // injected deps (never import the store runtime) and never throw (return a
+  // Result err instead). The composition root does the wiring.
+  {
+    files: ['src/lib/commands/**/*.ts', 'src/lib/**/commands/**/*.ts'],
+    ignores: TEST_GLOBS,
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/store', '@/store/**'],
+              message:
+                'Commands must not import the store — receive store actions via injected deps.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ThrowStatement',
+          message: 'Commands must not throw — return err(AppError) instead.',
+        },
+      ],
+    },
+  },
+
   // ---------------------------------------------------------------------------
   // Type & composition discipline (PR-B).
   // ---------------------------------------------------------------------------
