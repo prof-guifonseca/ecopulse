@@ -4,20 +4,50 @@
 :root {
   color-scheme: dark;
 
-  /* ---------- Surfaces ---------- */
-  --bg-primary: #070b0f;     /* app canvas */
-  --bg-secondary: #0d1418;   /* default surface */
-  --bg-elevated: #111c21;    /* elevated surface */
+  /* =========================================================
+     Canonical design tokens — shadcn/ui semantic naming.
+     These hold EcoPulse's literal dark-editorial values and are
+     the single source of truth. The bespoke names below (--bg-*,
+     --text-*, --accent-green, …) are kept as deprecated aliases so
+     existing call sites keep resolving during the migration; they
+     are swept away in the shadcn lock-in. New code styles through
+     these tokens (or the Tailwind utilities they back).
+     ========================================================= */
+  --background: #070b0f;            /* app canvas */
+  --foreground: #f5f7f2;
+  --card: #0d1418;                  /* default surface */
+  --card-foreground: #f5f7f2;
+  --popover: #111c21;               /* elevated surface */
+  --popover-foreground: #f5f7f2;
+  --primary: #72d376;               /* brand green */
+  --primary-foreground: #071008;
+  --secondary: #111c21;
+  --secondary-foreground: #f5f7f2;
+  --muted: #111c21;
+  --muted-foreground: #9aa59f;
+  --accent: #16242a;                /* hover/active surface */
+  --accent-foreground: #f5f7f2;
+  --destructive: #e0706c;
+  --destructive-foreground: #071008;
+  --border: rgba(255, 255, 255, 0.075);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: rgba(114, 211, 118, 0.38);
+  --radius: 12px;
 
-  /* ---------- Text ---------- */
-  --text-primary: #f5f7f2;
+  /* ---------- Surfaces (aliases → canonical) ---------- */
+  --bg-primary: var(--background);   /* app canvas */
+  --bg-secondary: var(--card);       /* default surface */
+  --bg-elevated: var(--popover);     /* elevated surface */
+
+  /* ---------- Text (aliases → canonical) ---------- */
+  --text-primary: var(--foreground);
   --text-secondary: #b8c0b8;
-  --text-muted: #9aa59f;
+  --text-muted: var(--muted-foreground);
 
   /* ---------- Brand ---------- */
-  --accent-green: #72d376;
+  --accent-green: var(--primary);
   --accent-gold: #d8ad4d;
-  --accent-red: #e0706c;
+  --accent-red: var(--destructive);
   --accent-cyan: #66bed6;
   --accent-orange: #d5915a;
   --accent-gps: #5aa9ff;
@@ -30,7 +60,7 @@
   --score-e: var(--accent-red);
 
   /* On-gradient text (for primary/reward buttons & chips) */
-  --on-primary: #071008;
+  --on-primary: var(--primary-foreground);
   --on-reward: #160f05;
 
   /* Deep canvas — used by hero gradients and the desktop body background.
@@ -41,7 +71,7 @@
 
   /* Focus ring — composed of an inner darken plus an outer brand glow */
   --focus-ring-inner: rgba(7, 11, 15, 0.95);
-  --focus-ring-outer: rgba(114, 211, 118, 0.38);
+  --focus-ring-outer: var(--ring);
 
   /* ---------- Tints (white) ---------- */
   /* Use exclusively for subtle inset surfaces. */
@@ -56,9 +86,9 @@
   --tint-green-3: color-mix(in srgb, var(--accent-green) 15%, transparent);
   --tint-green-4: color-mix(in srgb, var(--accent-green) 28%, transparent);
 
-  /* ---------- Lines ---------- */
-  --line-soft: rgba(255, 255, 255, 0.075);
-  --line-strong: rgba(255, 255, 255, 0.15);
+  /* ---------- Lines (soft/strong alias → canonical border/input) ---------- */
+  --line-soft: var(--border);
+  --line-strong: var(--input);
   --line-active: color-mix(in srgb, var(--accent-green) 38%, transparent);
 
   /* ---------- Glass (header, nav, modals) ---------- */
@@ -110,6 +140,29 @@
 }
 
 @theme inline {
+  /* shadcn/ui semantic color utilities — bg-background, text-foreground,
+     bg-card, bg-primary, text-muted-foreground, border-border, ring-ring, … */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-DEFAULT: var(--radius);
+
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-elevated: var(--bg-elevated);
