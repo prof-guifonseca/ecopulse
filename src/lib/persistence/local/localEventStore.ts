@@ -1,6 +1,7 @@
 import type { EventStore } from '@/lib/ports/eventStore';
 import { persistenceError } from '@/lib/ports/appError';
 import { err, ok } from '@/lib/ports/result';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { getAccessToken } from '@/lib/client/supabaseBrowser';
 
 /**
@@ -17,19 +18,29 @@ export const localEventStore: EventStore = {
   async append(event) {
     try {
       const token = getAccessToken();
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          ...(token ? { authorization: `Bearer ${token}` } : {}),
+      // Single attempt (retries: 0): not idempotent under retry yet — the route
+      // re-mints `at` via createEcoPulseEvent, so a retried POST gets a fresh
+      // event id and lands a duplicate row. We route through fetchWithRetry for
+      // the uniform client fetch path; safe retry waits on sending a client
+      // idempotency key (the body omits `at`/`id` today). Deferred.
+      const response = await fetchWithRetry(
+        fetch,
+        '/api/events',
+        {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            ...(token ? { authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            type: event.type,
+            payload: event.payload,
+            source: event.source,
+            userId: event.userId,
+          }),
         },
-        body: JSON.stringify({
-          type: event.type,
-          payload: event.payload,
-          source: event.source,
-          userId: event.userId,
-        }),
-      });
+        { retries: 0 },
+      );
       if (!response.ok) {
         return err(persistenceError(`event append failed`, String(response.status)));
       }

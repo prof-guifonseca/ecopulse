@@ -205,6 +205,34 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // Client code goes through useAsync / fetchWithRetry (P4), never a bare
+  // `fetch(` — so every client→BFF call gets retry + cancellation and a uniform
+  // error contract (no more silent fire-and-forget). Server code (lib/backend,
+  // lib/esg, lib/products, app/api) is out of scope; `fetchWithRetry(fetch, …)`
+  // is allowed everywhere (the `fetch` there is an argument, not a call). The
+  // `.tsx` half of this rule lives in the `src/**/*.tsx` block below, because
+  // flat-config replaces (not merges) `no-restricted-syntax` per file — keeping
+  // it there lets a component get both the className and the no-bare-fetch checks.
+  {
+    files: [
+      'src/components/**/*.ts',
+      'src/hooks/**/*.ts',
+      'src/lib/client/**/*.ts',
+      'src/lib/persistence/**/*.ts',
+    ],
+    ignores: TEST_GLOBS,
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='fetch']",
+          message:
+            'No bare fetch() in client code — use useAsync (src/hooks/useAsync.ts) or fetchWithRetry(fetch, …) for retry + cancellation.',
+        },
+      ],
+    },
+  },
+
   // ---------------------------------------------------------------------------
   // Type & composition discipline (PR-B).
   // ---------------------------------------------------------------------------
@@ -220,8 +248,17 @@ const eslintConfig = defineConfig([
     rules: {
       // Force className composition through cn() — never a template literal or
       // string concatenation (cn() de-duplicates and resolves Tailwind conflicts).
+      // Plus the no-bare-fetch check (P4): a component must never call `fetch(`
+      // directly — go through useAsync / fetchWithRetry, or a server-side lib
+      // data function. (Co-located with the className rules because flat-config
+      // replaces `no-restricted-syntax` per file rather than merging.)
       'no-restricted-syntax': [
         'error',
+        {
+          selector: "CallExpression[callee.name='fetch']",
+          message:
+            'No bare fetch() in a component — use useAsync (src/hooks/useAsync.ts), fetchWithRetry(fetch, …), or a server-side lib data function.',
+        },
         {
           selector:
             "JSXAttribute[name.name='className'] > JSXExpressionContainer > TemplateLiteral",
