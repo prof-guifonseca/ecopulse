@@ -10,6 +10,23 @@ export type Score = (typeof SCORES)[number];
 export function isScore(value: unknown): value is Score {
   return typeof value === 'string' && (SCORES as readonly string[]).includes(value);
 }
+
+/** Accumulated real-world environmental impact (persisted in the game store).
+ *  Declared here, not in the store, so the pure esg layer can reference the
+ *  shape without importing the store (which would form a cycle). */
+export interface RealImpact {
+  /** Trees planted via donation (s6) or chapter-end ritual. */
+  treesPlanted: number;
+  /** Estimated kg of batteries dropped off (0.5 kg per visit). */
+  batteriesKgEstimated: number;
+  /** Estimated liters of cooking oil delivered (1 L per visit). */
+  oilLitersEstimated: number;
+  /** Repairs registered (1 per reparo visit). */
+  repairsCount: number;
+  /** Exchanges/swaps registered (1 per troca visit). */
+  exchangesCount: number;
+}
+
 export type BadgeTier = 'bronze' | 'silver' | 'gold' | 'epic';
 export type OutfitTier = 'common' | 'rare' | 'epic';
 export type OutfitSlot =

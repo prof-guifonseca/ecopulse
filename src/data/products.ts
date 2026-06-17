@@ -1,22 +1,9 @@
 import { deriveScore } from '@/lib/scoring';
 import type { Product, Score } from '@/types';
 import { OPEN_FOOD_FACTS_PRODUCTS, OPEN_FOOD_FACTS_SNAPSHOT_META } from './openFoodFactsProducts';
+import type { OpenFoodFactsSnapshotProduct } from './openFoodFactsTypes';
 
-export interface OpenFoodFactsSnapshotProduct {
-  code: string;
-  productName: string;
-  brand: string;
-  categories: string;
-  categoriesTags: readonly string[];
-  packaging: string;
-  packagingTags: readonly string[];
-  countriesTags: readonly string[];
-  novaGroup: 1 | 2 | 3 | 4 | null;
-  ecoscoreGrade: string | null;
-  imageUrl?: string;
-  sourceUrl: string;
-  evidenceFields: readonly string[];
-}
+export type { OpenFoodFactsSnapshotProduct } from './openFoodFactsTypes';
 
 export const PRODUCTS: Product[] = OPEN_FOOD_FACTS_PRODUCTS.map((item) => {
   const scoreInput = {

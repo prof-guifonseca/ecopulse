@@ -1,16 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { Region } from '@/lib/region/types';
-import type { EnvironmentalPoint } from '@/lib/esg';
+import type { MapCanvasProps } from './mapCanvas.types';
 
-export interface MapCanvasProps {
-  region: Region;
-  points: EnvironmentalPoint[];
-  visitedPointIds: string[];
-  focusCenter?: { lat: number; lng: number };
-  onSelectPoint: (point: EnvironmentalPoint) => void;
-}
+export type { MapCanvasProps };
 
 const MapCanvasClient = dynamic(
   () => import('./MapCanvasClient').then((mod) => mod.MapCanvasClient),

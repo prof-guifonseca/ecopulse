@@ -2,26 +2,13 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { DailyMissionsProgress, Score } from '@/types';
+import type { DailyMissionsProgress, RealImpact, Score } from '@/types';
 import {
   environmentalImpactDeltaForPoint,
   getOfficialEnvironmentalPointById,
   getRegisteredEnvironmentalPoint,
 } from '@/lib/esg';
 import { createSafeJSONStorage, readLegacyState } from './storage';
-
-export interface RealImpact {
-  /** Trees planted via donation (s6) or chapter-end ritual. */
-  treesPlanted: number;
-  /** Estimated kg of batteries dropped off (0.5 kg per visit). */
-  batteriesKgEstimated: number;
-  /** Estimated liters of cooking oil delivered (1 L per visit). */
-  oilLitersEstimated: number;
-  /** Repairs registered (1 per reparo visit). */
-  repairsCount: number;
-  /** Exchanges/swaps registered (1 per troca visit). */
-  exchangesCount: number;
-}
 
 const EMPTY_REAL_IMPACT: RealImpact = {
   treesPlanted: 0,

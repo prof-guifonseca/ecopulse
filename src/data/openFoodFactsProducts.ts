@@ -1,4 +1,4 @@
-import type { OpenFoodFactsSnapshotProduct } from './products';
+import type { OpenFoodFactsSnapshotProduct } from './openFoodFactsTypes';
 
 export const OPEN_FOOD_FACTS_SNAPSHOT_META = {
   sourceName: 'Open Food Facts',
