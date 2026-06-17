@@ -37,9 +37,27 @@ composition point (`src/lib/runtime/composition.ts`) with zero feature churn.
 - Adapter (now): `src/lib/persistence/local/localEventStore.ts`
 - Gate: dependency-cruiser `commands-use-ports-not-adapters` (commands import ports, never `persistence/**` or `backend/**`).
 
+## P3 — Boundary parse-don't-validate · _landed_
+
+Every untrusted edge (an API body, a persisted JSON blob) is **parsed** into a
+typed value or a typed `AppError` — never cast. A tiny tree-shakeable combinator
+(`Parser<T> = (unknown) => Result<T, AppError>`, ~60 lines) composes primitives
+into one parser per event type; `parseEventEnvelope` narrows `{ type, payload }`
+at the route, replacing the old boolean `eventPayloadLooksValid` (which narrowed
+nothing and forced a `payload as never`). Deliberately **not zod** — the repo
+already speaks branded factories + `isScore` + `assertNever`, and the PWA bundle
+stays lean. The rehydration boundary (`parsePersistedState`) discards any blob
+that isn't a `{ state }` envelope, so a malformed shape never reaches a store.
+
+- Combinator + parsers: `src/domain/parse.ts` (`isRecord` leaf: `src/lib/isRecord.ts`)
+- References: `src/app/api/events/route.ts` (`parseEventEnvelope`); the five other
+  `api/**` handlers use the `isRecord` boundary guard; `src/store/storage.ts`
+  (`parsePersistedState`)
+- Gates: ESLint bans `as Record<…>` in `src/app/api/**`; `npm run schema:check`
+  (code-written tables ⊆ migration tables); round-trip test (`parse.test.ts`).
+
 ## Planned (each lands with its reference + gate)
 
-- **P3 — Boundary parse-don't-validate** (no zod): per-event parsers replacing `eventPayloadLooksValid`, + `parsePersistedState` on rehydrate. Gate: ban `as Record<string,unknown>` in API routes + `schema:check` CI drift.
 - **P4 — `useAsync`** (adopts the orphaned `src/lib/net/fetchRetry.ts`). Gate: ban bare `fetch(` in client dirs.
 - **P5 — Loading/Empty/Error primitives + per-segment `error.tsx`**. Gate: structural test that every `(main)` segment has an `error.tsx`.
 - **P6 — Anti-Corruption Layer / Adapter** for open-data providers (Open Food Facts, ESG). Gate: depcruise — raw provider types never escape `adapters/`.

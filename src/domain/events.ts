@@ -1,5 +1,3 @@
-import { assertNever } from '@/lib/assertNever';
-import { isScore } from '@/types';
 import type { DataSource, EcoPulseEvent, EcoPulseEventPayloads, EcoPulseEventType } from './types';
 
 export const ECOPULSE_EVENT_TYPES: EcoPulseEventType[] = [
@@ -37,52 +35,6 @@ export function createEcoPulseEvent<TType extends EcoPulseEventType>(input: {
     source: input.source ?? 'user',
     payload: input.payload,
   };
-}
-
-export function eventPayloadLooksValid(type: EcoPulseEventType, payload: unknown): boolean {
-  if (!payload || typeof payload !== 'object') return false;
-  const item = payload as Record<string, unknown>;
-  switch (type) {
-    case 'onboarded':
-      return (
-        typeof item.name === 'string' &&
-        typeof item.tribe === 'string' &&
-        typeof item.regionId === 'string'
-      );
-    case 'scan_completed':
-      return typeof item.productId === 'string' && isScore(item.score);
-    case 'product_lookup_completed':
-      return (
-        typeof item.barcode === 'string' &&
-        typeof item.provider === 'string' &&
-        typeof item.found === 'boolean'
-      );
-    case 'map_visit_marked':
-      return typeof item.pointId === 'string' && typeof item.category === 'string';
-    case 'esg_point_verified':
-      return typeof item.pointId === 'string' && typeof item.status === 'string';
-    case 'post_liked':
-    case 'promise_created':
-      return typeof item.postId === 'string';
-    case 'community_reaction_recorded':
-      return (
-        typeof item.postId === 'string' &&
-        typeof item.reaction === 'string' &&
-        typeof item.active === 'boolean'
-      );
-    case 'daily_bonus_claimed':
-      return typeof item.day === 'string';
-    case 'battle_completed':
-      return typeof item.battleId === 'string' && typeof item.outcome === 'string';
-    case 'impact_recorded':
-      return (
-        typeof item.metric === 'string' &&
-        typeof item.value === 'number' &&
-        typeof item.unit === 'string'
-      );
-    default:
-      return assertNever(type);
-  }
 }
 
 function stableEventId(type: string, at: string, userId: string, payload: unknown): string {

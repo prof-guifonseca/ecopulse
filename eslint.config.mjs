@@ -186,6 +186,25 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // API route handlers sit on the untrusted edge: parse input, never cast it.
+  // A structural `as Record<…>` skips validation and lets a malformed body flow
+  // inward typed-as-safe. Use a boundary parser instead (src/domain/parse.ts):
+  // `isRecord(body)` guard or `parseEventEnvelope` (P3).
+  {
+    files: ['src/app/api/**/*.ts'],
+    ignores: TEST_GLOBS,
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'TSAsExpression > TSTypeReference[typeName.name="Record"]',
+          message:
+            'Do not cast request input with `as Record<…>` — parse it at the boundary (src/domain/parse.ts: isRecord / parseEventEnvelope).',
+        },
+      ],
+    },
+  },
+
   // ---------------------------------------------------------------------------
   // Type & composition discipline (PR-B).
   // ---------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import { createEcoPulseEvent } from '@/domain';
+import { createEcoPulseEvent, isRecord } from '@/domain';
 import { recordCommunityReaction, saveEvent } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
 import { asPostId } from '@/types';
@@ -7,7 +7,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body: unknown = await request.json();
+    if (!isRecord(body)) return Response.json({ error: 'invalid_reaction' }, { status: 400 });
     const postId = typeof body.postId === 'string' ? body.postId : '';
     const reaction =
       body.reaction === 'promise' ? 'promise' : body.reaction === 'like' ? 'like' : null;

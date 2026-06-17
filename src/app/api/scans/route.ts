@@ -1,4 +1,4 @@
-import { createEcoPulseEvent } from '@/domain';
+import { createEcoPulseEvent, isRecord } from '@/domain';
 import type { ProductLookupResult, ScanResult } from '@/domain';
 import { asProductId } from '@/types';
 import { saveEvent, saveScan } from '@/lib/backend/mvpRepository';
@@ -10,7 +10,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body: unknown = await request.json();
+    if (!isRecord(body)) return Response.json({ error: 'invalid_scan' }, { status: 400 });
     const lookup = await resolveLookup(body);
     if (!lookup) return Response.json({ error: 'invalid_scan' }, { status: 400 });
 

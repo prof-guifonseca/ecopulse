@@ -49,6 +49,9 @@ jobs:
       - name: Token drift
         run: npm run tokens:check
 
+      - name: Schema drift
+        run: npm run schema:check
+
       - name: Typecheck
         run: npm run typecheck
 
