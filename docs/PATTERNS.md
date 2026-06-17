@@ -60,8 +60,20 @@ that isn't a `{ state }` envelope, so a malformed shape never reaches a store.
 
 - **P4 — `useAsync`** (adopts the orphaned `src/lib/net/fetchRetry.ts`). Gate: ban bare `fetch(` in client dirs.
 - **P5 — Loading/Empty/Error primitives + per-segment `error.tsx`**. Gate: structural test that every `(main)` segment has an `error.tsx`.
-- **P6 — Anti-Corruption Layer / Adapter** for open-data providers (Open Food Facts, ESG). Gate: depcruise — raw provider types never escape `adapters/`.
 - **P7 — Telemetry on the event backbone** (anonymous, no PII; reuses `EcoPulseEvent`). Gate: TS payloads only (no free-form) + ESLint deny-list of external analytics SDKs.
+
+## P6 — Anti-Corruption Layer / Adapter (open data) · _landed_
+
+Each open-data provider talks to us in its own wire format; we never let that
+format leak inward. The raw shapes live in `adapters/*.raw.ts` (provider
+warts and all), and the adapter is the **only** module that fetches, narrows,
+and translates them into a domain type. Callers receive `ProductLookupResult` /
+`EnvironmentalPoint` / `GeocodedPlace` — never the provider shape. A provider
+changing its JSON is now a one-file edit.
+
+- Products: `src/lib/products/adapters/openFoodFacts.ts` (+ `.raw.ts`) — `fetchOpenFoodFactsProduct` / `normalizeOpenFoodFactsProduct`; `productLookup.ts` is a thin orchestrator (cache → adapter → catalog → unknown).
+- ESG: `src/lib/esg/adapters/openStreetMap.ts` (+ `.raw.ts`) — `normalizeOverpassResponse` accepts `unknown` so the Overpass provider never names the raw type; `src/lib/esg/adapters/nominatim.ts` (+ `.raw.ts`) — `geocodePlace`.
+- Gate: dependency-cruiser `raw-provider-shapes-stay-in-adapters` — nothing outside `adapters/` may import a `*.raw.ts`; golden-fixture tests (`openStreetMap.test.ts`, `productLookup.test.ts`).
 
 ## How to add a feature (target shape — finalized in P5)
 

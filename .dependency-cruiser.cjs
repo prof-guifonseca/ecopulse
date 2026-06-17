@@ -40,6 +40,14 @@ module.exports = {
       to: { path: ['^src/lib/persistence/', '^src/lib/backend/'] },
     },
     {
+      name: 'raw-provider-shapes-stay-in-adapters',
+      comment:
+        'Raw external-provider response shapes (P6, anti-corruption layer) are declared in `*.raw.ts` and may be imported only within their adapter directory. The rest of the app consumes the domain types the adapter returns (ProductLookupResult, EnvironmentalPoint, GeocodedPlace), never the provider wire format.',
+      severity: 'error',
+      from: { pathNot: ['^src/lib/(products|esg)/adapters/'] },
+      to: { path: ['^src/lib/(products|esg)/adapters/.*\\.raw\\.ts$'] },
+    },
+    {
       name: 'data-has-no-framework',
       comment: 'Static data must not import React, Next, or the store at runtime.',
       severity: 'error',

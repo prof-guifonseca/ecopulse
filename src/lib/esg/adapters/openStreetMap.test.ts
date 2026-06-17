@@ -1,12 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LONDRINA } from '@/data/regions/londrina';
+import { clearEsgSearchCache, searchEnvironmentalPlaces } from '@/lib/esg';
 import {
   buildOverpassQuery,
-  clearEsgSearchCache,
   normalizeOsmElement,
   normalizeOverpassResponse,
-  searchEnvironmentalPlaces,
-} from '@/lib/esg';
+} from './openStreetMap';
 
 describe('ESG OpenStreetMap integration', () => {
   afterEach(() => {
@@ -64,6 +63,13 @@ describe('ESG OpenStreetMap integration', () => {
     });
 
     expect(points.map((point) => point.category)).toEqual(['electronics', 'cooking_oil']);
+  });
+
+  it('defends against malformed Overpass payloads (the raw type never escapes)', () => {
+    expect(normalizeOverpassResponse(null)).toEqual([]);
+    expect(normalizeOverpassResponse('nope')).toEqual([]);
+    expect(normalizeOverpassResponse({})).toEqual([]);
+    expect(normalizeOverpassResponse({ elements: 'not-an-array' })).toEqual([]);
   });
 
   it('builds bounded Overpass queries for selected ESG categories', () => {

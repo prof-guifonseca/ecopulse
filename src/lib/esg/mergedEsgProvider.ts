@@ -1,6 +1,6 @@
 import { LONDRINA } from '@/data/regions/londrina';
 import { bboxFromCenter } from './geo';
-import { geocodePlace } from './nominatimProvider';
+import { geocodePlace } from './adapters/nominatim';
 import { createOverpassProvider } from './overpassProvider';
 import { createOfficialSnapshotProvider } from './officialSnapshotProvider';
 import type { EsgPlaceSearchInput, EsgPlaceSearchResult } from './types';
