@@ -83,9 +83,25 @@ double-count impact. Safe write-retry waits on a client idempotency key
   (the `fetch` is an argument). Server code (`lib/backend`, `lib/esg`,
   `lib/products`, `app/api`) is out of scope.
 
-## Planned (each lands with its reference + gate)
+## P7 — Anonymous usage telemetry · _landed_
 
-- **P7 — Telemetry on the event backbone** (anonymous, no PII; reuses `EcoPulseEvent`). Gate: TS payloads only (no free-form) + ESLint deny-list of external analytics SDKs.
+The only analytics a school project with minors should ship: a **local** count of
+what happened, never who or what. `usageCountersStore` projects the EcoPulse
+action vocabulary into `counts['YYYY-MM-DD'][key] = n` — local-first, **no
+network, no external SDK, no PII**. PII is structurally impossible: `recordUsage`
+takes a closed `UsageCounterKey` and stores a number — never an event payload, an
+id, or any free-form string. `onboarded` (its payload carries a display name) and
+`impact_recorded` are deliberately uncounted.
+
+- Store + API: `src/store/usageCountersStore.ts` (`recordUsage`,
+  `usageKeyForEventType`, `recordUsageForEventType`).
+- Emission (live today): the typed `mvpSync.sync*` client wrappers bump by closed
+  key. Emission (dormant): a `onCommandExecuted` hook on `CommandContext`
+  (`executeCommand` → `composition.ts`) lights up once PR-5 routes flows through
+  the seam.
+- Gates: dependency-cruiser `no-external-analytics-sdks` (bans posthog/mixpanel/
+  amplitude/segment/ga/plausible/… — preventive); TS closed-key signature (no
+  free-form); a no-PII round-trip test (`usageCountersStore.test.ts`).
 
 ## P5 — Async-state presentation primitives · _landed_
 

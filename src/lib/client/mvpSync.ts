@@ -1,20 +1,28 @@
 import type { EcoPulseEventPayloads, EcoPulseEventType, ProductLookupResult } from '@/domain';
 import type { EnvironmentalPoint } from '@/lib/esg';
 import { fetchWithRetry } from '@/lib/net/fetchRetry';
+import { recordUsage, recordUsageForEventType } from '@/store/usageCountersStore';
 import { getAccessToken } from './supabaseBrowser';
+
+// These wrappers are the live client chokepoints for real user actions, so they
+// also record one ANONYMOUS usage count (P7) — by closed event-type key only,
+// never the payload. The count is local; it does not depend on the POST.
 
 export function syncEvent<TType extends EcoPulseEventType>(
   type: TType,
   payload: EcoPulseEventPayloads[TType],
 ): void {
+  recordUsageForEventType(type);
   void postJson('/api/events', { type, payload });
 }
 
 export function syncScan(lookup: ProductLookupResult, source: 'barcode' | 'manual'): void {
+  recordUsage('scan_completed');
   void postJson('/api/scans', { lookup, source });
 }
 
 export function syncMapVisit(point: EnvironmentalPoint): void {
+  recordUsage('map_visit_marked');
   void postJson('/api/esg/visits', { point });
 }
 
@@ -23,6 +31,11 @@ export function syncCommunityReaction(
   reaction: 'like' | 'promise',
   active = true,
 ): void {
+  // Count only the ADD of a reaction, not its removal — un-liking must not bump
+  // the "like reactions today" signal (recordUsage ignores `active`, so gate here).
+  if (active) {
+    recordUsage(reaction === 'promise' ? 'community_reaction_promise' : 'community_reaction_like');
+  }
   void postJson('/api/community/reactions', { postId, reaction, active });
 }
 
@@ -33,6 +46,7 @@ export function syncCommunityComment(comment: {
   userAvatar?: string;
   userId?: string;
 }): void {
+  recordUsage('community_comment');
   void postJson('/api/community/comments', comment);
 }
 
