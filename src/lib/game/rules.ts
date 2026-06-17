@@ -1,3 +1,4 @@
+import { assertNever } from '@/lib/assertNever';
 import type { GearSet, SkinPack, SkinUnlock } from '@/types';
 
 /**
@@ -39,8 +40,11 @@ export function meetsSkinUnlock(unlock: SkinUnlock, snap: GameSnapshot): boolean
           return snap.completedChallengesCount >= unlock.value;
         case 'tutorials':
           return snap.completedTutorialsCount >= unlock.value;
+        default:
+          return assertNever(unlock.metric);
       }
-      return false;
+    default:
+      return assertNever(unlock);
   }
 }
 

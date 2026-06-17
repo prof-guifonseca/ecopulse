@@ -1,5 +1,5 @@
 import type { EnvironmentalPoint } from '@/lib/esg';
-import type { Score } from '@/types';
+import type { BattleId, PointId, PostId, ProductId, Score } from '@/types';
 
 export type DataSource = 'user' | 'provider' | 'cache' | 'official' | 'simulation' | 'demo';
 
@@ -32,7 +32,7 @@ export interface EcoPulseEventPayloads {
     regionId: string;
   };
   scan_completed: {
-    productId: string;
+    productId: ProductId;
     barcode?: string;
     score: Score;
     source: DataSource | 'barcode' | 'manual' | 'scan-action' | 'scanner' | 'first-run' | 'simulator';
@@ -45,7 +45,7 @@ export interface EcoPulseEventPayloads {
     score?: Score;
   };
   map_visit_marked: {
-    pointId: string;
+    pointId: PointId;
     source: EnvironmentalPoint['source'];
     category: EnvironmentalPoint['category'];
     lat: number;
@@ -53,18 +53,18 @@ export interface EcoPulseEventPayloads {
     confidence: number;
   };
   esg_point_verified: {
-    pointId: string;
+    pointId: PointId;
     status: 'visited' | 'closed' | 'incorrect' | 'suggested';
     note?: string;
   };
   post_liked: {
-    postId: string;
+    postId: PostId;
   };
   promise_created: {
-    postId: string;
+    postId: PostId;
   };
   community_reaction_recorded: {
-    postId: string;
+    postId: PostId;
     reaction: 'like' | 'promise';
     active: boolean;
   };
@@ -72,7 +72,7 @@ export interface EcoPulseEventPayloads {
     day: string;
   };
   battle_completed: {
-    battleId: string;
+    battleId: BattleId;
     outcome: 'win' | 'loss' | 'draw';
   };
   impact_recorded: {

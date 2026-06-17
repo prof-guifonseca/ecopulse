@@ -1,5 +1,6 @@
 import { createEcoPulseEvent } from '@/domain';
 import type { ImpactEntry } from '@/domain';
+import { asPointId } from '@/types';
 import { environmentalImpactDeltaForPoint, type EnvironmentalPoint } from '@/lib/esg';
 import { saveEvent, saveImpactEntry } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
           ? point.source
           : 'provider',
       payload: {
-        pointId: point.id,
+        pointId: asPointId(point.id),
         source: point.source,
         category: point.category,
         lat: point.lat,
