@@ -30,6 +30,7 @@ import { ListCard } from '@/components/ui/ListCard';
 import { PageShell } from '@/components/ui/PageShell';
 import { Button } from '@/components/ui/Button';
 import { resolveIcon } from '@/lib/iconRegistry';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { cn } from '@/lib/cn';
 import { MapCanvas } from './MapCanvas';
 import type { LatLng, RegionBBox } from '@/lib/region/types';
@@ -122,7 +123,7 @@ export function MapPage() {
       if (opts.query) params.set('q', opts.query);
 
       try {
-        const response = await fetch(`/api/esg/places?${params.toString()}`, {
+        const response = await fetchWithRetry(fetch, `/api/esg/places?${params.toString()}`, {
           signal: opts.signal,
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);

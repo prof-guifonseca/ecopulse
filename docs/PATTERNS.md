@@ -56,9 +56,35 @@ that isn't a `{ state }` envelope, so a malformed shape never reaches a store.
 - Gates: ESLint bans `as Record<…>` in `src/app/api/**`; `npm run schema:check`
   (code-written tables ⊆ migration tables); round-trip test (`parse.test.ts`).
 
+## P4 — `useAsync` + client fetch discipline · _landed_
+
+Every client→BFF call goes through one state machine with retry + cancellation,
+never a bare `fetch(`. `useAsync(task, { onError })` wraps a task in
+loading/success/error state with an AbortController that cancels the previous run
+and aborts on unmount (a late response never sets state on a gone component; an
+aborted run is a no-op, not an error). The task pairs with `fetchWithRetry`
+(previously orphaned — used only by server adapters).
+
+**Retry policy — retry reads, not writes.** Retry is enabled on the idempotent
+**GET**s (`ScannerPage` product lookup, `MapPage` ESG places). The **POST** sync
+calls (`mvpSync`, `localEventStore`) go through `fetchWithRetry` for the single
+uniform client fetch path but with `retries: 0`, because they are **not
+idempotent under retry yet**: the routes re-mint `at` via `createEcoPulseEvent`
+(and comments a fresh UUID), so a retried POST would land a duplicate row /
+double-count impact. Safe write-retry waits on a client idempotency key
+(deferred). This is why `fetchWithRetry` takes a `retries` option.
+
+- Hook: `src/hooks/useAsync.ts`
+- References: `ScannerPage` barcode lookup (via `useAsync`, retried); `MapPage`
+  ESG fetch (retried); `mvpSync` + `localEventStore` POSTs (`fetchWithRetry`,
+  `retries: 0`).
+- Gate: ESLint bans bare `fetch(` in client dirs (`components/**`, `hooks/**`,
+  `lib/client/**`, `lib/persistence/**`); `fetchWithRetry(fetch, …)` is allowed
+  (the `fetch` is an argument). Server code (`lib/backend`, `lib/esg`,
+  `lib/products`, `app/api`) is out of scope.
+
 ## Planned (each lands with its reference + gate)
 
-- **P4 — `useAsync`** (adopts the orphaned `src/lib/net/fetchRetry.ts`). Gate: ban bare `fetch(` in client dirs.
 - **P7 — Telemetry on the event backbone** (anonymous, no PII; reuses `EcoPulseEvent`). Gate: TS payloads only (no free-form) + ESLint deny-list of external analytics SDKs.
 
 ## P5 — Async-state presentation primitives · _landed_

@@ -16,6 +16,8 @@ import { useUserStore } from '@/store/userStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore, type ScanRecord } from '@/store/scanHistoryStore';
 import { useBarcodeScanner } from '@/hooks/useBarcodeScanner';
+import { useAsync } from '@/hooks/useAsync';
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { hapticTap } from '@/lib/haptic';
 import { awardTokens, unlockBadge } from '@/lib/gameActions';
 import type { ProductLookupResult } from '@/domain';
@@ -41,8 +43,7 @@ const DEMO_DATA_ENABLED = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === 'true';
 export function ScannerPage() {
   const [query, setQuery] = useState('');
   const [barcodeInput, setBarcodeInput] = useState('');
-  const [scanning, setScanning] = useState(false);
-  const [lookupError, setLookupError] = useState<string | null>(null);
+  const [demoScanning, setDemoScanning] = useState(false);
   const [lastBarcode, setLastBarcode] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
   const router = useRouter();
@@ -61,6 +62,24 @@ export function ScannerPage() {
   const history = useScanHistoryStore((s) => s.history);
   const products = useMemo(() => listProductCatalog(), []);
   const sampleProduct = useMemo(() => pickRealSampleProduct(), []);
+
+  // The barcode lookup runs through useAsync (P4): cancellable + retried on a
+  // transient network blip, with one place for the error toast.
+  const lookup = useAsync(
+    async (signal: AbortSignal, barcode: string) => {
+      const response = await fetchWithRetry(
+        fetch,
+        `/api/products/lookup?barcode=${encodeURIComponent(barcode)}`,
+        { signal },
+      );
+      if (!response.ok) throw new Error('lookup-failed');
+      return (await response.json()) as ProductLookupResult;
+    },
+    { onError: () => showToast('Consulta indisponível', 'info') },
+  );
+  const runLookup = lookup.run;
+  const scanning = lookup.isLoading || demoScanning;
+  const lookupError = lookup.error ? 'Não foi possível consultar o barcode agora.' : null;
 
   const firstRun = welcome && !firstScanCompleted;
   const awaitingFirstClose = useRef(false);
@@ -119,29 +138,20 @@ export function ScannerPage() {
       const barcode = rawBarcode.replace(/\D/g, '');
       if (barcode.length < 6 || scanning) return;
       hapticTap();
-      setScanning(true);
-      setLookupError(null);
       setLastBarcode(null);
 
-      try {
-        const response = await fetch(`/api/products/lookup?barcode=${encodeURIComponent(barcode)}`);
-        if (!response.ok) throw new Error('lookup-failed');
-        const lookup = (await response.json()) as ProductLookupResult;
-        const record = scanRecordFromLookup(lookup, source);
-        completeScan(record, source);
-        syncScan(lookup, source);
-        showToast(
-          lookup.found ? 'Produto identificado' : 'Registro manual criado',
-          lookup.found ? 'success' : 'info',
-        );
-      } catch {
-        setLookupError('Não foi possível consultar o barcode agora.');
-        showToast('Consulta indisponível', 'info');
-      } finally {
-        setScanning(false);
-      }
+      const result = await runLookup(barcode);
+      if (!result) return; // aborted, or failed (onError already toasted)
+
+      const record = scanRecordFromLookup(result, source);
+      completeScan(record, source);
+      syncScan(result, source);
+      showToast(
+        result.found ? 'Produto identificado' : 'Registro manual criado',
+        result.found ? 'success' : 'info',
+      );
     },
-    [completeScan, scanning, showToast],
+    [completeScan, runLookup, scanning, showToast],
   );
 
   const {
@@ -167,9 +177,9 @@ export function ScannerPage() {
   const triggerScan = () => {
     if (scanning || !DEMO_DATA_ENABLED) return;
     hapticTap();
-    setScanning(true);
+    lookup.reset(); // clear any stale barcode-lookup error before the demo ritual
+    setDemoScanning(true);
     setLastBarcode(null);
-    setLookupError(null);
 
     window.setTimeout(() => {
       void import('@/demo/simulatedScan')
@@ -181,10 +191,10 @@ export function ScannerPage() {
           completeScan(record, 'demo');
         })
         .catch(() => {
-          setLookupError('Demo indisponível.');
+          showToast('Demo indisponível', 'info');
         })
         .finally(() => {
-          setScanning(false);
+          setDemoScanning(false);
         });
     }, SCAN_RITUAL_MS);
   };
