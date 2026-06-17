@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { cn } from '@/lib/cn';
 import './globals.css';
 import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
 import { SupabaseAuthInit } from '@/components/auth/SupabaseAuthInit';
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="pt-BR"
       data-scroll-behavior="smooth"
-      className={`${inter.variable} antialiased`}
+      className={cn(inter.variable, 'antialiased')}
     >
       <body>
         {children}
