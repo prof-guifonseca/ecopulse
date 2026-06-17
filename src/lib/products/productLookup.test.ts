@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeOpenFoodFactsProduct, productLookupResultFromCatalog } from './productLookup';
+import { normalizeOpenFoodFactsProduct } from './adapters/openFoodFacts';
+import { productLookupResultFromCatalog } from './productLookup';
 import { PRODUCTS } from '@/data/products';
 
 describe('product lookup normalization', () => {

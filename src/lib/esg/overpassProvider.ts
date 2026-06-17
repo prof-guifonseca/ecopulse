@@ -1,5 +1,5 @@
 import { bboxFromCenter } from './geo';
-import { buildOverpassQuery, normalizeOverpassResponse, type OverpassResponse } from './osm';
+import { buildOverpassQuery, normalizeOverpassResponse } from './adapters/openStreetMap';
 import type { EsgPlaceProvider, EsgPlaceSearchInput, EsgPlaceSearchResult } from './types';
 import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { ECOPULSE_CONTACT_URL, ECOPULSE_USER_AGENT } from '@/lib/userAgent';
@@ -51,7 +51,7 @@ export function createOverpassProvider(options: OverpassProviderOptions = {}): E
           throw new Error(`Overpass request failed with ${response.status}`);
         }
 
-        const data = (await response.json()) as OverpassResponse;
+        const data: unknown = await response.json();
         const categoryFilter = new Set(input.categories ?? []);
         const points = normalizeOverpassResponse(data)
           .filter(

@@ -1,13 +1,13 @@
 import type { LatLng, RegionBBox } from '@/lib/region/types';
 import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { ECOPULSE_CONTACT_URL, ECOPULSE_USER_AGENT } from '@/lib/userAgent';
+import type { NominatimPlace } from './nominatim.raw';
 
-interface NominatimPlace {
-  display_name?: string;
-  lat?: string;
-  lon?: string;
-  boundingbox?: [string, string, string, string];
-}
+/**
+ * Nominatim geocoding adapter (P6 — anti-corruption layer). Translates the raw
+ * provider response (`*.raw.ts`) into the domain `GeocodedPlace`. The raw shape
+ * and its `as NominatimPlace[]` cast stay here, at the boundary.
+ */
 
 export interface GeocodedPlace {
   label: string;

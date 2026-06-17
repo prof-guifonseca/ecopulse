@@ -1,22 +1,15 @@
+import { isRecord } from '@/lib/isRecord';
 import type { RegionBBox } from '@/lib/region/types';
-import { ENVIRONMENTAL_CATEGORY_DETAIL_LABELS } from './categories';
-import type { EnvironmentalCategory, EnvironmentalPoint, EsgPlaceSearchInput } from './types';
+import { ENVIRONMENTAL_CATEGORY_DETAIL_LABELS } from '../categories';
+import type { EnvironmentalCategory, EnvironmentalPoint, EsgPlaceSearchInput } from '../types';
+import type { OsmElement } from './openStreetMap.raw';
 
-export interface OsmElement {
-  type: 'node' | 'way' | 'relation';
-  id: number;
-  lat?: number;
-  lon?: number;
-  center?: {
-    lat: number;
-    lon: number;
-  };
-  tags?: Record<string, string>;
-}
-
-export interface OverpassResponse {
-  elements?: OsmElement[];
-}
+/**
+ * OpenStreetMap / Overpass adapter (P6 — anti-corruption layer). The single
+ * place the provider's raw shapes (`*.raw.ts`) are translated into the domain
+ * `EnvironmentalPoint`. `normalizeOverpassResponse` accepts `unknown` and
+ * narrows internally, so callers (the Overpass provider) never name the raw type.
+ */
 
 type OsmSelector =
   | { key: string; value: string }
@@ -123,9 +116,11 @@ export function normalizeOsmElement(element: OsmElement): EnvironmentalPoint | n
   };
 }
 
-export function normalizeOverpassResponse(data: OverpassResponse): EnvironmentalPoint[] {
-  const points = (data.elements ?? [])
-    .map(normalizeOsmElement)
+export function normalizeOverpassResponse(data: unknown): EnvironmentalPoint[] {
+  const elements: unknown[] =
+    isRecord(data) && Array.isArray(data.elements) ? (data.elements as unknown[]) : [];
+  const points = elements
+    .map((element) => normalizeOsmElement(element as OsmElement))
     .filter((point): point is EnvironmentalPoint => point !== null);
   return dedupeEnvironmentalPoints(points);
 }
