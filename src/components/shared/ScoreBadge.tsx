@@ -1,30 +1,29 @@
+import { cva, type VariantProps } from 'class-variance-authority';
 import type { Score } from '@/types';
 import { cn } from '@/lib/cn';
 
-type Size = 'sm' | 'md' | 'lg';
+export const scoreBadgeVariants = cva(
+  'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
+  {
+    variants: {
+      size: {
+        sm: 'h-9 w-9 text-xs',
+        md: 'h-11 w-11 text-sm',
+        lg: 'h-14 w-14 text-base',
+      },
+    },
+    defaultVariants: { size: 'md' },
+  },
+);
 
-interface Props {
+interface Props extends VariantProps<typeof scoreBadgeVariants> {
   score: Score;
-  size?: Size;
   className?: string;
 }
 
-const SIZE_CLASSES: Record<Size, string> = {
-  sm: 'h-9 w-9 text-xs',
-  md: 'h-11 w-11 text-sm',
-  lg: 'h-14 w-14 text-base',
-};
-
-export function ScoreBadge({ score, size = 'md', className }: Props) {
+export function ScoreBadge({ score, size, className }: Props) {
   return (
-    <span
-      data-score={score}
-      className={cn(
-        'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
-        SIZE_CLASSES[size],
-        className,
-      )}
-    >
+    <span data-score={score} className={cn(scoreBadgeVariants({ size }), className)}>
       {score}
     </span>
   );
