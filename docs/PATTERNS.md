@@ -97,8 +97,8 @@ id, or any free-form string. `onboarded` (its payload carries a display name) an
   `usageKeyForEventType`, `recordUsageForEventType`).
 - Emission (live today): the typed `mvpSync.sync*` client wrappers bump by closed
   key. Emission (dormant): a `onCommandExecuted` hook on `CommandContext`
-  (`executeCommand` → `composition.ts`) lights up once PR-5 routes flows through
-  the seam.
+  (`executeCommand` → `composition.ts`) lights up once a future PR routes a live
+  flow through the seam (deferred — see "How to add a feature").
 - Gates: dependency-cruiser `no-external-analytics-sdks` (bans posthog/mixpanel/
   amplitude/segment/ga/plausible/… — preventive); TS closed-key signature (no
   free-form); a no-PII round-trip test (`usageCountersStore.test.ts`).
@@ -137,17 +137,34 @@ changing its JSON is now a one-file edit.
 - ESG: `src/lib/esg/adapters/openStreetMap.ts` (+ `.raw.ts`) — `normalizeOverpassResponse` accepts `unknown` so the Overpass provider never names the raw type; `src/lib/esg/adapters/nominatim.ts` (+ `.raw.ts`) — `geocodePlace`.
 - Gate: dependency-cruiser `raw-provider-shapes-stay-in-adapters` — nothing outside `adapters/` may import a `*.raw.ts`; golden-fixture tests (`openStreetMap.test.ts`, `productLookup.test.ts`).
 
-## How to add a feature (target shape — finalized in P5)
+## How to add a feature (the realized convention) · _landed_
+
+The convention is **tiered, not uniform** — a feature grows the parts it needs,
+and each part is enforced where it exists. (We deliberately did **not** force
+every folder into a `rules.ts` + `commands/` + `index.ts` triad: that would be
+churn without payoff for a solo-maintained MVP.)
 
 ```
 src/lib/<feature>/
-  rules.ts        pure, framework-free (the functional core)
-  commands/*.ts   imperative orchestration (P1), deps injected
-  index.ts        barrel (the public surface)
+  rules.ts          pure, framework-free core — when the feature has deterministic logic
+  adapters/*.raw.ts external wire formats (P6) — when it talks to an open-data provider
+  index.ts          public barrel — ONLY when the feature has external consumers + a stable surface
+src/lib/commands/<command>.ts   event-emitting mutations (P1) live FLAT here, not per-feature
+src/store/, src/lib/<x>Actions.ts   the only side-effect sites (functional core / imperative shell)
 ```
-UI calls `executeCommand(<command>, deps, input, commandContext)`; reads come
-from selectors; async I/O goes through `useAsync` (P4) rendered with the
-async-state primitives (P5).
+
+**Checklist:**
+
+- Pure logic? → `rules.ts` (no React/Next/store; type-only store refs OK). Enforced by the core firewall + `pure-core-stays-pure`.
+- External wire format? → `adapters/<provider>.ts` + `.raw.ts`; nothing outside `adapters/` imports a `.raw.ts` (`raw-provider-shapes-stay-in-adapters`).
+- A mutation that emits a domain event? → a command in `src/lib/commands/` — deps injected, ports not adapters, no `@/store`, no `throw` (the `commands/**` gates). Run it via `executeCommand(command, deps, input, commandContext)`.
+- A plain store mutation / shared reward? → a store action, or an `*Actions` module (e.g. `gameActions.awardTokens`). These stay top-level; they are cross-cutting, not feature-owned.
+- External consumers + a stable surface? → add an `index.ts` barrel and **enumerate the feature** in the `no-deep-imports-into-barreled-features` depcruise rule (that enumeration is the act of declaring its public surface). Otherwise skip the barrel. The barrel re-exports the feature's types too, so type imports go through it as well — everything via `index.ts`.
+- UI: read via selectors; async I/O via `useAsync` (P4) rendered with the `AsyncState` primitives (P5); gate un-hydrated reads behind `useHydrated`.
+
+Commands currently live flat in `src/lib/commands/`; the `commands/**` ESLint +
+depcruise globs already match a future per-feature `commands/`, so the nested
+form is anticipated but not required today.
 
 ## Explicitly deferred (kept healthy, not enterprise)
 

@@ -53,6 +53,7 @@ are the only place side effects live.
 | Client code never uses a bare `fetch(` (retry + cancel via `useAsync`/`fetchWithRetry`) (P4) | **ESLint** | client-dir `no-restricted-syntax` (`eslint.config.mjs`) |
 | No external analytics/tracking SDK — telemetry is anonymous + local (P7) | **CI** | `no-external-analytics-sdks` (`.dependency-cruiser.cjs`) |
 | Usage counters hold numbers keyed by a closed union — no PII by construction (P7) | **TS + test** | `UsageCounterKey` + `usageCountersStore.test.ts` |
+| A barreled feature is imported through its `index.ts`, not by reaching inside | **CI** | `no-deep-imports-into-barreled-features` (`.dependency-cruiser.cjs`) |
 
 `npm run lint && typecheck && format:check && tokens:check && schema:check && type-coverage && depcruise && test:coverage && build && test:e2e && test:a11y && audit` is the full gate; CI runs it on every PR.
 
