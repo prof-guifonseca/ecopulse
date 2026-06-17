@@ -17,7 +17,7 @@ export function ImpactPanel({ history }: { history: ScanRecord[] }) {
     <Card tone="solid" padded={false} className="px-4 py-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="t-title">Seu impacto</h2>
-        <span className="rounded-[var(--radius-sm)] border-soft bg-tint-1 px-2 py-1 t-caption">
+        <span className="border-soft bg-tint-1 t-caption rounded-[var(--radius-sm)] px-2 py-1">
           Open Food Facts
         </span>
       </div>
@@ -27,12 +27,12 @@ export function ImpactPanel({ history }: { history: ScanRecord[] }) {
           impacto estimado por evidências dos produtos
         </span>
       </div>
-      <div className="grid grid-cols-3 divide-x divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border-soft bg-tint-1">
+      <div className="border-soft bg-tint-1 grid grid-cols-3 divide-x divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)]">
         <ImpactMetric icon={SearchCheck} value={String(scannedCount)} label="avaliados" />
         <ImpactMetric icon={Recycle} value={String(withEvidence)} label="com evidência" />
         <ImpactMetric icon={Leaf} value={`${confidence}%`} label="confiança" reward />
       </div>
-      <p className="mt-3 t-caption text-[var(--text-muted)]">
+      <p className="t-caption mt-3 text-[var(--text-muted)]">
         <span className="text-[var(--text-secondary)]">Avaliados</span> e{' '}
         <span className="text-[var(--text-secondary)]">com evidência</span> são contagens reais dos
         seus scans (barcodes Open Food Facts/cache); a{' '}
@@ -56,9 +56,17 @@ function ImpactMetric({
 }) {
   return (
     <div className="min-w-0 px-2 py-4 text-center">
-      <Icon icon={icon} size={18} className={reward ? 'mx-auto text-[var(--accent-gold)]' : 'mx-auto text-[var(--accent-green)]'} />
-      <p className="mt-2 truncate text-lg font-extrabold leading-none text-[var(--text-primary)]">{value}</p>
-      <p className="mt-1 truncate t-caption">{label}</p>
+      <Icon
+        icon={icon}
+        size={18}
+        className={
+          reward ? 'mx-auto text-[var(--accent-gold)]' : 'mx-auto text-[var(--accent-green)]'
+        }
+      />
+      <p className="mt-2 truncate text-lg leading-none font-extrabold text-[var(--text-primary)]">
+        {value}
+      </p>
+      <p className="t-caption mt-1 truncate">{label}</p>
     </div>
   );
 }

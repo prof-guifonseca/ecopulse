@@ -1,7 +1,10 @@
 import { MAP_POINTS } from '@/data/mapPoints';
 import { PRODUCTS } from '@/data/products';
 import type { DataSource, ScanResult } from '@/domain';
-import { ENVIRONMENTAL_CATEGORY_LABELS, mapPointTypeToEnvironmentalCategory } from '@/lib/esg/categories';
+import {
+  ENVIRONMENTAL_CATEGORY_LABELS,
+  mapPointTypeToEnvironmentalCategory,
+} from '@/lib/esg/categories';
 import type { FeedPost, Score } from '@/types';
 
 export interface CommunityFeedPost extends FeedPost {
@@ -39,7 +42,10 @@ export interface CommunityFeedInput {
 export function buildRealCommunityFeed(input: CommunityFeedInput): CommunityFeedPost[] {
   const userPosts = [
     ...input.scans.slice(0, 6).map((scan) => scanPost(scan, input.viewerName)),
-    ...input.visitedPointIds.slice(0, 6).map((pointId) => visitPost(pointId, input.viewerName)).filter(Boolean),
+    ...input.visitedPointIds
+      .slice(0, 6)
+      .map((pointId) => visitPost(pointId, input.viewerName))
+      .filter(Boolean),
   ].filter((post): post is CommunityFeedPost => Boolean(post));
 
   const fallback = userPosts.length > 0 ? [] : realStarterPosts();
@@ -47,7 +53,7 @@ export function buildRealCommunityFeed(input: CommunityFeedInput): CommunityFeed
     [...userPosts, ...fallback],
     input.likedPostIds,
     input.promisedPostIds,
-    input.commentCounts
+    input.commentCounts,
   );
 }
 
@@ -147,7 +153,7 @@ function realStarterPosts(): CommunityFeedPost[] {
       source: 'cache',
       sourceLabel: product.sourceName ?? 'Open Food Facts snapshot',
       sourceUrl: product.sourceUrl,
-    })
+    }),
   );
 
   return [...points, ...products];
@@ -190,7 +196,7 @@ function applyViewerState(
   posts: CommunityFeedPost[],
   likedPostIds: readonly string[],
   promisedPostIds: readonly string[],
-  commentCounts: Readonly<Record<string, number>> = {}
+  commentCounts: Readonly<Record<string, number>> = {},
 ): CommunityFeedPost[] {
   const liked = new Set(likedPostIds);
   const promised = new Set(promisedPostIds);

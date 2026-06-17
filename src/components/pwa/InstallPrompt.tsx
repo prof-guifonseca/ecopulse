@@ -48,8 +48,7 @@ export function InstallPrompt() {
 
     const ua = navigator.userAgent.toLowerCase();
     const ios =
-      /iphone|ipad|ipod/.test(ua) &&
-      !(window as unknown as { MSStream?: unknown }).MSStream;
+      /iphone|ipad|ipod/.test(ua) && !(window as unknown as { MSStream?: unknown }).MSStream;
     if (ios) {
       reveal(true);
       return;
@@ -98,18 +97,14 @@ export function InstallPrompt() {
 
   return (
     <div className="px-4 pb-2 sm:px-8">
-      <div className="mx-auto flex w-full max-w-[var(--content-width)] items-center gap-3 rounded-[var(--radius-md)] border-soft bg-tint-2 px-4 py-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-green-2 text-[var(--accent-green)]">
+      <div className="border-soft bg-tint-2 mx-auto flex w-full max-w-[var(--content-width)] items-center gap-3 rounded-[var(--radius-md)] px-4 py-3">
+        <span className="bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
           <Icon icon={isIOS ? Share : Download} size={18} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="t-body-sm font-semibold text-[var(--text-primary)]">
-            Instalar o EcoPulse
-          </p>
+          <p className="t-body-sm font-semibold text-[var(--text-primary)]">Instalar o EcoPulse</p>
           {isIOS ? (
-            <p className="t-caption">
-              Toque em Compartilhar e em “Adicionar à Tela de Início”.
-            </p>
+            <p className="t-caption">Toque em Compartilhar e em “Adicionar à Tela de Início”.</p>
           ) : (
             <p className="t-caption">Acesse direto da tela inicial, mesmo offline.</p>
           )}
@@ -123,7 +118,7 @@ export function InstallPrompt() {
           type="button"
           onClick={dismiss}
           aria-label="Dispensar"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-tint-3 hover:text-[var(--text-primary)]"
+          className="hover:bg-tint-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
         >
           <Icon icon={X} size={16} />
         </button>

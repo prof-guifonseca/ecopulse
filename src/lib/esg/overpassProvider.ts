@@ -24,7 +24,9 @@ export function createOverpassProvider(options: OverpassProviderOptions = {}): E
 
   return {
     async search(input: EsgPlaceSearchInput): Promise<EsgPlaceSearchResult> {
-      const bbox = input.bbox ?? (input.center ? bboxFromCenter(input.center, input.radiusMeters ?? 3500) : undefined);
+      const bbox =
+        input.bbox ??
+        (input.center ? bboxFromCenter(input.center, input.radiusMeters ?? 3500) : undefined);
       if (!bbox) throw new Error('Overpass provider requires bbox or center.');
 
       const controller = new AbortController();
@@ -52,7 +54,11 @@ export function createOverpassProvider(options: OverpassProviderOptions = {}): E
         const data = (await response.json()) as OverpassResponse;
         const categoryFilter = new Set(input.categories ?? []);
         const points = normalizeOverpassResponse(data)
-          .filter((point) => categoryFilter.size === 0 || point.categories.some((category) => categoryFilter.has(category)))
+          .filter(
+            (point) =>
+              categoryFilter.size === 0 ||
+              point.categories.some((category) => categoryFilter.has(category)),
+          )
           .slice(0, input.limit ?? 80);
 
         return {

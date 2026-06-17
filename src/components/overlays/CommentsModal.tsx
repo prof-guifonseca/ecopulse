@@ -40,7 +40,15 @@ export function CommentsModal({ id }: Props) {
         comments,
         viewerName,
       }),
-    [activeChallenges, comments, completedChallenges, history, likedPostIds, viewerName, visitedPointIds]
+    [
+      activeChallenges,
+      comments,
+      completedChallenges,
+      history,
+      likedPostIds,
+      viewerName,
+      visitedPointIds,
+    ],
   );
   const post = feed.find((item) => item.id === id);
   const postComments = comments.filter((comment) => comment.postId === id);
@@ -77,7 +85,7 @@ export function CommentsModal({ id }: Props) {
             postComments.map((comment) => (
               <div
                 key={comment.id}
-                className="flex gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-3"
+                className="border-soft bg-tint-1 flex gap-3 rounded-[var(--radius-md)] px-3 py-3"
               >
                 <span className="text-xl leading-none">{comment.userAvatar}</span>
                 <div className="min-w-0 flex-1">
@@ -90,10 +98,12 @@ export function CommentsModal({ id }: Props) {
               </div>
             ))
           ) : (
-            <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-5 text-center">
+            <div className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-4 py-5 text-center">
               <Icon icon={MessageCircle} size={18} className="mx-auto text-[var(--text-muted)]" />
-              <p className="mt-2 t-body-sm">Nenhum comentário ainda.</p>
-              <p className="mt-1 t-caption">Abra a conversa com uma observação real sobre este item.</p>
+              <p className="t-body-sm mt-2">Nenhum comentário ainda.</p>
+              <p className="t-caption mt-1">
+                Abra a conversa com uma observação real sobre este item.
+              </p>
             </div>
           )}
         </div>
@@ -107,7 +117,7 @@ export function CommentsModal({ id }: Props) {
             value={text}
             onChange={(event) => setText(event.target.value)}
             maxLength={500}
-            className="min-w-0 flex-1 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
             placeholder="Escreva um comentário"
           />
           <Button

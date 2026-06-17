@@ -78,22 +78,22 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
         <div className="grid grid-cols-[8.75rem_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[10rem_minmax(0,1fr)]">
           <button
             onClick={openAvatarBuilder}
-            className="relative flex h-40 w-full items-end justify-center overflow-hidden rounded-[var(--radius-lg)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.16),transparent_48%),var(--tint-1)]"
+            className="border-soft relative flex h-40 w-full items-end justify-center overflow-hidden rounded-[var(--radius-lg)] bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.16),transparent_48%),var(--tint-1)]"
             aria-label="Editar avatar"
           >
             <Avatar loadout={avatarLoadout} size="stage" alt={name} pose="builder" />
-            <span className="gradient-gold absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-reward)]">
+            <span className="gradient-gold absolute right-2 bottom-2 flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-reward)]">
               <Icon icon={Pencil} size={12} strokeWidth={2.4} />
             </span>
           </button>
 
           <div className="min-w-0">
             <h1 className="t-display truncate">{name}</h1>
-            <p className="mt-1 t-caption">
+            <p className="t-caption mt-1">
               Nv {level} · {tribeLabel}
             </p>
-            <p className="mt-1 t-caption text-[var(--text-secondary)]">{loadoutLabel}</p>
-            <p className="mt-1 inline-flex items-center gap-1 t-caption text-[var(--text-muted)]">
+            <p className="t-caption mt-1 text-[var(--text-secondary)]">{loadoutLabel}</p>
+            <p className="t-caption mt-1 inline-flex items-center gap-1 text-[var(--text-muted)]">
               <Icon icon={MapPin} size={11} />
               {region.blurb}
             </p>
@@ -101,13 +101,25 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <Stat label="Tokens" value={tokens} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
-          <Stat label="Seq." value={`${streak}d`} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
-          <Stat label="Badges" value={badges.length} className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-2 py-3" />
+          <Stat
+            label="Tokens"
+            value={tokens}
+            className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-2 py-3"
+          />
+          <Stat
+            label="Seq."
+            value={`${streak}d`}
+            className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-2 py-3"
+          />
+          <Stat
+            label="Badges"
+            value={badges.length}
+            className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-2 py-3"
+          />
         </div>
 
         <div className="mt-4">
-          <div className="mb-1.5 flex items-baseline justify-between t-caption">
+          <div className="t-caption mb-1.5 flex items-baseline justify-between">
             <span>{GARDEN_LABEL[stage]}</span>
             <span className="font-semibold text-[var(--text-secondary)]">
               {xp}/{xpToNext} XP

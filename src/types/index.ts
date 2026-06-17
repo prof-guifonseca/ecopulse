@@ -65,7 +65,15 @@ export interface SkinPack {
 // ----- Gear (wearable avatar equipment) -----
 export type GearTier = 'common' | 'rare' | 'epic' | 'legendary';
 export type GearTheme = SkinTheme | 'utility' | 'nature';
-export type AvatarPose = 'idle' | 'builder' | 'battleReady' | 'attack' | 'defend' | 'focus' | 'victory' | 'defeat';
+export type AvatarPose =
+  | 'idle'
+  | 'builder'
+  | 'battleReady'
+  | 'attack'
+  | 'defend'
+  | 'focus'
+  | 'victory'
+  | 'defeat';
 export type GearHandPose = 'relaxed' | 'weapon' | 'staff' | 'shield' | 'object';
 export type GearFxLevel = 0 | 1 | 2 | 3;
 
@@ -105,13 +113,7 @@ export interface GearSet {
 }
 export type ChallengeType = 'individual' | 'cooperativo';
 export type ShopItemType = 'garden' | 'frame' | 'boost' | 'donation';
-export type MapPointType =
-  | 'baterias'
-  | 'eletronicos'
-  | 'oleo'
-  | 'trocas'
-  | 'granel'
-  | 'reparo';
+export type MapPointType = 'baterias' | 'eletronicos' | 'oleo' | 'trocas' | 'granel' | 'reparo';
 
 export interface Product {
   id: string;

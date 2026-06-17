@@ -28,7 +28,7 @@ async function seedOnboardedState(page: Page) {
           },
         },
         version: 5,
-      })
+      }),
     );
     localStorage.setItem(
       'ecopulse:game',
@@ -54,15 +54,15 @@ async function seedOnboardedState(page: Page) {
           },
         },
         version: 2,
-      })
+      }),
     );
     localStorage.setItem(
       'ecopulse:scanHistory',
-      JSON.stringify({ state: { history: [] }, version: 1 })
+      JSON.stringify({ state: { history: [] }, version: 1 }),
     );
     localStorage.setItem(
       'ecopulse:social',
-      JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 })
+      JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 }),
     );
     localStorage.setItem(
       'ecopulse:arena',
@@ -80,7 +80,7 @@ async function seedOnboardedState(page: Page) {
           rivalMastery: {},
         },
         version: 2,
-      })
+      }),
     );
     localStorage.setItem(
       'ecopulse:simulation',
@@ -97,12 +97,15 @@ async function seedOnboardedState(page: Page) {
           cursor: 0,
         },
         version: 1,
-      })
+      }),
     );
   });
 }
 
-async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'official' | 'cache'; gpsName?: string } = {}) {
+async function mockEsgPlaces(
+  page: Page,
+  opts: { source?: 'osm' | 'official' | 'cache'; gpsName?: string } = {},
+) {
   const source = opts.source ?? 'osm';
   const gpsName = opts.gpsName ?? 'Recicla Centro OSM';
   await page.route('**/api/esg/places**', async (route) => {
@@ -120,7 +123,11 @@ async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'official' | '
             id: source === 'official' ? 'ldb-bat-centro' : 'osm:node:9001',
             source,
             sourceId: source === 'official' ? 'official:ldb-bat-centro' : 'node/9001',
-            name: isGps ? gpsName : source === 'official' ? 'Multicoisas Catuaí - coleta de pilhas' : 'Recicla Centro OSM',
+            name: isGps
+              ? gpsName
+              : source === 'official'
+                ? 'Multicoisas Catuaí - coleta de pilhas'
+                : 'Recicla Centro OSM',
             category: 'batteries',
             categories: ['batteries', 'recycling'],
             address: 'Centro · Rua Sergipe, 489',
@@ -130,7 +137,8 @@ async function mockEsgPlaces(page: Page, opts: { source?: 'osm' | 'official' | '
             lng: -51.161,
             confidence: source === 'official' ? 84 : 91,
             tags: { test: 'true' },
-            sourceName: source === 'official' ? 'Prefeitura de Londrina / OpenStreetMap' : 'OpenStreetMap',
+            sourceName:
+              source === 'official' ? 'Prefeitura de Londrina / OpenStreetMap' : 'OpenStreetMap',
             sourceUrl:
               source === 'official'
                 ? 'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos'
@@ -270,13 +278,17 @@ test('map renders live ESG points, filters them, and restores modal focus', asyn
   await expect(placeButton).toBeFocused();
 });
 
-test('map falls back to the curated Londrina ESG snapshot when the API reports official data', async ({ page }) => {
+test('map falls back to the curated Londrina ESG snapshot when the API reports official data', async ({
+  page,
+}) => {
   await seedOnboardedState(page);
   await mockEsgPlaces(page, { source: 'official' });
   await gotoApp(page, '/map');
 
   await expect(page.getByText('Snapshot oficial').first()).toBeVisible();
-  await expect(page.getByText('Snapshot oficial/curado ativo enquanto a fonte aberta responde.')).toBeVisible();
+  await expect(
+    page.getByText('Snapshot oficial/curado ativo enquanto a fonte aberta responde.'),
+  ).toBeVisible();
   await expect(page.getByText('Multicoisas Catuaí - coleta de pilhas').first()).toBeVisible();
 });
 
@@ -343,7 +355,9 @@ test('arena route renders the loadout test surface', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Testar loadout|Treino bloqueado/ })).toBeVisible();
 });
 
-test('community opens comments for real feed posts and records a local comment', async ({ page }) => {
+test('community opens comments for real feed posts and records a local comment', async ({
+  page,
+}) => {
   await seedOnboardedState(page);
   await gotoApp(page, '/community');
 
@@ -356,12 +370,16 @@ test('community opens comments for real feed posts and records a local comment',
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText('Nenhum comentário ainda.')).toBeVisible();
-  await dialog.getByRole('textbox', { name: 'Novo comentário' }).fill('Fonte conferida e útil para Londrina.');
+  await dialog
+    .getByRole('textbox', { name: 'Novo comentário' })
+    .fill('Fonte conferida e útil para Londrina.');
   await dialog.getByRole('button', { name: 'Enviar' }).click();
   await expect(dialog.getByText('Fonte conferida e útil para Londrina.')).toBeVisible();
 });
 
-test('scanner can search, lookup a barcode, use a real sample, and restore modal focus', async ({ page }) => {
+test('scanner can search, lookup a barcode, use a real sample, and restore modal focus', async ({
+  page,
+}) => {
   await seedOnboardedState(page);
   await mockProductLookup(page);
   await gotoApp(page, '/scanner');
@@ -426,7 +444,9 @@ test('onboarding works when the demo seed is neutralized', async ({ page }) => {
   await activateButton(page, 'Começar');
 
   await expect(page).toHaveURL(/\/scanner\?welcome=1$/);
-  await expect(page.getByText('Primeiro passo: escaneie uma amostra real para liberar missões e impacto.')).toBeVisible();
+  await expect(
+    page.getByText('Primeiro passo: escaneie uma amostra real para liberar missões e impacto.'),
+  ).toBeVisible();
 
   await mockProductLookup(page);
   await activateButton(page, 'Amostra real');

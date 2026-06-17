@@ -44,14 +44,32 @@ export function CientistaEcoArt({ size, className }: Props) {
       {/* Coat seams */}
       <line x1="50" y1="38" x2="50" y2="60" stroke="#a8a08c" strokeWidth="0.5" />
       {/* Pocket */}
-      <rect x="36" y="68" width="10" height="7" rx="0.6" fill="#e8e2cc" stroke="#a8a08c" strokeWidth="0.5" />
+      <rect
+        x="36"
+        y="68"
+        width="10"
+        height="7"
+        rx="0.6"
+        fill="#e8e2cc"
+        stroke="#a8a08c"
+        strokeWidth="0.5"
+      />
       {/* Pen in pocket */}
       <line x1="40" y1="66" x2="40" y2="74" stroke="#5fb36f" strokeWidth="1.4" />
       {/* Notebook in pocket */}
       <rect x="43" y="65" width="2" height="4" fill="#3a2418" />
 
       {/* Beaker held in right hand */}
-      <rect x="62" y="62" width="10" height="14" rx="0.6" fill="rgba(159,224,173,0.4)" stroke="#5fb36f" strokeWidth="1" />
+      <rect
+        x="62"
+        y="62"
+        width="10"
+        height="14"
+        rx="0.6"
+        fill="rgba(159,224,173,0.4)"
+        stroke="#5fb36f"
+        strokeWidth="1"
+      />
       <ellipse cx="67" cy="62" rx="5" ry="1" fill="#5fb36f" />
       {/* Liquid */}
       <rect x="63" y="68" width="8" height="7" fill="url(#ce-bubble)" />
@@ -73,14 +91,29 @@ export function CientistaEcoArt({ size, className }: Props) {
       <path d="M 62 16 L 64 12 L 60 14 Z" fill="#5a3924" />
 
       {/* Safety goggles */}
-      <rect x="40" y="25" width="20" height="6" rx="2" fill="rgba(95,179,111,0.15)" stroke="#5fb36f" strokeWidth="1.4" />
+      <rect
+        x="40"
+        y="25"
+        width="20"
+        height="6"
+        rx="2"
+        fill="rgba(95,179,111,0.15)"
+        stroke="#5fb36f"
+        strokeWidth="1.4"
+      />
       <line x1="50" y1="25" x2="50" y2="31" stroke="#5fb36f" strokeWidth="1" />
       {/* Eyes seen through goggles */}
       <circle cx="45" cy="28" r="0.9" fill="#1a0e08" />
       <circle cx="55" cy="28" r="0.9" fill="#1a0e08" />
 
       {/* Hint of a smile */}
-      <path d="M 46 34 Q 50 36, 54 34" fill="none" stroke="#5a3924" strokeWidth="0.6" strokeLinecap="round" />
+      <path
+        d="M 46 34 Q 50 36, 54 34"
+        fill="none"
+        stroke="#5a3924"
+        strokeWidth="0.6"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

@@ -69,7 +69,7 @@ export function AppHeader() {
     >
       <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-3">
         <div
-          className="flex select-none items-center gap-2.5"
+          className="flex items-center gap-2.5 select-none"
           onPointerDown={startLongPress}
           onPointerUp={cancelLongPress}
           onPointerLeave={cancelLongPress}
@@ -78,13 +78,17 @@ export function AppHeader() {
         >
           <span
             aria-hidden
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)] bg-tint-green-2"
+            className="bg-tint-green-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)]"
           >
             <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--accent-green)]" />
           </span>
-          <span className="text-sm font-bold leading-none">EcoPulse</span>
+          <span className="text-sm leading-none font-bold">EcoPulse</span>
         </div>
-        <Chip asStatic active leftIcon={<Icon icon={summaryIcon} size={13} className="text-[var(--accent-green)]" />}>
+        <Chip
+          asStatic
+          active
+          leftIcon={<Icon icon={summaryIcon} size={13} className="text-[var(--accent-green)]" />}
+        >
           {summaryText}
         </Chip>
       </div>

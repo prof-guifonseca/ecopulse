@@ -147,12 +147,12 @@ describe('battle rules', () => {
     const guarded = resolveBattleRound(
       startBattleSession({ seed: 'guard-check', opponentId: opponent.id, player, opponent }),
       'defend',
-      'attack'
+      'attack',
     );
     const open = resolveBattleRound(
       startBattleSession({ seed: 'guard-check', opponentId: opponent.id, player, opponent }),
       'focus',
-      'attack'
+      'attack',
     );
 
     expect(140 - guarded.playerHp).toBeLessThan(140 - open.playerHp);
@@ -182,7 +182,9 @@ describe('battle rules', () => {
     const second = resolveBattleRound(makeSession(), 'focus');
 
     expect(first.rounds[0].opponentAction).toBe(second.rounds[0].opponentAction);
-    expect(first.events.map((event) => event.message)).toEqual(second.events.map((event) => event.message));
+    expect(first.events.map((event) => event.message)).toEqual(
+      second.events.map((event) => event.message),
+    );
   });
 
   it('finishes a tactical session at the configured round cap', () => {

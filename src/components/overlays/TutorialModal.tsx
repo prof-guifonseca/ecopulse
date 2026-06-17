@@ -45,9 +45,10 @@ export function TutorialModal({ id }: Props) {
           <div className="relative text-5xl drop-shadow-md">{tutorial.emoji}</div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3 t-caption">
+        <div className="t-caption mt-4 flex flex-wrap items-center gap-3">
           <span className="inline-flex items-center gap-1">
-            Nível: {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))}
+            Nível: {'●'.repeat(tutorial.difficulty)}
+            {'○'.repeat(Math.max(0, 3 - tutorial.difficulty))}
           </span>
           <span className="inline-flex items-center gap-1">
             <Icon icon={Clock} size={12} />
@@ -60,7 +61,9 @@ export function TutorialModal({ id }: Props) {
           <div className="t-eyebrow mb-2">Materiais</div>
           <div className="flex flex-wrap gap-1.5">
             {tutorial.materials.map((m) => (
-              <Chip key={m} asStatic>{m}</Chip>
+              <Chip key={m} asStatic>
+                {m}
+              </Chip>
             ))}
           </div>
         </div>
@@ -71,7 +74,7 @@ export function TutorialModal({ id }: Props) {
             {tutorial.steps.map((step, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-3 py-2.5 t-body-sm"
+                className="border-soft bg-tint-1 t-body-sm flex items-start gap-3 rounded-[var(--radius-md)] px-3 py-2.5"
               >
                 <span className="gradient-primary t-micro mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-bold text-[var(--on-primary)]">
                   {i + 1}
@@ -82,7 +85,7 @@ export function TutorialModal({ id }: Props) {
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 t-body-sm">
+        <div className="t-body-sm mt-5 flex items-center gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3">
           <Icon icon={Coins} size={14} className="text-[var(--accent-gold)]" />
           <strong className="text-[var(--accent-gold)]">+{tutorial.tokens} tokens</strong>
         </div>

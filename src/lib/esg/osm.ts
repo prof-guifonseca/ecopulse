@@ -130,13 +130,17 @@ export function normalizeOverpassResponse(data: OverpassResponse): Environmental
   return dedupeEnvironmentalPoints(points);
 }
 
-export function dedupeEnvironmentalPoints(points: readonly EnvironmentalPoint[]): EnvironmentalPoint[] {
+export function dedupeEnvironmentalPoints(
+  points: readonly EnvironmentalPoint[],
+): EnvironmentalPoint[] {
   const bySource = new Map<string, EnvironmentalPoint>();
   for (const point of points) {
     const existing = bySource.get(point.sourceId);
     if (!existing || point.confidence > existing.confidence) bySource.set(point.sourceId, point);
   }
-  return [...bySource.values()].sort((a, b) => b.confidence - a.confidence || a.name.localeCompare(b.name, 'pt-BR'));
+  return [...bySource.values()].sort(
+    (a, b) => b.confidence - a.confidence || a.name.localeCompare(b.name, 'pt-BR'),
+  );
 }
 
 function categoriesFromTags(tags: Record<string, string>): EnvironmentalCategory[] {
@@ -157,7 +161,11 @@ function categoriesFromTags(tags: Record<string, string>): EnvironmentalCategory
   ) {
     categories.push('electronics');
   }
-  if (truthy(tags['recycling:clothes']) || truthy(tags['recycling:shoes']) || matches(tags.shop, /^(charity|clothes)$/)) {
+  if (
+    truthy(tags['recycling:clothes']) ||
+    truthy(tags['recycling:shoes']) ||
+    matches(tags.shop, /^(charity|clothes)$/)
+  ) {
     categories.push('clothes');
   }
   if (
@@ -167,7 +175,11 @@ function categoriesFromTags(tags: Record<string, string>): EnvironmentalCategory
   ) {
     categories.push('repair');
   }
-  if (matches(tags.shop, /^(second_hand|charity|antiques)$/) || tags.amenity === 'give_box' || tags.amenity === 'public_bookcase') {
+  if (
+    matches(tags.shop, /^(second_hand|charity|antiques)$/) ||
+    tags.amenity === 'give_box' ||
+    tags.amenity === 'public_bookcase'
+  ) {
     categories.push('reuse');
   }
   if (truthy(tags.bulk_purchase) || matches(tags.shop, /^(health_food|greengrocer|spices)$/)) {
@@ -201,7 +213,9 @@ function buildAddress(tags: Record<string, string>): string {
   const suburb = tags['addr:suburb'] ?? tags['addr:neighbourhood'];
   const city = tags['addr:city'];
   const line = [street, number].filter(Boolean).join(', ');
-  return [suburb, line || city].filter(Boolean).join(' · ') || tags.address || 'Endereço não informado';
+  return (
+    [suburb, line || city].filter(Boolean).join(' · ') || tags.address || 'Endereço não informado'
+  );
 }
 
 function normalizeTags(tags: OsmElement['tags']): Record<string, string> {

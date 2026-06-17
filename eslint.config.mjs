@@ -1,7 +1,7 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import { fixupConfigRules } from "@eslint/compat";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import { defineConfig, globalIgnores } from 'eslint/config';
+import { fixupConfigRules } from '@eslint/compat';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
 
 // -----------------------------------------------------------------------------
 // Architecture firewall (PR-B). Encodes the layering the codebase already
@@ -17,19 +17,34 @@ import nextTs from "eslint-config-next/typescript";
 // distinction is what keeps the core pure while staying pragmatic.
 // -----------------------------------------------------------------------------
 
-const FRAMEWORK_GROUP = ["react", "react-dom", "next", "next/*", "zustand", "maplibre-gl", "react-map-gl"];
-const SHELL_GROUP = ["@/store", "@/store/**", "@/components", "@/components/**", "@/app", "@/app/**"];
-const TEST_GLOBS = ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"];
+const FRAMEWORK_GROUP = [
+  'react',
+  'react-dom',
+  'next',
+  'next/*',
+  'zustand',
+  'maplibre-gl',
+  'react-map-gl',
+];
+const SHELL_GROUP = [
+  '@/store',
+  '@/store/**',
+  '@/components',
+  '@/components/**',
+  '@/app',
+  '@/app/**',
+];
+const TEST_GLOBS = ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'];
 
 // Pure rule engines + the domain model. Never touch framework or app shell.
 const CORE_FILES = [
-  "src/lib/**/rules.ts",
-  "src/lib/**/affinity.ts",
-  "src/lib/**/progress.ts",
-  "src/lib/ecoMultiplier.ts",
-  "src/lib/doctrines.ts",
-  "src/lib/scoring.ts",
-  "src/domain/**/*.ts",
+  'src/lib/**/rules.ts',
+  'src/lib/**/affinity.ts',
+  'src/lib/**/progress.ts',
+  'src/lib/ecoMultiplier.ts',
+  'src/lib/doctrines.ts',
+  'src/lib/scoring.ts',
+  'src/domain/**/*.ts',
 ];
 
 const eslintConfig = defineConfig([
@@ -41,12 +56,21 @@ const eslintConfig = defineConfig([
     files: CORE_FILES,
     ignores: TEST_GLOBS,
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
-            { group: FRAMEWORK_GROUP, message: "The functional core must stay framework-free (no React/Next/Zustand/MapLibre)." },
-            { group: SHELL_GROUP, allowTypeImports: true, message: "The functional core must not depend on the store runtime, UI, or app shell." },
+            {
+              group: FRAMEWORK_GROUP,
+              message:
+                'The functional core must stay framework-free (no React/Next/Zustand/MapLibre).',
+            },
+            {
+              group: SHELL_GROUP,
+              allowTypeImports: true,
+              message:
+                'The functional core must not depend on the store runtime, UI, or app shell.',
+            },
           ],
         },
       ],
@@ -57,15 +81,19 @@ const eslintConfig = defineConfig([
   // data (a Region's backdrop, the gear-visual registry) may reference a
   // component — that inversion is intentional in this codebase.
   {
-    files: ["src/data/**/*.{ts,tsx}"],
+    files: ['src/data/**/*.{ts,tsx}'],
     ignores: TEST_GLOBS,
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
-            { group: FRAMEWORK_GROUP, message: "Data modules must stay framework-free." },
-            { group: ["@/store", "@/store/**", "@/app", "@/app/**"], allowTypeImports: true, message: "Data modules must not depend on the store runtime or the app shell." },
+            { group: FRAMEWORK_GROUP, message: 'Data modules must stay framework-free.' },
+            {
+              group: ['@/store', '@/store/**', '@/app', '@/app/**'],
+              allowTypeImports: true,
+              message: 'Data modules must not depend on the store runtime or the app shell.',
+            },
           ],
         },
       ],
@@ -74,24 +102,30 @@ const eslintConfig = defineConfig([
 
   // Types are leaves: declare types here, import runtime nowhere.
   {
-    files: ["src/types/**/*.ts"],
+    files: ['src/types/**/*.ts'],
     ignores: TEST_GLOBS,
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
             {
               group: [
                 ...FRAMEWORK_GROUP,
-                "@/store", "@/store/**",
-                "@/components", "@/components/**",
-                "@/app", "@/app/**",
-                "@/lib", "@/lib/**",
-                "@/data", "@/data/**",
-                "@/domain", "@/domain/**",
+                '@/store',
+                '@/store/**',
+                '@/components',
+                '@/components/**',
+                '@/app',
+                '@/app/**',
+                '@/lib',
+                '@/lib/**',
+                '@/data',
+                '@/data/**',
+                '@/domain',
+                '@/domain/**',
               ],
-              message: "Types are leaves: declare types here, import runtime nowhere.",
+              message: 'Types are leaves: declare types here, import runtime nowhere.',
             },
           ],
         },
@@ -101,15 +135,22 @@ const eslintConfig = defineConfig([
 
   // UI primitives must not subscribe to the store or call the action layer.
   {
-    files: ["src/components/ui/**/*.{ts,tsx}"],
+    files: ['src/components/ui/**/*.{ts,tsx}'],
     ignores: TEST_GLOBS,
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
-            { group: ["@/store", "@/store/**"], message: "UI primitives must not subscribe to the store — receive data via props." },
-            { group: ["@/lib/*Actions", "@/lib/**/*Actions"], message: "UI primitives must not call the action layer — lift it to a feature component." },
+            {
+              group: ['@/store', '@/store/**'],
+              message: 'UI primitives must not subscribe to the store — receive data via props.',
+            },
+            {
+              group: ['@/lib/*Actions', '@/lib/**/*Actions'],
+              message:
+                'UI primitives must not call the action layer — lift it to a feature component.',
+            },
           ],
         },
       ],
@@ -120,26 +161,28 @@ const eslintConfig = defineConfig([
   // Type & composition discipline (PR-B).
   // ---------------------------------------------------------------------------
   {
-    files: ["src/**/*.{ts,tsx}"],
+    files: ['src/**/*.{ts,tsx}'],
     rules: {
       // Freeze the zero-`any` baseline into the compiler-of-record.
-      "@typescript-eslint/no-explicit-any": "error",
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
   {
-    files: ["src/**/*.tsx"],
+    files: ['src/**/*.tsx'],
     rules: {
       // Force className composition through cn() — never a template literal or
       // string concatenation (cn() de-duplicates and resolves Tailwind conflicts).
-      "no-restricted-syntax": [
-        "error",
+      'no-restricted-syntax': [
+        'error',
         {
-          selector: "JSXAttribute[name.name='className'] > JSXExpressionContainer > TemplateLiteral",
-          message: "Compose className with cn() instead of a template literal.",
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > TemplateLiteral",
+          message: 'Compose className with cn() instead of a template literal.',
         },
         {
-          selector: "JSXAttribute[name.name='className'] > JSXExpressionContainer > BinaryExpression",
-          message: "Compose className with cn() instead of string concatenation.",
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > BinaryExpression",
+          message: 'Compose className with cn() instead of string concatenation.',
         },
       ],
     },
@@ -148,13 +191,13 @@ const eslintConfig = defineConfig([
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
-    ".next/**",
-    ".claude/**",
-    "out/**",
-    "build/**",
-    "playwright-report/**",
-    "test-results/**",
-    "next-env.d.ts",
+    '.next/**',
+    '.claude/**',
+    'out/**',
+    'build/**',
+    'playwright-report/**',
+    'test-results/**',
+    'next-env.d.ts',
   ]),
 ]);
 

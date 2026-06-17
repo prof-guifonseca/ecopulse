@@ -53,11 +53,9 @@ export function ChapterUnlockOverlay({ chapterId }: Props) {
     addOwnedShopItem('s6');
     fireConfetti();
     showToast(
-      extra > 0
-        ? `Registro local · 2 árvores (Raiz funda)`
-        : 'Registro local · 1 árvore',
+      extra > 0 ? `Registro local · 2 árvores (Raiz funda)` : 'Registro local · 1 árvore',
       'reward',
-      4200
+      4200,
     );
     closeModal();
   };
@@ -73,25 +71,25 @@ export function ChapterUnlockOverlay({ chapterId }: Props) {
           <IconTile size="lg" tone="brand" icon={<Icon icon={ChapterIcon} size={28} />} />
         </div>
 
-        <p className="text-center t-body text-[var(--text-secondary)]">{chapter.blurb}</p>
+        <p className="t-body text-center text-[var(--text-secondary)]">{chapter.blurb}</p>
 
         {isFloresta ? (
-          <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 p-4">
+          <div className="border-soft bg-tint-1 rounded-[var(--radius-md)] p-4">
             <p className="t-eyebrow mb-1">Ritual da Floresta</p>
             <p className="t-body">
-              A jornada se fecha com um compromisso local de plantio. Sua escolha entra no
-              contador da Floresta EcoPulse até conectarmos uma instituição parceira.
+              A jornada se fecha com um compromisso local de plantio. Sua escolha entra no contador
+              da Floresta EcoPulse até conectarmos uma instituição parceira.
             </p>
             <p className="t-caption mt-2">
               Floresta atual: {treesPlanted} {treesPlanted === 1 ? 'árvore' : 'árvores'}.
             </p>
           </div>
         ) : (
-          <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 p-4">
+          <div className="border-soft bg-tint-1 rounded-[var(--radius-md)] p-4">
             <p className="t-eyebrow mb-1">O que muda</p>
             <p className="t-body">
-              Estágio do jardim, missões diárias e o rival em destaque no teste de loadout se ajustam à sua
-              maturação.
+              Estágio do jardim, missões diárias e o rival em destaque no teste de loadout se
+              ajustam à sua maturação.
             </p>
           </div>
         )}

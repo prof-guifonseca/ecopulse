@@ -53,13 +53,13 @@ export function meetsSkinUnlock(unlock: SkinUnlock, snap: GameSnapshot): boolean
  */
 export function pendingSkinUnlocks(catalog: SkinPack[], snap: GameSnapshot): SkinPack[] {
   return catalog.filter(
-    (skin) => !snap.ownedSkinPacks.includes(skin.id) && meetsSkinUnlock(skin.unlock, snap)
+    (skin) => !snap.ownedSkinPacks.includes(skin.id) && meetsSkinUnlock(skin.unlock, snap),
   );
 }
 
 export function pendingGearSetUnlocks(catalog: GearSet[], snap: GameSnapshot): GearSet[] {
   return catalog.filter(
-    (set) => !snap.ownedGearSets.includes(set.id) && meetsSkinUnlock(set.unlock, snap)
+    (set) => !snap.ownedGearSets.includes(set.id) && meetsSkinUnlock(set.unlock, snap),
   );
 }
 

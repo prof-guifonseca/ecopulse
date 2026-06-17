@@ -62,7 +62,7 @@ export const Button = forwardRef<HTMLElement, Props>(function Button(
     as,
     ...rest
   },
-  ref
+  ref,
 ) {
   const Component: ElementType = as ?? 'button';
   const elementProps: Record<string, unknown> = { ...rest };
@@ -83,7 +83,7 @@ export const Button = forwardRef<HTMLElement, Props>(function Button(
         SIZE[size],
         VARIANT[variant],
         fullWidth && 'w-full',
-        className
+        className,
       )}
       style={style}
       {...elementProps}

@@ -130,10 +130,22 @@ const MISSION_POOL: MissionTemplate[] = [
     reward: 9,
     target: 1,
     flavorByTribe: {
-      guardioes: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
-      recicladores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
-      cultivadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
-      reparadores: { title: 'Diga "Vou tentar" em 1 post', body: 'Promessa registrada no ciclo diário.' },
+      guardioes: {
+        title: 'Diga "Vou tentar" em 1 post',
+        body: 'Promessa registrada no ciclo diário.',
+      },
+      recicladores: {
+        title: 'Diga "Vou tentar" em 1 post',
+        body: 'Promessa registrada no ciclo diário.',
+      },
+      cultivadores: {
+        title: 'Diga "Vou tentar" em 1 post',
+        body: 'Promessa registrada no ciclo diário.',
+      },
+      reparadores: {
+        title: 'Diga "Vou tentar" em 1 post',
+        body: 'Promessa registrada no ciclo diário.',
+      },
     },
   },
 ];
@@ -186,7 +198,7 @@ function hashStringToIndex(s: string, mod: number): number {
 import { TRIBES } from './tribes';
 export function effectiveMapTypes(
   template: MissionTemplate,
-  tribe: TribeId
+  tribe: TribeId,
 ): MapPointType[] | undefined {
   if (template.id === 'map-affinity') return TRIBES[tribe].mapAffinity;
   return template.filter?.mapTypes;
@@ -201,7 +213,7 @@ export function scanMeetsTemplate(template: MissionTemplate, score: Score): bool
 export function visitMeetsTemplate(
   template: MissionTemplate,
   type: MapPointType,
-  tribe: TribeId
+  tribe: TribeId,
 ): boolean {
   const types = effectiveMapTypes(template, tribe);
   if (!types || types.length === 0) return true;

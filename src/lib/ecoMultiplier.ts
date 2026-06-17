@@ -50,7 +50,11 @@ export interface TokensFromScanContext {
   streak?: number;
 }
 
-export function tokensFromScan(base: number, score: Score, ctx: TokensFromScanContext = {}): number {
+export function tokensFromScan(
+  base: number,
+  score: Score,
+  ctx: TokensFromScanContext = {},
+): number {
   const { doctrines = [], hour = new Date().getHours(), streak = 0 } = ctx;
   let effectiveBase = base;
   if (doctrines.includes('nami-solar:sol-firme') && hour >= 8 && hour < 16) {

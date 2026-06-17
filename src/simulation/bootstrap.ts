@@ -73,7 +73,7 @@ export function startNewUserSimulation(input: {
       tribe: input.tribe,
       chapterId: 'semente',
       seed: `${today}|${input.tribe}|${regionId}`,
-    })
+    }),
   );
 }
 
@@ -85,7 +85,12 @@ export function resetSimulationState(): void {
   window.location.reload();
 }
 
-export function createSimulationSeed(scenario: ScenarioId, name: string, tribe: string, day: string): string {
+export function createSimulationSeed(
+  scenario: ScenarioId,
+  name: string,
+  tribe: string,
+  day: string,
+): string {
   return `${scenario}-${deterministicId([name.trim().toLowerCase(), tribe, day])}`;
 }
 
@@ -102,13 +107,13 @@ export function ensureDailyPlanForCurrentState(day: string = todayKey()): void {
       tribe,
       chapterId: currentChapterId(),
       seed: `${day}|${tribe}|${user.regionId || DEFAULT_REGION_ID}`,
-    })
+    }),
   );
 }
 
 function startSimulationConfig(
   scenario: ScenarioId,
-  opts: Pick<SimulationConfig, 'seed' | 'regionId' | 'currentDay'>
+  opts: Pick<SimulationConfig, 'seed' | 'regionId' | 'currentDay'>,
 ): void {
   useSimulationStore.getState().startSimulation({
     scenario,
@@ -133,4 +138,3 @@ function currentChapterId(): string {
     defeatedRivals: arena.defeatedOpponents?.length ?? 0,
   }).id;
 }
-

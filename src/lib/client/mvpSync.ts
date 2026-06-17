@@ -4,7 +4,7 @@ import { getAccessToken } from './supabaseBrowser';
 
 export function syncEvent<TType extends EcoPulseEventType>(
   type: TType,
-  payload: EcoPulseEventPayloads[TType]
+  payload: EcoPulseEventPayloads[TType],
 ): void {
   void postJson('/api/events', { type, payload });
 }
@@ -17,7 +17,11 @@ export function syncMapVisit(point: EnvironmentalPoint): void {
   void postJson('/api/esg/visits', { point });
 }
 
-export function syncCommunityReaction(postId: string, reaction: 'like' | 'promise', active = true): void {
+export function syncCommunityReaction(
+  postId: string,
+  reaction: 'like' | 'promise',
+  active = true,
+): void {
   void postJson('/api/community/reactions', { postId, reaction, active });
 }
 

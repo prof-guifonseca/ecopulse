@@ -33,7 +33,15 @@ export function CommunityPage() {
       comments,
       viewerName,
     });
-  }, [activeChallenges, comments, completedChallenges, history, likedPostIds, viewerName, visitedPointIds]);
+  }, [
+    activeChallenges,
+    comments,
+    completedChallenges,
+    history,
+    likedPostIds,
+    viewerName,
+    visitedPointIds,
+  ]);
 
   if (!hydrated) return <CommunitySkeleton />;
 
@@ -41,7 +49,9 @@ export function CommunityPage() {
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Comunidade</h1>
-        <p className="mt-1 t-caption">Ações locais viram feed, comentários e prova de engajamento.</p>
+        <p className="t-caption mt-1">
+          Ações locais viram feed, comentários e prova de engajamento.
+        </p>
       </header>
 
       <div className="stagger space-y-5">

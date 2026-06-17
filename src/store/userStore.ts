@@ -12,7 +12,10 @@ import {
   loadoutFromLegacy,
   unique,
 } from '@/data';
-import { equipGearItem as equipGearItemRule, equipGearSet as equipGearSetRule } from '@/lib/gear/rules';
+import {
+  equipGearItem as equipGearItemRule,
+  equipGearSet as equipGearSetRule,
+} from '@/lib/gear/rules';
 import { DEFAULT_REGION_ID, tribeFromGearSetId } from '@/data';
 import { createSafeJSONStorage, readLegacyState, markLegacyMigrated } from './storage';
 
@@ -120,9 +123,9 @@ export function migrateUserStateToV3(state: Partial<UserState>): UserState {
   const incomingLoadout = state.avatarLoadout;
   const hasPersistedLoadout = Boolean(
     incomingLoadout &&
-      (incomingLoadout.baseId ||
-        incomingLoadout.activeSetId ||
-        Object.values(incomingLoadout.equippedGear ?? {}).some(Boolean))
+    (incomingLoadout.baseId ||
+      incomingLoadout.activeSetId ||
+      Object.values(incomingLoadout.equippedGear ?? {}).some(Boolean)),
   );
   const migratedLoadout = hasPersistedLoadout
     ? {
@@ -148,7 +151,9 @@ export function migrateUserStateToV3(state: Partial<UserState>): UserState {
 export function migrateUserStateToV5(state: Partial<UserState>): UserState {
   const prev = migrateUserStateToV4(state);
   const regionId = prev.regionId && prev.regionId.length > 0 ? prev.regionId : DEFAULT_REGION_ID;
-  const adoptedDoctrines = Array.isArray(prev.adoptedDoctrines) ? unique(prev.adoptedDoctrines) : [];
+  const adoptedDoctrines = Array.isArray(prev.adoptedDoctrines)
+    ? unique(prev.adoptedDoctrines)
+    : [];
 
   // If tribe is still the bare default and the user is already onboarded, try
   // to deduce a tribe from the active gear set so the lateral identity isn't
@@ -180,7 +185,9 @@ export function migrateUserStateToV4(state: Partial<UserState>): UserState {
   const equippedGear = { ...EMPTY_GEAR, ...(prev.avatarLoadout.equippedGear ?? {}) };
 
   if (activeSet) {
-    for (const [slot, itemId] of Object.entries(activeSet.defaultLoadout) as Array<[GearSlot, string]>) {
+    for (const [slot, itemId] of Object.entries(activeSet.defaultLoadout) as Array<
+      [GearSlot, string]
+    >) {
       if (!equippedGear[slot]) {
         equippedGear[slot] = itemId;
       }
@@ -212,7 +219,8 @@ export const useUserStore = create<UserState>()(
         set((s) => {
           const nextLoadout = partial.avatarLoadout
             ? {
-                baseId: partial.avatarLoadout.baseId ?? partial.avatarBase ?? s.avatarLoadout.baseId,
+                baseId:
+                  partial.avatarLoadout.baseId ?? partial.avatarBase ?? s.avatarLoadout.baseId,
                 equippedGear: { ...EMPTY_GEAR, ...partial.avatarLoadout.equippedGear },
                 activeSetId: partial.avatarLoadout.activeSetId ?? null,
               }
@@ -316,7 +324,10 @@ export const useUserStore = create<UserState>()(
         set((s) =>
           s.ownedGearItems.includes(id)
             ? s
-            : { ownedGearItems: [...s.ownedGearItems, id], ownedOutfits: unique([...s.ownedOutfits, id]) }
+            : {
+                ownedGearItems: [...s.ownedGearItems, id],
+                ownedOutfits: unique([...s.ownedOutfits, id]),
+              },
         ),
 
       addOwnedGearItems: (ids) =>
@@ -345,7 +356,7 @@ export const useUserStore = create<UserState>()(
           if (!setItem || !s.ownedGearSets.includes(id)) return s;
           const nextLoadout = equipGearSetRule(
             { ...s.avatarLoadout, baseId: s.avatarLoadout.baseId ?? s.avatarBase },
-            setItem
+            setItem,
           );
           return {
             avatarLoadout: nextLoadout,
@@ -370,7 +381,7 @@ export const useUserStore = create<UserState>()(
           if (!setItem || !s.ownedGearSets.includes(id)) return s;
           const nextLoadout = equipGearSetRule(
             { ...s.avatarLoadout, baseId: s.avatarLoadout.baseId ?? s.avatarBase },
-            setItem
+            setItem,
           );
           return {
             equippedSkinPack: null,
@@ -399,7 +410,9 @@ export const useUserStore = create<UserState>()(
         set({
           ownedSkinPacks: unique([...ownedSkinPacks, id]),
           ownedGearSets: ownedGearSets.includes(id) ? ownedGearSets : [...ownedGearSets, id],
-          ownedGearItems: setItem ? unique([...ownedGearItems, ...setItem.itemIds]) : ownedGearItems,
+          ownedGearItems: setItem
+            ? unique([...ownedGearItems, ...setItem.itemIds])
+            : ownedGearItems,
           ownedOutfits: setItem ? unique([...ownedOutfits, ...setItem.itemIds]) : ownedOutfits,
         });
         return true;
@@ -445,8 +458,8 @@ export const useUserStore = create<UserState>()(
         return migrateUserStateToV5(state as Partial<UserState>);
       },
       onRehydrateStorage: () => () => markLegacyMigrated(),
-    }
-  )
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

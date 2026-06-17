@@ -32,7 +32,7 @@ const productCache = new Map<string, { expiresAt: number; value: ProductLookupRe
 
 export async function lookupProductByBarcode(
   barcode: string,
-  options: { userAgent?: string; signal?: AbortSignal } = {}
+  options: { userAgent?: string; signal?: AbortSignal } = {},
 ): Promise<ProductLookupResult> {
   const normalizedBarcode = normalizeBarcode(barcode);
   const cached = productCache.get(normalizedBarcode);
@@ -49,7 +49,10 @@ export async function lookupProductByBarcode(
   try {
     const live = await lookupOpenFoodFacts(normalizedBarcode, options);
     if (live) {
-      productCache.set(normalizedBarcode, { expiresAt: Date.now() + PRODUCT_CACHE_TTL_MS, value: live });
+      productCache.set(normalizedBarcode, {
+        expiresAt: Date.now() + PRODUCT_CACHE_TTL_MS,
+        value: live,
+      });
       return live;
     }
   } catch {
@@ -62,7 +65,7 @@ export async function lookupProductByBarcode(
 
 export function normalizeOpenFoodFactsProduct(
   barcode: string,
-  product: OpenFoodFactsProduct
+  product: OpenFoodFactsProduct,
 ): ProductLookupResult {
   const packagingTags = normalizeTags([...(product.packaging_tags ?? []), product.packaging ?? '']);
   const countries = normalizeTags(product.countries_tags ?? []);
@@ -174,7 +177,7 @@ function unknownProductResult(barcode: string): ProductLookupResult {
 
 async function lookupOpenFoodFacts(
   barcode: string,
-  options: { userAgent?: string; signal?: AbortSignal }
+  options: { userAgent?: string; signal?: AbortSignal },
 ): Promise<ProductLookupResult | null> {
   const fields = [
     'code',
@@ -196,10 +199,11 @@ async function lookupOpenFoodFacts(
     `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(barcode)}.json?fields=${fields}`,
     {
       headers: {
-        'user-agent': options.userAgent ?? process.env.OPEN_FOOD_FACTS_USER_AGENT ?? ECOPULSE_USER_AGENT,
+        'user-agent':
+          options.userAgent ?? process.env.OPEN_FOOD_FACTS_USER_AGENT ?? ECOPULSE_USER_AGENT,
       },
       signal: options.signal,
-    }
+    },
   );
   if (!response.ok) return null;
   const data = (await response.json()) as OpenFoodFactsResponse;
@@ -224,7 +228,11 @@ function normalizeNova(value: number | undefined): 1 | 2 | 3 | 4 | null {
 
 function scoreFromEcoScore(value: string | undefined): Score | null {
   const normalized = value?.trim().toUpperCase();
-  return normalized === 'A' || normalized === 'B' || normalized === 'C' || normalized === 'D' || normalized === 'E'
+  return normalized === 'A' ||
+    normalized === 'B' ||
+    normalized === 'C' ||
+    normalized === 'D' ||
+    normalized === 'E'
     ? normalized
     : null;
 }
@@ -248,7 +256,12 @@ function emojiForCategory(category: string): string {
 }
 
 function firstValue(value: string | undefined): string {
-  return value?.split(',').map((item) => item.trim()).find(Boolean) ?? '';
+  return (
+    value
+      ?.split(',')
+      .map((item) => item.trim())
+      .find(Boolean) ?? ''
+  );
 }
 
 function buildEvidence(input: {

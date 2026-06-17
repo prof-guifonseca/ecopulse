@@ -17,7 +17,7 @@ const MapCanvasClient = dynamic(
   {
     ssr: false,
     loading: () => <MapCanvasLoading />,
-  }
+  },
 );
 
 export function MapCanvas(props: MapCanvasProps) {
@@ -27,7 +27,7 @@ export function MapCanvas(props: MapCanvasProps) {
 function MapCanvasLoading() {
   return (
     <div
-      className="relative grid place-items-center overflow-hidden rounded-[var(--radius-md)] border-soft bg-[var(--bg-secondary)]"
+      className="border-soft relative grid place-items-center overflow-hidden rounded-[var(--radius-md)] bg-[var(--bg-secondary)]"
       style={{ aspectRatio: '1 / 1' }}
       role="status"
       aria-label="Carregando mapa"

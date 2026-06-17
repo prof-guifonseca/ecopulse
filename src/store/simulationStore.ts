@@ -2,7 +2,12 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { SimulationConfig, SimulationEvent, SimulationEventPayload, SimulationEventType } from '@/simulation/types';
+import type {
+  SimulationConfig,
+  SimulationEvent,
+  SimulationEventPayload,
+  SimulationEventType,
+} from '@/simulation/types';
 import { deterministicId } from '@/simulation/rng';
 import { createSafeJSONStorage } from './storage';
 
@@ -14,7 +19,12 @@ interface SimulationState {
   startSimulation: (config: SimulationConfig) => void;
   setCurrentDay: (day: string) => void;
   nextCursor: () => number;
-  recordEvent: (event: { type: SimulationEventType; payload?: SimulationEventPayload; at?: string; day?: string }) => void;
+  recordEvent: (event: {
+    type: SimulationEventType;
+    payload?: SimulationEventPayload;
+    at?: string;
+    day?: string;
+  }) => void;
   resetSimulation: () => void;
 }
 
@@ -24,7 +34,9 @@ const DEFAULT_SIMULATION = {
   cursor: 0,
 };
 
-export function migrateSimulationStateToV1(state: Partial<SimulationState> | undefined): Pick<SimulationState, 'config' | 'events' | 'cursor'> {
+export function migrateSimulationStateToV1(
+  state: Partial<SimulationState> | undefined,
+): Pick<SimulationState, 'config' | 'events' | 'cursor'> {
   return {
     config: state?.config ?? null,
     events: Array.isArray(state?.events) ? state.events : [],
@@ -54,7 +66,12 @@ export const useSimulationStore = create<SimulationState>()(
         set((state) => {
           const timestamp = at ?? new Date().toISOString();
           const eventDay = day ?? state.config?.currentDay ?? dayKey(new Date(timestamp));
-          const id = deterministicId([state.config?.seed ?? 'local', type, timestamp, state.events.length]);
+          const id = deterministicId([
+            state.config?.seed ?? 'local',
+            type,
+            timestamp,
+            state.events.length,
+          ]);
           return {
             events: [
               ...state.events,
@@ -75,9 +92,10 @@ export const useSimulationStore = create<SimulationState>()(
       name: 'ecopulse:simulation',
       version: 1,
       storage: createSafeJSONStorage<SimulationState>(),
-      migrate: (state) => migrateSimulationStateToV1(state as Partial<SimulationState>) as SimulationState,
-    }
-  )
+      migrate: (state) =>
+        migrateSimulationStateToV1(state as Partial<SimulationState>) as SimulationState,
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

@@ -25,7 +25,9 @@ export function Stat({ value, label, icon, layout = 'block', className }: Props)
   if (layout === 'inline') {
     return (
       <span className={cn('t-body-sm inline-flex items-baseline gap-1.5', className)}>
-        {icon ? <Icon icon={icon} size={13} className="translate-y-[1px] text-[var(--accent-green)]" /> : null}
+        {icon ? (
+          <Icon icon={icon} size={13} className="translate-y-[1px] text-[var(--accent-green)]" />
+        ) : null}
         <span className="font-semibold text-[var(--text-primary)]">{value}</span>
         <span className="t-caption">{label}</span>
       </span>
@@ -34,8 +36,8 @@ export function Stat({ value, label, icon, layout = 'block', className }: Props)
 
   return (
     <div className={className}>
-      <div className="text-base font-bold leading-none text-[var(--text-primary)]">{value}</div>
-      <div className="mt-1 t-caption">{label}</div>
+      <div className="text-base leading-none font-bold text-[var(--text-primary)]">{value}</div>
+      <div className="t-caption mt-1">{label}</div>
     </div>
   );
 }

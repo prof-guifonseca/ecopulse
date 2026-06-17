@@ -34,7 +34,7 @@ export function FlorestaCounterStrip() {
   return (
     <section
       aria-label="Floresta EcoPulse · suas ações registradas"
-      className="rounded-[var(--radius-md)] border-soft bg-tint-1 p-3"
+      className="border-soft bg-tint-1 rounded-[var(--radius-md)] p-3"
     >
       <header className="mb-2 flex items-baseline justify-between gap-2">
         <h2 className="t-eyebrow">Floresta EcoPulse</h2>
@@ -44,7 +44,7 @@ export function FlorestaCounterStrip() {
         {metrics.map((m) => (
           <li
             key={m.label}
-            className="flex flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] border-soft bg-[var(--bg-secondary)] px-1.5 py-2"
+            className="border-soft flex flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-1.5 py-2"
           >
             <span className="text-[var(--accent-green)]">
               <Icon icon={m.icon} size={16} />

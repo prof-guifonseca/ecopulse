@@ -50,7 +50,10 @@ describe('arena presentation helpers', () => {
     'initiative',
     'finish',
   ])('maps %s events to a visual cue', (type) => {
-    const session = type === 'finish' ? { ...baseSession, status: 'finished' as const, outcome: 'win' as const } : baseSession;
+    const session =
+      type === 'finish'
+        ? { ...baseSession, status: 'finished' as const, outcome: 'win' as const }
+        : baseSession;
     const cue = battleEventToVisualCue(eventOfType(type), session);
 
     expect(cue.title.length).toBeGreaterThan(0);
@@ -97,7 +100,8 @@ function eventOfType(type: BattleEventType): BattleEvent {
     type,
     actorId: type === 'finish' ? 'player' : 'player',
     targetId: type === 'attack' || type === 'critical' || type === 'special' ? 'rival' : null,
-    action: type === 'defend' || type === 'block' ? 'defend' : type === 'focus' ? 'focus' : 'attack',
+    action:
+      type === 'defend' || type === 'block' ? 'defend' : type === 'focus' ? 'focus' : 'attack',
     message: `Evento ${type}`,
     effects: [],
     damage: type === 'attack' || type === 'critical' || type === 'special' ? 12 : 0,

@@ -57,7 +57,10 @@ interface GameState {
   completeChallenge: (id: string) => void;
   completeTutorial: (id: string) => void;
   unlockBadge: (id: string) => boolean;
-  markMission: (key: keyof DailyMissionsProgress, value: DailyMissionsProgress[keyof DailyMissionsProgress]) => void;
+  markMission: (
+    key: keyof DailyMissionsProgress,
+    value: DailyMissionsProgress[keyof DailyMissionsProgress],
+  ) => void;
   incrementLikeMission: () => void;
   claimBonus: () => void;
   resetDailyMissions: (day: string) => void;
@@ -76,7 +79,12 @@ const DEFAULT_GAME = {
   challengeProgress: {} as Record<string, number>,
   completedTutorials: [] as string[],
   badges: [] as string[],
-  dailyMissions: { scan: false, likes: 0, map: false, bonusClaimed: false } as DailyMissionsProgress,
+  dailyMissions: {
+    scan: false,
+    likes: 0,
+    map: false,
+    bonusClaimed: false,
+  } as DailyMissionsProgress,
   lastMissionDay: null as string | null,
   todaysMissionIds: [] as string[],
   lastScanScore: null as Score | null,
@@ -127,7 +135,7 @@ export const useGameStore = create<GameState>()(
 
       addScannedProduct: (id) =>
         set((s) =>
-          s.scannedProducts.includes(id) ? s : { scannedProducts: [...s.scannedProducts, id] }
+          s.scannedProducts.includes(id) ? s : { scannedProducts: [...s.scannedProducts, id] },
         ),
 
       addVisitedPoint: (id) =>
@@ -142,12 +150,12 @@ export const useGameStore = create<GameState>()(
 
       addOwnedShopItem: (id) =>
         set((s) =>
-          s.ownedShopItems.includes(id) ? s : { ownedShopItems: [...s.ownedShopItems, id] }
+          s.ownedShopItems.includes(id) ? s : { ownedShopItems: [...s.ownedShopItems, id] },
         ),
 
       joinChallenge: (id) =>
         set((s) =>
-          s.activeChallenges.includes(id) ? s : { activeChallenges: [...s.activeChallenges, id] }
+          s.activeChallenges.includes(id) ? s : { activeChallenges: [...s.activeChallenges, id] },
         ),
 
       advanceChallenge: (id, duration) => {
@@ -167,7 +175,9 @@ export const useGameStore = create<GameState>()(
 
       completeTutorial: (id) =>
         set((s) =>
-          s.completedTutorials.includes(id) ? s : { completedTutorials: [...s.completedTutorials, id] }
+          s.completedTutorials.includes(id)
+            ? s
+            : { completedTutorials: [...s.completedTutorials, id] },
         ),
 
       unlockBadge: (id) => {
@@ -182,8 +192,7 @@ export const useGameStore = create<GameState>()(
       incrementLikeMission: () =>
         set((s) => ({ dailyMissions: { ...s.dailyMissions, likes: s.dailyMissions.likes + 1 } })),
 
-      claimBonus: () =>
-        set((s) => ({ dailyMissions: { ...s.dailyMissions, bonusClaimed: true } })),
+      claimBonus: () => set((s) => ({ dailyMissions: { ...s.dailyMissions, bonusClaimed: true } })),
 
       resetDailyMissions: (day) =>
         set({
@@ -223,8 +232,8 @@ export const useGameStore = create<GameState>()(
         }
         return migrateGameStateToV2(state as Partial<GameState>);
       },
-    }
-  )
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

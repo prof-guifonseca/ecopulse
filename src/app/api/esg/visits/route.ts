@@ -20,7 +20,10 @@ export async function POST(request: Request) {
       type: 'map_visit_marked',
       userId,
       source:
-        point.source === 'cache' || point.source === 'demo' || point.source === 'official' || point.source === 'user'
+        point.source === 'cache' ||
+        point.source === 'demo' ||
+        point.source === 'official' ||
+        point.source === 'user'
           ? point.source
           : 'provider',
       payload: {
@@ -47,16 +50,52 @@ function impactEntriesForPoint(point: EnvironmentalPoint, eventId: string): Impa
   const now = new Date().toISOString();
   const entries: ImpactEntry[] = [];
   if (delta.batteriesKgEstimated) {
-    entries.push(metric('batteries_kg', delta.batteriesKgEstimated, 'kg', eventId, now, '0.5 kg estimado por visita a ponto de baterias.'));
+    entries.push(
+      metric(
+        'batteries_kg',
+        delta.batteriesKgEstimated,
+        'kg',
+        eventId,
+        now,
+        '0.5 kg estimado por visita a ponto de baterias.',
+      ),
+    );
   }
   if (delta.oilLitersEstimated) {
-    entries.push(metric('oil_l', delta.oilLitersEstimated, 'l', eventId, now, '1 L estimado por entrega de óleo de cozinha.'));
+    entries.push(
+      metric(
+        'oil_l',
+        delta.oilLitersEstimated,
+        'l',
+        eventId,
+        now,
+        '1 L estimado por entrega de óleo de cozinha.',
+      ),
+    );
   }
   if (delta.repairsCount) {
-    entries.push(metric('repairs', delta.repairsCount, 'count', eventId, now, '1 reparo registrado por visita a serviço de reparo.'));
+    entries.push(
+      metric(
+        'repairs',
+        delta.repairsCount,
+        'count',
+        eventId,
+        now,
+        '1 reparo registrado por visita a serviço de reparo.',
+      ),
+    );
   }
   if (delta.exchangesCount) {
-    entries.push(metric('exchanges', delta.exchangesCount, 'count', eventId, now, '1 reuso/troca estimado por visita a ponto de reuso.'));
+    entries.push(
+      metric(
+        'exchanges',
+        delta.exchangesCount,
+        'count',
+        eventId,
+        now,
+        '1 reuso/troca estimado por visita a ponto de reuso.',
+      ),
+    );
   }
   return entries;
 }
@@ -67,7 +106,7 @@ function metric(
   unit: ImpactEntry['unit'],
   eventId: string,
   now: string,
-  methodology: string
+  methodology: string,
 ): ImpactEntry {
   return {
     id: `impact:${eventId}:${metricName}`,

@@ -59,14 +59,16 @@ describe('tokensFromScan', () => {
   });
 
   it('does not apply sol-firme outside the window', () => {
-    expect(
-      tokensFromScan(10, 'A', { doctrines: ['nami-solar:sol-firme'], hour: 20 })
-    ).toBe(15);
+    expect(tokensFromScan(10, 'A', { doctrines: ['nami-solar:sol-firme'], hour: 20 })).toBe(15);
   });
 
   it('applies ritmo doctrine when streak > 7', () => {
-    expect(tokensFromScan(10, 'C', { doctrines: ['mestra-ginga:ritmo'], streak: 8, hour: 0 })).toBe(11);
-    expect(tokensFromScan(10, 'C', { doctrines: ['mestra-ginga:ritmo'], streak: 7, hour: 0 })).toBe(10);
+    expect(tokensFromScan(10, 'C', { doctrines: ['mestra-ginga:ritmo'], streak: 8, hour: 0 })).toBe(
+      11,
+    );
+    expect(tokensFromScan(10, 'C', { doctrines: ['mestra-ginga:ritmo'], streak: 7, hour: 0 })).toBe(
+      10,
+    );
   });
 });
 

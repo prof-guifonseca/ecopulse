@@ -42,4 +42,3 @@ export interface MapRankingContext {
   visitedPointIds: string[];
   preferredTypes?: MapPointType[];
 }
-

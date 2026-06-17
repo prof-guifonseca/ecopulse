@@ -32,4 +32,3 @@ export function getCommunityPostCatalog() {
 export function getDailyMissionTemplate(id: string | null | undefined) {
   return getMissionTemplate(id);
 }
-

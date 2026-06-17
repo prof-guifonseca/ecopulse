@@ -48,7 +48,7 @@ function resolverContext(): MissionResolverContext {
 
 function templateBySlot(
   templates: ReadonlyArray<MissionTemplate | null>,
-  slot: 'scan' | 'map' | 'social'
+  slot: 'scan' | 'map' | 'social',
 ): MissionTemplate | null {
   return templates.find((t): t is MissionTemplate => t?.slot === slot) ?? null;
 }
@@ -63,7 +63,7 @@ function flavor(template: MissionTemplate, tribe: TribeId) {
  */
 export function buildMissionChecks(
   dm: DailyMissionStateSnapshot,
-  ctx: MissionResolverContext = resolverContext()
+  ctx: MissionResolverContext = resolverContext(),
 ): DailyMissionCheckMap {
   const socialT = templateBySlot(ctx.templates, 'social');
 
@@ -81,7 +81,7 @@ export function missionChecks() {
 export function resolveDailyAction(
   checks: DailyMissionCheckMap,
   bonusClaimed: boolean,
-  ctx: MissionResolverContext = resolverContext()
+  ctx: MissionResolverContext = resolverContext(),
 ): DailyAction {
   const completedCount = Object.values(checks).filter(Boolean).length;
   const tribe = ctx.tribe;

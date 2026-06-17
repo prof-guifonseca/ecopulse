@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
         source: result.source,
         score: result.score,
       },
-    })
+    }),
   );
 
   return Response.json(result, {

@@ -19,12 +19,10 @@ const SIZE_CLASSES: Record<Size, string> = {
 const VARIANT_CLASSES: Record<Variant, string> = {
   /** No chrome until hover. Used in modal headers, where the surface itself
       should carry the visual weight. */
-  ghost:
-    'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--text-primary)]',
+  ghost: 'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--text-primary)]',
   /** Subtle filled circle. Used inside content blocks (onboarding back-arrow,
       list rows) where the button needs to read as a target before hover. */
-  soft:
-    'border-soft bg-tint-1 text-[var(--text-secondary)] hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]',
+  soft: 'border-soft bg-tint-1 text-[var(--text-secondary)] hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]',
 };
 
 /**
@@ -49,7 +47,7 @@ export function IconButton({
         'inline-flex shrink-0 items-center justify-center rounded-[var(--radius-sm)] transition-colors',
         SIZE_CLASSES[size],
         VARIANT_CLASSES[variant],
-        className
+        className,
       )}
       {...props}
     >

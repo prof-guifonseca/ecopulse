@@ -1,5 +1,10 @@
 import type { EquipmentVisualStatus } from '@/components/avatar/gearVisuals';
-import { SIGNATURE_FAMILIES, familyOf, hasGearVisual, parseGearVisualKey } from '@/components/avatar/gearVisuals';
+import {
+  SIGNATURE_FAMILIES,
+  familyOf,
+  hasGearVisual,
+  parseGearVisualKey,
+} from '@/components/avatar/gearVisuals';
 import type { GearItem } from '@/types';
 
 export type EquipmentVisualAuditRow = {
@@ -16,7 +21,10 @@ export function equipmentVisualStatus(item: GearItem): EquipmentVisualStatus {
   const visual = parseGearVisualKey(item.visualKey);
   if (!visual || !hasGearVisual(item.visualKey)) return 'fallback';
   if (item.visualKey.includes(':')) return 'fallback';
-  if (item.setId && SIGNATURE_FAMILIES.includes(familyOf(item) as (typeof SIGNATURE_FAMILIES)[number])) {
+  if (
+    item.setId &&
+    SIGNATURE_FAMILIES.includes(familyOf(item) as (typeof SIGNATURE_FAMILIES)[number])
+  ) {
     return 'signature';
   }
   if (item.setId) return 'variant';

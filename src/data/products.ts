@@ -79,27 +79,40 @@ export function productConfidence(item: OpenFoodFactsSnapshotProduct): number {
 
 export function scoreFromEcoScore(value: string | null | undefined): Score | null {
   const normalized = value?.trim().toUpperCase();
-  return normalized === 'A' || normalized === 'B' || normalized === 'C' || normalized === 'D' || normalized === 'E'
+  return normalized === 'A' ||
+    normalized === 'B' ||
+    normalized === 'C' ||
+    normalized === 'D' ||
+    normalized === 'E'
     ? normalized
     : null;
 }
 
 function tipFromEvidence(score: Score, confidence: number): string {
-  if (confidence < 55) return 'Dados insuficientes para avaliação completa. Use como indício, não como veredito.';
+  if (confidence < 55)
+    return 'Dados insuficientes para avaliação completa. Use como indício, não como veredito.';
   if (score === 'A') return 'Boa pegada ambiental segundo sinais abertos do Open Food Facts.';
-  if (score === 'B') return 'Sinais positivos. Compare embalagem e processamento antes da próxima compra.';
-  if (score === 'C') return 'Avaliação intermediária. Vale procurar versões com embalagem mais simples.';
-  if (score === 'D') return 'Sinais de maior impacto. Confira alternativas com melhor embalagem ou menor processamento.';
+  if (score === 'B')
+    return 'Sinais positivos. Compare embalagem e processamento antes da próxima compra.';
+  if (score === 'C')
+    return 'Avaliação intermediária. Vale procurar versões com embalagem mais simples.';
+  if (score === 'D')
+    return 'Sinais de maior impacto. Confira alternativas com melhor embalagem ou menor processamento.';
   return 'Sinais críticos de impacto. Priorize uma alternativa com dados e embalagem melhores.';
 }
 
 function categoryFromOpenFoodFacts(item: OpenFoodFactsSnapshotProduct): string {
   const tags = new Set(item.categoriesTags);
-  const raw = item.categories.split(',').map((part) => part.trim()).find(Boolean);
+  const raw = item.categories
+    .split(',')
+    .map((part) => part.trim())
+    .find(Boolean);
   if (hasAny(tags, ['beverages', 'instant-beverages', 'sodas'])) return 'Bebidas';
   if (hasAny(tags, ['dairies', 'milks', 'uht-milks', 'milk-powders'])) return 'Laticínios';
-  if (hasAny(tags, ['snacks', 'sweet-snacks', 'salty-snacks', 'biscuits-and-cakes'])) return 'Snacks';
-  if (hasAny(tags, ['fats', 'vegetable-oils', 'olive-oils', 'soybean-oils'])) return 'Óleos e gorduras';
+  if (hasAny(tags, ['snacks', 'sweet-snacks', 'salty-snacks', 'biscuits-and-cakes']))
+    return 'Snacks';
+  if (hasAny(tags, ['fats', 'vegetable-oils', 'olive-oils', 'soybean-oils']))
+    return 'Óleos e gorduras';
   if (hasAny(tags, ['breads', 'sliced-breads', 'cereals-and-potatoes'])) return 'Padaria';
   if (hasAny(tags, ['condiments', 'sauces', 'mayonnaises'])) return 'Condimentos';
   return raw || 'Alimentos';

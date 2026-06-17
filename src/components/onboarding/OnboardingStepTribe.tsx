@@ -44,8 +44,9 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
       <main className="animate-fade-in relative flex flex-1 flex-col gap-5">
         <div className="space-y-2">
           <h1 className="t-display">Escolha sua causa.</h1>
-          <p className="t-body text-[var(--text-secondary)] max-w-[34ch]">
-            A tribo personaliza o tom das missões sem mudar as regras. Cada pessoa começa por onde consegue agir.
+          <p className="t-body max-w-[34ch] text-[var(--text-secondary)]">
+            A tribo personaliza o tom das missões sem mudar as regras. Cada pessoa começa por onde
+            consegue agir.
           </p>
         </div>
 
@@ -63,7 +64,7 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
                     'flex w-full items-center gap-3 rounded-[var(--radius-md)] px-4 py-3 text-left transition-colors',
                     active
                       ? 'border-active bg-tint-green-3'
-                      : 'border-soft bg-tint-1 hover:bg-tint-2'
+                      : 'border-soft bg-tint-1 hover:bg-tint-2',
                   )}
                   aria-pressed={active}
                 >
@@ -72,7 +73,7 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
                       'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                       active
                         ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                        : 'bg-tint-2 text-[var(--accent-green)]'
+                        : 'bg-tint-2 text-[var(--accent-green)]',
                     )}
                   >
                     <Icon icon={I} size={16} />

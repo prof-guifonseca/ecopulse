@@ -120,10 +120,9 @@ export function useBarcodeScanner({ onDetect }: Options): BarcodeScanner {
     if (!stream) return;
     void (async () => {
       try {
-        const [{ BrowserMultiFormatReader }, { DecodeHintType, BarcodeFormat }] = await Promise.all([
-          import('@zxing/browser'),
-          import('@zxing/library'),
-        ]);
+        const [{ BrowserMultiFormatReader }, { DecodeHintType, BarcodeFormat }] = await Promise.all(
+          [import('@zxing/browser'), import('@zxing/library')],
+        );
         if (disposed) return;
         const hints = new Map();
         hints.set(DecodeHintType.POSSIBLE_FORMATS, [

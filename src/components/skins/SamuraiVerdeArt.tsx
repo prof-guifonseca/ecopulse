@@ -67,16 +67,8 @@ export function SamuraiVerdeArt({ size, className }: Props) {
       />
 
       {/* Lapel V-cross */}
-      <path
-        d="M50 38 L 42 60 L 50 66 L 58 60 Z"
-        fill="#1f3d31"
-        opacity="0.7"
-      />
-      <path
-        d="M50 38 L 50 66"
-        stroke="#0e2520"
-        strokeWidth="0.8"
-      />
+      <path d="M50 38 L 42 60 L 50 66 L 58 60 Z" fill="#1f3d31" opacity="0.7" />
+      <path d="M50 38 L 50 66" stroke="#0e2520" strokeWidth="0.8" />
 
       {/* Obi (white sash) */}
       <rect x="29" y="68" width="42" height="6" fill="#f0e8d6" />
@@ -92,18 +84,8 @@ export function SamuraiVerdeArt({ size, className }: Props) {
       <ellipse cx="50" cy="17" rx="4" ry="1" fill="#e0c27a" />
 
       {/* Brow + face */}
-      <path
-        d="M 44 22 L 47 22"
-        stroke="#1a0e08"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 53 22 L 56 22"
-        stroke="#1a0e08"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
+      <path d="M 44 22 L 47 22" stroke="#1a0e08" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M 53 22 L 56 22" stroke="#1a0e08" strokeWidth="1.4" strokeLinecap="round" />
       <circle cx="46" cy="28" r="1.1" fill="#1a0e08" />
       <circle cx="54" cy="28" r="1.1" fill="#1a0e08" />
 

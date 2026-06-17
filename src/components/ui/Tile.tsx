@@ -19,7 +19,8 @@ interface Props {
 const TONE_CLASSES: Record<Tone, string> = {
   default: 'border-[var(--line-soft)] bg-tint-1',
   brand: 'border-[var(--line-active)] bg-tint-green-1',
-  reward: 'border-[color:color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)]',
+  reward:
+    'border-[color:color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)]',
 };
 
 const VALUE_TONE: Record<Tone, string> = {
@@ -54,14 +55,20 @@ export function Tile({
         padY,
         align === 'center' ? 'text-center' : 'text-left',
         TONE_CLASSES[tone],
-        className
+        className,
       )}
     >
       <div className={cn('flex items-center gap-1.5', align === 'center' ? 'justify-center' : '')}>
         {icon ? <span className="text-[var(--accent-green)]">{icon}</span> : null}
         <span className="t-label">{label}</span>
       </div>
-      <div className={cn('mt-1.5 leading-none font-semibold', size === 'sm' ? 'text-base' : 'text-lg', VALUE_TONE[tone])}>
+      <div
+        className={cn(
+          'mt-1.5 leading-none font-semibold',
+          size === 'sm' ? 'text-base' : 'text-lg',
+          VALUE_TONE[tone],
+        )}
+      >
         {value}
       </div>
       {hint ? <div className="t-caption mt-1">{hint}</div> : null}

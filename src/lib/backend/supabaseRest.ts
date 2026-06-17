@@ -25,15 +25,31 @@ function headers(): Record<string, string> {
  * into `data` (jsonb) plus a few extracted snake_case columns for querying. Keeps
  * the Postgres schema idiomatic while the app keeps its camelCase contracts.
  */
-export function buildSupabaseRow(table: string, obj: Record<string, unknown>): Record<string, unknown> {
+export function buildSupabaseRow(
+  table: string,
+  obj: Record<string, unknown>,
+): Record<string, unknown> {
   const userId = (typeof obj.userId === 'string' && obj.userId) || 'local-user';
   switch (table) {
     case 'events':
-      return { id: obj.id, user_id: userId, type: obj.type, day: obj.day, source: obj.source, data: obj };
+      return {
+        id: obj.id,
+        user_id: userId,
+        type: obj.type,
+        day: obj.day,
+        source: obj.source,
+        data: obj,
+      };
     case 'scan_results':
       return { id: obj.id, user_id: userId, score: obj.score, data: obj };
     case 'impact_entries':
-      return { id: obj.id, user_id: userId, metric: obj.metric, confidence: obj.confidence, data: obj };
+      return {
+        id: obj.id,
+        user_id: userId,
+        metric: obj.metric,
+        confidence: obj.confidence,
+        data: obj,
+      };
     case 'community_reactions':
       return {
         id: `${userId}:${String(obj.postId)}:${String(obj.reaction)}`,

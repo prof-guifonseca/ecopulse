@@ -27,7 +27,9 @@ describe('real product catalog facade', () => {
     const sample = pickRealSampleProduct();
     expect(sample?.sourceName).toBe('Open Food Facts');
 
-    const lowerScoreProduct = listProductCatalog().find((product) => product.score === 'D' || product.score === 'E');
+    const lowerScoreProduct = listProductCatalog().find(
+      (product) => product.score === 'D' || product.score === 'E',
+    );
     if (!lowerScoreProduct) return;
 
     const alternatives = findProductAlternatives(lowerScoreProduct);

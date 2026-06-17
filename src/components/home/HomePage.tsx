@@ -81,14 +81,14 @@ export function HomePage() {
       <section className="pt-3">
         <Card tone="soft" padded={false} className="px-4 py-4">
           <div className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
+            <div className="border-soft bg-tint-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-lg)]">
               <Avatar loadout={avatarLoadout} size="md" alt={name} />
             </div>
             <div className="min-w-0">
               <h1 className="t-headline truncate">
                 Oi, <span className="t-italic-soft">{name}</span>
               </h1>
-              <p className="mt-1 truncate t-caption">Hoje · rotina diária</p>
+              <p className="t-caption mt-1 truncate">Hoje · rotina diária</p>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export function HomePage() {
 
       <Card tone="solid" padded={false} className="px-5 py-5">
         <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-green-2 text-[var(--accent-green)]">
+          <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--accent-green)]">
             <Icon icon={ActionIcon} size={19} />
           </span>
           <div className="min-w-0 flex-1">
@@ -120,7 +120,7 @@ export function HomePage() {
         </div>
 
         <div className="mt-5">
-          <div className="mb-1.5 flex items-baseline justify-between gap-2 t-caption">
+          <div className="t-caption mb-1.5 flex items-baseline justify-between gap-2">
             <span>Missões de hoje</span>
             <span className="font-semibold text-[var(--text-secondary)]">
               {action.completedCount}/{DAILY_MISSION_TARGET}
@@ -129,7 +129,7 @@ export function HomePage() {
           <ProgressBar value={progressPct} size="sm" ariaLabel="Progresso das missões de hoje" />
         </div>
 
-        <ul className="mt-4 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-tint-1">
+        <ul className="bg-tint-1 mt-4 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)]">
           {rows.map((row) => {
             const MissionIcon = resolveIcon(row.iconName);
             return (
@@ -139,7 +139,7 @@ export function HomePage() {
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                     row.done
                       ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                      : 'border-soft text-[var(--text-secondary)]'
+                      : 'border-soft text-[var(--text-secondary)]',
                   )}
                 >
                   {row.done ? (
@@ -150,13 +150,13 @@ export function HomePage() {
                 </span>
                 <span
                   className={cn(
-                    'min-w-0 flex-1 truncate t-body-sm',
-                    row.done && 'text-[var(--accent-green)]'
+                    't-body-sm min-w-0 flex-1 truncate',
+                    row.done && 'text-[var(--accent-green)]',
                   )}
                 >
                   {row.title}
                 </span>
-                <span className="shrink-0 t-caption font-semibold text-[var(--accent-gold)]">
+                <span className="t-caption shrink-0 font-semibold text-[var(--accent-gold)]">
                   +{row.reward}
                 </span>
               </li>
@@ -172,27 +172,30 @@ export function HomePage() {
 
 function DailyProofPanel() {
   return (
-    <section className="rounded-[var(--radius-md)] border-active bg-[linear-gradient(135deg,var(--tint-green-2),var(--tint-1))] p-4">
+    <section className="border-active rounded-[var(--radius-md)] bg-[linear-gradient(135deg,var(--tint-green-2),var(--tint-1))] p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="t-eyebrow text-[var(--accent-green)]">Jornada EcoPulse</p>
-          <h2 className="mt-1 t-title">Uma escolha consciente precisa virar ação visível.</h2>
+          <h2 className="t-title mt-1">Uma escolha consciente precisa virar ação visível.</h2>
         </div>
-        <span className="shrink-0 rounded-full border border-[var(--line-active)] px-2.5 py-1 t-micro text-[var(--accent-green)]">
+        <span className="t-micro shrink-0 rounded-full border border-[var(--line-active)] px-2.5 py-1 text-[var(--accent-green)]">
           3 passos
         </span>
       </div>
       <ol className="mt-4 grid grid-cols-3 gap-2">
         {DAILY_PROOF_STEPS.map((step, index) => (
-          <li key={step.label} className="min-w-0 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-3 py-3">
+          <li
+            key={step.label}
+            className="min-w-0 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-3 py-3"
+          >
             <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-xs)] bg-tint-green-2 text-[var(--accent-green)]">
+              <span className="bg-tint-green-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-xs)] text-[var(--accent-green)]">
                 <Icon icon={step.icon} size={13} />
               </span>
               <span className="t-micro text-[var(--text-muted)]">0{index + 1}</span>
             </div>
-            <p className="mt-2 truncate t-micro text-[var(--text-primary)]">{step.label}</p>
-            <p className="mt-1 text-[0.66rem] font-medium leading-tight text-[var(--text-muted)]">
+            <p className="t-micro mt-2 truncate text-[var(--text-primary)]">{step.label}</p>
+            <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--text-muted)]">
               {step.value}
             </p>
           </li>
@@ -213,7 +216,7 @@ interface MissionRow {
 function buildMissionRows(
   ids: string[],
   dailyMissions: { scan: boolean; likes: number; map: boolean },
-  tribe: TribeId
+  tribe: TribeId,
 ): MissionRow[] {
   const order: Array<'scan' | 'map' | 'social'> = ['scan', 'map', 'social'];
   const activeIds = ids.length > 0 ? ids : ['scan-any', 'map-any', 'social-replicate'];
@@ -252,12 +255,16 @@ function HomeMetric({
   reward?: boolean;
 }) {
   return (
-    <div className="min-w-0 rounded-[var(--radius-md)] border-soft bg-[var(--bg-secondary)] px-3 py-3">
+    <div className="border-soft min-w-0 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] px-3 py-3">
       <div className="flex items-center gap-2">
-        <Icon icon={icon} size={15} className={reward ? 'text-[var(--accent-gold)]' : 'text-[var(--accent-green)]'} />
+        <Icon
+          icon={icon}
+          size={15}
+          className={reward ? 'text-[var(--accent-gold)]' : 'text-[var(--accent-green)]'}
+        />
         <span className="truncate text-sm font-bold text-[var(--text-primary)]">{value}</span>
       </div>
-      <p className="mt-1 truncate t-caption">{label}</p>
+      <p className="t-caption mt-1 truncate">{label}</p>
     </div>
   );
 }

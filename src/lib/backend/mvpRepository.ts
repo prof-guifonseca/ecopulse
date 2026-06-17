@@ -62,9 +62,15 @@ export function listScans(): ScanResult[] {
   return store().scans;
 }
 
-export async function saveImpactEntry(entry: ImpactEntry, userId = 'local-user'): Promise<ImpactEntry> {
+export async function saveImpactEntry(
+  entry: ImpactEntry,
+  userId = 'local-user',
+): Promise<ImpactEntry> {
   const s = store();
-  s.impactEntries = [entry, ...s.impactEntries.filter((item) => item.id !== entry.id)].slice(0, 500);
+  s.impactEntries = [entry, ...s.impactEntries.filter((item) => item.id !== entry.id)].slice(
+    0,
+    500,
+  );
   await persistRow('impact_entries', { ...entry, userId });
   return entry;
 }
@@ -73,13 +79,19 @@ export function listImpactEntries(): ImpactEntry[] {
   return store().impactEntries;
 }
 
-export async function recordCommunityReaction(reaction: CommunityReaction): Promise<CommunityReaction> {
+export async function recordCommunityReaction(
+  reaction: CommunityReaction,
+): Promise<CommunityReaction> {
   const s = store();
   s.communityReactions = [
     reaction,
     ...s.communityReactions.filter(
       (item) =>
-        !(item.userId === reaction.userId && item.postId === reaction.postId && item.reaction === reaction.reaction)
+        !(
+          item.userId === reaction.userId &&
+          item.postId === reaction.postId &&
+          item.reaction === reaction.reaction
+        ),
     ),
   ].slice(0, 1000);
   await persistRow('community_reactions', reaction);
@@ -88,16 +100,22 @@ export async function recordCommunityReaction(reaction: CommunityReaction): Prom
 
 export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedItem[] {
   const s = store();
-  const reactions = s.communityReactions.filter((item) => item.userId === userId || item.userId === 'local-user');
-  const activeLikes = new Set(reactions.filter((item) => item.reaction === 'like' && item.active).map((item) => item.postId));
-  const activePromises = new Set(reactions.filter((item) => item.reaction === 'promise' && item.active).map((item) => item.postId));
+  const reactions = s.communityReactions.filter(
+    (item) => item.userId === userId || item.userId === 'local-user',
+  );
+  const activeLikes = new Set(
+    reactions.filter((item) => item.reaction === 'like' && item.active).map((item) => item.postId),
+  );
+  const activePromises = new Set(
+    reactions
+      .filter((item) => item.reaction === 'promise' && item.active)
+      .map((item) => item.postId),
+  );
   const commentCounts = s.communityComments.reduce<Record<string, number>>((acc, comment) => {
     acc[comment.postId] = (acc[comment.postId] ?? 0) + 1;
     return acc;
   }, {});
-  const visitedPointIds = s.events
-    .filter(isMapVisitEvent)
-    .map((event) => event.payload.pointId);
+  const visitedPointIds = s.events.filter(isMapVisitEvent).map((event) => event.payload.pointId);
 
   return buildRealServerCommunityFeed({
     scans: s.scans,
@@ -125,15 +143,17 @@ export function buildServerCommunityFeed(userId = 'local-user'): CommunityFeedIt
 
 export async function saveCommunityComment(comment: CommunityComment): Promise<CommunityComment> {
   const s = store();
-  s.communityComments = [comment, ...s.communityComments.filter((item) => item.id !== comment.id)].slice(0, 1000);
+  s.communityComments = [
+    comment,
+    ...s.communityComments.filter((item) => item.id !== comment.id),
+  ].slice(0, 1000);
   await persistRow('community_comments', comment);
   return comment;
 }
 
 export function listCommunityComments(postId: string): CommunityComment[] {
   return store()
-    .communityComments
-    .filter((comment) => comment.postId === postId)
+    .communityComments.filter((comment) => comment.postId === postId)
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }
 

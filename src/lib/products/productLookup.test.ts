@@ -7,7 +7,9 @@ describe('product lookup normalization', () => {
     expect(PRODUCTS.length).toBeGreaterThanOrEqual(12);
     expect(PRODUCTS.every((product) => /^\d{8,14}$/.test(product.barcode))).toBe(true);
     expect(PRODUCTS.every((product) => product.sourceName === 'Open Food Facts')).toBe(true);
-    expect(PRODUCTS.every((product) => product.sourceUrl?.includes('openfoodfacts.org/product/'))).toBe(true);
+    expect(
+      PRODUCTS.every((product) => product.sourceUrl?.includes('openfoodfacts.org/product/')),
+    ).toBe(true);
     expect(PRODUCTS.every((product) => (product.evidence?.fields.length ?? 0) >= 3)).toBe(true);
   });
 

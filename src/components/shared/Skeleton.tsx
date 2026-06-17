@@ -6,12 +6,6 @@ interface Props {
 
 export function Skeleton({ className }: Props) {
   return (
-    <div
-      aria-hidden
-      className={cn(
-        'shimmer-bg rounded-[var(--radius-md)] bg-tint-2',
-        className
-      )}
-    />
+    <div aria-hidden className={cn('shimmer-bg bg-tint-2 rounded-[var(--radius-md)]', className)} />
   );
 }

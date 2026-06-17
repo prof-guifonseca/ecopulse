@@ -36,18 +36,10 @@ export function NinjaEcoArt({ size, className }: Props) {
       />
 
       {/* Crossed shoulder strap with shuriken */}
-      <path
-        d="M 32 50 L 68 60"
-        stroke="#3a3a3a"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      <path d="M 32 50 L 68 60" stroke="#3a3a3a" strokeWidth="2" strokeLinecap="round" />
       {/* Shuriken — 4-pointed star on chest */}
       <g transform="translate(50 56) rotate(15)">
-        <polygon
-          points="0,-5 1.5,-1.5 5,0 1.5,1.5 0,5 -1.5,1.5 -5,0 -1.5,-1.5"
-          fill="#8ddb98"
-        />
+        <polygon points="0,-5 1.5,-1.5 5,0 1.5,1.5 0,5 -1.5,1.5 -5,0 -1.5,-1.5" fill="#8ddb98" />
         <circle cx="0" cy="0" r="0.8" fill="#0a140e" />
       </g>
 
@@ -65,10 +57,7 @@ export function NinjaEcoArt({ size, className }: Props) {
       <rect x="38" y="17" width="24" height="4.5" rx="0.6" fill="#5fb36f" />
       <rect x="38" y="19" width="24" height="0.6" fill="#3f8a4f" />
       {/* Headband tail flapping behind */}
-      <path
-        d="M 62 19 Q 70 17, 72 22 Q 67 24, 62 22 Z"
-        fill="#5fb36f"
-      />
+      <path d="M 62 19 Q 70 17, 72 22 Q 67 24, 62 22 Z" fill="#5fb36f" />
       {/* Leaf insignia */}
       <ellipse cx="50" cy="19.4" rx="2.6" ry="1.4" fill="#0a140e" />
       <path d="M 50 18.4 L 50 20.4" stroke="#5fb36f" strokeWidth="0.5" />

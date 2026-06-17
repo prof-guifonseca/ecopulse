@@ -31,9 +31,7 @@ export const useSocialStore = create<SocialState>()(
       toggleLike: (postId) => {
         const liked = get().likedPosts.includes(postId);
         set((s) => ({
-          likedPosts: liked
-            ? s.likedPosts.filter((x) => x !== postId)
-            : [...s.likedPosts, postId],
+          likedPosts: liked ? s.likedPosts.filter((x) => x !== postId) : [...s.likedPosts, postId],
         }));
         return !liked;
       },
@@ -75,8 +73,8 @@ export const useSocialStore = create<SocialState>()(
           comments: normalizeComments((state as Partial<SocialState>)?.comments),
         } as SocialState;
       },
-    }
-  )
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

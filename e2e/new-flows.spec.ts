@@ -82,7 +82,10 @@ async function seedOnboardedWithActivity(page: Page) {
         version: 1,
       }),
     );
-    localStorage.setItem('ecopulse:social', JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 }));
+    localStorage.setItem(
+      'ecopulse:social',
+      JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 }),
+    );
     localStorage.setItem(
       'ecopulse:arena',
       JSON.stringify({

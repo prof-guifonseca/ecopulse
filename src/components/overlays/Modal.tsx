@@ -38,9 +38,9 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
       if (e.key !== 'Tab') return;
       const surface = surfaceRef.current;
       if (!surface) return;
-      const focusables = Array.from(surface.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-        (el) => !el.hasAttribute('disabled') && el.offsetParent !== null
-      );
+      const focusables = Array.from(
+        surface.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
       if (focusables.length === 0) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -92,8 +92,8 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
   return createPortal(
     <div
       className={cn(
-        'animate-fade-in fixed inset-0 z-[999] flex justify-center bg-scrim backdrop-blur-xl',
-        variant === 'center' ? 'items-center' : 'items-end'
+        'animate-fade-in bg-scrim fixed inset-0 z-[999] flex justify-center backdrop-blur-xl',
+        variant === 'center' ? 'items-center' : 'items-end',
       )}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -105,10 +105,10 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         ref={surfaceRef}
         tabIndex={-1}
         className={cn(
-          'relative w-full max-w-[var(--shell-width)] border-soft bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
+          'border-soft relative w-full max-w-[var(--shell-width)] bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
           variant === 'center'
-            ? 'mx-4 rounded-[var(--radius-lg)] animate-fade-in'
-            : 'rounded-t-[var(--radius-lg)] animate-slide-up'
+            ? 'animate-fade-in mx-4 rounded-[var(--radius-lg)]'
+            : 'animate-slide-up rounded-t-[var(--radius-lg)]',
         )}
         style={{
           maxHeight: 'var(--modal-max-h)',
@@ -133,6 +133,6 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

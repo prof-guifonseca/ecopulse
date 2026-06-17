@@ -1,6 +1,14 @@
 'use client';
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Camera, Keyboard, Search, Sparkles, Video } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
@@ -73,7 +81,7 @@ export function ScannerPage() {
         product.name.toLowerCase().includes(normalizedQuery) ||
         product.brand.toLowerCase().includes(normalizedQuery) ||
         product.category.toLowerCase().includes(normalizedQuery) ||
-        product.barcode.includes(normalizedQuery)
+        product.barcode.includes(normalizedQuery),
     );
   }, [deferredQuery, products]);
 
@@ -102,7 +110,7 @@ export function ScannerPage() {
       missionScan,
       openModal,
       recordScan,
-    ]
+    ],
   );
 
   const lookupBarcode = useCallback(
@@ -121,7 +129,10 @@ export function ScannerPage() {
         const record = scanRecordFromLookup(lookup, source);
         completeScan(record, source);
         syncScan(lookup, source);
-        showToast(lookup.found ? 'Produto identificado' : 'Registro manual criado', lookup.found ? 'success' : 'info');
+        showToast(
+          lookup.found ? 'Produto identificado' : 'Registro manual criado',
+          lookup.found ? 'success' : 'info',
+        );
       } catch {
         setLookupError('Não foi possível consultar o barcode agora.');
         showToast('Consulta indisponível', 'info');
@@ -129,7 +140,7 @@ export function ScannerPage() {
         setScanning(false);
       }
     },
-    [completeScan, scanning, showToast]
+    [completeScan, scanning, showToast],
   );
 
   const {
@@ -162,7 +173,10 @@ export function ScannerPage() {
     window.setTimeout(() => {
       void import('@/demo/simulatedScan')
         .then(({ performDemoScan }) => {
-          const record = performDemoScan(history.map((h) => h.productId), { firstRun });
+          const record = performDemoScan(
+            history.map((h) => h.productId),
+            { firstRun },
+          );
           completeScan(record, 'demo');
         })
         .catch(() => {
@@ -178,7 +192,7 @@ export function ScannerPage() {
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Scanner</h1>
-        <p className="mt-1 t-caption">
+        <p className="t-caption mt-1">
           Consulta real por barcode, amostra Open Food Facts ou registro manual.
         </p>
       </header>
@@ -195,7 +209,7 @@ export function ScannerPage() {
 
           {/* Reticle: a thin square that pulses while scanning */}
           <div
-            className="relative h-32 w-32 rounded-[var(--radius-lg)] border-active bg-tint-green-3"
+            className="border-active bg-tint-green-3 relative h-32 w-32 rounded-[var(--radius-lg)]"
             style={{
               boxShadow: scanning ? '0 0 0 3px var(--tint-green-2)' : 'var(--shadow-glow)',
               transition: 'box-shadow 0.3s ease',
@@ -205,10 +219,10 @@ export function ScannerPage() {
               <Icon icon={Camera} size={44} strokeWidth={1.4} />
             </div>
             {/* Corner brackets — Apple Wallet scanner style */}
-            <span className="absolute left-[-2px] top-[-2px] h-4 w-4 rounded-tl-md border-l-2 border-t-2 border-[var(--accent-green)]" />
-            <span className="absolute right-[-2px] top-[-2px] h-4 w-4 rounded-tr-md border-r-2 border-t-2 border-[var(--accent-green)]" />
+            <span className="absolute top-[-2px] left-[-2px] h-4 w-4 rounded-tl-md border-t-2 border-l-2 border-[var(--accent-green)]" />
+            <span className="absolute top-[-2px] right-[-2px] h-4 w-4 rounded-tr-md border-t-2 border-r-2 border-[var(--accent-green)]" />
             <span className="absolute bottom-[-2px] left-[-2px] h-4 w-4 rounded-bl-md border-b-2 border-l-2 border-[var(--accent-green)]" />
-            <span className="absolute bottom-[-2px] right-[-2px] h-4 w-4 rounded-br-md border-b-2 border-r-2 border-[var(--accent-green)]" />
+            <span className="absolute right-[-2px] bottom-[-2px] h-4 w-4 rounded-br-md border-r-2 border-b-2 border-[var(--accent-green)]" />
           </div>
 
           {/* Scan line — runs only while the ritual is in flight (1.4s here is
@@ -216,7 +230,7 @@ export function ScannerPage() {
           <div
             className={cn(
               'pointer-events-none absolute inset-x-12 top-1/2 h-[2px] origin-left transition-opacity duration-200',
-              scanning ? 'opacity-95' : 'opacity-0'
+              scanning ? 'opacity-95' : 'opacity-0',
             )}
             style={{
               background:
@@ -248,7 +262,7 @@ export function ScannerPage() {
             inputMode="numeric"
             autoComplete="off"
             placeholder="Digite o barcode"
-            className="min-w-0 flex-1 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
           />
           <Button
             variant="primary"
@@ -296,25 +310,26 @@ export function ScannerPage() {
           ) : null}
         </div>
 
-        <p className="mt-3 text-center t-caption">
-          {history.length} scan{history.length === 1 ? '' : 's'} · {missionScan ? 'missão ok' : 'pendente'}
+        <p className="t-caption mt-3 text-center">
+          {history.length} scan{history.length === 1 ? '' : 's'} ·{' '}
+          {missionScan ? 'missão ok' : 'pendente'}
         </p>
 
         {lastBarcode ? (
-          <p className="mt-1 text-center t-caption text-[var(--accent-green)]">
+          <p className="t-caption mt-1 text-center text-[var(--accent-green)]">
             Lido: {lastBarcode}
           </p>
         ) : null}
 
         {lookupError || cameraError ? (
-          <p className="mt-2 text-center t-caption text-[var(--accent-red)]">
+          <p className="t-caption mt-2 text-center text-[var(--accent-red)]">
             {lookupError ?? cameraError}
           </p>
         ) : null}
       </div>
 
       {firstRun ? (
-        <p className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
+        <p className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
           Primeiro passo: escaneie uma amostra real para liberar missões e impacto.
         </p>
@@ -336,12 +351,12 @@ export function ScannerPage() {
                   onClick={() => openModal({ kind: 'product', id: scan.id })}
                   className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
+                  <span className="bg-tint-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-2xl">
                     {scan.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{scan.name}</h3>
-                    <p className="mt-0.5 truncate t-caption">
+                    <p className="t-caption mt-0.5 truncate">
                       {scan.brand} · {scan.category}
                     </p>
                   </div>
@@ -371,7 +386,7 @@ export function ScannerPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <p className="mt-4 text-center t-body-sm">
+          <p className="t-body-sm mt-4 text-center">
             Nada encontrado para &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
@@ -382,12 +397,12 @@ export function ScannerPage() {
                   onClick={() => openModal({ kind: 'product', id: product.id })}
                   className="flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-80"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-2 text-2xl">
+                  <span className="bg-tint-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-2xl">
                     {product.emoji}
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="t-title truncate">{product.name}</h3>
-                    <p data-score={product.score} className="text-score mt-0.5 truncate t-caption">
+                    <p data-score={product.score} className="text-score t-caption mt-0.5 truncate">
                       {product.brand} · {product.tip}
                     </p>
                   </div>
@@ -405,4 +420,3 @@ export function ScannerPage() {
 // Re-export so the unused-import warning doesn't trigger if a future hook
 // rearranges the consumer; the symbol is referenced via ScanRecord above.
 export type { ScanRecord };
-

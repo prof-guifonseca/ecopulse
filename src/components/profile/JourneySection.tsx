@@ -54,12 +54,12 @@ export function JourneySection() {
             <li
               key={c.id}
               className={cn(
-                'flex shrink-0 items-center gap-1.5 rounded-full border-soft px-2.5 py-1',
+                'border-soft flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1',
                 isCurrent
-                  ? 'bg-tint-green-3 text-[var(--accent-green)] border-active'
+                  ? 'bg-tint-green-3 border-active text-[var(--accent-green)]'
                   : isPast
                     ? 'bg-tint-1 text-[var(--text-secondary)]'
-                    : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+                    : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
               )}
             >
               <Icon icon={I} size={12} />
@@ -70,7 +70,7 @@ export function JourneySection() {
       </ol>
 
       {progress.next ? (
-        <div className="rounded-[var(--radius-sm)] border-soft bg-tint-1 p-3">
+        <div className="border-soft bg-tint-1 rounded-[var(--radius-sm)] p-3">
           <p className="t-eyebrow mb-2">Para virar {progress.next.label}</p>
           {progress.missing.length === 0 ? (
             <p className="t-caption text-[var(--accent-green)]">
@@ -79,7 +79,7 @@ export function JourneySection() {
           ) : (
             <ul className="space-y-1.5">
               {progress.missing.map((m) => (
-                <li key={m.key} className="flex items-center gap-2 t-caption">
+                <li key={m.key} className="t-caption flex items-center gap-2">
                   <Icon icon={Circle} size={12} className="text-[var(--text-muted)]" />
                   <span>{m.message}</span>
                 </li>

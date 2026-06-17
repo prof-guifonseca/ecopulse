@@ -1,4 +1,10 @@
-import type { AvatarPose, BattleEvent, BattleOutcome, BattleSession, OpponentArchetype } from '@/types';
+import type {
+  AvatarPose,
+  BattleEvent,
+  BattleOutcome,
+  BattleSession,
+  OpponentArchetype,
+} from '@/types';
 
 export type ArenaCueTone =
   | 'neutral'
@@ -9,7 +15,14 @@ export type ArenaCueTone =
   | 'special'
   | 'finish';
 
-export type ArenaCueImpact = 'none' | 'spotlight' | 'strike' | 'guard' | 'focus' | 'burst' | 'finish';
+export type ArenaCueImpact =
+  | 'none'
+  | 'spotlight'
+  | 'strike'
+  | 'guard'
+  | 'focus'
+  | 'burst'
+  | 'finish';
 
 export interface BattleVisualCue {
   tone: ArenaCueTone;
@@ -40,7 +53,10 @@ export const ARENA_ARCHETYPE_LABELS: Record<OpponentArchetype, string> = {
   trickster: 'Truque',
 };
 
-export function battleEventToVisualCue(event: BattleEvent | undefined, session: BattleSession): BattleVisualCue {
+export function battleEventToVisualCue(
+  event: BattleEvent | undefined,
+  session: BattleSession,
+): BattleVisualCue {
   if (!event) {
     return {
       tone: 'neutral',
@@ -98,7 +114,13 @@ export function arenaOutcomePresentation(outcome: BattleOutcome): ArenaOutcomePr
   };
 }
 
-function cueForEventType(event: BattleEvent, session: BattleSession): Omit<BattleVisualCue, 'actorSide' | 'targetSide' | 'playerPose' | 'opponentPose' | 'damageLabel'> {
+function cueForEventType(
+  event: BattleEvent,
+  session: BattleSession,
+): Omit<
+  BattleVisualCue,
+  'actorSide' | 'targetSide' | 'playerPose' | 'opponentPose' | 'damageLabel'
+> {
   if (event.type === 'attack') {
     return baseCue({
       tone: 'attack',
@@ -173,7 +195,10 @@ function cueForEventType(event: BattleEvent, session: BattleSession): Omit<Battl
 }
 
 function baseCue(
-  cue: Omit<BattleVisualCue, 'actorSide' | 'targetSide' | 'playerPose' | 'opponentPose' | 'damageLabel'>
+  cue: Omit<
+    BattleVisualCue,
+    'actorSide' | 'targetSide' | 'playerPose' | 'opponentPose' | 'damageLabel'
+  >,
 ) {
   return cue;
 }
@@ -183,7 +208,7 @@ function poseForSide(
   actorSide: BattleVisualCue['actorSide'],
   targetSide: BattleVisualCue['targetSide'],
   cue: Pick<BattleVisualCue, 'tone' | 'impact'>,
-  outcome: BattleSession['outcome']
+  outcome: BattleSession['outcome'],
 ): AvatarPose {
   if (cue.tone === 'finish') return finishPoseForSide(side, outcome);
   if (side === actorSide) {
@@ -195,7 +220,10 @@ function poseForSide(
   return 'battleReady';
 }
 
-function finishPoseForSide(side: 'player' | 'opponent', outcome: BattleSession['outcome']): AvatarPose {
+function finishPoseForSide(
+  side: 'player' | 'opponent',
+  outcome: BattleSession['outcome'],
+): AvatarPose {
   if (outcome === 'draw') return 'battleReady';
   if (outcome === 'win') return side === 'player' ? 'victory' : 'defeat';
   if (outcome === 'loss') return side === 'player' ? 'defeat' : 'victory';

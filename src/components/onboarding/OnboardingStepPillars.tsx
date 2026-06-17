@@ -56,7 +56,8 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
         <div className="space-y-2">
           <h1 className="t-display">Da dúvida à ação.</h1>
           <p className="t-body max-w-[32ch] text-[var(--text-secondary)]">
-            A banca precisa entender rápido: o EcoPulse junta decisão de compra, cidade e comunidade em uma rotina.
+            A banca precisa entender rápido: o EcoPulse junta decisão de compra, cidade e comunidade
+            em uma rotina.
           </p>
         </div>
 
@@ -64,14 +65,14 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
           {PILLARS.map((p) => (
             <li
               key={p.title}
-              className="flex gap-4 rounded-[var(--radius-md)] border-soft bg-tint-1 p-4"
+              className="border-soft bg-tint-1 flex gap-4 rounded-[var(--radius-md)] p-4"
             >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-tint-green-3 text-[var(--accent-green)]">
+              <div className="bg-tint-green-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
                 <Icon icon={p.icon} size={22} strokeWidth={1.6} />
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="t-title">{p.title}</h2>
-                <p className="mt-1 t-body-sm">{p.body}</p>
+                <p className="t-body-sm mt-1">{p.body}</p>
               </div>
             </li>
           ))}

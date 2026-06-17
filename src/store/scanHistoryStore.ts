@@ -79,8 +79,8 @@ export const useScanHistoryStore = create<ScanHistoryState>()(
       name: 'ecopulse:scanHistory',
       version: 1,
       storage: createSafeJSONStorage<ScanHistoryState>(),
-    }
-  )
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

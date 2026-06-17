@@ -20,7 +20,7 @@ export function RegionMap({ region, children }: { region: Region; children?: Rea
 
   return (
     <div
-      className="relative overflow-hidden rounded-[var(--radius-md)] border-soft"
+      className="border-soft relative overflow-hidden rounded-[var(--radius-md)]"
       style={{ aspectRatio: '1 / 1' }}
       role="group"
       aria-label={`Mapa de ${region.name} · ${region.mapPoints.length} pontos sustentáveis`}
@@ -40,7 +40,7 @@ export function RegionMap({ region, children }: { region: Region; children?: Rea
         <span className="gps-dot relative block h-3 w-3 rounded-full" />
       </div>
 
-      <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-soft bg-scrim-card px-2.5 py-1 backdrop-blur-md">
+      <div className="border-soft bg-scrim-card pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 backdrop-blur-md">
         <Locate size={11} className="text-[var(--accent-gps)]" strokeWidth={2.4} />
         <span className="t-micro tracking-normal text-[var(--text-secondary)]">
           {`${region.name.toUpperCase()} · ${region.state}`}

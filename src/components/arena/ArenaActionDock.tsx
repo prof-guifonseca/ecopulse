@@ -15,14 +15,20 @@ interface Props {
   onNextRound: () => void;
 }
 
-export function ArenaActionDock({ session, reviewingRound, canChooseAction, onAction, onNextRound }: Props) {
+export function ArenaActionDock({
+  session,
+  reviewingRound,
+  canChooseAction,
+  onAction,
+  onNextRound,
+}: Props) {
   if (session.status === 'finished') {
     return (
       <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
         <div className="flex items-center justify-between gap-3 px-1 py-1">
           <div className="min-w-0">
             <p className="t-title">Sessão encerrada</p>
-            <p className="mt-0.5 t-caption">XP de teste registrado.</p>
+            <p className="t-caption mt-0.5">XP de teste registrado.</p>
           </div>
           <Icon icon={Zap} size={22} className="shrink-0 text-[var(--accent-gold)]" />
         </div>
@@ -56,15 +62,19 @@ export function ArenaActionDock({ session, reviewingRound, canChooseAction, onAc
             disabled={!canChooseAction}
             onClick={() => onAction(item.action)}
             className={cn(
-              'group min-h-[78px] rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-tint-2 px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-tint-green-2 disabled:cursor-not-allowed disabled:opacity-55',
-              item.tone
+              'group bg-tint-2 hover:bg-tint-green-2 min-h-[78px] rounded-[var(--radius-md)] border border-[var(--line-soft)] px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55',
+              item.tone,
             )}
           >
             <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[var(--bg-primary)] text-current shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
               <Icon icon={item.icon} size={18} />
             </span>
-            <span className="mt-2 block text-sm font-bold text-[var(--text-primary)]">{BATTLE_ACTION_LABELS[item.action]}</span>
-            <span className="mt-0.5 block text-[0.66rem] font-semibold text-[var(--text-secondary)]">{item.hint}</span>
+            <span className="mt-2 block text-sm font-bold text-[var(--text-primary)]">
+              {BATTLE_ACTION_LABELS[item.action]}
+            </span>
+            <span className="mt-0.5 block text-[0.66rem] font-semibold text-[var(--text-secondary)]">
+              {item.hint}
+            </span>
           </button>
         ))}
       </div>

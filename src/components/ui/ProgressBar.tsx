@@ -9,7 +9,14 @@ interface Props {
   ariaLabel?: string;
 }
 
-export function ProgressBar({ value, max = 100, size = 'md', className, fillClassName, ariaLabel }: Props) {
+export function ProgressBar({
+  value,
+  max = 100,
+  size = 'md',
+  className,
+  fillClassName,
+  ariaLabel,
+}: Props) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
 
   return (
@@ -20,13 +27,16 @@ export function ProgressBar({ value, max = 100, size = 'md', className, fillClas
       aria-valuemax={100}
       aria-label={ariaLabel}
       className={cn(
-        'overflow-hidden rounded-full bg-tint-3',
+        'bg-tint-3 overflow-hidden rounded-full',
         size === 'sm' ? 'h-1.5' : 'h-2',
-        className
+        className,
       )}
     >
       <div
-        className={cn('gradient-primary h-full rounded-full transition-[width] duration-500 ease-out', fillClassName)}
+        className={cn(
+          'gradient-primary h-full rounded-full transition-[width] duration-500 ease-out',
+          fillClassName,
+        )}
         style={{ width: `${pct}%` }}
       />
     </div>

@@ -81,21 +81,22 @@ describe('ESG OpenStreetMap integration', () => {
   });
 
   it('returns cached live results without calling Overpass again', async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({
-          elements: [
-            {
-              type: 'node',
-              id: 99,
-              lat: -23.31,
-              lon: -51.16,
-              tags: { name: 'Recicla Centro', amenity: 'recycling' },
-            },
-          ],
-        }),
-        { status: 200 }
-      )
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            elements: [
+              {
+                type: 'node',
+                id: 99,
+                lat: -23.31,
+                lon: -51.16,
+                tags: { name: 'Recicla Centro', amenity: 'recycling' },
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -111,7 +112,7 @@ describe('ESG OpenStreetMap integration', () => {
   it('falls back to the curated Londrina snapshot when the external provider fails', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => new Response('unavailable', { status: 503 }))
+      vi.fn(async () => new Response('unavailable', { status: 503 })),
     );
 
     const result = await searchEnvironmentalPlaces({ bbox: LONDRINA.bbox, limit: 20 });

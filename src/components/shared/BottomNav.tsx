@@ -29,12 +29,12 @@ export function BottomNav() {
     <nav
       id="bottom-nav"
       role="tablist"
-      className="shrink-0 border-t border-[var(--line-soft)] bg-[color-mix(in_srgb,var(--bg-primary)_92%,transparent)] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] pt-2 backdrop-blur-xl sm:px-8"
+      className="shrink-0 border-t border-[var(--line-soft)] bg-[color-mix(in_srgb,var(--bg-primary)_92%,transparent)] px-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] backdrop-blur-xl sm:px-8"
     >
-      <div className="relative mx-auto flex min-w-0 max-w-[var(--content-width)] items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-tint-1 p-1">
+      <div className="bg-tint-1 relative mx-auto flex max-w-[var(--content-width)] min-w-0 items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] p-1">
         <span
           aria-hidden
-          className="gradient-primary pointer-events-none absolute bottom-1 top-1 rounded-[var(--radius-md)]"
+          className="gradient-primary pointer-events-none absolute top-1 bottom-1 rounded-[var(--radius-md)]"
           style={{
             left: '0.25rem',
             width: `calc((100% - 0.5rem) / ${TABS.length})`,
@@ -56,21 +56,23 @@ export function BottomNav() {
               aria-label={t.label}
               className={cn(
                 'group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-[var(--radius-md)] px-1 py-1.5 transition-colors duration-200',
-                active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                active
+                  ? 'text-[var(--on-primary)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
               )}
             >
               <span
                 className={cn(
                   'flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] transition-all duration-300',
-                  active ? 'scale-105' : 'scale-100'
+                  active ? 'scale-105' : 'scale-100',
                 )}
               >
                 <Icon icon={t.icon} size={17} strokeWidth={active ? 2.2 : 1.7} />
               </span>
               <span
                 className={cn(
-                  'max-w-full truncate text-[0.62rem] font-semibold leading-none tracking-normal transition-colors duration-200',
-                  active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)]'
+                  'max-w-full truncate text-[0.62rem] leading-none font-semibold tracking-normal transition-colors duration-200',
+                  active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)]',
                 )}
               >
                 {t.label}

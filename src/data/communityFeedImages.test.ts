@@ -20,8 +20,9 @@ function pngSize(filePath: string) {
 
 describe('community feed images', () => {
   it('maps every simulated post to a local generated image', () => {
-    const missing = FEED_POSTS.filter((post) => !COMMUNITY_FEED_IMAGES[post.imageKey as keyof typeof COMMUNITY_FEED_IMAGES])
-      .map((post) => post.id);
+    const missing = FEED_POSTS.filter(
+      (post) => !COMMUNITY_FEED_IMAGES[post.imageKey as keyof typeof COMMUNITY_FEED_IMAGES],
+    ).map((post) => post.id);
 
     expect(missing).toEqual([]);
   });

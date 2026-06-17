@@ -43,7 +43,7 @@ export function OnboardingFlow() {
   };
 
   return (
-    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--content-width)] flex-col justify-between px-4 pb-[calc(env(safe-area-inset-bottom,0px)+28px)] pt-[calc(env(safe-area-inset-top,0px)+28px)] sm:px-8">
+    <div className="mx-auto flex h-[100dvh] w-full max-w-[var(--content-width)] flex-col justify-between px-4 pt-[calc(env(safe-area-inset-top,0px)+28px)] pb-[calc(env(safe-area-inset-bottom,0px)+28px)] sm:px-8">
       {step === 0 ? (
         <OnboardingStepVision onNext={() => setStep(1)} />
       ) : step === 1 ? (

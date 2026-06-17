@@ -14,6 +14,6 @@ export async function GET() {
       headers: {
         'Cache-Control': 'private, max-age=600',
       },
-    }
+    },
   );
 }

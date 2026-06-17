@@ -6,10 +6,12 @@ import type { ScanRecord } from '@/store/scanHistoryStore';
 
 export function performDemoScan(
   recentlyScannedIds: string[],
-  options: { firstRun?: boolean } = {}
+  options: { firstRun?: boolean } = {},
 ): ScanRecord {
   const game = useGameStore.getState();
-  const scanTemplateId = game.todaysMissionIds.find((id) => getMissionTemplate(id)?.slot === 'scan');
+  const scanTemplateId = game.todaysMissionIds.find(
+    (id) => getMissionTemplate(id)?.slot === 'scan',
+  );
   const scanTemplate = getMissionTemplate(scanTemplateId);
   const product = options.firstRun
     ? pickRealSampleProduct()

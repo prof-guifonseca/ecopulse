@@ -20,7 +20,8 @@ const SIZE_CLASSES: Record<Size, string> = {
 const TONE_CLASSES: Record<Tone, string> = {
   default: 'border-soft bg-tint-2 text-[var(--text-primary)]',
   brand: 'border-active bg-tint-green-3 text-[var(--accent-green)]',
-  reward: 'border border-[color:color-mix(in_srgb,var(--accent-gold)_36%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_12%,transparent)] text-[var(--accent-gold)]',
+  reward:
+    'border border-[color:color-mix(in_srgb,var(--accent-gold)_36%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_12%,transparent)] text-[var(--accent-gold)]',
 };
 
 /**
@@ -35,7 +36,7 @@ export function IconTile({ icon, size = 'md', tone = 'default', className }: Pro
         'flex shrink-0 items-center justify-center',
         SIZE_CLASSES[size],
         TONE_CLASSES[tone],
-        className
+        className,
       )}
       aria-hidden
     >

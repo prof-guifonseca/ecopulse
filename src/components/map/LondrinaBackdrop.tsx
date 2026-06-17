@@ -90,9 +90,15 @@ export function LondrinaBackdrop() {
         fontSize="3.2"
         letterSpacing="0.3"
       >
-        <text x="58" y="84" transform="rotate(-32 58 84)">AV. HIGIENÓPOLIS</text>
-        <text x="60" y="142" transform="rotate(32 60 142)">AV. BANDEIRANTES</text>
-        <text x="98" y="190" transform="rotate(-90 98 190)">AV. TIRADENTES</text>
+        <text x="58" y="84" transform="rotate(-32 58 84)">
+          AV. HIGIENÓPOLIS
+        </text>
+        <text x="60" y="142" transform="rotate(32 60 142)">
+          AV. BANDEIRANTES
+        </text>
+        <text x="98" y="190" transform="rotate(-90 98 190)">
+          AV. TIRADENTES
+        </text>
       </g>
 
       {/* Compass rose top-right */}
@@ -106,7 +112,15 @@ export function LondrinaBackdrop() {
 
       {/* Scale bar bottom-left — represents ~500 m at this zoom */}
       <g transform="translate(8 188)">
-        <rect x="0" y="0" width="28" height="2.4" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.3" />
+        <rect
+          x="0"
+          y="0"
+          width="28"
+          height="2.4"
+          fill="rgba(0,0,0,0.45)"
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="0.3"
+        />
         <rect x="0" y="0" width="14" height="2.4" fill="rgba(225,210,180,0.55)" />
         <text x="0" y="-2" fontSize="3" fill="rgba(255,255,255,0.55)">
           500 m

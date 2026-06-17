@@ -98,7 +98,9 @@ function normalizeProduct(product) {
   const evidenceFields = [
     packagingTags.length > 0 || clean(product.packaging) ? 'packaging' : null,
     novaGroup ? 'nova_group' : null,
-    ecoscoreGrade && !['unknown', 'not-applicable'].includes(ecoscoreGrade) ? 'ecoscore_grade' : null,
+    ecoscoreGrade && !['unknown', 'not-applicable'].includes(ecoscoreGrade)
+      ? 'ecoscore_grade'
+      : null,
     imageUrl ? 'image_front_url' : null,
     countriesTags.includes('brazil') ? 'countries_tags' : null,
   ].filter(Boolean);
@@ -128,10 +130,17 @@ function normalizeProduct(product) {
 function normalizeTags(values) {
   return (values ?? [])
     .flatMap((value) => String(value).split(','))
-    .map((value) => value.trim().toLowerCase().replace(/^(en|pt|fr|es):/, ''))
+    .map((value) =>
+      value
+        .trim()
+        .toLowerCase()
+        .replace(/^(en|pt|fr|es):/, ''),
+    )
     .filter(Boolean);
 }
 
 function clean(value) {
-  return String(value ?? '').trim().replace(/\s+/g, ' ');
+  return String(value ?? '')
+    .trim()
+    .replace(/\s+/g, ' ');
 }

@@ -30,7 +30,8 @@ export const MAP_POINTS: MapPoint[] = [
     lng: -51.1856858,
     lastVerifiedDays: 0,
     sourceName: 'Prefeitura de Londrina / OpenStreetMap',
-    sourceUrl: 'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos',
+    sourceUrl:
+      'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos',
     sourceUpdatedAt: SNAPSHOT_DATE,
     geocodeConfidence: 92,
     confidence: 84,
@@ -93,7 +94,8 @@ export const MAP_POINTS: MapPoint[] = [
     lastVerifiedDays: 0,
     phone: '(43) 3339-0475',
     sourceName: 'Prefeitura de Londrina',
-    sourceUrl: 'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos',
+    sourceUrl:
+      'https://portal.londrina.pr.gov.br/gestao-de-residuos-ambiente/destinacao-de-residuos',
     sourceUpdatedAt: SNAPSHOT_DATE,
     geocodeConfidence: 72,
     confidence: 76,

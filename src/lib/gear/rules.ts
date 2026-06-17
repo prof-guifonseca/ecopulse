@@ -7,7 +7,7 @@ export function ownedAfterGearItemPurchase(ownedGearItems: string[], itemId: str
 export function ownedAfterGearSetPurchase(
   ownedGearItems: string[],
   ownedGearSets: string[],
-  set: GearSet
+  set: GearSet,
 ) {
   return {
     ownedGearItems: unique([...ownedGearItems, ...set.itemIds]),
@@ -35,7 +35,7 @@ export function equipGearSet(loadout: AvatarLoadout, set: GearSet): AvatarLoadou
 export function isGearSetComplete(
   set: GearSet | undefined,
   loadout: AvatarLoadout,
-  itemsById: Map<string, GearItem>
+  itemsById: Map<string, GearItem>,
 ) {
   if (!set) return false;
   const equippedIds = new Set(Object.values(loadout.equippedGear).filter(Boolean));
@@ -74,7 +74,13 @@ export function deriveStatsFromLoadout({
 }
 
 export function loadoutPowerScore(stats: BattleStats): number {
-  return Math.round(stats.hp * 0.25 + stats.attack * 2 + stats.defense * 1.6 + stats.speed * 1.5 + stats.focus * 1.4);
+  return Math.round(
+    stats.hp * 0.25 +
+      stats.attack * 2 +
+      stats.defense * 1.6 +
+      stats.speed * 1.5 +
+      stats.focus * 1.4,
+  );
 }
 
 export function equippedGearIds(loadout: AvatarLoadout): string[] {

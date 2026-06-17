@@ -10,7 +10,7 @@ export interface EnvironmentalRankingContext {
 
 export function rankEnvironmentalPoints<T extends EnvironmentalPoint>(
   points: readonly T[],
-  context: EnvironmentalRankingContext
+  context: EnvironmentalRankingContext,
 ): T[] {
   const visited = new Set(context.visitedPointIds);
   const preferred = new Set(context.preferredCategories ?? []);

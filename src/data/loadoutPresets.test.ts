@@ -29,7 +29,7 @@ describe('avatar loadout presets', () => {
     const setIds = new Set(
       Object.values(loadout.equippedGear)
         .map((itemId) => getGearItem(itemId)?.setId)
-        .filter(Boolean)
+        .filter(Boolean),
     );
 
     expect(loadout.activeSetId).toBeNull();

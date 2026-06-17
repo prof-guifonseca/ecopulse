@@ -30,7 +30,9 @@ function readTitle(sp: SearchParams): string {
 }
 
 function readCaption(sp: SearchParams): string {
-  return typeof sp.caption === 'string' && sp.caption ? sp.caption : 'Sustentabilidade é lifestyle.';
+  return typeof sp.caption === 'string' && sp.caption
+    ? sp.caption
+    : 'Sustentabilidade é lifestyle.';
 }
 
 export async function generateMetadata({
@@ -61,11 +63,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function SharePage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
+export default async function SharePage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const ogPath = `/api/og?${paramsFrom(sp).toString()}`;
   const title = readTitle(sp);
@@ -79,7 +77,7 @@ export default async function SharePage({
         alt={title}
         width={1200}
         height={630}
-        className="w-full max-w-[480px] rounded-[var(--radius-lg)] border-soft"
+        className="border-soft w-full max-w-[480px] rounded-[var(--radius-lg)]"
       />
       <div className="space-y-2">
         <h1 className="t-headline">{title}</h1>

@@ -181,7 +181,7 @@ export function startBattleSession({
 export function resolveBattleRound(
   session: BattleSession,
   playerAction: BattleAction,
-  opponentActionOverride?: BattleAction
+  opponentActionOverride?: BattleAction,
 ): BattleSession {
   if (session.status === 'finished') return session;
 
@@ -205,7 +205,7 @@ export function resolveBattleRound(
   const roundEvents: BattleEvent[] = [];
 
   const pushEvent = (
-    event: Omit<BattleEvent, 'id' | 'playerHp' | 'opponentHp' | 'playerEnergy' | 'opponentEnergy'>
+    event: Omit<BattleEvent, 'id' | 'playerHp' | 'opponentHp' | 'playerEnergy' | 'opponentEnergy'>,
   ) => {
     const nextEvent = makeBattleEvent({
       seed: session.seed,
@@ -333,7 +333,9 @@ export function resolveBattleRound(
         opponentFocus,
         events: roundEvents,
         finished: roundFinished,
-        winnerId: roundFinished ? decideWinner(session.player, session.opponent, playerHp, opponentHp) : null,
+        winnerId: roundFinished
+          ? decideWinner(session.player, session.opponent, playerHp, opponentHp)
+          : null,
       },
     ],
   };
@@ -344,8 +346,14 @@ export function resolveBattleRound(
 export function finishBattleSession(session: BattleSession): BattleSession {
   if (session.status === 'finished') return session;
 
-  const winnerId = decideWinner(session.player, session.opponent, session.playerHp, session.opponentHp);
-  const outcome = winnerId === session.player.id ? 'win' : winnerId === session.opponent.id ? 'loss' : 'draw';
+  const winnerId = decideWinner(
+    session.player,
+    session.opponent,
+    session.playerHp,
+    session.opponentHp,
+  );
+  const outcome =
+    winnerId === session.player.id ? 'win' : winnerId === session.opponent.id ? 'loss' : 'draw';
   const finishRound = session.rounds.at(-1)?.round ?? Math.min(session.round, session.maxRounds);
   const finishEvent = makeBattleEvent({
     seed: session.seed,
@@ -362,8 +370,8 @@ export function finishBattleSession(session: BattleSession): BattleSession {
     effects: [{ type: 'finish', actorId: winnerId }],
     message:
       outcome === 'draw'
-      ? 'O teste encerra em empate técnico.'
-      : `${winnerId === session.player.id ? session.player.name : session.opponent.name} vence o treino tático.`,
+        ? 'O teste encerra em empate técnico.'
+        : `${winnerId === session.player.id ? session.player.name : session.opponent.name} vence o treino tático.`,
   });
 
   return {
@@ -637,7 +645,10 @@ function attackOutcome({
 }: AttackOutcomeInput): AttackOutcome {
   const variance = 0.82 + rng() * 0.36;
   const focusMultiplier = 1 + focusStacks * 0.12;
-  let damage = Math.max(3, attacker.stats.attack * variance * focusMultiplier - defender.stats.defense * 0.5);
+  let damage = Math.max(
+    3,
+    attacker.stats.attack * variance * focusMultiplier - defender.stats.defense * 0.5,
+  );
   const canSpecial = energy >= SPECIAL_COST;
   const special =
     canSpecial && rng() < Math.min(0.68, 0.24 + attacker.stats.focus / 170 + focusStacks * 0.1);
@@ -664,7 +675,12 @@ function attackOutcome({
   ];
 
   if (special) {
-    effects.push({ type: 'special', actorId: attacker.id, targetId: defender.id, amount: roundedDamage });
+    effects.push({
+      type: 'special',
+      actorId: attacker.id,
+      targetId: defender.id,
+      amount: roundedDamage,
+    });
     return {
       type: 'special',
       damage: roundedDamage,
@@ -675,7 +691,12 @@ function attackOutcome({
   }
 
   if (critical) {
-    effects.push({ type: 'critical', actorId: attacker.id, targetId: defender.id, amount: roundedDamage });
+    effects.push({
+      type: 'critical',
+      actorId: attacker.id,
+      targetId: defender.id,
+      amount: roundedDamage,
+    });
     return {
       type: 'critical',
       damage: roundedDamage,
@@ -686,7 +707,11 @@ function attackOutcome({
   }
 
   if (guardReduction > 0 || randomBlock) {
-    effects.push({ type: 'guard', actorId: defender.id, amount: Math.round((guardReduction || 0.42) * 100) });
+    effects.push({
+      type: 'guard',
+      actorId: defender.id,
+      amount: Math.round((guardReduction || 0.42) * 100),
+    });
     return {
       type: 'block',
       damage: roundedDamage,
@@ -714,7 +739,7 @@ function decideWinner(
   player: BattleFighter,
   opponent: BattleFighter,
   playerHp: number,
-  opponentHp: number
+  opponentHp: number,
 ) {
   if (playerHp <= 0 && opponentHp <= 0) return null;
   if (opponentHp <= 0) return player.id;

@@ -98,7 +98,8 @@ export function deriveScore(input: ScoreInput): ScoreResult {
   if (input.preGradedScore) rationale.push(`Eco-Score atribuído: ${input.preGradedScore}`);
   if (input.novaGroup) rationale.push(`Grupo NOVA: ${input.novaGroup}`);
   if (input.packagingTags.length > 0) rationale.push('Embalagem identificada');
-  if (input.hasKnownOrigin) rationale.push(input.isLocal ? 'Origem nacional' : 'Origem identificada');
+  if (input.hasKnownOrigin)
+    rationale.push(input.isLocal ? 'Origem nacional' : 'Origem identificada');
   if (rationale.length === 0) rationale.push('Dados parciais — score estimado.');
 
   return { score, breakdown, tip: buildTip(score), rationale };

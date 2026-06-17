@@ -28,7 +28,7 @@ export async function POST(request: Request) {
           score: scan.score,
           source: scan.source,
         },
-      })
+      }),
     );
 
     return Response.json({ scan }, { status: 201 });
