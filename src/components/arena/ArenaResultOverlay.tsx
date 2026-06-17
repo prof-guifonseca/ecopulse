@@ -83,13 +83,13 @@ function RewardTile({ label, value }: { label: string; value: string }) {
       <p className="truncate text-[0.64rem] font-semibold tracking-normal text-[var(--text-secondary)] uppercase">
         {label}
       </p>
-      <p className="t-title mt-1 text-[var(--text-primary)]">{value}</p>
+      <p className="t-title mt-1 text-[var(--foreground)]">{value}</p>
     </div>
   );
 }
 
 const RESULT_STYLE = {
-  win: 'border-[color-mix(in_srgb,var(--accent-green)_34%,transparent)] bg-[color-mix(in_srgb,var(--bg-secondary)_90%,var(--accent-green)_10%)] text-[var(--accent-green)]',
-  loss: 'border-[color-mix(in_srgb,var(--accent-red)_30%,transparent)] bg-[color-mix(in_srgb,var(--bg-secondary)_92%,var(--accent-red)_8%)] text-[var(--accent-red)]',
-  draw: 'border-[color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--bg-secondary)_92%,var(--accent-gold)_8%)] text-[var(--accent-gold)]',
+  win: 'border-[color-mix(in_srgb,var(--primary)_34%,transparent)] bg-[color-mix(in_srgb,var(--card)_90%,var(--primary)_10%)] text-[var(--primary)]',
+  loss: 'border-[color-mix(in_srgb,var(--destructive)_30%,transparent)] bg-[color-mix(in_srgb,var(--card)_92%,var(--destructive)_8%)] text-[var(--destructive)]',
+  draw: 'border-[color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--card)_92%,var(--accent-gold)_8%)] text-[var(--accent-gold)]',
 };

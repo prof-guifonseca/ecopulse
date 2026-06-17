@@ -215,14 +215,14 @@ export function ScannerPage() {
               transition: 'box-shadow 0.3s ease',
             }}
           >
-            <div className="absolute inset-0 flex items-center justify-center text-[var(--accent-green)]">
+            <div className="absolute inset-0 flex items-center justify-center text-[var(--primary)]">
               <Icon icon={Camera} size={44} strokeWidth={1.4} />
             </div>
             {/* Corner brackets — Apple Wallet scanner style */}
-            <span className="absolute top-[-2px] left-[-2px] h-4 w-4 rounded-tl-md border-t-2 border-l-2 border-[var(--accent-green)]" />
-            <span className="absolute top-[-2px] right-[-2px] h-4 w-4 rounded-tr-md border-t-2 border-r-2 border-[var(--accent-green)]" />
-            <span className="absolute bottom-[-2px] left-[-2px] h-4 w-4 rounded-bl-md border-b-2 border-l-2 border-[var(--accent-green)]" />
-            <span className="absolute right-[-2px] bottom-[-2px] h-4 w-4 rounded-br-md border-r-2 border-b-2 border-[var(--accent-green)]" />
+            <span className="absolute top-[-2px] left-[-2px] h-4 w-4 rounded-tl-md border-t-2 border-l-2 border-[var(--primary)]" />
+            <span className="absolute top-[-2px] right-[-2px] h-4 w-4 rounded-tr-md border-t-2 border-r-2 border-[var(--primary)]" />
+            <span className="absolute bottom-[-2px] left-[-2px] h-4 w-4 rounded-bl-md border-b-2 border-l-2 border-[var(--primary)]" />
+            <span className="absolute right-[-2px] bottom-[-2px] h-4 w-4 rounded-br-md border-r-2 border-b-2 border-[var(--primary)]" />
           </div>
 
           {/* Scan line — runs only while the ritual is in flight (1.4s here is
@@ -234,7 +234,7 @@ export function ScannerPage() {
             )}
             style={{
               background:
-                'linear-gradient(90deg, transparent, var(--accent-green) 35%, var(--accent-green) 65%, transparent)',
+                'linear-gradient(90deg, transparent, var(--primary) 35%, var(--primary) 65%, transparent)',
               animation: scanning ? 'scanLine 1.4s linear infinite' : 'none',
               filter: 'blur(0.5px)',
             }}
@@ -262,7 +262,7 @@ export function ScannerPage() {
             inputMode="numeric"
             autoComplete="off"
             placeholder="Digite o barcode"
-            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)] focus:border-[var(--line-active)]"
           />
           <Button
             variant="primary"
@@ -316,20 +316,18 @@ export function ScannerPage() {
         </p>
 
         {lastBarcode ? (
-          <p className="t-caption mt-1 text-center text-[var(--accent-green)]">
-            Lido: {lastBarcode}
-          </p>
+          <p className="t-caption mt-1 text-center text-[var(--primary)]">Lido: {lastBarcode}</p>
         ) : null}
 
         {lookupError || cameraError ? (
-          <p className="t-caption mt-2 text-center text-[var(--accent-red)]">
+          <p className="t-caption mt-2 text-center text-[var(--destructive)]">
             {lookupError ?? cameraError}
           </p>
         ) : null}
       </div>
 
       {firstRun ? (
-        <p className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
+        <p className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--primary)]">
           <Icon icon={Sparkles} size={14} className="mr-1.5 inline align-[-2px]" />
           Primeiro passo: escaneie uma amostra real para liberar missões e impacto.
         </p>
@@ -375,13 +373,13 @@ export function ScannerPage() {
           <span className="t-caption">{products.length} produtos</span>
         </div>
         <div className="input-shell flex items-center gap-3 px-4 py-3">
-          <Icon icon={Search} size={18} className="text-[var(--text-muted)]" />
+          <Icon icon={Search} size={18} className="text-[var(--muted-foreground)]" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Buscar produto"
             aria-label="Buscar produtos"
-            className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
+            className="t-body w-full bg-transparent outline-none placeholder:text-[var(--muted-foreground)]"
           />
         </div>
 

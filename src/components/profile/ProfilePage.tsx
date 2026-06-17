@@ -93,7 +93,7 @@ export function ProfilePage({ initialTab = 'impact' }: ProfilePageProps) {
               Nv {level} · {tribeLabel}
             </p>
             <p className="t-caption mt-1 text-[var(--text-secondary)]">{loadoutLabel}</p>
-            <p className="t-caption mt-1 inline-flex items-center gap-1 text-[var(--text-muted)]">
+            <p className="t-caption mt-1 inline-flex items-center gap-1 text-[var(--muted-foreground)]">
               <Icon icon={MapPin} size={11} />
               {region.blurb}
             </p>

@@ -36,7 +36,7 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            'radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--accent-green) 12%, transparent) 0%, transparent 55%)',
+            'radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 55%)',
         }}
       />
 
@@ -67,7 +67,7 @@ export function OnboardingStepPillars({ onNext, onBack }: Props) {
               key={p.title}
               className="border-soft bg-tint-1 flex gap-4 rounded-[var(--radius-md)] p-4"
             >
-              <div className="bg-tint-green-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
+              <div className="bg-tint-green-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary)]">
                 <Icon icon={p.icon} size={22} strokeWidth={1.6} />
               </div>
               <div className="min-w-0 flex-1">

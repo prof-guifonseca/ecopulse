@@ -20,12 +20,12 @@ export function MapCanvas(props: MapCanvasProps) {
 function MapCanvasLoading() {
   return (
     <div
-      className="border-soft relative grid place-items-center overflow-hidden rounded-[var(--radius-md)] bg-[var(--bg-secondary)]"
+      className="border-soft relative grid place-items-center overflow-hidden rounded-[var(--radius-md)] bg-[var(--card)]"
       style={{ aspectRatio: '1 / 1' }}
       role="status"
       aria-label="Carregando mapa"
     >
-      <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-[var(--accent-green)] border-t-transparent" />
+      <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
     </div>
   );
 }

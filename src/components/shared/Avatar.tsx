@@ -50,7 +50,7 @@ export function Avatar({
           width: sz,
           height: sz,
           borderRadius: '50%',
-          background: 'var(--bg-secondary)',
+          background: 'var(--card)',
         }}
       />
     );

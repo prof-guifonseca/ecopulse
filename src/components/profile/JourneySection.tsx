@@ -56,10 +56,10 @@ export function JourneySection() {
               className={cn(
                 'border-soft flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1',
                 isCurrent
-                  ? 'bg-tint-green-3 border-active text-[var(--accent-green)]'
+                  ? 'bg-tint-green-3 border-active text-[var(--primary)]'
                   : isPast
                     ? 'bg-tint-1 text-[var(--text-secondary)]'
-                    : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
+                    : 'bg-[var(--card)] text-[var(--muted-foreground)]',
               )}
             >
               <Icon icon={I} size={12} />
@@ -73,14 +73,14 @@ export function JourneySection() {
         <div className="border-soft bg-tint-1 rounded-[var(--radius-sm)] p-3">
           <p className="t-eyebrow mb-2">Para virar {progress.next.label}</p>
           {progress.missing.length === 0 ? (
-            <p className="t-caption text-[var(--accent-green)]">
+            <p className="t-caption text-[var(--primary)]">
               Tudo pronto. Próxima ação destrava o capítulo.
             </p>
           ) : (
             <ul className="space-y-1.5">
               {progress.missing.map((m) => (
                 <li key={m.key} className="t-caption flex items-center gap-2">
-                  <Icon icon={Circle} size={12} className="text-[var(--text-muted)]" />
+                  <Icon icon={Circle} size={12} className="text-[var(--muted-foreground)]" />
                   <span>{m.message}</span>
                 </li>
               ))}

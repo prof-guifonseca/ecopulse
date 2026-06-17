@@ -121,7 +121,7 @@ export function GearSetModal({ id }: Props) {
         </div>
 
         {equipped ? (
-          <div className="border-active bg-tint-green-2 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-2 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--primary)]">
             Equipado agora
           </div>
         ) : owned ? (
@@ -130,16 +130,16 @@ export function GearSetModal({ id }: Props) {
           </div>
         ) : locked ? (
           <div className="border-soft bg-tint-1 t-body-sm flex items-start gap-3 rounded-[var(--radius-md)] px-4 py-3">
-            <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--text-muted)]" />
+            <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--muted-foreground)]" />
             <div>
-              <p className="font-semibold text-[var(--text-primary)]">Bloqueado</p>
+              <p className="font-semibold text-[var(--foreground)]">Bloqueado</p>
               <p>
                 {unlockHint(setItem)} · {setItem.priceTokens} tokens
               </p>
             </div>
           </div>
         ) : (
-          <div className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--primary)]">
             Pronto para liberar.
           </div>
         )}

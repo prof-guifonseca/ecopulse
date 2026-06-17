@@ -10,8 +10,8 @@ export const iconTileVariants = cva('flex shrink-0 items-center justify-center',
       lg: 'h-14 w-14 rounded-[var(--radius-md)] text-2xl',
     },
     tone: {
-      default: 'border-soft bg-tint-2 text-[var(--text-primary)]',
-      brand: 'border-active bg-tint-green-3 text-[var(--accent-green)]',
+      default: 'border-soft bg-tint-2 text-[var(--foreground)]',
+      brand: 'border-active bg-tint-green-3 text-[var(--primary)]',
       reward:
         'border border-[color:color-mix(in_srgb,var(--accent-gold)_36%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_12%,transparent)] text-[var(--accent-gold)]',
     },

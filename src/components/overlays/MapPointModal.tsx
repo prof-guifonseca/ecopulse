@@ -144,7 +144,7 @@ function verificationLabel(point: EnvironmentalPoint): string {
 function Row({ icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-3">
-      <span className="inline-flex items-center gap-2 text-[var(--text-muted)]">
+      <span className="inline-flex items-center gap-2 text-[var(--muted-foreground)]">
         <Icon icon={icon} size={14} />
         <span className="t-caption">{label}</span>
       </span>

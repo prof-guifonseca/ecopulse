@@ -98,11 +98,11 @@ export function InstallPrompt() {
   return (
     <div className="px-4 pb-2 sm:px-8">
       <div className="border-soft bg-tint-2 mx-auto flex w-full max-w-[var(--content-width)] items-center gap-3 rounded-[var(--radius-md)] px-4 py-3">
-        <span className="bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
+        <span className="bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary)]">
           <Icon icon={isIOS ? Share : Download} size={18} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="t-body-sm font-semibold text-[var(--text-primary)]">Instalar o EcoPulse</p>
+          <p className="t-body-sm font-semibold text-[var(--foreground)]">Instalar o EcoPulse</p>
           {isIOS ? (
             <p className="t-caption">Toque em Compartilhar e em “Adicionar à Tela de Início”.</p>
           ) : (
@@ -118,7 +118,7 @@ export function InstallPrompt() {
           type="button"
           onClick={dismiss}
           aria-label="Dispensar"
-          className="hover:bg-tint-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+          className="hover:bg-tint-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
         >
           <Icon icon={X} size={16} />
         </button>

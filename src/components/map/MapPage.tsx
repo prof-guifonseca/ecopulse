@@ -242,7 +242,7 @@ export function MapPage() {
           id="map-location-search"
           value={locationQuery}
           onChange={(event) => setLocationQuery(event.target.value)}
-          className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] transition-colors outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+          className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--foreground)] transition-colors outline-none placeholder:text-[var(--muted-foreground)] focus:border-[var(--line-active)]"
           placeholder="Londrina, bairro ou endereço"
           autoComplete="off"
         />
@@ -287,7 +287,7 @@ export function MapPage() {
       </div>
 
       {sourceReason ? (
-        <p className="t-caption -mt-2 text-[var(--text-muted)]">
+        <p className="t-caption -mt-2 text-[var(--muted-foreground)]">
           {dataSource === 'official' || status === 'fallback' || status === 'error'
             ? 'Snapshot oficial/curado ativo enquanto a fonte aberta responde.'
             : 'Resultado reaproveitado de consulta recente.'}
@@ -324,8 +324,8 @@ export function MapPage() {
             className={cn(
               'flex-1 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors',
               panel === opt.v
-                ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-[var(--shadow-card)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
+                ? 'bg-[var(--card)] text-[var(--foreground)] shadow-[var(--shadow-card)]'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--text-secondary)]',
             )}
           >
             {opt.label}
@@ -354,7 +354,7 @@ export function MapPage() {
                     className={cn(
                       'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                       isVisited
-                        ? 'border-active bg-tint-green-2 text-[var(--accent-green)]'
+                        ? 'border-active bg-tint-green-2 text-[var(--primary)]'
                         : 'border-soft bg-tint-2 text-[var(--text-secondary)]',
                     )}
                   >
@@ -365,14 +365,14 @@ export function MapPage() {
                     <p className="t-caption truncate">
                       {distance} · {point.address}
                     </p>
-                    <p className="t-micro mt-0.5 tracking-normal text-[var(--text-muted)]">
+                    <p className="t-micro mt-0.5 tracking-normal text-[var(--muted-foreground)]">
                       {ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança {point.confidence}%
                     </p>
                   </div>
                   <Icon
                     icon={ChevronRight}
                     size={16}
-                    className="shrink-0 text-[var(--text-muted)]"
+                    className="shrink-0 text-[var(--muted-foreground)]"
                   />
                 </button>
               </li>
@@ -384,7 +384,7 @@ export function MapPage() {
           {events.map((event) => (
             <li key={event.id} className="flex items-center gap-4 px-4 py-3">
               <div className="border-soft bg-tint-2 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)]">
-                <span className="text-sm leading-none font-semibold text-[var(--text-primary)]">
+                <span className="text-sm leading-none font-semibold text-[var(--foreground)]">
                   {event.day}
                 </span>
                 <span className="t-caption mt-0.5 leading-none">{event.month}</span>

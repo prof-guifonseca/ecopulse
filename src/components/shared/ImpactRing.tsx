@@ -6,7 +6,7 @@ interface Props {
   value: string | number;
 }
 
-export function ImpactRing({ pct, color = 'var(--accent-green)', size = 72, label, value }: Props) {
+export function ImpactRing({ pct, color = 'var(--primary)', size = 72, label, value }: Props) {
   return (
     <div className="flex flex-col items-center gap-1.5">
       <div

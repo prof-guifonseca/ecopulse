@@ -43,7 +43,7 @@ export function MissionsBlock() {
                 className={cn(
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
                   isDone
-                    ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
+                    ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                     : 'border-soft text-[var(--text-secondary)]',
                 )}
               >
@@ -53,7 +53,7 @@ export function MissionsBlock() {
                   <Icon icon={MissionIcon} size={15} />
                 ) : null}
               </span>
-              <span className={cn('t-body flex-1', isDone && 'text-[var(--accent-green)]')}>
+              <span className={cn('t-body flex-1', isDone && 'text-[var(--primary)]')}>
                 {mission.title}
               </span>
               <span className="t-caption font-semibold text-[var(--accent-gold)]">

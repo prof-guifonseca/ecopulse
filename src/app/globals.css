@@ -34,33 +34,23 @@
   --ring: rgba(114, 211, 118, 0.38);
   --radius: 12px;
 
-  /* ---------- Surfaces (aliases → canonical) ---------- */
-  --bg-primary: var(--background); /* app canvas */
-  --bg-secondary: var(--card); /* default surface */
-  --bg-elevated: var(--popover); /* elevated surface */
-
-  /* ---------- Text (aliases → canonical) ---------- */
-  --text-primary: var(--foreground);
+  /* ---------- Text ---------- */
   --text-secondary: #b8c0b8;
-  --text-muted: var(--muted-foreground);
 
-  /* ---------- Brand ---------- */
-  --accent-green: var(--primary);
+  /* ---------- Brand (non-semantic accents; primary/destructive live above) ---------- */
   --accent-gold: #d8ad4d;
-  --accent-red: var(--destructive);
   --accent-cyan: #66bed6;
   --accent-orange: #d5915a;
   --accent-gps: #5aa9ff;
 
   /* Semantic score tokens (A=best → E=worst) */
-  --score-a: var(--accent-green);
+  --score-a: var(--primary);
   --score-b: var(--accent-cyan);
   --score-c: var(--accent-gold);
   --score-d: var(--accent-orange);
-  --score-e: var(--accent-red);
+  --score-e: var(--destructive);
 
-  /* On-gradient text (for primary/reward buttons & chips) */
-  --on-primary: var(--primary-foreground);
+  /* On-gradient text (reward chips; primary uses --primary-foreground) */
   --on-reward: #160f05;
 
   /* Deep canvas — used by hero gradients and the desktop body background.
@@ -71,7 +61,6 @@
 
   /* Focus ring — composed of an inner darken plus an outer brand glow */
   --focus-ring-inner: rgba(7, 11, 15, 0.95);
-  --focus-ring-outer: var(--ring);
 
   /* ---------- Tints (white) ---------- */
   /* Use exclusively for subtle inset surfaces. */
@@ -81,15 +70,13 @@
   --tint-4: rgba(255, 255, 255, 0.1);
 
   /* ---------- Tints (brand) ---------- */
-  --tint-green-1: color-mix(in srgb, var(--accent-green) 4%, transparent);
-  --tint-green-2: color-mix(in srgb, var(--accent-green) 9%, transparent);
-  --tint-green-3: color-mix(in srgb, var(--accent-green) 15%, transparent);
-  --tint-green-4: color-mix(in srgb, var(--accent-green) 28%, transparent);
+  --tint-green-1: color-mix(in srgb, var(--primary) 4%, transparent);
+  --tint-green-2: color-mix(in srgb, var(--primary) 9%, transparent);
+  --tint-green-3: color-mix(in srgb, var(--primary) 15%, transparent);
+  --tint-green-4: color-mix(in srgb, var(--primary) 28%, transparent);
 
-  /* ---------- Lines (soft/strong alias → canonical border/input) ---------- */
-  --line-soft: var(--border);
-  --line-strong: var(--input);
-  --line-active: color-mix(in srgb, var(--accent-green) 38%, transparent);
+  /* ---------- Lines (border/input live above; active is brand-tinted) ---------- */
+  --line-active: color-mix(in srgb, var(--primary) 38%, transparent);
 
   /* ---------- Glass (header, nav, modals) ---------- */
   --glass-bg: rgba(8, 13, 17, 0.88);
@@ -99,7 +86,7 @@
   /* ---------- Gradients ---------- */
   --gradient-primary: linear-gradient(135deg, #66c96d 0%, #8ce287 100%);
   --gradient-gold: linear-gradient(135deg, #e2ba55 0%, #c98932 100%);
-  --gradient-canvas: linear-gradient(180deg, var(--bg-canvas-deep) 0%, var(--bg-primary) 55%);
+  --gradient-canvas: linear-gradient(180deg, var(--bg-canvas-deep) 0%, var(--background) 55%);
 
   /* ---------- Elevation ---------- */
   --shadow-card-val: 0 14px 34px -24px rgba(0, 0, 0, 0.72);
@@ -163,19 +150,19 @@
   --color-ring: var(--ring);
   --radius-DEFAULT: var(--radius);
 
-  --color-bg-primary: var(--bg-primary);
-  --color-bg-secondary: var(--bg-secondary);
-  --color-bg-elevated: var(--bg-elevated);
-  --color-text-primary: var(--text-primary);
+  --color-bg-primary: var(--background);
+  --color-bg-secondary: var(--card);
+  --color-bg-elevated: var(--popover);
+  --color-text-primary: var(--foreground);
   --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-accent-green: var(--accent-green);
+  --color-text-muted: var(--muted-foreground);
+  --color-accent-green: var(--primary);
   --color-accent-gold: var(--accent-gold);
-  --color-accent-red: var(--accent-red);
+  --color-accent-red: var(--destructive);
   --color-accent-cyan: var(--accent-cyan);
   --color-accent-orange: var(--accent-orange);
   --color-accent-gps: var(--accent-gps);
-  --color-on-primary: var(--on-primary);
+  --color-on-primary: var(--primary-foreground);
   --color-on-reward: var(--on-reward);
   --color-tint-1: var(--tint-1);
   --color-tint-2: var(--tint-2);
@@ -436,7 +423,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    background: var(--bg-primary);
+    background: var(--background);
   }
 
   body {
@@ -445,10 +432,10 @@
     font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.55;
-    color: var(--text-primary);
+    color: var(--foreground);
     background:
       radial-gradient(circle at 50% -12%, rgba(114, 211, 118, 0.045), transparent 36%),
-      var(--bg-primary);
+      var(--background);
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
   }
@@ -459,10 +446,10 @@
       background:
         radial-gradient(
           ellipse 80% 40% at 50% -10%,
-          color-mix(in srgb, var(--accent-green) 5%, transparent),
+          color-mix(in srgb, var(--primary) 5%, transparent),
           transparent 70%
         ),
-        var(--bg-primary);
+        var(--background);
     }
   }
 
@@ -518,14 +505,14 @@
 
   ::selection {
     background: var(--tint-green-3);
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   :where(button, a, input, textarea, select):focus-visible {
     outline: none;
     box-shadow:
       0 0 0 1px var(--focus-ring-inner),
-      0 0 0 3px var(--focus-ring-outer);
+      0 0 0 3px var(--ring);
   }
 
   ::-webkit-scrollbar {
@@ -560,7 +547,7 @@
      ========================================================= */
   .device-shell {
     position: relative;
-    background: var(--bg-primary);
+    background: var(--background);
   }
 
   /* =========================================================
@@ -570,19 +557,15 @@
   .card {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg-secondary) 96%, white 4%),
-      var(--bg-secondary)
-    );
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, white 4%), var(--card));
     box-shadow: var(--shadow-card-val);
   }
 
   .card-soft {
     position: relative;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background: var(--tint-1);
   }
 
@@ -599,10 +582,10 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--bg-elevated) 96%, white 4%),
+      color-mix(in srgb, var(--popover) 96%, white 4%),
       var(--bg-hero-bottom)
     );
     box-shadow: var(--shadow-card-val);
@@ -614,8 +597,8 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
-    background: linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--popover), var(--bg-editorial-bottom));
     box-shadow: var(--shadow-card-val);
     isolation: isolate;
   }
@@ -707,7 +690,7 @@
     font-weight: 700;
     line-height: 1.08;
     letter-spacing: 0;
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   .t-headline {
@@ -716,7 +699,7 @@
     font-weight: 700;
     line-height: 1.12;
     letter-spacing: 0;
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   .t-title {
@@ -725,7 +708,7 @@
     font-weight: 700;
     line-height: 1.25;
     letter-spacing: 0;
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   .t-body {
@@ -733,7 +716,7 @@
     font-size: 0.9rem;
     font-weight: 400;
     line-height: 1.6;
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   .t-body-sm {
@@ -741,7 +724,7 @@
     font-size: 0.8rem;
     font-weight: 400;
     line-height: 1.55;
-    color: var(--text-muted);
+    color: var(--muted-foreground);
   }
 
   .t-caption {
@@ -749,7 +732,7 @@
     font-size: 0.72rem;
     font-weight: 500;
     line-height: 1.4;
-    color: var(--text-muted);
+    color: var(--muted-foreground);
     letter-spacing: 0;
   }
 
@@ -759,7 +742,7 @@
     font-weight: 600;
     letter-spacing: 0;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--muted-foreground);
   }
 
   .t-label {
@@ -768,7 +751,7 @@
     font-weight: 600;
     letter-spacing: 0;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--muted-foreground);
   }
 
   /* Smallest UI atoms: counter pills, status chips, in-button badges */
@@ -787,7 +770,7 @@
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0;
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   /* Editorial italic flourish on Fraunces — apply to specific words via a span */
@@ -807,10 +790,10 @@
 
   /* Token-aware borders (replace `border border-[var(--line-*)]`) */
   .border-soft {
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
   }
   .border-strong {
-    border: 1px solid var(--line-strong);
+    border: 1px solid var(--input);
   }
   .border-active {
     border: 1px solid var(--line-active);
@@ -839,7 +822,7 @@
     align-items: center;
     gap: 0.35rem;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background: var(--tint-2);
     padding: 0.34rem 0.58rem;
     font-size: 0.72rem;
@@ -850,20 +833,20 @@
   }
 
   .command-pill:hover {
-    color: var(--text-primary);
-    border-color: var(--line-strong);
+    color: var(--foreground);
+    border-color: var(--input);
   }
 
   .command-pill[data-active='true'] {
     border-color: var(--line-active);
     background: var(--tint-green-2);
-    color: var(--text-primary);
+    color: var(--foreground);
   }
 
   /* Form shell */
   .input-shell {
     border-radius: var(--radius-sm);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background: var(--tint-1);
     transition:
       border-color 0.18s ease,
@@ -882,7 +865,7 @@
     height: var(--ring-size, 72px);
     border-radius: 999px;
     background: conic-gradient(
-      var(--ring-color, var(--accent-green)) calc(var(--ring-pct, 0) * 1%),
+      var(--ring-color, var(--primary)) calc(var(--ring-pct, 0) * 1%),
       var(--tint-3) 0
     );
     display: flex;
@@ -895,8 +878,8 @@
     position: absolute;
     inset: 6px;
     border-radius: 999px;
-    border: 1px solid var(--line-soft);
-    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    background: var(--background);
   }
 
   .impact-ring > * {
@@ -910,10 +893,10 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background:
       radial-gradient(circle at 50% 30%, var(--tint-green-2), transparent 60%),
-      linear-gradient(180deg, var(--bg-elevated), var(--bg-editorial-bottom));
+      linear-gradient(180deg, var(--popover), var(--bg-editorial-bottom));
   }
 
   /* Pulsing radial light behind the camera target */
@@ -926,7 +909,7 @@
     border-radius: 999px;
     background: radial-gradient(
       circle,
-      color-mix(in srgb, var(--accent-green) 22%, transparent) 0%,
+      color-mix(in srgb, var(--primary) 22%, transparent) 0%,
       transparent 65%
     );
     filter: blur(8px);
@@ -952,14 +935,14 @@
   .scan-ring-outer {
     width: 180px;
     height: 180px;
-    border: 1px dashed color-mix(in srgb, var(--accent-green) 35%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--primary) 35%, transparent);
     animation: ringSpin 14s linear infinite;
   }
   .scan-ring-inner {
     width: 140px;
     height: 140px;
-    border: 1px solid color-mix(in srgb, var(--accent-green) 28%, transparent);
-    border-top-color: color-mix(in srgb, var(--accent-green) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+    border-top-color: color-mix(in srgb, var(--primary) 70%, transparent);
     animation: ringSpin 4s linear infinite reverse;
   }
   .scan-frame[data-scanning='true'] .scan-ring-outer {
@@ -1016,7 +999,7 @@
   .gps-dot {
     background: var(--accent-gps);
     box-shadow:
-      0 0 0 2px var(--bg-primary),
+      0 0 0 2px var(--background),
       0 0 12px color-mix(in srgb, var(--accent-gps) 60%, transparent);
   }
 
@@ -1035,7 +1018,7 @@
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--line-soft);
+    border: 1px solid var(--border);
     background: var(--tint-1);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);

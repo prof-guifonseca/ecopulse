@@ -18,7 +18,7 @@ export function ArenaRoundTimeline({ session, events, activeEventId, reviewingRo
   const latestRound = session.rounds.at(-1);
 
   return (
-    <section className="bg-tint-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] px-4 py-4">
+    <section className="bg-tint-1 rounded-[var(--radius-lg)] border border-[var(--border)] px-4 py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="t-eyebrow">Timeline</p>
@@ -64,7 +64,7 @@ function TimelineEvent({
         'grid grid-cols-[32px_minmax(0,1fr)_auto] items-start gap-3 rounded-[var(--radius-md)] border px-3 py-2.5 transition-colors',
         active
           ? 'bg-tint-green-2 border-[var(--line-active)]'
-          : 'border-[var(--line-soft)] bg-black/10',
+          : 'border-[var(--border)] bg-black/10',
       )}
     >
       <span
@@ -79,7 +79,7 @@ function TimelineEvent({
         <p
           className={cn(
             'text-sm leading-tight font-bold',
-            active ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]',
+            active ? 'text-[var(--foreground)]' : 'text-[var(--text-secondary)]',
           )}
         >
           {cue.title}
@@ -99,7 +99,7 @@ function TimelineEvent({
 
 function ActionChip({ label, action }: { label: string; action: BattleAction }) {
   return (
-    <span className="rounded-full border border-[var(--line-soft)] bg-black/16 px-2 py-1 text-[0.64rem] font-semibold text-[var(--text-secondary)]">
+    <span className="rounded-full border border-[var(--border)] bg-black/16 px-2 py-1 text-[0.64rem] font-semibold text-[var(--text-secondary)]">
       {label}: {BATTLE_ACTION_LABELS[action]}
     </span>
   );
@@ -122,10 +122,10 @@ const CUE_ICON: Record<ReturnType<typeof battleEventToVisualCue>['iconName'], Lu
 
 const CUE_TEXT: Record<ReturnType<typeof battleEventToVisualCue>['tone'], string> = {
   neutral: 'text-[var(--text-secondary)]',
-  attack: 'text-[var(--accent-red)]',
+  attack: 'text-[var(--destructive)]',
   defend: 'text-[var(--accent-cyan)]',
   focus: 'text-[var(--accent-gold)]',
   critical: 'text-[var(--accent-gold)]',
   special: 'text-[var(--accent-cyan)]',
-  finish: 'text-[var(--accent-green)]',
+  finish: 'text-[var(--primary)]',
 };

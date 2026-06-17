@@ -38,11 +38,11 @@ export function OnboardingStepVision({ onNext }: Props) {
 
       <main className="animate-fade-in relative flex flex-1 flex-col justify-end gap-6">
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--line-soft)] bg-black/20 px-3 py-1.5 text-[var(--accent-green)] backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-black/20 px-3 py-1.5 text-[var(--primary)] backdrop-blur-md">
             <Icon icon={Sparkles} size={14} />
             <span className="t-micro">Protótipo navegável</span>
           </div>
-          <h1 className="text-[2.85rem] leading-[0.92] font-black tracking-normal text-[var(--text-primary)] sm:text-[3.45rem]">
+          <h1 className="text-[2.85rem] leading-[0.92] font-black tracking-normal text-[var(--foreground)] sm:text-[3.45rem]">
             EcoPulse
           </h1>
           <p className="t-body max-w-[31ch] text-[var(--text-secondary)]">
@@ -57,9 +57,9 @@ export function OnboardingStepVision({ onNext }: Props) {
               key={item.label}
               className="rounded-[var(--radius-sm)] border border-white/10 bg-black/20 px-3 py-3 backdrop-blur-md"
             >
-              <Icon icon={item.icon} size={16} className="text-[var(--accent-green)]" />
-              <p className="t-micro mt-2 text-[var(--text-primary)]">{item.label}</p>
-              <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--text-muted)]">
+              <Icon icon={item.icon} size={16} className="text-[var(--primary)]" />
+              <p className="t-micro mt-2 text-[var(--foreground)]">{item.label}</p>
+              <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--muted-foreground)]">
                 {item.value}
               </p>
             </li>

@@ -105,7 +105,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
         ref={surfaceRef}
         tabIndex={-1}
         className={cn(
-          'border-soft relative w-full max-w-[var(--shell-width)] bg-[var(--bg-secondary)] shadow-[var(--shadow-lifted)] outline-none',
+          'border-soft relative w-full max-w-[var(--shell-width)] bg-[var(--card)] shadow-[var(--shadow-lifted)] outline-none',
           variant === 'center'
             ? 'animate-fade-in mx-4 rounded-[var(--radius-lg)]'
             : 'animate-slide-up rounded-t-[var(--radius-lg)]',
@@ -126,7 +126,7 @@ export function Modal({ onClose, children, variant = 'bottom' }: Props) {
             className="pointer-events-none absolute inset-x-0 top-0 h-px"
             style={{
               background:
-                'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--accent-green) 40%, transparent) 50%, transparent 100%)',
+                'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary) 40%, transparent) 50%, transparent 100%)',
             }}
           />
         ) : null}

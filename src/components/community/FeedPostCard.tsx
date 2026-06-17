@@ -74,7 +74,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
 
       <div className="space-y-3 px-4 py-4">
         <p className="t-body">{post.caption}</p>
-        <p className="t-micro text-[var(--text-muted)]">
+        <p className="t-micro text-[var(--muted-foreground)]">
           Fonte:{' '}
           {post.sourceUrl ? (
             <a
@@ -95,7 +95,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
             active={liked}
             onClick={toggle}
             leftIcon={<Icon icon={Heart} size={14} fill={liked ? 'currentColor' : 'none'} />}
-            className={cn(liked && 'text-[var(--accent-red)]')}
+            className={cn(liked && 'text-[var(--destructive)]')}
           >
             {likeCount}
           </Chip>
@@ -121,7 +121,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
             className="hover:bg-tint-1 -mx-1 block w-full rounded-md px-1 py-1 text-left transition-colors"
           >
             <p className="t-body-sm">
-              <span className="font-semibold text-[var(--text-primary)]">{firstComment.user}</span>{' '}
+              <span className="font-semibold text-[var(--foreground)]">{firstComment.user}</span>{' '}
               <span className="text-[var(--text-secondary)]">{firstComment.text}</span>
             </p>
             {commentCount > 1 ? <p className="t-caption mt-0.5">Ver comentários</p> : null}

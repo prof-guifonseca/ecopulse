@@ -20,7 +20,7 @@ export function ArenaProgressPanel({ progress, totalOpponents }: Props) {
     <section className="space-y-3">
       <Card tone="solid" padded={false} className="border-soft px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="bg-tint-green-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[var(--accent-green)]">
+          <span className="bg-tint-green-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[var(--primary)]">
             <Icon icon={Trophy} size={21} />
           </span>
           <div className="min-w-0 flex-1">
@@ -97,8 +97,8 @@ function Metric({
 }) {
   return (
     <div className="bg-tint-1 min-w-0 rounded-[var(--radius-md)] px-2 py-2 text-center">
-      <Icon icon={icon} size={14} className="mx-auto text-[var(--accent-green)]" />
-      <p className="mt-1 truncate text-[0.62rem] font-semibold tracking-normal text-[var(--text-muted)] uppercase">
+      <Icon icon={icon} size={14} className="mx-auto text-[var(--primary)]" />
+      <p className="mt-1 truncate text-[0.62rem] font-semibold tracking-normal text-[var(--muted-foreground)] uppercase">
         {label}
       </p>
       <p className="t-title mt-0.5">{value}</p>

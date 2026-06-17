@@ -78,7 +78,7 @@ export function FlorestaSection() {
     <Card className="p-4">
       <header className="mb-3 flex items-baseline justify-between gap-2">
         <h2 className="t-title">Floresta EcoPulse</h2>
-        <span className="t-micro text-[var(--text-muted)]">Suas ações</span>
+        <span className="t-micro text-[var(--muted-foreground)]">Suas ações</span>
       </header>
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {metrics.map((m) => (
@@ -93,12 +93,12 @@ export function FlorestaSection() {
                 <ConfidenceTag kind={m.confidence} />
               </div>
               <p className="t-caption truncate">{m.label}</p>
-              <p className="t-micro mt-0.5 text-[var(--text-muted)]">{m.hint}</p>
+              <p className="t-micro mt-0.5 text-[var(--muted-foreground)]">{m.hint}</p>
             </div>
           </li>
         ))}
       </ul>
-      <p className="t-micro mt-3 text-[var(--text-muted)]">
+      <p className="t-micro mt-3 text-[var(--muted-foreground)]">
         Contagens vêm das suas visitas registradas no mapa; massas (kg/L) são estimativas por
         visita, não medições.
       </p>

@@ -13,10 +13,10 @@ export const iconButtonVariants = cva(
       variant: {
         /** No chrome until hover. Used in modal headers, where the surface itself
             should carry the visual weight. */
-        ghost: 'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--text-primary)]',
+        ghost: 'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--foreground)]',
         /** Subtle filled circle. Used inside content blocks (onboarding back-arrow,
             list rows) where the button needs to read as a target before hover. */
-        soft: 'border-soft bg-tint-1 text-[var(--text-secondary)] hover:border-[var(--line-strong)] hover:text-[var(--text-primary)]',
+        soft: 'border-soft bg-tint-1 text-[var(--text-secondary)] hover:border-[var(--input)] hover:text-[var(--foreground)]',
       },
     },
     defaultVariants: { size: 'md', variant: 'ghost' },

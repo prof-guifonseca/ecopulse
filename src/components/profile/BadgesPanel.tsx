@@ -25,13 +25,13 @@ export function BadgesPanel({ owned }: { owned: string[] }) {
                 className={cn(
                   'flex h-12 w-12 items-center justify-center rounded-full',
                   unlocked
-                    ? 'border-active bg-tint-green-2 text-[var(--accent-green)]'
+                    ? 'border-active bg-tint-green-2 text-[var(--primary)]'
                     : 'border-soft text-[var(--text-secondary)]',
                 )}
               >
                 {Lucide ? <Icon icon={Lucide} size={20} /> : null}
               </span>
-              <div className="t-caption leading-tight font-semibold text-[var(--text-primary)]">
+              <div className="t-caption leading-tight font-semibold text-[var(--foreground)]">
                 {badge.name}
               </div>
             </div>

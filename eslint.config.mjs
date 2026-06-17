@@ -184,6 +184,14 @@ const eslintConfig = defineConfig([
             "JSXAttribute[name.name='className'] > JSXExpressionContainer > BinaryExpression",
           message: 'Compose className with cn() instead of string concatenation.',
         },
+        {
+          // No magic hex colours in className — every colour goes through a
+          // design token (var(--token) or a token utility). Dimensional
+          // arbitraries (px/rem) stay allowed for genuine one-offs.
+          selector: "JSXAttribute[name.name='className'] Literal[value=/-\\[#[0-9a-fA-F]/]",
+          message:
+            'No raw hex colours in className — use a design token (var(--…) or a token utility).',
+        },
       ],
     },
   },

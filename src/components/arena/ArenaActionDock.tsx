@@ -24,7 +24,7 @@ export function ArenaActionDock({
 }: Props) {
   if (session.status === 'finished') {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
+      <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
         <div className="flex items-center justify-between gap-3 px-1 py-1">
           <div className="min-w-0">
             <p className="t-title">Sessão encerrada</p>
@@ -38,7 +38,7 @@ export function ArenaActionDock({
 
   if (reviewingRound) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
+      <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
         <Button
           variant="secondary"
           size="lg"
@@ -53,7 +53,7 @@ export function ArenaActionDock({
   }
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
+    <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--glass-bg)] p-3 shadow-[var(--shadow-lifted)] backdrop-blur-xl">
       <div className="grid grid-cols-3 gap-2">
         {ACTION_BUTTONS.map((item) => (
           <button
@@ -62,14 +62,14 @@ export function ArenaActionDock({
             disabled={!canChooseAction}
             onClick={() => onAction(item.action)}
             className={cn(
-              'group bg-tint-2 hover:bg-tint-green-2 min-h-[78px] rounded-[var(--radius-md)] border border-[var(--line-soft)] px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55',
+              'group bg-tint-2 hover:bg-tint-green-2 min-h-[78px] rounded-[var(--radius-md)] border border-[var(--border)] px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55',
               item.tone,
             )}
           >
-            <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[var(--bg-primary)] text-current shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
+            <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-current shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
               <Icon icon={item.icon} size={18} />
             </span>
-            <span className="mt-2 block text-sm font-bold text-[var(--text-primary)]">
+            <span className="mt-2 block text-sm font-bold text-[var(--foreground)]">
               {BATTLE_ACTION_LABELS[item.action]}
             </span>
             <span className="mt-0.5 block text-[0.66rem] font-semibold text-[var(--text-secondary)]">
@@ -88,7 +88,7 @@ const ACTION_BUTTONS: Array<{
   icon: LucideIcon;
   tone: string;
 }> = [
-  { action: 'attack', hint: '+10 energia', icon: Swords, tone: 'text-[var(--accent-red)]' },
+  { action: 'attack', hint: '+10 energia', icon: Swords, tone: 'text-[var(--destructive)]' },
   { action: 'defend', hint: '+8 energia', icon: ShieldCheck, tone: 'text-[var(--accent-cyan)]' },
   { action: 'focus', hint: '+14 energia', icon: Brain, tone: 'text-[var(--accent-gold)]' },
 ];

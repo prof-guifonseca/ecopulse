@@ -8,11 +8,11 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         default: 'bg-tint-2 text-[var(--text-secondary)]',
-        brand: 'bg-tint-green-3 text-[var(--accent-green)]',
+        brand: 'bg-tint-green-3 text-[var(--primary)]',
         reward: 'gradient-gold text-[var(--on-reward)]',
         outline: 'border-soft text-[var(--text-secondary)]',
         destructive:
-          'bg-[color:color-mix(in_srgb,var(--accent-red)_18%,transparent)] text-[var(--accent-red)]',
+          'bg-[color:color-mix(in_srgb,var(--destructive)_18%,transparent)] text-[var(--destructive)]',
       },
       size: {
         sm: 'h-5 px-1.5 text-[0.66rem]',

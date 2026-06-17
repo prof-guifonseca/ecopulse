@@ -31,7 +31,7 @@ export default function MainError({
         className="mt-2 inline-flex h-10 items-center justify-center rounded-[var(--radius-sm)] px-5 text-sm font-semibold"
         style={{
           background: 'var(--gradient-primary)',
-          color: 'var(--on-primary)',
+          color: 'var(--primary-foreground)',
         }}
       >
         Tentar de novo

@@ -47,13 +47,13 @@ export function OpponentCard({
           'relative h-full overflow-hidden rounded-[var(--radius-lg)] border px-3 py-3 transition-all duration-200',
           selected
             ? 'bg-tint-green-2 border-[var(--line-active)] shadow-[var(--shadow-glow)]'
-            : 'bg-tint-1 hover:bg-tint-2 border-[var(--line-soft)]',
+            : 'bg-tint-1 hover:bg-tint-2 border-[var(--border)]',
           locked && 'opacity-50',
         )}
       >
         {isPatron ? (
           <span
-            className="absolute top-2 right-2 z-10 rounded-full bg-[var(--accent-gold)] px-2 py-0.5 text-[0.6rem] font-bold tracking-wide text-[var(--bg-primary)] uppercase"
+            className="absolute top-2 right-2 z-10 rounded-full bg-[var(--accent-gold)] px-2 py-0.5 text-[0.6rem] font-bold tracking-wide text-[var(--background)] uppercase"
             aria-label={`Patrono da tribo ${patronLabel ?? ''}`.trim()}
           >
             Patrono{patronLabel ? ` · ${patronLabel}` : ''}
@@ -71,7 +71,7 @@ export function OpponentCard({
           <div
             className={cn(
               'relative flex h-16 w-16 shrink-0 items-end justify-center rounded-full border bg-black/22',
-              selected ? 'border-[var(--line-active)]' : 'border-[var(--line-soft)]',
+              selected ? 'border-[var(--line-active)]' : 'border-[var(--border)]',
             )}
           >
             <span
@@ -82,7 +82,7 @@ export function OpponentCard({
               }}
             />
             <Avatar loadout={opponent.loadout} size="md" alt={opponent.name} pose="battleReady" />
-            <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--bg-primary)] text-[0.67rem] font-bold text-[var(--accent-gold)]">
+            <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--background)] text-[0.67rem] font-bold text-[var(--accent-gold)]">
               {opponent.order}
             </span>
           </div>
@@ -90,7 +90,7 @@ export function OpponentCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <h3 className="truncate text-sm leading-tight font-bold text-[var(--text-primary)]">
+                <h3 className="truncate text-sm leading-tight font-bold text-[var(--foreground)]">
                   {opponent.name}
                 </h3>
                 <p className="mt-0.5 truncate text-[0.68rem] leading-tight text-[var(--text-secondary)]">
@@ -101,13 +101,13 @@ export function OpponentCard({
                 <Icon
                   icon={LockKeyhole}
                   size={15}
-                  className="mt-0.5 shrink-0 text-[var(--text-muted)]"
+                  className="mt-0.5 shrink-0 text-[var(--muted-foreground)]"
                 />
               ) : defeated ? (
                 <Icon
                   icon={CheckCircle2}
                   size={15}
-                  className="mt-0.5 shrink-0 text-[var(--accent-green)]"
+                  className="mt-0.5 shrink-0 text-[var(--primary)]"
                 />
               ) : null}
             </div>
@@ -131,11 +131,11 @@ export function OpponentCard({
 
         <div className="relative z-10 mt-3 min-h-[28px]">
           {mastery?.wins ? (
-            <span className="bg-tint-green-2 rounded-full px-2 py-1 text-[0.66rem] font-semibold text-[var(--accent-green)]">
+            <span className="bg-tint-green-2 rounded-full px-2 py-1 text-[0.66rem] font-semibold text-[var(--primary)]">
               {mastery.wins} vitória{mastery.wins === 1 ? '' : 's'}
             </span>
           ) : (
-            <p className="line-clamp-2 text-[0.67rem] leading-snug text-[var(--text-muted)]">
+            <p className="line-clamp-2 text-[0.67rem] leading-snug text-[var(--muted-foreground)]">
               {stage.floorLabel}
             </p>
           )}

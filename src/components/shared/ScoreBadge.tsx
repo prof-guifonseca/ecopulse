@@ -3,7 +3,7 @@ import type { Score } from '@/types';
 import { cn } from '@/lib/cn';
 
 export const scoreBadgeVariants = cva(
-  'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
+  'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--primary-foreground)] shadow-[var(--shadow-card)]',
   {
     variants: {
       size: {
