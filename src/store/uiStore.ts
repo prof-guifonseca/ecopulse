@@ -1,14 +1,11 @@
 'use client';
 
+import { createElement } from 'react';
 import { create } from 'zustand';
+import { Coins } from 'lucide-react';
+import { toast as sonnerToast } from 'sonner';
 
 export type ToastType = 'success' | 'info' | 'reward';
-
-export interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-}
 
 export type ModalContent =
   | { kind: 'product'; id: string }
@@ -21,13 +18,11 @@ export type ModalContent =
   | { kind: 'chapterUnlock'; chapterId: string };
 
 interface UIState {
-  toasts: Toast[];
   modal: ModalContent | null;
   avatarBuilderOpen: boolean;
   confettiKey: number;
 
   showToast: (message: string, type?: ToastType, durationMs?: number) => void;
-  dismissToast: (id: number) => void;
   openModal: (c: ModalContent) => void;
   closeModal: () => void;
   openAvatarBuilder: () => void;
@@ -35,20 +30,22 @@ interface UIState {
   fireConfetti: () => void;
 }
 
-let toastCounter = 0;
-
-export const useUIStore = create<UIState>()((set, get) => ({
-  toasts: [],
+export const useUIStore = create<UIState>()((set) => ({
   modal: null,
   avatarBuilderOpen: false,
   confettiKey: 0,
 
+  // Toasts are owned by sonner (rendered by <Toasts /> in Overlays); the store
+  // is just the typed entry point so call sites keep using showToast().
   showToast: (message, type = 'success', durationMs = 3000) => {
-    const id = ++toastCounter;
-    set((s) => ({ toasts: [...s.toasts, { id, message, type }] }));
-    setTimeout(() => get().dismissToast(id), durationMs);
+    if (type === 'reward') {
+      sonnerToast(message, { duration: durationMs, icon: createElement(Coins, { size: 16 }) });
+    } else if (type === 'info') {
+      sonnerToast.info(message, { duration: durationMs });
+    } else {
+      sonnerToast.success(message, { duration: durationMs });
+    }
   },
-  dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
   openModal: (c) => set({ modal: c }),
   closeModal: () => set({ modal: null }),
   openAvatarBuilder: () => set({ avatarBuilderOpen: true }),
