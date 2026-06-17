@@ -46,11 +46,20 @@ jobs:
       - name: Format check
         run: npm run format:check
 
+      - name: Token drift
+        run: npm run tokens:check
+
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Unit tests
-        run: npm run test:unit
+      - name: Type coverage
+        run: npm run type-coverage
+
+      - name: Dependency graph
+        run: npm run depcruise
+
+      - name: Unit tests + coverage
+        run: npm run test:coverage
 
       - name: Build
         run: npm run build
