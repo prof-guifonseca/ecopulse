@@ -145,7 +145,10 @@ export function itemHidesFace(item: GearItem) {
   if (item.hidesFace !== undefined) return item.hidesFace;
   const family = familyOf(item);
   const name = item.name.toLowerCase();
-  return item.slot === 'face' && (family === 'ninja-eco' || name.includes('mascara') || name.includes('máscara'));
+  return (
+    item.slot === 'face' &&
+    (family === 'ninja-eco' || name.includes('mascara') || name.includes('máscara'))
+  );
 }
 
 export function itemHandPose(item: GearItem): GearHandPose | undefined {

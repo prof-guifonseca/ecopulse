@@ -32,7 +32,12 @@ export async function shareOrDownload(blob: Blob, options: ShareOptions): Promis
 
   if (typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
     try {
-      await nav.share({ files: [file], title: options.title, text: options.text, url: options.url });
+      await nav.share({
+        files: [file],
+        title: options.title,
+        text: options.text,
+        url: options.url,
+      });
       return 'shared';
     } catch (error) {
       // Usuário cancelou a folha de compartilhamento: não força download.

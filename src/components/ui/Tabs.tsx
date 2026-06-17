@@ -15,14 +15,20 @@ interface Props<Value extends string> {
   fitted?: boolean;
 }
 
-export function Tabs<Value extends string>({ items, value, onChange, className, fitted = true }: Props<Value>) {
+export function Tabs<Value extends string>({
+  items,
+  value,
+  onChange,
+  className,
+  fitted = true,
+}: Props<Value>) {
   return (
     <div
       role="tablist"
       className={cn(
-        'relative flex gap-1 rounded-[var(--radius-md)] border border-[var(--line-soft)] bg-tint-1 p-1',
+        'bg-tint-1 relative flex gap-1 rounded-[var(--radius-md)] border border-[var(--line-soft)] p-1',
         fitted ? 'w-full' : 'inline-flex',
-        className
+        className,
       )}
     >
       {items.map((item) => {
@@ -37,7 +43,7 @@ export function Tabs<Value extends string>({ items, value, onChange, className, 
               'relative flex-1 rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold transition-colors duration-200',
               active
                 ? 'bg-[var(--bg-secondary)] text-[var(--accent-green)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
             )}
           >
             {item.label}

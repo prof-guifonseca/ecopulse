@@ -42,11 +42,12 @@ export function OnboardingStepVision({ onNext }: Props) {
             <Icon icon={Sparkles} size={14} />
             <span className="t-micro">Protótipo navegável</span>
           </div>
-          <h1 className="text-[2.85rem] font-black leading-[0.92] tracking-normal text-[var(--text-primary)] sm:text-[3.45rem]">
+          <h1 className="text-[2.85rem] leading-[0.92] font-black tracking-normal text-[var(--text-primary)] sm:text-[3.45rem]">
             EcoPulse
           </h1>
           <p className="t-body max-w-[31ch] text-[var(--text-secondary)]">
-            Sustentabilidade na rotina: escaneie produtos, encontre pontos confiáveis e transforme ações em impacto.
+            Sustentabilidade na rotina: escaneie produtos, encontre pontos confiáveis e transforme
+            ações em impacto.
           </p>
         </div>
 
@@ -57,8 +58,8 @@ export function OnboardingStepVision({ onNext }: Props) {
               className="rounded-[var(--radius-sm)] border border-white/10 bg-black/20 px-3 py-3 backdrop-blur-md"
             >
               <Icon icon={item.icon} size={16} className="text-[var(--accent-green)]" />
-              <p className="mt-2 t-micro text-[var(--text-primary)]">{item.label}</p>
-              <p className="mt-1 text-[0.66rem] font-medium leading-tight text-[var(--text-muted)]">
+              <p className="t-micro mt-2 text-[var(--text-primary)]">{item.label}</p>
+              <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--text-muted)]">
                 {item.value}
               </p>
             </li>

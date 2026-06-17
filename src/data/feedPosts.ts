@@ -19,8 +19,18 @@ export const FEED_POSTS: FeedPost[] = [
     liked: false,
     imageKey: 'upcyclingCrafts',
     commentList: [
-      { user: 'Pedro L.', avatar: '🧑‍💻', text: 'Ficou demais. Vou tentar no fim de semana.', time: '1h' },
-      { user: 'Julia R.', avatar: '👩‍🌾', text: 'Qual cola você usou? Quero replicar.', time: '45min' },
+      {
+        user: 'Pedro L.',
+        avatar: '🧑‍💻',
+        text: 'Ficou demais. Vou tentar no fim de semana.',
+        time: '1h',
+      },
+      {
+        user: 'Julia R.',
+        avatar: '👩‍🌾',
+        text: 'Qual cola você usou? Quero replicar.',
+        time: '45min',
+      },
       { user: 'Rafael M.', avatar: '🧑‍🎤', text: '🌱💚♻️', time: '30min' },
     ],
   },
@@ -52,7 +62,12 @@ export const FEED_POSTS: FeedPost[] = [
     commentList: [
       { user: 'Lucas A.', avatar: '🧑‍🚀', text: 'Quanto tempo levou pra brotar?', time: '20h' },
       { user: 'Beatriz N.', avatar: '👩‍⚕️', text: 'Quero fazer uma também na varanda.', time: '18h' },
-      { user: 'Thiago F.', avatar: '🧑‍🏫', text: 'Tutorial do app ajuda demais nesse setup.', time: '16h' },
+      {
+        user: 'Thiago F.',
+        avatar: '🧑‍🏫',
+        text: 'Tutorial do app ajuda demais nesse setup.',
+        time: '16h',
+      },
     ],
   },
   {
@@ -112,7 +127,12 @@ export const FEED_POSTS: FeedPost[] = [
     imageKey: 'vintageFashion',
     commentList: [
       { user: 'Marina S.', avatar: '👩‍🎨', text: 'O brechó da Aurora é meu favorito.', time: '2d' },
-      { user: 'Camila T.', avatar: '👩‍🔬', text: 'Tem que ir nas terças, chega coisa nova.', time: '2d' },
+      {
+        user: 'Camila T.',
+        avatar: '👩‍🔬',
+        text: 'Tem que ir nas terças, chega coisa nova.',
+        time: '2d',
+      },
     ],
   },
   {
@@ -172,7 +192,12 @@ export const FEED_POSTS: FeedPost[] = [
     imageKey: 'freshProduce',
     commentList: [
       { user: 'Camila T.', avatar: '👩‍🔬', text: 'Receita?? 👀', time: '4d' },
-      { user: 'Thiago F.', avatar: '🧑‍🏫', text: 'A gente faz com casca de batata também.', time: '4d' },
+      {
+        user: 'Thiago F.',
+        avatar: '🧑‍🏫',
+        text: 'A gente faz com casca de batata também.',
+        time: '4d',
+      },
     ],
   },
   {

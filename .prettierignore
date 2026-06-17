@@ -1,0 +1,12 @@
+.next
+node_modules
+out
+build
+coverage
+playwright-report
+test-results
+package-lock.json
+src/types/tokens.ts
+**/*.md
+public
+*.snap

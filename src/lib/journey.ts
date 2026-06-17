@@ -117,9 +117,7 @@ function visitsByType(visitedPointIds: string[]): Record<MapPointType, number> {
   for (const id of visitedPointIds) {
     const environmentalPoint =
       getRegisteredEnvironmentalPoint(id) ?? getOfficialEnvironmentalPointById(id);
-    const type = environmentalPoint
-      ? mapPointTypeForEnvironmentalPoint(environmentalPoint)
-      : null;
+    const type = environmentalPoint ? mapPointTypeForEnvironmentalPoint(environmentalPoint) : null;
     if (type) counts[type] = (counts[type] ?? 0) + 1;
   }
   return counts as Record<MapPointType, number>;
@@ -243,7 +241,7 @@ function countGates(gates: ChapterGates): number {
  */
 export function justUnlockedChapter(
   prev: JourneySnapshot,
-  curr: JourneySnapshot
+  curr: JourneySnapshot,
 ): ChapterId | null {
   const prevId = currentChapter(prev).id;
   const currId = currentChapter(curr).id;

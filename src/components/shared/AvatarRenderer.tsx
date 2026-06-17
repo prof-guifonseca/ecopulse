@@ -3,11 +3,7 @@
 import { useId, useMemo } from 'react';
 import type { AvatarLoadout, AvatarPose, GearItem, GearSlot } from '@/types';
 import { AVATAR_BASES, GEAR_ITEMS } from '@/data';
-import {
-  itemHidesFace,
-  itemHidesHair,
-  resolveGearVisual,
-} from '@/components/avatar/gearVisuals';
+import { itemHidesFace, itemHidesHair, resolveGearVisual } from '@/components/avatar/gearVisuals';
 import { paletteForGear } from '@/components/avatar/palettes';
 import { cn } from '@/lib/cn';
 
@@ -122,9 +118,13 @@ export function AvatarRenderer({
           {renderSlot(gearBySlot.feet, 'feet', reactId, pose, highlightSlot)}
           <BaseArms skinId={baseSkinId} pose={pose} />
           {renderSlot(gearBySlot.torso, 'torso', reactId, pose, highlightSlot)}
-          {!headHidesHair ? renderSlot(gearBySlot.hair, 'hair', reactId, pose, highlightSlot) : null}
+          {!headHidesHair
+            ? renderSlot(gearBySlot.hair, 'hair', reactId, pose, highlightSlot)
+            : null}
           {renderSlot(gearBySlot.head, 'head', reactId, pose, highlightSlot)}
-          {!hiddenFace ? <BaseFace eyeId={`avatar-eye-${reactId}`} cheekId={`avatar-cheek-${reactId}`} /> : null}
+          {!hiddenFace ? (
+            <BaseFace eyeId={`avatar-eye-${reactId}`} cheekId={`avatar-cheek-${reactId}`} />
+          ) : null}
           {renderSlot(gearBySlot.face, 'face', reactId, pose, highlightSlot)}
           <BaseHands skinId={baseSkinId} pose={pose} />
           {renderSlot(gearBySlot.offHand, 'offHand', reactId, pose, highlightSlot)}
@@ -153,7 +153,7 @@ function renderSlot(
   slot: GearSlot,
   idPrefix: string,
   pose: AvatarPose,
-  highlightSlot?: GearSlot
+  highlightSlot?: GearSlot,
 ) {
   if (!item) return null;
   const visual = resolveGearVisual(item);
@@ -188,20 +188,68 @@ function BaseBody({
     <g filter={`url(#${shadowId})`}>
       <path d="M80 222 L113 222 L108 294 L82 294 Z" fill="#24352f" />
       <path d="M127 222 L160 222 L158 294 L132 294 Z" fill="#24352f" />
-      <path d="M70 174 C78 141, 96 127, 120 127 C145 127, 163 141, 171 174 L164 238 C139 252, 101 252, 76 238 Z" fill={`url(#${shirtId})`} />
-      <path d="M75 153 C63 169, 57 194, 58 217" fill="none" stroke="#10231c" strokeWidth="15" strokeLinecap="round" opacity="0.7" />
-      <path d="M165 153 C177 169, 183 194, 182 217" fill="none" stroke="#10231c" strokeWidth="15" strokeLinecap="round" opacity="0.7" />
-      <path d="M70 177 C51 189, 48 219, 58 239" fill="none" stroke={`url(#${skinId})`} strokeWidth="17" strokeLinecap="round" />
-      <path d="M170 177 C189 189, 192 219, 182 239" fill="none" stroke={`url(#${skinId})`} strokeWidth="17" strokeLinecap="round" />
+      <path
+        d="M70 174 C78 141, 96 127, 120 127 C145 127, 163 141, 171 174 L164 238 C139 252, 101 252, 76 238 Z"
+        fill={`url(#${shirtId})`}
+      />
+      <path
+        d="M75 153 C63 169, 57 194, 58 217"
+        fill="none"
+        stroke="#10231c"
+        strokeWidth="15"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      <path
+        d="M165 153 C177 169, 183 194, 182 217"
+        fill="none"
+        stroke="#10231c"
+        strokeWidth="15"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      <path
+        d="M70 177 C51 189, 48 219, 58 239"
+        fill="none"
+        stroke={`url(#${skinId})`}
+        strokeWidth="17"
+        strokeLinecap="round"
+      />
+      <path
+        d="M170 177 C189 189, 192 219, 182 239"
+        fill="none"
+        stroke={`url(#${skinId})`}
+        strokeWidth="17"
+        strokeLinecap="round"
+      />
       <ellipse cx="73" cy="105" rx="8" ry="12" fill={`url(#${skinId})`} />
       <ellipse cx="167" cy="105" rx="8" ry="12" fill={`url(#${skinId})`} />
-      <path d="M70 104 C70 70, 91 45, 120 45 C150 45, 171 70, 170 104 C169 135, 149 153, 120 153 C91 153, 71 135, 70 104 Z" fill={`url(#${skinId})`} />
-      <path d="M77 97 C82 66, 101 51, 123 51 C147 52, 162 69, 164 98 C145 86, 104 85, 77 97 Z" fill="rgba(255,255,255,0.06)" />
+      <path
+        d="M70 104 C70 70, 91 45, 120 45 C150 45, 171 70, 170 104 C169 135, 149 153, 120 153 C91 153, 71 135, 70 104 Z"
+        fill={`url(#${skinId})`}
+      />
+      <path
+        d="M77 97 C82 66, 101 51, 123 51 C147 52, 162 69, 164 98 C145 86, 104 85, 77 97 Z"
+        fill="rgba(255,255,255,0.06)"
+      />
       {!hiddenHair ? (
         <g>
-          <path d="M72 102 C74 69, 93 47, 121 42 C151 38, 172 62, 169 106 C148 86, 103 84, 72 102 Z" fill={hairColor} />
-          <path d="M77 96 L93 51 L108 88 L123 40 L139 89 L158 55 L167 106 C143 82, 104 82, 77 96 Z" fill={hairColor} opacity="0.92" />
-          <path d="M93 60 C108 50, 135 50, 151 66" fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="5" strokeLinecap="round" />
+          <path
+            d="M72 102 C74 69, 93 47, 121 42 C151 38, 172 62, 169 106 C148 86, 103 84, 72 102 Z"
+            fill={hairColor}
+          />
+          <path
+            d="M77 96 L93 51 L108 88 L123 40 L139 89 L158 55 L167 106 C143 82, 104 82, 77 96 Z"
+            fill={hairColor}
+            opacity="0.92"
+          />
+          <path
+            d="M93 60 C108 50, 135 50, 151 66"
+            fill="none"
+            stroke="rgba(255,255,255,0.16)"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
         </g>
       ) : null}
     </g>
@@ -217,7 +265,14 @@ function BaseFace({ eyeId, cheekId }: { eyeId: string; cheekId: string }) {
       <circle cx="136" cy="105" r="3.2" fill="#ffffff" opacity="0.92" />
       <circle cx="104" cy="116" r="2" fill="#7ee6b2" opacity="0.78" />
       <circle cx="144" cy="116" r="2" fill="#7ee6b2" opacity="0.78" />
-      <path d="M105 132 Q120 142, 136 132" fill="none" stroke="#875740" strokeWidth="4" strokeLinecap="round" opacity="0.78" />
+      <path
+        d="M105 132 Q120 142, 136 132"
+        fill="none"
+        stroke="#875740"
+        strokeWidth="4"
+        strokeLinecap="round"
+        opacity="0.78"
+      />
       <ellipse cx="88" cy="122" rx="13" ry="9" fill={`url(#${cheekId})`} />
       <ellipse cx="152" cy="122" rx="13" ry="9" fill={`url(#${cheekId})`} />
     </g>
@@ -225,7 +280,8 @@ function BaseFace({ eyeId, cheekId }: { eyeId: string; cheekId: string }) {
 }
 
 function BaseArms({ skinId, pose }: { skinId: string; pose: AvatarPose }) {
-  const left = pose === 'defend' ? 'M70 177 C54 184, 46 200, 52 215' : 'M70 178 C52 190, 50 220, 60 240';
+  const left =
+    pose === 'defend' ? 'M70 177 C54 184, 46 200, 52 215' : 'M70 178 C52 190, 50 220, 60 240';
   const right =
     pose === 'attack'
       ? 'M170 176 C190 161, 205 146, 213 127'
@@ -234,10 +290,36 @@ function BaseArms({ skinId, pose }: { skinId: string; pose: AvatarPose }) {
         : 'M170 178 C188 190, 190 220, 180 240';
   return (
     <g>
-      <path d={left} fill="none" stroke="#162b24" strokeWidth="22" strokeLinecap="round" opacity="0.46" />
-      <path d={right} fill="none" stroke="#162b24" strokeWidth="22" strokeLinecap="round" opacity="0.46" />
-      <path d={left} fill="none" stroke={`url(#${skinId})`} strokeWidth="15" strokeLinecap="round" />
-      <path d={right} fill="none" stroke={`url(#${skinId})`} strokeWidth="15" strokeLinecap="round" />
+      <path
+        d={left}
+        fill="none"
+        stroke="#162b24"
+        strokeWidth="22"
+        strokeLinecap="round"
+        opacity="0.46"
+      />
+      <path
+        d={right}
+        fill="none"
+        stroke="#162b24"
+        strokeWidth="22"
+        strokeLinecap="round"
+        opacity="0.46"
+      />
+      <path
+        d={left}
+        fill="none"
+        stroke={`url(#${skinId})`}
+        strokeWidth="15"
+        strokeLinecap="round"
+      />
+      <path
+        d={right}
+        fill="none"
+        stroke={`url(#${skinId})`}
+        strokeWidth="15"
+        strokeLinecap="round"
+      />
     </g>
   );
 }
@@ -263,7 +345,15 @@ function AuraForeground({ item, idPrefix }: { item?: GearItem; idPrefix: string 
       <circle cx="55" cy="82" r="4" fill={palette.glow} />
       <circle cx="188" cy="133" r="3" fill={palette.light} />
       <circle cx="174" cy="257" r="4" fill={palette.accent} />
-      <path d={`M43 270 C71 299, 168 299, 197 270`} fill="none" stroke={palette.glow} strokeWidth="3" strokeLinecap="round" opacity="0.45" id={`${idPrefix}-aura-front`} />
+      <path
+        d={`M43 270 C71 299, 168 299, 197 270`}
+        fill="none"
+        stroke={palette.glow}
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.45"
+        id={`${idPrefix}-aura-front`}
+      />
     </g>
   );
 }
@@ -272,16 +362,39 @@ function PoseEffect({ pose }: { pose: AvatarPose }) {
   if (pose === 'attack') {
     return (
       <g opacity="0.72">
-        <path d="M167 82 C196 100, 210 126, 209 158" fill="none" stroke="#d8fbe1" strokeWidth="5" strokeLinecap="round" />
-        <path d="M177 103 C196 119, 203 137, 200 158" fill="none" stroke="#7ee6b2" strokeWidth="3" strokeLinecap="round" />
+        <path
+          d="M167 82 C196 100, 210 126, 209 158"
+          fill="none"
+          stroke="#d8fbe1"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M177 103 C196 119, 203 137, 200 158"
+          fill="none"
+          stroke="#7ee6b2"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
       </g>
     );
   }
   if (pose === 'defend') {
     return (
       <g opacity="0.62">
-        <path d="M47 156 C63 132, 91 124, 113 139 C107 179, 86 204, 54 214 C44 194, 40 174, 47 156 Z" fill="none" stroke="#b9f7c7" strokeWidth="5" />
-        <path d="M62 158 C77 147, 92 146, 105 155" fill="none" stroke="#7ee6b2" strokeWidth="3" strokeLinecap="round" />
+        <path
+          d="M47 156 C63 132, 91 124, 113 139 C107 179, 86 204, 54 214 C44 194, 40 174, 47 156 Z"
+          fill="none"
+          stroke="#b9f7c7"
+          strokeWidth="5"
+        />
+        <path
+          d="M62 158 C77 147, 92 146, 105 155"
+          fill="none"
+          stroke="#7ee6b2"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
       </g>
     );
   }
@@ -291,15 +404,27 @@ function PoseEffect({ pose }: { pose: AvatarPose }) {
         <circle cx="120" cy="49" r="5" fill="#b9f7c7" />
         <circle cx="92" cy="74" r="3" fill="#7ee6b2" />
         <circle cx="150" cy="73" r="3" fill="#d7c46a" />
-        <path d="M98 271 C110 282, 131 282, 143 271" fill="none" stroke="#7ee6b2" strokeWidth="4" strokeLinecap="round" />
+        <path
+          d="M98 271 C110 282, 131 282, 143 271"
+          fill="none"
+          stroke="#7ee6b2"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
       </g>
     );
   }
   if (pose === 'victory') {
     return (
       <g opacity="0.72">
-        <path d="M73 68 L79 80 L92 82 L82 91 L84 104 L73 97 L61 104 L64 91 L54 82 L67 80 Z" fill="#d7c46a" />
-        <path d="M168 83 L173 92 L184 93 L176 101 L178 112 L168 107 L158 112 L160 101 L152 93 L163 92 Z" fill="#b9f7c7" />
+        <path
+          d="M73 68 L79 80 L92 82 L82 91 L84 104 L73 97 L61 104 L64 91 L54 82 L67 80 Z"
+          fill="#d7c46a"
+        />
+        <path
+          d="M168 83 L173 92 L184 93 L176 101 L178 112 L168 107 L158 112 L160 101 L152 93 L163 92 Z"
+          fill="#b9f7c7"
+        />
       </g>
     );
   }

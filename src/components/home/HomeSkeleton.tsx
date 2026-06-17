@@ -2,7 +2,11 @@ import { Skeleton } from '@/components/shared/Skeleton';
 
 export function HomeSkeleton() {
   return (
-    <div className="w-[min(100%,calc(100vw-40px))] max-w-full space-y-5 pt-3" aria-busy="true" aria-live="polite">
+    <div
+      className="w-[min(100%,calc(100vw-40px))] max-w-full space-y-5 pt-3"
+      aria-busy="true"
+      aria-live="polite"
+    >
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1 space-y-2">
           <Skeleton className="h-8 w-40" />

@@ -1,0 +1,11 @@
+# Normalize line endings to LF in the repository so Prettier's check is
+# deterministic across Windows/macOS/Linux and CI.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

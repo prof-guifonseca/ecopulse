@@ -12,6 +12,7 @@ export function seededRandom(seed: string, cursor: number): number {
 }
 
 export function deterministicId(parts: Array<string | number | null | undefined>): string {
-  return hashString(parts.filter((part) => part !== undefined && part !== null).join(':')).toString(36);
+  return hashString(parts.filter((part) => part !== undefined && part !== null).join(':')).toString(
+    36,
+  );
 }
-

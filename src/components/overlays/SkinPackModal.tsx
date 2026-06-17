@@ -56,35 +56,40 @@ export function SkinPackModal({ id }: Props) {
     <ModalShell eyebrow="Personagem" title={skin.name}>
       <div className="space-y-5">
         {/* Hero illustration */}
-        <div className="flex h-44 items-center justify-center rounded-[var(--radius-lg)] border-soft bg-tint-1">
+        <div className="border-soft bg-tint-1 flex h-44 items-center justify-center rounded-[var(--radius-lg)]">
           <SkinPackArt id={skin.id} size="xl" />
         </div>
 
         <div className="space-y-2">
-          <p className="t-eyebrow text-[var(--accent-gold)]">{TIER_LABEL[skin.tier]} · {skin.theme}</p>
+          <p className="t-eyebrow text-[var(--accent-gold)]">
+            {TIER_LABEL[skin.tier]} · {skin.theme}
+          </p>
           <p className="t-body">{skin.tagline}</p>
           <BattleStatChips stats={skin.battleStats} />
         </div>
 
         {/* Status / unlock hint */}
         {equipped ? (
-          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-2 px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-2 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
             ✓ Equipado agora
           </div>
         ) : owned ? (
-          <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
+          <div className="border-soft bg-tint-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3">
             Você já desbloqueou. Toque pra equipar.
           </div>
         ) : locked ? (
-          <div className="flex items-start gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
+          <div className="border-soft bg-tint-1 t-body-sm flex items-start gap-3 rounded-[var(--radius-md)] px-4 py-3">
             <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--text-muted)]" />
             <div>
               <p className="font-semibold text-[var(--text-primary)]">Bloqueada</p>
-              <p>Para desbloquear: {unlockHint(skin)} · ou compre direto por {skin.priceTokens} tokens.</p>
+              <p>
+                Para desbloquear: {unlockHint(skin)} · ou compre direto por {skin.priceTokens}{' '}
+                tokens.
+              </p>
             </div>
           </div>
         ) : (
-          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
             Critério atingido. Pronto para comprar.
           </div>
         )}

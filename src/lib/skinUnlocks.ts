@@ -82,7 +82,9 @@ export function buySkinPack(id: string): boolean {
 /**
  * Human-readable progress hint for a locked set/equipment pack.
  */
-export function unlockHint(item: UnlockableCatalogItem | { unlock: SkinUnlock; priceTokens: number }): string {
+export function unlockHint(
+  item: UnlockableCatalogItem | { unlock: SkinUnlock; priceTokens: number },
+): string {
   switch (item.unlock.kind) {
     case 'paid':
       return `${item.priceTokens} tokens`;

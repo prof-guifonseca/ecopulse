@@ -115,7 +115,11 @@ describe('gear rules', () => {
   });
 });
 
-function gear(id: string, slot: GearItem['slot'], battleStats: Partial<GearItem['battleStats']>): GearItem {
+function gear(
+  id: string,
+  slot: GearItem['slot'],
+  battleStats: Partial<GearItem['battleStats']>,
+): GearItem {
   return {
     id,
     name: id,

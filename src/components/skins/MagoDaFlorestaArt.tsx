@@ -40,10 +40,7 @@ export function MagoDaFlorestaArt({ size, className }: Props) {
       />
       {/* Staff charm — leaf bud */}
       <ellipse cx="78" cy="18" rx="6" ry="6" fill="url(#mf-glow)" />
-      <path
-        d="M 78 12 Q 82 16, 78 22 Q 74 16, 78 12 Z"
-        fill="#5fb36f"
-      />
+      <path d="M 78 12 Q 82 16, 78 22 Q 74 16, 78 12 Z" fill="#5fb36f" />
       <line x1="78" y1="14" x2="78" y2="22" stroke="#3a8a4a" strokeWidth="0.6" />
 
       {/* Robe — wide A-shape */}
@@ -60,15 +57,20 @@ export function MagoDaFlorestaArt({ size, className }: Props) {
       {/* Belt rope */}
       <ellipse cx="50" cy="68" rx="22" ry="2" fill="#7a4318" />
       <circle cx="42" cy="71" r="1.6" fill="#7a4318" />
-      <line x1="42" y1="72" x2="40" y2="80" stroke="#7a4318" strokeWidth="1.4" strokeLinecap="round" />
+      <line
+        x1="42"
+        y1="72"
+        x2="40"
+        y2="80"
+        stroke="#7a4318"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
 
       {/* Head */}
       <circle cx="50" cy="28" r="9" fill="#e8d2a8" />
       {/* Beard */}
-      <path
-        d="M 42 32 Q 50 44, 58 32 Q 56 38, 50 40 Q 44 38, 42 32 Z"
-        fill="#f0f0e8"
-      />
+      <path d="M 42 32 Q 50 44, 58 32 Q 56 38, 50 40 Q 44 38, 42 32 Z" fill="#f0f0e8" />
       <ellipse cx="50" cy="36" rx="6" ry="3" fill="#f8f8f2" />
 
       {/* Eyes */}
@@ -79,10 +81,7 @@ export function MagoDaFlorestaArt({ size, className }: Props) {
       <ellipse cx="54" cy="25" rx="2" ry="0.8" fill="#f0f0e8" />
 
       {/* Wizard hat — pointed cone with brim */}
-      <path
-        d="M 38 22 L 50 4 L 62 22 Z"
-        fill="#3a6d4a"
-      />
+      <path d="M 38 22 L 50 4 L 62 22 Z" fill="#3a6d4a" />
       <ellipse cx="50" cy="22" rx="14" ry="2.6" fill="#2a5034" />
       {/* Hat star */}
       <polygon

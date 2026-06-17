@@ -18,7 +18,7 @@ export function ArenaRoundTimeline({ session, events, activeEventId, reviewingRo
   const latestRound = session.rounds.at(-1);
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-[var(--line-soft)] bg-tint-1 px-4 py-4">
+    <section className="bg-tint-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] px-4 py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="t-eyebrow">Timeline</p>
@@ -35,7 +35,14 @@ export function ArenaRoundTimeline({ session, events, activeEventId, reviewingRo
       <ol className="mt-3 space-y-2">
         {events.map((event) => {
           const cue = battleEventToVisualCue(event, session);
-          return <TimelineEvent key={event.id} event={event} cue={cue} active={event.id === activeEventId} />;
+          return (
+            <TimelineEvent
+              key={event.id}
+              event={event}
+              cue={cue}
+              active={event.id === activeEventId}
+            />
+          );
         })}
       </ol>
     </section>
@@ -55,17 +62,31 @@ function TimelineEvent({
     <li
       className={cn(
         'grid grid-cols-[32px_minmax(0,1fr)_auto] items-start gap-3 rounded-[var(--radius-md)] border px-3 py-2.5 transition-colors',
-        active ? 'border-[var(--line-active)] bg-tint-green-2' : 'border-[var(--line-soft)] bg-black/10'
+        active
+          ? 'bg-tint-green-2 border-[var(--line-active)]'
+          : 'border-[var(--line-soft)] bg-black/10',
       )}
     >
-      <span className={cn('flex h-8 w-8 items-center justify-center rounded-full bg-black/24', CUE_TEXT[cue.tone])}>
+      <span
+        className={cn(
+          'flex h-8 w-8 items-center justify-center rounded-full bg-black/24',
+          CUE_TEXT[cue.tone],
+        )}
+      >
         <Icon icon={CUE_ICON[cue.iconName]} size={15} />
       </span>
       <div className="min-w-0">
-        <p className={cn('text-sm font-bold leading-tight', active ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]')}>
+        <p
+          className={cn(
+            'text-sm leading-tight font-bold',
+            active ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]',
+          )}
+        >
           {cue.title}
         </p>
-        <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[var(--text-secondary)]">{event.message}</p>
+        <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[var(--text-secondary)]">
+          {event.message}
+        </p>
       </div>
       {event.damage > 0 ? (
         <span className="rounded-full bg-black/24 px-2 py-1 text-xs font-bold text-[var(--accent-gold)]">

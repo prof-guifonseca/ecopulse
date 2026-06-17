@@ -22,7 +22,7 @@ export function ScoreBadge({ score, size = 'md', className }: Props) {
       className={cn(
         'score-badge flex items-center justify-center rounded-[var(--radius-md)] font-extrabold text-[var(--on-primary)] shadow-[var(--shadow-card)]',
         SIZE_CLASSES[size],
-        className
+        className,
       )}
     >
       {score}

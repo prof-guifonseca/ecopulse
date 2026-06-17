@@ -32,7 +32,10 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
   const synthChallengeId = `feed-${post.id}-${todayKey()}`;
   const activeChallenges = useGameStore((s) => s.activeChallenges);
   const completedChallenges = useGameStore((s) => s.completedChallenges);
-  const tried = post.viewerPromised || activeChallenges.includes(synthChallengeId) || completedChallenges.includes(synthChallengeId);
+  const tried =
+    post.viewerPromised ||
+    activeChallenges.includes(synthChallengeId) ||
+    completedChallenges.includes(synthChallengeId);
   const showToast = useUIStore((s) => s.showToast);
 
   const tryThis = () => {
@@ -56,7 +59,7 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/55 to-transparent" />
-        <div className="absolute left-4 top-4 right-4 flex items-center gap-3">
+        <div className="absolute top-4 right-4 left-4 flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/40 text-lg backdrop-blur-md">
             {post.user.avatar}
           </div>
@@ -69,11 +72,17 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-3">
+      <div className="space-y-3 px-4 py-4">
         <p className="t-body">{post.caption}</p>
         <p className="t-micro text-[var(--text-muted)]">
-          Fonte: {post.sourceUrl ? (
-            <a href={post.sourceUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted underline-offset-2">
+          Fonte:{' '}
+          {post.sourceUrl ? (
+            <a
+              href={post.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-dotted underline-offset-2"
+            >
               {post.sourceLabel}
             </a>
           ) : (
@@ -109,15 +118,13 @@ export function FeedPostCard({ post, onOpenComments }: Props) {
         {firstComment ? (
           <button
             onClick={onOpenComments}
-            className="-mx-1 block w-full text-left rounded-md px-1 py-1 transition-colors hover:bg-tint-1"
+            className="hover:bg-tint-1 -mx-1 block w-full rounded-md px-1 py-1 text-left transition-colors"
           >
             <p className="t-body-sm">
               <span className="font-semibold text-[var(--text-primary)]">{firstComment.user}</span>{' '}
               <span className="text-[var(--text-secondary)]">{firstComment.text}</span>
             </p>
-            {commentCount > 1 ? (
-              <p className="t-caption mt-0.5">Ver comentários</p>
-            ) : null}
+            {commentCount > 1 ? <p className="t-caption mt-0.5">Ver comentários</p> : null}
           </button>
         ) : null}
       </div>

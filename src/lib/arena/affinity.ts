@@ -23,7 +23,7 @@ export interface LoadoutAffinity {
  */
 export function computeLoadoutAffinity(
   loadout: AvatarLoadout | null | undefined,
-  tribeId: string | null | undefined
+  tribeId: string | null | undefined,
 ): LoadoutAffinity {
   const tribe = getTribe(tribeId);
   let alignedPieces = 0;

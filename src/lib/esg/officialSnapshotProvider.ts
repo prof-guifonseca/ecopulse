@@ -47,7 +47,7 @@ export function mapPointToEnvironmentalPoint(point: MapPoint): EnvironmentalPoin
 
 export function getLocalEnvironmentalPoints(
   points: readonly MapPoint[] = MAP_POINTS,
-  input: Pick<EsgPlaceSearchInput, 'bbox' | 'categories' | 'limit'> = {}
+  input: Pick<EsgPlaceSearchInput, 'bbox' | 'categories' | 'limit'> = {},
 ): EnvironmentalPoint[] {
   const categories = new Set(input.categories ?? []);
   return points

@@ -34,22 +34,8 @@ export function AventureiroArt({ size, className }: Props) {
       <rect x="60" y="42" width="16" height="3" fill="#3a2418" />
       <rect x="60" y="58" width="16" height="3" fill="#3a2418" />
       {/* Rolled map sticking out */}
-      <rect
-        x="70"
-        y="32"
-        width="2.5"
-        height="10"
-        fill="#f0e8d6"
-        transform="rotate(20 71 36)"
-      />
-      <rect
-        x="69.4"
-        y="32"
-        width="3.6"
-        height="2.5"
-        fill="#9c6a3c"
-        transform="rotate(20 71 33)"
-      />
+      <rect x="70" y="32" width="2.5" height="10" fill="#f0e8d6" transform="rotate(20 71 36)" />
+      <rect x="69.4" y="32" width="3.6" height="2.5" fill="#9c6a3c" transform="rotate(20 71 33)" />
       {/* Leaf bouncing out top */}
       <path d="M 64 36 Q 68 30, 64 24 Q 60 30, 64 36 Z" fill="#5fb36f" />
 
@@ -81,14 +67,17 @@ export function AventureiroArt({ size, className }: Props) {
       <circle cx="46" cy="29" r="1" fill="#1a0e08" />
       <circle cx="54" cy="29" r="1" fill="#1a0e08" />
       {/* Smile hint */}
-      <path d="M 47 33 Q 50 35, 53 33" fill="none" stroke="#5a3924" strokeWidth="0.7" strokeLinecap="round" />
+      <path
+        d="M 47 33 Q 50 35, 53 33"
+        fill="none"
+        stroke="#5a3924"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
 
       {/* Wide-brim hat */}
       <ellipse cx="50" cy="22" rx="18" ry="3" fill="#5a3924" />
-      <path
-        d="M 40 22 L 42 12 Q 50 8, 58 12 L 60 22 Z"
-        fill="#7a4318"
-      />
+      <path d="M 40 22 L 42 12 Q 50 8, 58 12 L 60 22 Z" fill="#7a4318" />
       {/* Hat band */}
       <rect x="40" y="19" width="20" height="2" fill="#3a2418" />
       {/* Hat leaf charm */}

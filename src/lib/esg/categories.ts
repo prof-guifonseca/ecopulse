@@ -58,16 +58,19 @@ export const ENVIRONMENTAL_SOURCE_LABELS: Record<EnvironmentalPointSource, strin
   demo: 'Demo',
 };
 
-export const MAP_POINT_TYPE_TO_ENVIRONMENTAL_CATEGORY: Record<MapPointType, EnvironmentalCategory> = {
-  baterias: 'batteries',
-  eletronicos: 'electronics',
-  oleo: 'cooking_oil',
-  trocas: 'reuse',
-  granel: 'bulk',
-  reparo: 'repair',
-};
+export const MAP_POINT_TYPE_TO_ENVIRONMENTAL_CATEGORY: Record<MapPointType, EnvironmentalCategory> =
+  {
+    baterias: 'batteries',
+    eletronicos: 'electronics',
+    oleo: 'cooking_oil',
+    trocas: 'reuse',
+    granel: 'bulk',
+    reparo: 'repair',
+  };
 
-const ENVIRONMENTAL_CATEGORY_TO_MAP_POINT_TYPE: Partial<Record<EnvironmentalCategory, MapPointType>> = {
+const ENVIRONMENTAL_CATEGORY_TO_MAP_POINT_TYPE: Partial<
+  Record<EnvironmentalCategory, MapPointType>
+> = {
   batteries: 'baterias',
   electronics: 'eletronicos',
   cooking_oil: 'oleo',
@@ -82,7 +85,7 @@ export function mapPointTypeToEnvironmentalCategory(type: MapPointType): Environ
 }
 
 export function environmentalCategoryToMapPointType(
-  category: EnvironmentalCategory
+  category: EnvironmentalCategory,
 ): MapPointType | null {
   return ENVIRONMENTAL_CATEGORY_TO_MAP_POINT_TYPE[category] ?? null;
 }

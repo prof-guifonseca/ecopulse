@@ -2,10 +2,7 @@
 
 import { Info, Lightbulb, Plus } from 'lucide-react';
 import { BREAKDOWN_LABELS } from '@/lib/scanner';
-import {
-  findCatalogProductById,
-  findProductAlternatives,
-} from '@/lib/products/catalog';
+import { findCatalogProductById, findProductAlternatives } from '@/lib/products/catalog';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
@@ -116,13 +113,13 @@ export function ProductDetailModal({ id }: Props) {
           {[view.brand, view.category].filter(Boolean).join(' · ') || 'Sem metadados'}
         </p>
 
-        <div className="mt-3 inline-flex items-center gap-2 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-micro">
+        <div className="border-soft bg-tint-1 t-micro mt-3 inline-flex items-center gap-2 rounded-full px-2.5 py-1">
           <span className="text-[var(--text-muted)]">Recompensa:</span>
           <span className="font-semibold text-[var(--accent-gold)]">
             ×{ECO_MULTIPLIER[view.score].toFixed(1)} tokens
           </span>
         </div>
-        <div className="mt-2 inline-flex max-w-full flex-wrap justify-center gap-2 rounded-full border-soft bg-tint-1 px-2.5 py-1 t-micro">
+        <div className="border-soft bg-tint-1 t-micro mt-2 inline-flex max-w-full flex-wrap justify-center gap-2 rounded-full px-2.5 py-1">
           <span className="text-[var(--text-muted)]">Fonte:</span>
           <span className="font-semibold text-[var(--text-secondary)]">
             {view.sourceName ?? 'Open Food Facts'}
@@ -138,18 +135,18 @@ export function ProductDetailModal({ id }: Props) {
           ))}
         </div>
 
-        <div className="mt-5 flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 text-left t-body-sm">
+        <div className="t-body-sm mt-5 flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent-gold)_28%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)] px-4 py-3 text-left">
           <Icon icon={Lightbulb} size={16} className="mt-0.5 text-[var(--accent-gold)]" />
           <span>{view.tip}</span>
         </div>
 
         {view.rationale.length > 0 ? (
-          <div className="mt-3 w-full rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 text-left">
-            <div className="flex items-center gap-2 t-eyebrow">
+          <div className="border-soft bg-tint-1 mt-3 w-full rounded-[var(--radius-md)] px-4 py-3 text-left">
+            <div className="t-eyebrow flex items-center gap-2">
               <Icon icon={Info} size={12} />
               Cálculo
             </div>
-            <ul className="mt-2 space-y-1 t-caption">
+            <ul className="t-caption mt-2 space-y-1">
               {view.confidence && view.confidence < 55 ? (
                 <li>· Dados insuficientes para avaliação completa</li>
               ) : null}
@@ -216,7 +213,7 @@ export function ProductDetailModal({ id }: Props) {
 
 function resolveView(
   id: string,
-  scan: ReturnType<typeof useScanHistoryStore.getState>['history'][number] | undefined
+  scan: ReturnType<typeof useScanHistoryStore.getState>['history'][number] | undefined,
 ): UnifiedView | null {
   if (scan) {
     return {
@@ -261,11 +258,11 @@ function resolveView(
 function BreakdownRow({ label, value, score }: { label: string; value: number; score: Score }) {
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-between t-caption">
+      <div className="t-caption mb-1.5 flex items-center justify-between">
         <span className="font-semibold text-[var(--text-secondary)]">{label}</span>
         <span>{value}/100</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-tint-3">
+      <div className="bg-tint-3 h-1.5 w-full overflow-hidden rounded-full">
         <div
           data-score={score}
           className="bg-score h-full rounded-full transition-[width] duration-700"
@@ -276,7 +273,13 @@ function BreakdownRow({ label, value, score }: { label: string; value: number; s
   );
 }
 
-function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id: string) => void }) {
+function AlternativesList({
+  items,
+  openItem,
+}: {
+  items: Product[];
+  openItem: (id: string) => void;
+}) {
   return (
     <div className="mt-5 w-full text-left">
       <div className="t-eyebrow mb-2">Alternativas</div>
@@ -286,7 +289,7 @@ function AlternativesList({ items, openItem }: { items: Product[]; openItem: (id
             key={a.id}
             type="button"
             onClick={() => openItem(a.id)}
-            className="flex w-full items-center gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 p-3 text-left transition-colors hover:border-[var(--line-strong)]"
+            className="border-soft bg-tint-1 flex w-full items-center gap-3 rounded-[var(--radius-md)] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
           >
             <IconTile size="md" icon={<span>{a.emoji}</span>} />
             <div className="min-w-0 flex-1">

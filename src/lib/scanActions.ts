@@ -60,8 +60,7 @@ export function performScan(): Product {
 
   // Score-aware reward toast.
   const star = chosen.score === 'A' ? '⭐ A · ' : '';
-  const tail =
-    chosen.score === 'D' || chosen.score === 'E' ? ` · alternativa A no mapa?` : '';
+  const tail = chosen.score === 'D' || chosen.score === 'E' ? ` · alternativa A no mapa?` : '';
   ui.showToast(`+${tokens} tokens · ${star}${chosen.name}${tail}`, 'reward');
   ui.fireConfetti();
 

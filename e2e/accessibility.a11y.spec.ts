@@ -1,7 +1,16 @@
 import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const routes = ['/home', '/scanner', '/map', '/community', '/profile', '/arena', '/onboarding', '/pitch'] as const;
+const routes = [
+  '/home',
+  '/scanner',
+  '/map',
+  '/community',
+  '/profile',
+  '/arena',
+  '/onboarding',
+  '/pitch',
+] as const;
 
 async function mockEsgPlaces(page: Page) {
   await page.route('**/api/esg/places**', async (route) => {
@@ -49,7 +58,7 @@ async function resetState(page: Page) {
           avatarLoadout: { baseId: 'base2', equippedGear: {}, activeSetId: null },
         },
         version: 5,
-      })
+      }),
     );
     localStorage.setItem(
       'ecopulse:game',
@@ -75,10 +84,16 @@ async function resetState(page: Page) {
           },
         },
         version: 2,
-      })
+      }),
     );
-    localStorage.setItem('ecopulse:scanHistory', JSON.stringify({ state: { history: [] }, version: 1 }));
-    localStorage.setItem('ecopulse:social', JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 }));
+    localStorage.setItem(
+      'ecopulse:scanHistory',
+      JSON.stringify({ state: { history: [] }, version: 1 }),
+    );
+    localStorage.setItem(
+      'ecopulse:social',
+      JSON.stringify({ state: { likedPosts: [], following: [] }, version: 1 }),
+    );
     localStorage.setItem(
       'ecopulse:arena',
       JSON.stringify({
@@ -95,7 +110,7 @@ async function resetState(page: Page) {
           rivalMastery: {},
         },
         version: 2,
-      })
+      }),
     );
     localStorage.setItem(
       'ecopulse:simulation',
@@ -112,7 +127,7 @@ async function resetState(page: Page) {
           cursor: 0,
         },
         version: 1,
-      })
+      }),
     );
   });
 }
@@ -130,7 +145,7 @@ for (const route of routes) {
 
     const results = await new AxeBuilder({ page }).analyze();
     const blockingViolations = results.violations.filter((violation) =>
-      ['critical', 'serious'].includes(violation.impact ?? '')
+      ['critical', 'serious'].includes(violation.impact ?? ''),
     );
 
     expect(blockingViolations).toEqual([]);

@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
-import path from "node:path";
+import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs';
+import path from 'node:path';
 
 const nextConfig: NextConfig = {
   // Pin Turbopack's workspace root to this project so it doesn't infer
@@ -12,27 +12,27 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         ],
       },
       {
         // O browser deve sempre revalidar o script do service worker.
-        source: "/sw.js",
+        source: '/sw.js',
         headers: [
-          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
-          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
-          { key: "Service-Worker-Allowed", value: "/" },
+          { key: 'Content-Type', value: 'application/javascript; charset=utf-8' },
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+          { key: 'Service-Worker-Allowed', value: '/' },
         ],
       },
     ];

@@ -110,5 +110,8 @@ export const COMMUNITY_FEED_IMAGES = {
 export type CommunityFeedImageKey = keyof typeof COMMUNITY_FEED_IMAGES;
 
 export function communityFeedImage(imageKey: string): CommunityFeedImage {
-  return COMMUNITY_FEED_IMAGES[imageKey as CommunityFeedImageKey] ?? COMMUNITY_FEED_IMAGES.upcyclingCrafts;
+  return (
+    COMMUNITY_FEED_IMAGES[imageKey as CommunityFeedImageKey] ??
+    COMMUNITY_FEED_IMAGES.upcyclingCrafts
+  );
 }

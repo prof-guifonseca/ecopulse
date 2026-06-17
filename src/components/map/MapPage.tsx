@@ -43,7 +43,7 @@ export function MapPage() {
   const region = useCurrentRegion();
   const events = region.events;
   const [allPoints, setAllPoints] = useState<EnvironmentalPoint[]>(() =>
-    getLocalEnvironmentalPoints(region.mapPoints)
+    getLocalEnvironmentalPoints(region.mapPoints),
   );
   const [filter, setFilter] = useState<'todos' | EnvironmentalCategory>('todos');
   const [panel, setPanel] = useState<'places' | 'events'>('places');
@@ -61,19 +61,22 @@ export function MapPage() {
 
   const fallbackPoints = useMemo(
     () => getLocalEnvironmentalPoints(region.mapPoints, { limit: 120 }),
-    [region.mapPoints]
+    [region.mapPoints],
   );
 
   const preferredCategories = useMemo(() => {
     const mapTemplateId = todaysMissionIds.find((id) => getMissionTemplate(id)?.slot === 'map');
     const template = getMissionTemplate(mapTemplateId);
     return template
-      ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId)?.map(mapPointTypeToEnvironmentalCategory)
+      ? effectiveMapTypes(template, (tribe ?? 'guardioes') as TribeId)?.map(
+          mapPointTypeToEnvironmentalCategory,
+        )
       : undefined;
   }, [todaysMissionIds, tribe]);
 
   const pins = useMemo(() => {
-    const visible = filter === 'todos' ? allPoints : allPoints.filter((point) => point.category === filter);
+    const visible =
+      filter === 'todos' ? allPoints : allPoints.filter((point) => point.category === filter);
     return rankEnvironmentalPoints(visible, {
       visitedPointIds: visited,
       preferredCategories,
@@ -105,7 +108,10 @@ export function MapPage() {
         categories: ENVIRONMENTAL_CATEGORIES.join(','),
       });
       if (opts.bbox) {
-        params.set('bbox', `${opts.bbox.south},${opts.bbox.west},${opts.bbox.north},${opts.bbox.east}`);
+        params.set(
+          'bbox',
+          `${opts.bbox.south},${opts.bbox.west},${opts.bbox.north},${opts.bbox.east}`,
+        );
       }
       if (opts.center) {
         params.set('lat', String(opts.center.lat));
@@ -120,7 +126,8 @@ export function MapPage() {
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const result = (await response.json()) as EsgPlaceSearchResult;
-        const nextPoints = Array.isArray(result.points) && result.points.length > 0 ? result.points : fallbackPoints;
+        const nextPoints =
+          Array.isArray(result.points) && result.points.length > 0 ? result.points : fallbackPoints;
         rememberEnvironmentalPoints(nextPoints);
         setAllPoints(nextPoints);
         setDataSource(result.source);
@@ -137,7 +144,7 @@ export function MapPage() {
         setStatus('error');
       }
     },
-    [fallbackPoints, region.id]
+    [fallbackPoints, region.id],
   );
 
   useEffect(() => {
@@ -162,7 +169,7 @@ export function MapPage() {
       rememberEnvironmentalPoints([point]);
       openModal({ kind: 'mapPoint', id: point.id });
     },
-    [openModal]
+    [openModal],
   );
 
   const refresh = useCallback(() => {
@@ -195,7 +202,7 @@ export function MapPage() {
         setStatus('ready');
         showToast('Não foi possível acessar a localização', 'info');
       },
-      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 8000 }
+      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 8000 },
     );
   }, [requestPlaces, showToast]);
 
@@ -209,16 +216,14 @@ export function MapPage() {
         label: query,
       });
     },
-    [locationQuery, requestPlaces]
+    [locationQuery, requestPlaces],
   );
 
   return (
     <PageShell spacing={5}>
       <header className="pt-2">
         <h1 className="t-headline">Mapa</h1>
-        <p className="mt-1 t-caption">
-          {scopeLabel} · pontos com fonte, distância e confiança.
-        </p>
+        <p className="t-caption mt-1">{scopeLabel} · pontos com fonte, distância e confiança.</p>
       </header>
 
       <MapCanvas
@@ -237,7 +242,7 @@ export function MapPage() {
           id="map-location-search"
           value={locationQuery}
           onChange={(event) => setLocationQuery(event.target.value)}
-          className="min-w-0 flex-1 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 text-sm text-[var(--text-primary)] outline-none transition-colors placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+          className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] transition-colors outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
           placeholder="Londrina, bairro ou endereço"
           autoComplete="off"
         />
@@ -308,11 +313,11 @@ export function MapPage() {
         })}
       </div>
 
-      <div className="flex gap-1 rounded-full border-soft bg-tint-1 p-1">
-        {([
+      <div className="border-soft bg-tint-1 flex gap-1 rounded-full p-1">
+        {[
           { v: 'places' as const, label: `Locais (${pins.length})` },
           { v: 'events' as const, label: `Agenda (${events.length})` },
-        ]).map((opt) => (
+        ].map((opt) => (
           <button
             key={opt.v}
             onClick={() => setPanel(opt.v)}
@@ -320,7 +325,7 @@ export function MapPage() {
               'flex-1 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors',
               panel === opt.v
                 ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-[var(--shadow-card)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
             )}
           >
             {opt.label}
@@ -334,20 +339,23 @@ export function MapPage() {
             const Lucide = resolveIcon(ENVIRONMENTAL_CATEGORY_ICON[point.category]) ?? MapPin;
             const isVisited = visited.includes(point.id);
             const distance = formatDistanceMeters(
-              approximateDistanceM(focusCenter ?? region.center, { lat: point.lat, lng: point.lng })
+              approximateDistanceM(focusCenter ?? region.center, {
+                lat: point.lat,
+                lng: point.lng,
+              }),
             );
             return (
               <li key={point.id}>
                 <button
                   onClick={() => openPoint(point)}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
+                  className="hover:bg-tint-2 flex w-full items-center gap-3 px-4 py-3 text-left transition-colors"
                 >
                   <span
                     className={cn(
                       'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                       isVisited
                         ? 'border-active bg-tint-green-2 text-[var(--accent-green)]'
-                        : 'border-soft bg-tint-2 text-[var(--text-secondary)]'
+                        : 'border-soft bg-tint-2 text-[var(--text-secondary)]',
                     )}
                   >
                     <Icon icon={Lucide} size={16} />
@@ -361,7 +369,11 @@ export function MapPage() {
                       {ENVIRONMENTAL_SOURCE_LABELS[point.source]} · confiança {point.confidence}%
                     </p>
                   </div>
-                  <Icon icon={ChevronRight} size={16} className="shrink-0 text-[var(--text-muted)]" />
+                  <Icon
+                    icon={ChevronRight}
+                    size={16}
+                    className="shrink-0 text-[var(--text-muted)]"
+                  />
                 </button>
               </li>
             );
@@ -371,13 +383,17 @@ export function MapPage() {
         <ListCard>
           {events.map((event) => (
             <li key={event.id} className="flex items-center gap-4 px-4 py-3">
-              <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)] border-soft bg-tint-2">
-                <span className="text-sm font-semibold leading-none text-[var(--text-primary)]">{event.day}</span>
+              <div className="border-soft bg-tint-2 flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[var(--radius-sm)]">
+                <span className="text-sm leading-none font-semibold text-[var(--text-primary)]">
+                  {event.day}
+                </span>
                 <span className="t-caption mt-0.5 leading-none">{event.month}</span>
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="t-title">{event.title}</h3>
-                <p className="t-caption">{event.time} · {event.rsvp} confirmados</p>
+                <p className="t-caption">
+                  {event.time} · {event.rsvp} confirmados
+                </p>
               </div>
             </li>
           ))}

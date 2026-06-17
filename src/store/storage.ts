@@ -53,7 +53,7 @@ export interface LegacyState {
 }
 
 export function createSafeJSONStorage<S>(
-  getStorage: () => Storage = () => localStorage
+  getStorage: () => Storage = () => localStorage,
 ): PersistStorage<S, unknown> | undefined {
   return createJSONStorage<S>(() => {
     const storage = getStorage();

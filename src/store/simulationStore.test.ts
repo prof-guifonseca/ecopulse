@@ -36,4 +36,3 @@ describe('simulationStore migration v1', () => {
     expect(migrated.cursor).toBe(7);
   });
 });
-

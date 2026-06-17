@@ -20,7 +20,9 @@ export function DiscoveryBlock() {
 
   // Surface the most relevant challenge: an active one if any, else next up.
   const featured =
-    CHALLENGES.find((c) => activeChallenges.includes(c.id) && !completedChallenges.includes(c.id)) ??
+    CHALLENGES.find(
+      (c) => activeChallenges.includes(c.id) && !completedChallenges.includes(c.id),
+    ) ??
     CHALLENGES.find((c) => !completedChallenges.includes(c.id)) ??
     CHALLENGES[0];
   const isActive = activeChallenges.includes(featured.id);
@@ -28,8 +30,8 @@ export function DiscoveryBlock() {
   const completion = isDone
     ? 100
     : isActive
-    ? Math.min(100, ((progress[featured.id] ?? 0) / featured.duration) * 100)
-    : 0;
+      ? Math.min(100, ((progress[featured.id] ?? 0) / featured.duration) * 100)
+      : 0;
   const ChallengeIcon = resolveIcon(featured.iconName);
 
   const tutorials = TUTORIALS.slice(0, 2);
@@ -43,13 +45,13 @@ export function DiscoveryBlock() {
       {/* Featured challenge */}
       <Card tone="solid" padded={false} className="px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-active bg-tint-green-2 text-[var(--accent-green)]">
+          <span className="border-active bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
             {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : null}
           </span>
           <div className="min-w-0 flex-1">
             <p className="t-eyebrow">Desafio</p>
-            <h3 className="mt-0.5 t-title">{featured.title}</h3>
-            <p className="mt-1 t-caption">
+            <h3 className="t-title mt-0.5">{featured.title}</h3>
+            <p className="t-caption mt-1">
               {featured.duration} dias · {featured.participants.toLocaleString('pt-BR')} pessoas
             </p>
           </div>
@@ -59,13 +61,22 @@ export function DiscoveryBlock() {
           </Chip>
         </div>
 
-        {(isActive || isDone) ? (
-          <ProgressBar value={completion} size="sm" className="mt-4" ariaLabel="Progresso do desafio em destaque" />
+        {isActive || isDone ? (
+          <ProgressBar
+            value={completion}
+            size="sm"
+            className="mt-4"
+            ariaLabel="Progresso do desafio em destaque"
+          />
         ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3">
           <span className="t-caption">
-            {isDone ? 'Concluído' : isActive ? `${Math.round(completion)}% feito` : 'Pronto pra começar'}
+            {isDone
+              ? 'Concluído'
+              : isActive
+                ? `${Math.round(completion)}% feito`
+                : 'Pronto pra começar'}
           </span>
           <Button
             variant={isDone ? 'ghost' : 'secondary'}
@@ -87,14 +98,18 @@ export function DiscoveryBlock() {
             className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
           >
             <Card tone="solid" padded={false} className="h-full">
-              <div className="relative flex min-h-[100px] items-end px-4 py-4" style={{ background: tutorial.gradient }}>
+              <div
+                className="relative flex min-h-[100px] items-end px-4 py-4"
+                style={{ background: tutorial.gradient }}
+              >
                 <div className="absolute inset-0 bg-black/15" aria-hidden />
                 <div className="relative text-3xl drop-shadow-md">{tutorial.emoji}</div>
               </div>
               <div className="px-4 py-3">
                 <h3 className="t-title leading-tight">{tutorial.title}</h3>
-                <p className="mt-1 t-caption">
-                  {'●'.repeat(tutorial.difficulty)}{'○'.repeat(Math.max(0, 3 - tutorial.difficulty))} · {tutorial.time}
+                <p className="t-caption mt-1">
+                  {'●'.repeat(tutorial.difficulty)}
+                  {'○'.repeat(Math.max(0, 3 - tutorial.difficulty))} · {tutorial.time}
                 </p>
               </div>
             </Card>

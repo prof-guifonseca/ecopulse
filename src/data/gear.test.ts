@@ -1,11 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { GEAR_ITEMS, GEAR_SETS, getGearItem } from './gear';
-import { SLOT_ANCHORS, hasGearVisual, itemHidesFace, itemHidesHair, resolveGearVisual, visualRegistry } from '@/components/avatar/gearVisuals';
+import {
+  SLOT_ANCHORS,
+  hasGearVisual,
+  itemHidesFace,
+  itemHidesHair,
+  resolveGearVisual,
+  visualRegistry,
+} from '@/components/avatar/gearVisuals';
 import { buildEquipmentVisualAudit, equipmentVisualStatus } from './equipmentVisualAudit';
 
 describe('gear visual catalog', () => {
   it('maps every gear item to a registered SVG visual', () => {
-    const missing = GEAR_ITEMS.filter((item) => !hasGearVisual(item.visualKey)).map((item) => item.id);
+    const missing = GEAR_ITEMS.filter((item) => !hasGearVisual(item.visualKey)).map(
+      (item) => item.id,
+    );
     expect(missing).toEqual([]);
   });
 
@@ -18,9 +27,9 @@ describe('gear visual catalog', () => {
   });
 
   it('uses item-specific visual keys for set equipment', () => {
-    const generic = GEAR_ITEMS.filter((item) => item.setId && /^[a-z-]+:[a-zA-Z]+$/.test(item.visualKey)).map(
-      (item) => item.id
-    );
+    const generic = GEAR_ITEMS.filter(
+      (item) => item.setId && /^[a-z-]+:[a-zA-Z]+$/.test(item.visualKey),
+    ).map((item) => item.id);
     expect(generic).toEqual([]);
   });
 
@@ -58,7 +67,9 @@ describe('gear visual catalog', () => {
 
   it('gives each premium set visible clothing coverage', () => {
     for (const set of GEAR_SETS) {
-      const slots = new Set(GEAR_ITEMS.filter((item) => item.setId === set.id).map((item) => item.slot));
+      const slots = new Set(
+        GEAR_ITEMS.filter((item) => item.setId === set.id).map((item) => item.slot),
+      );
       expect(slots.has('torso')).toBe(true);
       expect(slots.has('legs')).toBe(true);
       expect(slots.has('feet')).toBe(true);

@@ -42,7 +42,7 @@ export function ShopItemModal({ id }: Props) {
   return (
     <ModalShell eyebrow="Vestiário" title={item.name}>
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full border-soft bg-tint-2 text-5xl">
+        <div className="border-soft bg-tint-2 flex h-24 w-24 items-center justify-center rounded-full text-5xl">
           {item.emoji}
         </div>
         <p className="t-body-sm mt-3 max-w-[32ch]">{item.desc}</p>

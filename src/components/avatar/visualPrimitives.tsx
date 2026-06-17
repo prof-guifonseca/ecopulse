@@ -34,7 +34,17 @@ export function SlotHighlight({ slot }: { slot: GearSlot }) {
   );
 }
 
-export function GlassSheen({ x, y, width, opacity = 0.55 }: { x: number; y: number; width: number; opacity?: number }) {
+export function GlassSheen({
+  x,
+  y,
+  width,
+  opacity = 0.55,
+}: {
+  x: number;
+  y: number;
+  width: number;
+  opacity?: number;
+}) {
   return (
     <path
       d={`M${x} ${y + 12} L${x + width * 0.42} ${y} M${x + width * 0.58} ${y + 18} L${x + width} ${y + 5}`}
@@ -46,16 +56,41 @@ export function GlassSheen({ x, y, width, opacity = 0.55 }: { x: number; y: numb
   );
 }
 
-export function Leaf({ x, y, rotate = 0, scale = 1, palette }: { x: number; y: number; rotate?: number; scale?: number; palette: AvatarPalette }) {
+export function Leaf({
+  x,
+  y,
+  rotate = 0,
+  scale = 1,
+  palette,
+}: {
+  x: number;
+  y: number;
+  rotate?: number;
+  scale?: number;
+  palette: AvatarPalette;
+}) {
   return (
     <g transform={`translate(${x} ${y}) rotate(${rotate}) scale(${scale})`}>
       <path d="M0 0 C13 -12, 28 -8, 33 7 C18 10, 8 8, 0 0 Z" fill={palette.accent} opacity="0.88" />
-      <path d="M2 1 C12 2, 22 5, 31 7" fill="none" stroke={palette.dark} strokeWidth="2" strokeLinecap="round" opacity="0.4" />
+      <path
+        d="M2 1 C12 2, 22 5, 31 7"
+        fill="none"
+        stroke={palette.dark}
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
     </g>
   );
 }
 
-export function CircuitLines({ palette, dense = false }: { palette: AvatarPalette; dense?: boolean }) {
+export function CircuitLines({
+  palette,
+  dense = false,
+}: {
+  palette: AvatarPalette;
+  dense?: boolean;
+}) {
   return (
     <g fill="none" stroke={palette.glow} strokeLinecap="round" opacity={dense ? 0.72 : 0.5}>
       <path d="M90 158 H110 V174 H130 V158 H151" strokeWidth="3" />
@@ -73,11 +108,22 @@ export function CircuitLines({ palette, dense = false }: { palette: AvatarPalett
   );
 }
 
-export function StitchLines({ palette, path = 'M87 150 C103 159, 137 159, 153 150' }: { palette: AvatarPalette; path?: string }) {
+export function StitchLines({
+  palette,
+  path = 'M87 150 C103 159, 137 159, 153 150',
+}: {
+  palette: AvatarPalette;
+  path?: string;
+}) {
   return (
     <g opacity="0.55">
       <path d={path} stroke={palette.light} strokeWidth="3" strokeLinecap="round" fill="none" />
-      <path d="M91 151 L88 158 M106 156 L103 163 M121 158 L119 165 M136 156 L139 163 M150 151 L153 158" stroke={palette.light} strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M91 151 L88 158 M106 156 L103 163 M121 158 L119 165 M136 156 L139 163 M150 151 L153 158"
+        stroke={palette.light}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </g>
   );
 }

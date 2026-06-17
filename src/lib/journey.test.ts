@@ -44,7 +44,7 @@ describe('currentChapter', () => {
         level: 4,
         scans: 15,
         visitedPointIds: ['ldb-granel-empório'],
-      }).id
+      }).id,
     ).toBe('arbusto');
   });
 
@@ -89,10 +89,13 @@ describe('evaluateGates', () => {
 
   it('returns empty when all gates pass', () => {
     expect(
-      evaluateGates({ level: 5, scans: 10, ecoIndex: 'A', visitedPointIds: [], defeatedRivals: 0 }, {
-        minLevel: 4,
-        minScans: 5,
-      })
+      evaluateGates(
+        { level: 5, scans: 10, ecoIndex: 'A', visitedPointIds: [], defeatedRivals: 0 },
+        {
+          minLevel: 4,
+          minScans: 5,
+        },
+      ),
     ).toEqual([]);
   });
 });

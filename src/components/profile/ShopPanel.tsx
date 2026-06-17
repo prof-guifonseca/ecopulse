@@ -65,7 +65,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               />
               <span className="t-body-sm">tokens</span>
             </div>
-            <p className="mt-2 t-caption">Ganhos no app.</p>
+            <p className="t-caption mt-2">Ganhos no app.</p>
           </div>
           <Button variant="secondary" size="sm" onClick={openAvatarBuilder}>
             Vestiário
@@ -78,7 +78,9 @@ export function ShopPanel({ tokens }: { tokens: number }) {
       <section>
         <div className="mb-3 flex items-baseline justify-between gap-3">
           <h2 className="t-title">Conjuntos</h2>
-          <span className="t-caption">{ownedGearSets.length}/{GEAR_SETS.length} desbloqueados</span>
+          <span className="t-caption">
+            {ownedGearSets.length}/{GEAR_SETS.length} desbloqueados
+          </span>
         </div>
         <div className="-mx-3 flex gap-3 overflow-x-auto px-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {GEAR_SETS.map((setItem) => {
@@ -91,7 +93,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <button
                 key={setItem.id}
                 onClick={() => openModal({ kind: 'gearSet', id: setItem.id })}
-                className="group flex w-[168px] shrink-0 flex-col rounded-[var(--radius-md)] border bg-tint-1 text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
+                className="group bg-tint-1 flex w-[168px] shrink-0 flex-col rounded-[var(--radius-md)] border text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
                 style={{
                   borderColor: equipped ? 'var(--line-active)' : 'var(--line-soft)',
                   backgroundColor: equipped ? 'var(--tint-green-2)' : undefined,
@@ -100,7 +102,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                 <div
                   className={cn(
                     'flex h-[148px] items-end justify-center overflow-hidden rounded-t-[var(--radius-md)] bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.14),transparent_48%),var(--tint-2)]',
-                    locked && 'opacity-40 grayscale'
+                    locked && 'opacity-40 grayscale',
                   )}
                 >
                   <Avatar loadout={previewLoadout} size="stage" alt={setItem.name} pose="builder" />
@@ -115,7 +117,9 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                     ) : locked ? (
                       `Bloq. ${unlockHint(setItem)}`
                     ) : (
-                      <span className="text-[var(--accent-gold)]">{setItem.priceTokens} tokens</span>
+                      <span className="text-[var(--accent-gold)]">
+                        {setItem.priceTokens} tokens
+                      </span>
                     )}
                   </p>
                   <BattleStatChips stats={setItem.setBonusStats} compact className="mt-2" />
@@ -139,9 +143,9 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <li key={item.id}>
                 <button
                   onClick={openAvatarBuilder}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-tint-2"
+                  className="hover:bg-tint-2 flex w-full items-center gap-3 px-4 py-3 text-left transition-colors"
                 >
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] border-soft bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.12),transparent_50%),var(--tint-2)]">
+                  <span className="border-soft flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] bg-[radial-gradient(circle_at_50%_12%,rgba(126,230,178,0.12),transparent_50%),var(--tint-2)]">
                     <Avatar
                       loadout={previewLoadoutForGear(avatarLoadout, item)}
                       size="lg"
@@ -152,17 +156,19 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="t-title truncate">{item.name}</div>
-                    <p className="mt-0.5 t-caption">{GEAR_SLOT_LABELS[item.slot]} · {item.tier}</p>
+                    <p className="t-caption mt-0.5">
+                      {GEAR_SLOT_LABELS[item.slot]} · {item.tier}
+                    </p>
                     <BattleStatChips stats={item.battleStats} compact className="mt-1.5" />
                   </div>
                   <span
                     className={cn(
-                      'shrink-0 t-caption font-semibold',
+                      't-caption shrink-0 font-semibold',
                       equippedHere
                         ? 'text-[var(--accent-green)]'
                         : owned
                           ? 'text-[var(--text-secondary)]'
-                          : 'text-[var(--accent-gold)]'
+                          : 'text-[var(--accent-gold)]',
                     )}
                   >
                     {equippedHere ? 'Equipado' : owned ? 'Usar peça' : `${item.priceTokens}t`}
@@ -175,20 +181,24 @@ export function ShopPanel({ tokens }: { tokens: number }) {
       </section>
 
       <section>
-        <h2 className="mb-3 t-title">Outros</h2>
+        <h2 className="t-title mb-3">Outros</h2>
         <div className="grid grid-cols-2 gap-3">
           {SHOP_ITEMS.map((item) => {
             const isOwned = ownedItems.includes(item.id);
             return (
-              <button key={item.id} onClick={() => openModal({ kind: 'shopItem', id: item.id })} className="text-left">
+              <button
+                key={item.id}
+                onClick={() => openModal({ kind: 'shopItem', id: item.id })}
+                className="text-left"
+              >
                 <Card tone="solid" padded={false} className="flex h-full flex-col gap-2 px-4 py-4">
                   <span className="text-3xl leading-none">{item.emoji}</span>
                   <div className="t-title">{item.name}</div>
                   <p className="t-caption">{item.desc}</p>
                   <div
                     className={cn(
-                      'mt-auto inline-flex items-center gap-1 t-body-sm font-semibold',
-                      isOwned ? 'text-[var(--accent-green)]' : 'text-[var(--accent-gold)]'
+                      't-body-sm mt-auto inline-flex items-center gap-1 font-semibold',
+                      isOwned ? 'text-[var(--accent-green)]' : 'text-[var(--accent-gold)]',
                     )}
                   >
                     {isOwned ? (
@@ -214,14 +224,15 @@ function LoadoutTestCard({ activeLoadoutLabel }: { activeLoadoutLabel: string })
   return (
     <Card tone="solid" padded={false} className="border-active px-5 py-4">
       <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-tint-green-2 text-[var(--accent-green)]">
+        <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--accent-green)]">
           <Icon icon={Swords} size={18} />
         </span>
         <div className="min-w-0">
           <p className="t-eyebrow">Teste seu loadout</p>
           <h2 className="t-title mt-1">Leve o Vestiário para treino</h2>
-          <p className="mt-1 t-caption">
-            {activeLoadoutLabel} entra em rounds simulados para comparar atributos antes do próximo investimento.
+          <p className="t-caption mt-1">
+            {activeLoadoutLabel} entra em rounds simulados para comparar atributos antes do próximo
+            investimento.
           </p>
         </div>
       </div>

@@ -58,14 +58,7 @@ export function AkashiArt({ size, className }: Props) {
       <ellipse cx="64" cy="78" rx="4.5" ry="3" fill="url(#akashi-cloud)" />
 
       {/* Cloak fold seam down the middle — subtle */}
-      <line
-        x1="50"
-        y1="48"
-        x2="50"
-        y2="92"
-        stroke="rgba(0,0,0,0.4)"
-        strokeWidth="0.6"
-      />
+      <line x1="50" y1="48" x2="50" y2="92" stroke="rgba(0,0,0,0.4)" strokeWidth="0.6" />
     </svg>
   );
 }

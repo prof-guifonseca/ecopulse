@@ -50,7 +50,11 @@ export function GearSetModal({ id }: Props) {
 
   const pieces = gearItemsForSet(id);
   const previewLoadout = defaultLoadoutForSet(id, avatarLoadout.baseId);
-  const equipped = isGearSetComplete(setItem, avatarLoadout, new Map(GEAR_ITEMS.map((item) => [item.id, item])));
+  const equipped = isGearSetComplete(
+    setItem,
+    avatarLoadout,
+    new Map(GEAR_ITEMS.map((item) => [item.id, item])),
+  );
   const meets = meetsSkinUnlock(setItem.unlock, {
     level,
     tokens,
@@ -79,7 +83,7 @@ export function GearSetModal({ id }: Props) {
   return (
     <ModalShell eyebrow="Conjunto" title={setItem.name}>
       <div className="space-y-5">
-        <div className="flex h-56 items-end justify-center overflow-hidden rounded-[var(--radius-lg)] border-soft bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.16),transparent_50%),var(--tint-1)]">
+        <div className="border-soft flex h-56 items-end justify-center overflow-hidden rounded-[var(--radius-lg)] bg-[radial-gradient(circle_at_50%_10%,rgba(126,230,178,0.16),transparent_50%),var(--tint-1)]">
           <Avatar loadout={previewLoadout} size="stage" alt={setItem.name} pose="builder" />
         </div>
 
@@ -91,12 +95,12 @@ export function GearSetModal({ id }: Props) {
           <BattleStatChips stats={setItem.setBonusStats} />
         </div>
 
-        <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3">
+        <div className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-4 py-3">
           <p className="t-eyebrow">Peças</p>
           <ul className="mt-3 space-y-2">
             {pieces.map((piece) => (
               <li key={piece.id} className="flex items-center gap-3">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] bg-tint-2">
+                <span className="bg-tint-2 flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)]">
                   <Avatar
                     loadout={previewLoadout}
                     size="md"
@@ -117,23 +121,25 @@ export function GearSetModal({ id }: Props) {
         </div>
 
         {equipped ? (
-          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-2 px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-2 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
             Equipado agora
           </div>
         ) : owned ? (
-          <div className="rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
+          <div className="border-soft bg-tint-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3">
             Desbloqueado.
           </div>
         ) : locked ? (
-          <div className="flex items-start gap-3 rounded-[var(--radius-md)] border-soft bg-tint-1 px-4 py-3 t-body-sm">
+          <div className="border-soft bg-tint-1 t-body-sm flex items-start gap-3 rounded-[var(--radius-md)] px-4 py-3">
             <Icon icon={Lock} size={16} className="mt-0.5 text-[var(--text-muted)]" />
             <div>
               <p className="font-semibold text-[var(--text-primary)]">Bloqueado</p>
-              <p>{unlockHint(setItem)} · {setItem.priceTokens} tokens</p>
+              <p>
+                {unlockHint(setItem)} · {setItem.priceTokens} tokens
+              </p>
             </div>
           </div>
         ) : (
-          <div className="rounded-[var(--radius-md)] border-active bg-tint-green-1 px-4 py-3 t-body-sm text-[var(--accent-green)]">
+          <div className="border-active bg-tint-green-1 t-body-sm rounded-[var(--radius-md)] px-4 py-3 text-[var(--accent-green)]">
             Pronto para liberar.
           </div>
         )}

@@ -74,20 +74,35 @@ export function PirataReciclaArt({ size, className }: Props) {
       <line x1="40" y1="22" x2="62" y2="32" stroke="#0a0a0a" strokeWidth="0.6" />
 
       {/* Smirk */}
-      <path d="M 47 33 Q 50 35, 53 33" fill="none" stroke="#5a3924" strokeWidth="0.7" strokeLinecap="round" />
+      <path
+        d="M 47 33 Q 50 35, 53 33"
+        fill="none"
+        stroke="#5a3924"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
 
       {/* Tricorn hat */}
-      <path
-        d="M 32 18 L 50 6 L 68 18 L 64 22 L 50 18 L 36 22 Z"
-        fill="#1a0e08"
-      />
+      <path d="M 32 18 L 50 6 L 68 18 L 64 22 L 50 18 L 36 22 Z" fill="#1a0e08" />
       {/* Hat leaf insignia */}
       <path d="M 50 14 Q 54 11, 50 7 Q 46 11, 50 14 Z" fill="#5fb36f" />
       <line x1="50" y1="9" x2="50" y2="13" stroke="#3a8a4a" strokeWidth="0.5" />
 
       {/* Hair tied — peeking from sides */}
-      <path d="M 39 22 Q 36 30, 38 38" stroke="#1a0e08" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <path d="M 61 22 Q 64 30, 62 38" stroke="#1a0e08" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <path
+        d="M 39 22 Q 36 30, 38 38"
+        stroke="#1a0e08"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 61 22 Q 64 30, 62 38"
+        stroke="#1a0e08"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

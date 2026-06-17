@@ -30,7 +30,7 @@ function parseSearchParams(searchParams: URLSearchParams) {
   const radiusMeters = clampNumber(
     Number(searchParams.get('radiusMeters') ?? DEFAULT_RADIUS_METERS),
     250,
-    MAX_RADIUS_METERS
+    MAX_RADIUS_METERS,
   );
   const bbox = parseBBox(searchParams.get('bbox'));
   const categories = parseCategories(searchParams.get('categories'));
@@ -76,7 +76,7 @@ function parseCategories(value: string | null): EnvironmentalCategory[] | undefi
   const categories = value
     .split(',')
     .filter((category): category is EnvironmentalCategory =>
-      allowed.has(category as EnvironmentalCategory)
+      allowed.has(category as EnvironmentalCategory),
     );
   return categories.length > 0 ? categories : undefined;
 }

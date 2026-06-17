@@ -14,7 +14,7 @@ export function ConfidenceTag({ kind, className }: { kind: Confidence; className
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 t-micro font-semibold',
+        't-micro inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold',
         verified
           ? 'bg-tint-green-2 text-[var(--accent-green)]'
           : 'bg-tint-1 text-[var(--text-muted)]',

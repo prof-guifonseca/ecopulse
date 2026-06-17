@@ -60,8 +60,24 @@ export function CapoeiristaArt({ size, className }: Props) {
       <rect x="28" y="70" width="44" height="0.8" fill="#3f8a4f" />
       {/* Knot — small loop on left */}
       <circle cx="34" cy="73" r="2" fill="#5fb36f" />
-      <line x1="34" y1="74" x2="32" y2="80" stroke="#5fb36f" strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="34" y1="74" x2="36" y2="80" stroke="#5fb36f" strokeWidth="1.4" strokeLinecap="round" />
+      <line
+        x1="34"
+        y1="74"
+        x2="32"
+        y2="80"
+        stroke="#5fb36f"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <line
+        x1="34"
+        y1="74"
+        x2="36"
+        y2="80"
+        stroke="#5fb36f"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
 
       {/* Head */}
       <circle cx="50" cy="28" r="11" fill="#9c6a3c" />
@@ -73,14 +89,32 @@ export function CapoeiristaArt({ size, className }: Props) {
       <path d="M 62 22 Q 70 20, 72 26 Q 66 28, 62 25 Z" fill="#5fb36f" />
 
       {/* Hair tufts visible */}
-      <path d="M 39 26 Q 36 32, 39 38" stroke="#1a0e08" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <path d="M 61 26 Q 64 32, 61 38" stroke="#1a0e08" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      <path
+        d="M 39 26 Q 36 32, 39 38"
+        stroke="#1a0e08"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 61 26 Q 64 32, 61 38"
+        stroke="#1a0e08"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+      />
 
       {/* Eyes */}
       <circle cx="46" cy="28" r="1.1" fill="#1a0e08" />
       <circle cx="54" cy="28" r="1.1" fill="#1a0e08" />
       {/* Wide grin (energy of capoeira) */}
-      <path d="M 45 33 Q 50 36, 55 33" fill="none" stroke="#1a0e08" strokeWidth="0.9" strokeLinecap="round" />
+      <path
+        d="M 45 33 Q 50 36, 55 33"
+        fill="none"
+        stroke="#1a0e08"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

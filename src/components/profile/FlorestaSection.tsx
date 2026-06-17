@@ -84,7 +84,7 @@ export function FlorestaSection() {
         {metrics.map((m) => (
           <li
             key={m.label}
-            className="flex items-start gap-3 rounded-[var(--radius-sm)] border-soft bg-tint-1 px-3 py-2.5"
+            className="border-soft bg-tint-1 flex items-start gap-3 rounded-[var(--radius-sm)] px-3 py-2.5"
           >
             <IconTile size="sm" tone="brand" icon={<Icon icon={m.icon} size={16} />} />
             <div className="min-w-0 flex-1">
@@ -93,12 +93,12 @@ export function FlorestaSection() {
                 <ConfidenceTag kind={m.confidence} />
               </div>
               <p className="t-caption truncate">{m.label}</p>
-              <p className="mt-0.5 t-micro text-[var(--text-muted)]">{m.hint}</p>
+              <p className="t-micro mt-0.5 text-[var(--text-muted)]">{m.hint}</p>
             </div>
           </li>
         ))}
       </ul>
-      <p className="mt-3 t-micro text-[var(--text-muted)]">
+      <p className="t-micro mt-3 text-[var(--text-muted)]">
         Contagens vêm das suas visitas registradas no mapa; massas (kg/L) são estimativas por
         visita, não medições.
       </p>

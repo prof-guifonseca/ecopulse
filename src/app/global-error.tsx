@@ -41,7 +41,13 @@ export default function GlobalError({
             Algo travou
           </p>
           <h1 style={{ fontSize: '1.35rem', fontWeight: 700, lineHeight: 1.1 }}>Algo travou.</h1>
-          <p style={{ color: 'var(--text-secondary, #aab3a7)', fontSize: '0.92rem', lineHeight: 1.55 }}>
+          <p
+            style={{
+              color: 'var(--text-secondary, #aab3a7)',
+              fontSize: '0.92rem',
+              lineHeight: 1.55,
+            }}
+          >
             Tente de novo.
           </p>
           <button

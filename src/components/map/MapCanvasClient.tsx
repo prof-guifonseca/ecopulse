@@ -29,12 +29,12 @@ export function MapCanvasClient({
         point,
         position: latLngToPercent(region.bbox, { lat: point.lat, lng: point.lng }),
       })),
-    [points, region.bbox]
+    [points, region.bbox],
   );
 
   return (
     <div
-      className="relative overflow-hidden rounded-[var(--radius-md)] border-soft bg-[var(--bg-secondary)]"
+      className="border-soft relative overflow-hidden rounded-[var(--radius-md)] bg-[var(--bg-secondary)]"
       style={{ aspectRatio: '1 / 1' }}
       data-testid="maplibre-surface"
     >
@@ -67,10 +67,10 @@ export function MapCanvasClient({
               type="button"
               onClick={() => onSelectPoint(point)}
               className={cn(
-                'pointer-events-auto absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-strong backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95',
+                'border-strong pointer-events-auto absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95',
                 isVisited
                   ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                  : 'bg-[rgba(15,23,19,0.88)] text-[var(--accent-green)]'
+                  : 'bg-[rgba(15,23,19,0.88)] text-[var(--accent-green)]',
               )}
               style={{
                 left: `${position.x}%`,
@@ -87,7 +87,7 @@ export function MapCanvasClient({
         })}
       </div>
 
-      <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-soft bg-scrim-card px-2.5 py-1 backdrop-blur-md">
+      <div className="border-soft bg-scrim-card pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 backdrop-blur-md">
         <Locate size={11} className="text-[var(--accent-gps)]" strokeWidth={2.4} />
         <span className="t-micro tracking-normal text-[var(--text-secondary)]">
           {`${region.name.toUpperCase()} · ${region.state}`}
@@ -95,7 +95,7 @@ export function MapCanvasClient({
       </div>
 
       {mapError ? (
-        <div className="pointer-events-none absolute bottom-3 right-3 rounded-full border-soft bg-scrim-card px-2.5 py-1 backdrop-blur-md">
+        <div className="border-soft bg-scrim-card pointer-events-none absolute right-3 bottom-3 rounded-full px-2.5 py-1 backdrop-blur-md">
           <span className="t-micro tracking-normal text-[var(--text-secondary)]">
             Base indisponível
           </span>

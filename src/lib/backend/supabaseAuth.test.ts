@@ -30,14 +30,20 @@ describe('resolveUserId', () => {
     vi.stubEnv('SUPABASE_URL', 'https://x.supabase.co');
     vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'svc');
     vi.stubEnv('SUPABASE_ANON_KEY', 'anon');
-    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ id: 'user-123' })));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => Response.json({ id: 'user-123' })),
+    );
     await expect(resolveUserId(req({ authorization: 'Bearer good' }))).resolves.toBe('user-123');
   });
 
   it('falls back to local-user when the token is rejected', async () => {
     vi.stubEnv('SUPABASE_URL', 'https://x.supabase.co');
     vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'svc');
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('nope', { status: 401 })));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('nope', { status: 401 })),
+    );
     await expect(resolveUserId(req({ authorization: 'Bearer bad' }))).resolves.toBe(LOCAL_USER);
   });
 });

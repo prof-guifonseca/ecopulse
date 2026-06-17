@@ -6,7 +6,7 @@ import { buildRealCommunityFeed, type CommunityFeedPost } from './realFeed';
 export function promisedPostIdsForDay(
   activeChallenges: readonly string[],
   completedChallenges: readonly string[],
-  day: string = todayKey()
+  day: string = todayKey(),
 ): string[] {
   return [...activeChallenges, ...completedChallenges]
     .filter((id) => id.startsWith('feed-') && id.endsWith(`-${day}`))

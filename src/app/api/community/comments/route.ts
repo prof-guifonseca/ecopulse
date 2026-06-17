@@ -18,7 +18,8 @@ export async function POST(request: Request) {
     const text = typeof body.text === 'string' ? body.text.trim().slice(0, 500) : '';
     const userId = await resolveUserId(request);
     const userName = typeof body.userName === 'string' ? body.userName.trim().slice(0, 80) : 'Você';
-    const userAvatar = typeof body.userAvatar === 'string' ? body.userAvatar.trim().slice(0, 8) : '🌱';
+    const userAvatar =
+      typeof body.userAvatar === 'string' ? body.userAvatar.trim().slice(0, 8) : '🌱';
 
     if (!postId || text.length < 2) {
       return Response.json({ error: 'invalid_comment' }, { status: 400 });

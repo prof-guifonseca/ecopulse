@@ -16,7 +16,7 @@ interface SearchOptions {
 
 export async function searchEnvironmentalPlaces(
   input: EsgPlaceSearchInput,
-  options: SearchOptions = {}
+  options: SearchOptions = {},
 ): Promise<EsgPlaceSearchResult> {
   const provider = options.provider ?? process.env.ESG_DISCOVERY_PROVIDER ?? 'openstreetmap';
   const normalizedInput = await resolveSearchInput(input, options);
@@ -66,7 +66,7 @@ export function clearEsgSearchCache(): void {
 
 async function resolveSearchInput(
   input: EsgPlaceSearchInput,
-  options: SearchOptions
+  options: SearchOptions,
 ): Promise<EsgPlaceSearchInput> {
   if (input.query?.trim()) {
     try {

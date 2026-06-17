@@ -45,7 +45,7 @@ export const useArenaStore = create<ArenaState>()(
 
       recordBattle: (result, loadoutMultiplier) =>
         set((state) =>
-          applyArenaBattleProgress(state, result, { loadoutMultiplier: loadoutMultiplier ?? 1 })
+          applyArenaBattleProgress(state, result, { loadoutMultiplier: loadoutMultiplier ?? 1 }),
         ),
 
       setDemoProgress: (progress) => set(progress),
@@ -55,8 +55,8 @@ export const useArenaStore = create<ArenaState>()(
       version: 2,
       storage: createSafeJSONStorage<ArenaProgress>(),
       migrate: (state) => migrateArenaStateToV2(state as Partial<ArenaProgress>),
-    }
-  )
+    },
+  ),
 );
 
 if (typeof window !== 'undefined') {

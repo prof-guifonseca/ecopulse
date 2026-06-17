@@ -37,7 +37,10 @@ export function Card({
   ...rest
 }: Props) {
   return (
-    <As className={cn(TONE[tone], ACCENT[accent], padded && 'p-5', 'overflow-hidden', className)} {...rest}>
+    <As
+      className={cn(TONE[tone], ACCENT[accent], padded && 'p-5', 'overflow-hidden', className)}
+      {...rest}
+    >
       {children}
     </As>
   );

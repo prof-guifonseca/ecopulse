@@ -15,8 +15,8 @@ export const visualRegistry = Object.fromEntries(
     VISUAL_SLOTS.map((slot) => {
       const key = `${family}.${slot}.standard`;
       return [key, createVisualDefinition(key, family, slot)];
-    })
-  )
+    }),
+  ),
 ) as Record<string, GearVisualDefinition>;
 
 export function resolveGearVisual(item: GearItem): GearVisualDefinition {

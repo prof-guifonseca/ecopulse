@@ -5,7 +5,7 @@ import type { Product } from '@/types';
 
 export function scanRecordFromLookup(
   lookup: ProductLookupResult,
-  source: ScanRecord['source'] = lookup.source === 'user' ? 'manual' : 'barcode'
+  source: ScanRecord['source'] = lookup.source === 'user' ? 'manual' : 'barcode',
 ): ScanRecord {
   return {
     id: lookup.id,
@@ -39,7 +39,10 @@ export function scanRecordFromLookup(
   };
 }
 
-export function scanResultFromLookup(lookup: ProductLookupResult, source: ScanResult['source']): ScanResult {
+export function scanResultFromLookup(
+  lookup: ProductLookupResult,
+  source: ScanResult['source'],
+): ScanResult {
   return {
     id: `scan:${lookup.id}:${Date.parse(lookup.checkedAt).toString(36)}`,
     barcode: lookup.barcode,
@@ -54,7 +57,7 @@ export function scanResultFromLookup(lookup: ProductLookupResult, source: ScanRe
 export function scanRecordFromProduct(
   product: Product,
   source: ScanRecord['source'] = 'cache',
-  scannedAt: string = new Date().toISOString()
+  scannedAt: string = new Date().toISOString(),
 ): ScanRecord {
   const result = deriveScore({
     novaGroup: product.novaGroup,

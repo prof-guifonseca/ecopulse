@@ -133,7 +133,11 @@ const SET_PALETTES: Record<string, AvatarPalette> = {
 };
 
 export function paletteForGear(item: GearItem): AvatarPalette {
-  return SET_PALETTES[item.paletteId ?? item.setId ?? ''] ?? THEME_PALETTES[themeFromVisualKey(item.visualKey)] ?? THEME_PALETTES.nature;
+  return (
+    SET_PALETTES[item.paletteId ?? item.setId ?? ''] ??
+    THEME_PALETTES[themeFromVisualKey(item.visualKey)] ??
+    THEME_PALETTES.nature
+  );
 }
 
 export function themeFromVisualKey(key: string): GearTheme {

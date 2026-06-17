@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildSupabaseRow, isSupabaseConfigured, persistRow, supabaseSelectData } from './supabaseRest';
+import {
+  buildSupabaseRow,
+  isSupabaseConfigured,
+  persistRow,
+  supabaseSelectData,
+} from './supabaseRest';
 
 describe('supabaseRest', () => {
   afterEach(() => {
@@ -57,7 +62,13 @@ describe('supabaseRest', () => {
           reaction: 'like',
           active: true,
         }),
-      ).toMatchObject({ id: 'u1:p9:like', user_id: 'u1', post_id: 'p9', reaction: 'like', active: true });
+      ).toMatchObject({
+        id: 'u1:p9:like',
+        user_id: 'u1',
+        post_id: 'p9',
+        reaction: 'like',
+        active: true,
+      });
     });
   });
 

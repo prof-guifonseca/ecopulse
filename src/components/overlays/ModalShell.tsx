@@ -40,7 +40,7 @@ export function ModalShell({
         </div>
       ) : null}
 
-      <header className="flex items-start justify-between gap-3 px-5 pb-3 pt-4">
+      <header className="flex items-start justify-between gap-3 px-5 pt-4 pb-3">
         <div className="min-w-0 flex-1">
           {eyebrow ? <div className="t-eyebrow mb-1">{eyebrow}</div> : null}
           {title ? <h2 className="t-title">{title}</h2> : null}
@@ -58,7 +58,7 @@ export function ModalShell({
         className={cn(
           'overflow-y-auto px-5 pb-[calc(env(safe-area-inset-bottom,0px)+20px)]',
           footer ? 'pb-4' : '',
-          bodyClassName
+          bodyClassName,
         )}
         style={{ maxHeight: 'var(--modal-body-max-h)' }}
       >

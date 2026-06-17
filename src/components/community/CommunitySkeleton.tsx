@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/shared/Skeleton';
 export function CommunitySkeleton() {
   return (
     <PageShell spacing={5}>
-      <header className="pt-2 space-y-2" aria-busy="true" aria-live="polite">
+      <header className="space-y-2 pt-2" aria-busy="true" aria-live="polite">
         <Skeleton className="h-7 w-36" />
         <Skeleton className="h-3 w-20" />
       </header>

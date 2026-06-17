@@ -9,7 +9,7 @@ const SCORE_RANK: Record<Score, number> = { A: 5, B: 4, C: 3, D: 2, E: 1 };
 
 export function pickNextProduct(
   context: ProductPickContext,
-  products: readonly Product[] = PRODUCT_CATALOG
+  products: readonly Product[] = PRODUCT_CATALOG,
 ): Product {
   const recent = new Set(context.recentlyScannedIds);
   const unseen = products.filter((product) => !recent.has(product.id));
@@ -24,7 +24,7 @@ export function pickNextProduct(
   return [...pool].sort(
     (a, b) =>
       hashString(`${context.seed}:${context.cursor}:${a.id}`) -
-      hashString(`${context.seed}:${context.cursor}:${b.id}`)
+      hashString(`${context.seed}:${context.cursor}:${b.id}`),
   )[0];
 }
 
@@ -38,7 +38,7 @@ export function buildDailyPlan(context: DailyPlanContext): string[] {
 
 export function rankMapPoints<T extends MapPoint>(
   points: readonly T[],
-  context: MapRankingContext
+  context: MapRankingContext,
 ): T[] {
   const visited = new Set(context.visitedPointIds);
   const preferred = new Set(context.preferredTypes ?? []);
@@ -87,4 +87,3 @@ function filterByScore(products: readonly Product[], minScore: Score | null | un
   const minRank = SCORE_RANK[minScore];
   return products.filter((product) => SCORE_RANK[product.score] >= minRank);
 }
-

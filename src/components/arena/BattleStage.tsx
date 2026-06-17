@@ -1,7 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { ArenaRivalMastery, ArenaStageTheme, BattleAction, BattleResult, BattleSession } from '@/types';
+import type {
+  ArenaRivalMastery,
+  ArenaStageTheme,
+  BattleAction,
+  BattleResult,
+  BattleSession,
+} from '@/types';
 import { sessionToBattleResult } from '@/lib/battle/rules';
 import { battleArenaXpReward } from '@/lib/arena/progress';
 import { battleEventToVisualCue } from '@/lib/arena/presentation';
@@ -36,11 +42,11 @@ export function BattleStage({
   const cue = battleEventToVisualCue(lastEvent, session);
   const result = useMemo(
     () => (session.status === 'finished' ? sessionToBattleResult(session) : null),
-    [session]
+    [session],
   );
   const reward = useMemo(
     () => (result ? battleArenaXpReward(result, masteryAtStart) : null),
-    [masteryAtStart, result]
+    [masteryAtStart, result],
   );
   const currentEvents = useMemo(() => {
     if (session.status === 'finished') return session.events.slice(-5);

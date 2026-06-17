@@ -20,7 +20,7 @@ describe('simulation queries', () => {
   it('avoids recently scanned products while alternatives exist', () => {
     const picked = pickNextProduct(
       { seed: 'lia', cursor: 1, recentlyScannedIds: ['a', 'b', 'c'] },
-      products
+      products,
     );
 
     expect(picked.id).toBe('d');
@@ -29,7 +29,7 @@ describe('simulation queries', () => {
   it('respects a minimum score when a daily mission asks for quality', () => {
     const picked = pickNextProduct(
       { seed: 'lia', cursor: 2, recentlyScannedIds: [], minScore: 'B' },
-      products
+      products,
     );
 
     expect(['A', 'B']).toContain(picked.score);
@@ -57,7 +57,7 @@ describe('simulation queries', () => {
         mapPoint('fresh-repair', 'reparo', 9),
         mapPoint('fresh-battery', 'baterias', 8),
       ],
-      { visitedPointIds: ['visited-battery'], preferredTypes: ['baterias'] }
+      { visitedPointIds: ['visited-battery'], preferredTypes: ['baterias'] },
     );
 
     expect(ranked.map((point) => point.id)).toEqual([
@@ -123,4 +123,3 @@ function post(id: string, liked: boolean): FeedPost {
     commentList: [],
   };
 }
-

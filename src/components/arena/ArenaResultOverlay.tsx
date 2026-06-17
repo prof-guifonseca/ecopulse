@@ -25,7 +25,7 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
     <section
       className={cn(
         'relative z-20 -mt-12 rounded-[var(--radius-lg)] border px-4 py-4 shadow-[var(--shadow-lifted)] backdrop-blur-xl',
-        RESULT_STYLE[presentation.tone]
+        RESULT_STYLE[presentation.tone],
       )}
       aria-live="polite"
     >
@@ -36,13 +36,16 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
         <div className="min-w-0 flex-1">
           <p className="t-eyebrow">Resultado</p>
           <h2 className="t-headline mt-1">{presentation.title}</h2>
-          <p className="mt-1 t-body-sm text-[var(--text-secondary)]">{presentation.body}</p>
+          <p className="t-body-sm mt-1 text-[var(--text-secondary)]">{presentation.body}</p>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
         <RewardTile label="XP de teste" value={`+${reward.total}`} />
-        <RewardTile label="Bônus" value={reward.firstWinBonus > 0 ? `+${reward.firstWinBonus}` : '0'} />
+        <RewardTile
+          label="Bônus"
+          value={reward.firstWinBonus > 0 ? `+${reward.firstWinBonus}` : '0'}
+        />
         <RewardTile label="Rounds" value={result.rounds.toString()} />
       </div>
 
@@ -67,9 +70,8 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
         </Button>
       </div>
 
-      <p className="mt-3 flex items-center justify-center gap-1.5 text-center t-caption">
-        <Icon icon={Zap} size={13} className="text-[var(--accent-gold)]" />
-        0 tokens por treino.
+      <p className="t-caption mt-3 flex items-center justify-center gap-1.5 text-center">
+        <Icon icon={Zap} size={13} className="text-[var(--accent-gold)]" />0 tokens por treino.
       </p>
     </section>
   );
@@ -78,10 +80,10 @@ export function ArenaResultOverlay({ result, reward, onRematch, onChangeOpponent
 function RewardTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-[var(--radius-md)] border border-white/10 bg-black/18 px-2 py-3 text-center">
-      <p className="truncate text-[0.64rem] font-semibold uppercase tracking-normal text-[var(--text-secondary)]">
+      <p className="truncate text-[0.64rem] font-semibold tracking-normal text-[var(--text-secondary)] uppercase">
         {label}
       </p>
-      <p className="mt-1 t-title text-[var(--text-primary)]">{value}</p>
+      <p className="t-title mt-1 text-[var(--text-primary)]">{value}</p>
     </div>
   );
 }

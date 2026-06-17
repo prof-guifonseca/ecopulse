@@ -21,7 +21,9 @@ export function MissionsBlock() {
     <section>
       <div className="mb-4 flex items-baseline justify-between gap-3">
         <h2 className="t-title">Missões de hoje</h2>
-        <span className="t-caption">{done}/{DAILY_MISSION_TARGET}</span>
+        <span className="t-caption">
+          {done}/{DAILY_MISSION_TARGET}
+        </span>
       </div>
 
       <ListCard tone="flat">
@@ -34,7 +36,7 @@ export function MissionsBlock() {
               key={mission.id}
               className={cn(
                 'flex items-center gap-3 py-4 transition-colors',
-                isDone && 'opacity-90'
+                isDone && 'opacity-90',
               )}
             >
               <span
@@ -42,7 +44,7 @@ export function MissionsBlock() {
                   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
                   isDone
                     ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                    : 'border-soft text-[var(--text-secondary)]'
+                    : 'border-soft text-[var(--text-secondary)]',
                 )}
               >
                 {isDone ? (
@@ -51,10 +53,12 @@ export function MissionsBlock() {
                   <Icon icon={MissionIcon} size={15} />
                 ) : null}
               </span>
-              <span className={cn('flex-1 t-body', isDone && 'text-[var(--accent-green)]')}>
+              <span className={cn('t-body flex-1', isDone && 'text-[var(--accent-green)]')}>
                 {mission.title}
               </span>
-              <span className="t-caption font-semibold text-[var(--accent-gold)]">+{mission.reward}</span>
+              <span className="t-caption font-semibold text-[var(--accent-gold)]">
+                +{mission.reward}
+              </span>
             </li>
           );
         })}
@@ -71,7 +75,7 @@ export function MissionsBlock() {
           Coletar bônus diário
         </Button>
       ) : (
-        <p className="mt-3 t-caption">
+        <p className="t-caption mt-3">
           {bonusClaimed ? 'Bônus de hoje coletado.' : `Complete os 3 e ganhe +25.`}
         </p>
       )}

@@ -46,12 +46,12 @@ export interface BattleRewardOptions {
 export function battleArenaXpReward(
   result: BattleResult,
   existingMastery?: ArenaRivalMastery,
-  options: BattleRewardOptions = {}
+  options: BattleRewardOptions = {},
 ) {
   const multiplier = options.loadoutMultiplier ?? 1;
   const rawBase =
     result.outcome === 'win'
-      ? result.opponent.arenaXpReward ?? ARENA_XP_REWARDS.win
+      ? (result.opponent.arenaXpReward ?? ARENA_XP_REWARDS.win)
       : ARENA_XP_REWARDS[result.outcome];
   const baseReward = Math.round(rawBase * multiplier);
   const firstWinBonus =
@@ -67,7 +67,7 @@ export function battleArenaXpReward(
 export function applyArenaBattleProgress(
   progress: ArenaProgress,
   result: BattleResult,
-  options: BattleRewardOptions = {}
+  options: BattleRewardOptions = {},
 ): ArenaProgress {
   const previousMastery = progress.rivalMastery[result.opponentId] ?? {
     wins: 0,
@@ -84,8 +84,7 @@ export function applyArenaBattleProgress(
     wins: previousMastery.wins + (won ? 1 : 0),
     losses: previousMastery.losses + (lost ? 1 : 0),
     draws: previousMastery.draws + (drew ? 1 : 0),
-    firstDefeatedAt:
-      previousMastery.firstDefeatedAt ?? (won ? result.playedAt : undefined),
+    firstDefeatedAt: previousMastery.firstDefeatedAt ?? (won ? result.playedAt : undefined),
     lastOutcome: result.outcome,
   };
 

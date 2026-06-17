@@ -13,11 +13,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useArenaStore } from '@/store/arenaStore';
 import { useScanHistoryStore } from '@/store/scanHistoryStore';
 import { useSimulationStore } from '@/store/simulationStore';
-import {
-  createPlayerFighter,
-  opponentToFighter,
-  simulateBattle,
-} from '@/lib/battle/rules';
+import { createPlayerFighter, opponentToFighter, simulateBattle } from '@/lib/battle/rules';
 import { applyArenaBattleProgress } from '@/lib/arena/progress';
 import { scanRecordFromProduct } from '@/lib/products/scanRecord';
 import { rollTodaysMissions } from '@/lib/dailyReset';
@@ -91,10 +87,19 @@ export function seedArthurDemoScenario(): void {
 
   // User profile — Arthur, level 7.
   // xpToNext at level 7 follows 100 * 1.4^(level-1) ≈ 750.
-  const seededGearSets = [
-    ...GEAR_SETS.map((setItem) => setItem.id),
+  const seededGearSets = [...GEAR_SETS.map((setItem) => setItem.id)];
+  const seededLegacyItems = [
+    'hat1',
+    'hat2',
+    'hat3',
+    'glass1',
+    'glass2',
+    'shirt1',
+    'shirt2',
+    'acc1',
+    'acc2',
+    'bg1',
   ];
-  const seededLegacyItems = ['hat1', 'hat2', 'hat3', 'glass1', 'glass2', 'shirt1', 'shirt2', 'acc1', 'acc2', 'bg1'];
   useUserStore.getState().setProfile({
     name: 'Arthur',
     tribe: 'guardioes',
@@ -123,7 +128,10 @@ export function seedArthurDemoScenario(): void {
     equippedSkinPack: null,
     ownedSkinPacks: seededGearSets,
     ownedGearSets: seededGearSets,
-    ownedGearItems: unique([...seededLegacyItems, ...gearItemIdsFromLegacySkinPacks(seededGearSets)]),
+    ownedGearItems: unique([
+      ...seededLegacyItems,
+      ...gearItemIdsFromLegacySkinPacks(seededGearSets),
+    ]),
   });
 
   // Game state — 8 badges, scans synced with history, mid-flight challenge.
@@ -242,8 +250,8 @@ function seedArenaDemoIfEmpty(): void {
         bestStreak: 0,
         rivalMastery: {},
       },
-      result
-    )
+      result,
+    ),
   );
 }
 
@@ -262,9 +270,29 @@ function pickDiverseProducts(count: number) {
   };
   // Realistic shopper mix: ~30% A/B (intentional), ~50% C (default), ~20% D/E (slips).
   const targets: Array<keyof typeof byScore> = [
-    'C', 'B', 'A', 'C', 'D', 'B', 'C', 'A', 'C', 'B',
-    'D', 'B', 'C', 'C', 'A', 'B', 'E', 'C', 'B', 'A',
-    'C', 'D', 'B',
+    'C',
+    'B',
+    'A',
+    'C',
+    'D',
+    'B',
+    'C',
+    'A',
+    'C',
+    'B',
+    'D',
+    'B',
+    'C',
+    'C',
+    'A',
+    'B',
+    'E',
+    'C',
+    'B',
+    'A',
+    'C',
+    'D',
+    'B',
   ];
   const out: typeof PRODUCTS = [];
   const cursor: Record<keyof typeof byScore, number> = { A: 0, B: 0, C: 0, D: 0, E: 0 };

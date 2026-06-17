@@ -9,7 +9,8 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
     const postId = typeof body.postId === 'string' ? body.postId : '';
-    const reaction = body.reaction === 'promise' ? 'promise' : body.reaction === 'like' ? 'like' : null;
+    const reaction =
+      body.reaction === 'promise' ? 'promise' : body.reaction === 'like' ? 'like' : null;
     const active = typeof body.active === 'boolean' ? body.active : true;
     if (!postId || !reaction) return Response.json({ error: 'invalid_reaction' }, { status: 400 });
 
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
         type: 'community_reaction_recorded',
         userId,
         payload: { postId: asPostId(postId), reaction, active },
-      })
+      }),
     );
     return Response.json({ reaction: saved }, { status: 201 });
   } catch {

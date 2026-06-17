@@ -24,9 +24,5 @@ const SPACING: Record<NonNullable<Props['spacing']>, string> = {
  * + space-y-6 repeated in every page component.
  */
 export function PageShell({ children, className, spacing = 8 }: Props) {
-  return (
-    <div className={cn('animate-fade-in', SPACING[spacing], className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('animate-fade-in', SPACING[spacing], className)}>{children}</div>;
 }

@@ -66,5 +66,7 @@ export function createAvatarLoadoutPresets(baseId: string | null): DemoLoadoutPr
 export const AVATAR_LOADOUT_PRESETS = createAvatarLoadoutPresets('base2');
 
 export function presetItemIds(preset: DemoLoadoutPreset): string[] {
-  return Object.values(preset.loadout.equippedGear).filter((id): id is string => Boolean(id && getGearItem(id)));
+  return Object.values(preset.loadout.equippedGear).filter((id): id is string =>
+    Boolean(id && getGearItem(id)),
+  );
 }

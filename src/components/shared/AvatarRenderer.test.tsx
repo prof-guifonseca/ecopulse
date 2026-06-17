@@ -7,7 +7,11 @@ describe('AvatarRenderer', () => {
   it('renders every complete gear set without throwing', () => {
     for (const set of GEAR_SETS) {
       const markup = renderToStaticMarkup(
-        <AvatarRenderer loadout={defaultLoadoutForSet(set.id, 'base1')} size="stage" pose="battleReady" />
+        <AvatarRenderer
+          loadout={defaultLoadoutForSet(set.id, 'base1')}
+          size="stage"
+          pose="battleReady"
+        />,
       );
       expect(markup).toContain('<svg');
       expect(markup).toContain('data-avatar-slot="torso"');
@@ -16,10 +20,21 @@ describe('AvatarRenderer', () => {
 
   it('renders every Arena pose at duel size', () => {
     const loadout = defaultLoadoutForSet('cyber-reciclador', 'base1');
-    const poses = ['idle', 'builder', 'battleReady', 'attack', 'defend', 'focus', 'victory', 'defeat'] as const;
+    const poses = [
+      'idle',
+      'builder',
+      'battleReady',
+      'attack',
+      'defend',
+      'focus',
+      'victory',
+      'defeat',
+    ] as const;
 
     for (const pose of poses) {
-      const markup = renderToStaticMarkup(<AvatarRenderer loadout={loadout} size="duel" pose={pose} />);
+      const markup = renderToStaticMarkup(
+        <AvatarRenderer loadout={loadout} size="duel" pose={pose} />,
+      );
 
       expect(markup).toContain('width="196"');
       expect(markup).toContain('<svg');
@@ -39,7 +54,7 @@ describe('AvatarRenderer', () => {
           pose="builder"
           highlightSlot={item.slot}
           showAura={item.slot === 'aura'}
-        />
+        />,
       );
 
       expect(markup).toContain('<svg');

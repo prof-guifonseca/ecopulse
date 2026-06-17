@@ -22,16 +22,20 @@ export function findCatalogProductByBarcode(barcode: string): ProductCatalogItem
 
 export function pickRealSampleProduct(): ProductCatalogItem | null {
   for (const score of SAMPLE_SCORE_ORDER) {
-    const product = PRODUCTS.find((item) => item.score === score && item.confidence && item.confidence >= 55);
+    const product = PRODUCTS.find(
+      (item) => item.score === score && item.confidence && item.confidence >= 55,
+    );
     if (product) return product;
   }
   return PRODUCTS[0] ?? null;
 }
 
-export function pickNextCatalogProduct(options: {
-  recentlyScannedIds?: readonly string[];
-  minScore?: Score | null;
-} = {}): ProductCatalogItem | null {
+export function pickNextCatalogProduct(
+  options: {
+    recentlyScannedIds?: readonly string[];
+    minScore?: Score | null;
+  } = {},
+): ProductCatalogItem | null {
   const recent = new Set(options.recentlyScannedIds ?? []);
   const unseen = PRODUCTS.filter((product) => !recent.has(product.id));
   const pool = unseen.length > 0 ? unseen : PRODUCTS;
@@ -45,8 +49,7 @@ export function findProductAlternatives(product: ProductCatalogItem): ProductCat
   const productScoreIndex = ALTERNATIVE_ORDER.indexOf(product.score);
   if (productScoreIndex <= 1) return [];
 
-  const betterSameCategory = PRODUCTS
-    .filter((candidate) => candidate.id !== product.id)
+  const betterSameCategory = PRODUCTS.filter((candidate) => candidate.id !== product.id)
     .filter((candidate) => candidate.category === product.category)
     .filter((candidate) => ALTERNATIVE_ORDER.indexOf(candidate.score) < productScoreIndex)
     .sort(productComparator)
@@ -54,8 +57,7 @@ export function findProductAlternatives(product: ProductCatalogItem): ProductCat
 
   if (betterSameCategory.length > 0) return betterSameCategory;
 
-  return PRODUCTS
-    .filter((candidate) => candidate.id !== product.id)
+  return PRODUCTS.filter((candidate) => candidate.id !== product.id)
     .filter((candidate) => candidate.score === 'A' || candidate.score === 'B')
     .sort(productComparator)
     .slice(0, 2);
@@ -67,7 +69,7 @@ export function assertRealProductCatalog(): boolean {
       /^\d{8,14}$/.test(product.barcode) &&
       product.sourceName === 'Open Food Facts' &&
       Boolean(product.sourceUrl?.includes('openfoodfacts.org/product/')) &&
-      (product.evidence?.fields.length ?? 0) >= 3
+      (product.evidence?.fields.length ?? 0) >= 3,
   );
 }
 

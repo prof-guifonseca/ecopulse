@@ -35,7 +35,14 @@ export interface EcoPulseEventPayloads {
     productId: ProductId;
     barcode?: string;
     score: Score;
-    source: DataSource | 'barcode' | 'manual' | 'scan-action' | 'scanner' | 'first-run' | 'simulator';
+    source:
+      | DataSource
+      | 'barcode'
+      | 'manual'
+      | 'scan-action'
+      | 'scanner'
+      | 'first-run'
+      | 'simulator';
   };
   product_lookup_completed: {
     barcode: string;
@@ -83,8 +90,7 @@ export interface EcoPulseEventPayloads {
   };
 }
 
-export type EcoPulseEventPayload =
-  EcoPulseEventPayloads[keyof EcoPulseEventPayloads];
+export type EcoPulseEventPayload = EcoPulseEventPayloads[keyof EcoPulseEventPayloads];
 
 export interface EcoPulseEvent<TType extends EcoPulseEventType = EcoPulseEventType> {
   id: string;
@@ -166,7 +172,15 @@ export interface CommunityComment {
 
 export interface ImpactEntry {
   id: string;
-  metric: 'co2_kg' | 'waste_kg' | 'water_l' | 'batteries_kg' | 'oil_l' | 'repairs' | 'exchanges' | 'trees';
+  metric:
+    | 'co2_kg'
+    | 'waste_kg'
+    | 'water_l'
+    | 'batteries_kg'
+    | 'oil_l'
+    | 'repairs'
+    | 'exchanges'
+    | 'trees';
   value: number;
   unit: 'kg' | 'l' | 'count';
   confidence: 'estimated' | 'verified';

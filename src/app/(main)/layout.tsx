@@ -45,13 +45,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, [hydrated, onboarded, router, showToast]);
 
   return (
-    <div className="mx-auto flex h-[100dvh] min-w-0 w-[min(100vw,var(--canvas-width))] max-w-full flex-col overflow-hidden">
+    <div className="mx-auto flex h-[100dvh] w-[min(100vw,var(--canvas-width))] max-w-full min-w-0 flex-col overflow-hidden">
       <AppHeader />
       <main
-        className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-10 pt-3 sm:px-8"
+        className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pt-3 pb-10 sm:px-8"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="mx-auto min-w-0 w-full max-w-[var(--content-width)] overflow-x-hidden">
+        <div className="mx-auto w-full max-w-[var(--content-width)] min-w-0 overflow-x-hidden">
           {children}
         </div>
       </main>

@@ -27,7 +27,7 @@ const DEFAULT_NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
 
 export async function geocodePlace(
   query: string,
-  options: NominatimOptions = {}
+  options: NominatimOptions = {},
 ): Promise<GeocodedPlace | null> {
   const value = query.trim();
   if (value.length < 3) return null;

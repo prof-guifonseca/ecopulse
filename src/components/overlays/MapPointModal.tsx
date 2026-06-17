@@ -124,17 +124,21 @@ function resolvePoint(id: string): EnvironmentalPoint | null {
 
 function verificationLabel(point: EnvironmentalPoint): string {
   if (point.sourceUpdatedAt) {
-    return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-      new Date(point.sourceUpdatedAt)
-    );
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(new Date(point.sourceUpdatedAt));
   }
   if (point.lastVerifiedDays !== undefined) {
     return `há ${point.lastVerifiedDays} dia${point.lastVerifiedDays === 1 ? '' : 's'}`;
   }
   if (!point.lastVerifiedAt) return 'fonte aberta';
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-    new Date(point.lastVerifiedAt)
-  );
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(point.lastVerifiedAt));
 }
 
 function Row({ icon, label, value }: { icon: LucideIcon; label: string; value: string }) {

@@ -29,20 +29,9 @@ const TONE_CLASSES: Record<Tone, string> = {
  * divide-[var(--line-soft)] rounded-[var(--radius-md)] border-soft bg-tint-1`
  * across map, missions, scanner, shop, etc.
  */
-export function ListCard({
-  children,
-  as: Component = 'ul',
-  tone = 'soft',
-  className,
-}: Props) {
+export function ListCard({ children, as: Component = 'ul', tone = 'soft', className }: Props) {
   return (
-    <Component
-      className={cn(
-        'divide-y divide-[var(--line-soft)]',
-        TONE_CLASSES[tone],
-        className
-      )}
-    >
+    <Component className={cn('divide-y divide-[var(--line-soft)]', TONE_CLASSES[tone], className)}>
       {children}
     </Component>
   );

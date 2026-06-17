@@ -16,7 +16,11 @@ export type { MissionTemplate, MissionFlavor, MissionSlot } from './missionPool'
 export { TUTORIALS } from './tutorials';
 export { CHALLENGES } from './challenges';
 export { FEED_POSTS } from './feedPosts';
-export { COMMUNITY_FEED_IMAGES, communityFeedImage, type CommunityFeedImageKey } from './communityFeedImages';
+export {
+  COMMUNITY_FEED_IMAGES,
+  communityFeedImage,
+  type CommunityFeedImageKey,
+} from './communityFeedImages';
 export { BADGES } from './badges';
 export { SHOP_ITEMS } from './shopItems';
 export { EVENTS } from './events';

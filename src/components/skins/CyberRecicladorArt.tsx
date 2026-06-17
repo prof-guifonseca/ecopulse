@@ -83,9 +83,25 @@ export function CyberRecicladorArt({ size, className }: Props) {
       <line x1="53" y1="29" x2="53" y2="31" stroke="#5a6b62" strokeWidth="0.4" />
 
       {/* Antennae */}
-      <line x1="42" y1="14" x2="40" y2="6" stroke="#5a6b62" strokeWidth="1.4" strokeLinecap="round" />
+      <line
+        x1="42"
+        y1="14"
+        x2="40"
+        y2="6"
+        stroke="#5a6b62"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
       <circle cx="40" cy="5" r="1.4" fill="#9fe0ad" />
-      <line x1="58" y1="14" x2="60" y2="6" stroke="#5a6b62" strokeWidth="1.4" strokeLinecap="round" />
+      <line
+        x1="58"
+        y1="14"
+        x2="60"
+        y2="6"
+        stroke="#5a6b62"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
       <circle cx="60" cy="5" r="1.4" fill="#e0c27a" />
 
       {/* Shoulder bolts */}
