@@ -1,5 +1,4 @@
-import type { RealImpact } from '@/store/gameStore';
-import type { MapPointType } from '@/types';
+import type { MapPointType, RealImpact } from '@/types';
 import type { EnvironmentalCategory, EnvironmentalPoint, EnvironmentalPointSource } from './types';
 
 export const ENVIRONMENTAL_CATEGORIES: EnvironmentalCategory[] = [

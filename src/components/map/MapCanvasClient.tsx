@@ -8,7 +8,7 @@ import { latLngToPercent } from '@/lib/region';
 import { Icon } from '@/components/ui/Icon';
 import { resolveIcon } from '@/lib/iconRegistry';
 import { cn } from '@/lib/cn';
-import type { MapCanvasProps } from './MapCanvas';
+import type { MapCanvasProps } from './mapCanvas.types';
 import { getMapStyle } from './mapStyle';
 
 const DEFAULT_ZOOM = 13;

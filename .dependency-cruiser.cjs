@@ -7,14 +7,9 @@
 module.exports = {
   forbidden: [
     {
-      // KNOWN DEBT (reported, not blocking): 4 pre-existing cycles —
-      // src/lib/esg/* ↔ src/store/gameStore, src/data/products ↔
-      // openFoodFactsProducts, and map/MapCanvas ↔ MapCanvasClient. Kept at
-      // `warn` so the graph is visible without blocking the regime; promote to
-      // `error` once they are broken (see docs/ARCHITECTURE.md).
       name: 'no-circular',
       comment: 'Circular dependencies make the module graph impossible to reason about.',
-      severity: 'warn',
+      severity: 'error',
       from: {},
       to: { circular: true },
     },
