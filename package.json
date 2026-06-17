@@ -25,6 +25,7 @@
     "check": "npm run lint && npm run typecheck && npm run test:unit && npm run build && npm run test:e2e && npm run audit",
     "tokens:gen": "node scripts/gen-tokens.mjs",
     "tokens:check": "node scripts/gen-tokens.mjs && git diff --exit-code -- src/types/tokens.ts",
+    "schema:check": "node scripts/check-schema.mjs",
     "overnight": "node scripts/overnight.mjs",
     "prepare": "husky"
   },

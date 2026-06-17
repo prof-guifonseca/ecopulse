@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import type { CommunityComment } from '@/domain';
+import { isRecord, type CommunityComment } from '@/domain';
 import { listCommunityComments, saveCommunityComment } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body: unknown = await request.json();
+    if (!isRecord(body)) return Response.json({ error: 'invalid_comment' }, { status: 400 });
     const postId = typeof body.postId === 'string' ? body.postId.trim() : '';
     const text = typeof body.text === 'string' ? body.text.trim().slice(0, 500) : '';
     const userId = await resolveUserId(request);

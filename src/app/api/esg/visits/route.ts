@@ -1,4 +1,4 @@
-import { createEcoPulseEvent } from '@/domain';
+import { createEcoPulseEvent, isRecord } from '@/domain';
 import type { ImpactEntry } from '@/domain';
 import { asPointId } from '@/types';
 import { environmentalImpactDeltaForPoint, type EnvironmentalPoint } from '@/lib/esg';
@@ -9,7 +9,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body: unknown = await request.json();
+    if (!isRecord(body)) return Response.json({ error: 'invalid_point' }, { status: 400 });
     const point = body.point as EnvironmentalPoint | undefined;
     if (!point?.id || typeof point.lat !== 'number' || typeof point.lng !== 'number') {
       return Response.json({ error: 'invalid_point' }, { status: 400 });

@@ -1,4 +1,4 @@
-import { createEcoPulseEvent } from '@/domain';
+import { createEcoPulseEvent, isRecord } from '@/domain';
 import { saveEvent } from '@/lib/backend/mvpRepository';
 import { asPointId } from '@/types';
 
@@ -8,7 +8,8 @@ const STATUSES = new Set(['visited', 'closed', 'incorrect', 'suggested']);
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body: unknown = await request.json();
+    if (!isRecord(body)) return Response.json({ error: 'invalid_verification' }, { status: 400 });
     const pointId = typeof body.pointId === 'string' ? body.pointId.trim() : '';
     const status = typeof body.status === 'string' ? body.status.trim() : '';
     const note = typeof body.note === 'string' ? body.note.trim().slice(0, 500) : undefined;

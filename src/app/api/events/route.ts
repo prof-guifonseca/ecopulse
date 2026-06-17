@@ -1,9 +1,4 @@
-import {
-  createEcoPulseEvent,
-  eventPayloadLooksValid,
-  isEcoPulseEventType,
-  type DataSource,
-} from '@/domain';
+import { createEcoPulseEvent, isRecord, parseEventEnvelope, type DataSource } from '@/domain';
 import { saveEvent } from '@/lib/backend/mvpRepository';
 import { resolveUserId } from '@/lib/backend/supabaseAuth';
 
@@ -11,18 +6,20 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
-    const type = body.type;
-    const payload = body.payload;
-    if (!isEcoPulseEventType(type) || !eventPayloadLooksValid(type, payload)) {
-      return Response.json({ error: 'invalid_event' }, { status: 400 });
+    const body: unknown = await request.json();
+    const parsed = parseEventEnvelope(body);
+    if (!parsed.ok) {
+      return Response.json(
+        { error: 'invalid_event', detail: parsed.error.message },
+        { status: 400 },
+      );
     }
 
     const event = createEcoPulseEvent({
-      type,
-      payload: payload as never,
+      type: parsed.value.type,
+      payload: parsed.value.payload,
       userId: await resolveUserId(request),
-      source: dataSourceFrom(body.source),
+      source: isRecord(body) ? dataSourceFrom(body.source) : 'user',
     });
     await saveEvent(event);
     return Response.json({ event }, { status: 201 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { asProductId } from '@/types';
-import { createEcoPulseEvent, eventPayloadLooksValid, isEcoPulseEventType } from './events';
+import { createEcoPulseEvent, isEcoPulseEventType } from './events';
 
 describe('EcoPulse domain events', () => {
   it('creates an audit event with stable day and source metadata', () => {
@@ -21,10 +21,8 @@ describe('EcoPulse domain events', () => {
     expect(event.source).toBe('provider');
   });
 
-  it('validates known event types and rejects malformed payloads', () => {
+  it('recognises known event types and rejects unknown ones', () => {
     expect(isEcoPulseEventType('map_visit_marked')).toBe(true);
     expect(isEcoPulseEventType('unknown')).toBe(false);
-    expect(eventPayloadLooksValid('post_liked', { postId: 'post-1' })).toBe(true);
-    expect(eventPayloadLooksValid('post_liked', { id: 'post-1' })).toBe(false);
   });
 });
