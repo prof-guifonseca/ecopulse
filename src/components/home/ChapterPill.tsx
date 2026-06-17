@@ -39,11 +39,11 @@ export function ChapterPill() {
 
   return (
     <div className="border-soft bg-tint-1 flex items-center gap-2 rounded-full px-3 py-1.5">
-      <span className="bg-tint-green-3 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--accent-green)]">
+      <span className="bg-tint-green-3 inline-flex h-6 w-6 items-center justify-center rounded-full text-[var(--primary)]">
         <Icon icon={Icn} size={13} />
       </span>
       <span className="t-caption">
-        Capítulo: <strong className="text-[var(--text-primary)]">{progress.current.label}</strong>
+        Capítulo: <strong className="text-[var(--foreground)]">{progress.current.label}</strong>
         {progress.next ? (
           <>
             {' '}

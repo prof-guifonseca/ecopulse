@@ -35,7 +35,7 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            'radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--accent-green) 16%, transparent) 0%, transparent 55%)',
+            'radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--primary) 16%, transparent) 0%, transparent 55%)',
         }}
       />
 
@@ -80,7 +80,7 @@ export function OnboardingStepName({ avatarBase, onSubmit, onBack }: Props) {
               onChange={(e) => setName(e.target.value)}
               placeholder="Seu primeiro nome"
               aria-label="Seu primeiro nome"
-              className="t-body w-full bg-transparent outline-none placeholder:text-[var(--text-muted)]"
+              className="t-body w-full bg-transparent outline-none placeholder:text-[var(--muted-foreground)]"
               autoComplete="given-name"
             />
           </div>

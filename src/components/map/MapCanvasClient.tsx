@@ -34,7 +34,7 @@ export function MapCanvasClient({
 
   return (
     <div
-      className="border-soft relative overflow-hidden rounded-[var(--radius-md)] bg-[var(--bg-secondary)]"
+      className="border-soft relative overflow-hidden rounded-[var(--radius-md)] bg-[var(--card)]"
       style={{ aspectRatio: '1 / 1' }}
       data-testid="maplibre-surface"
     >
@@ -69,8 +69,8 @@ export function MapCanvasClient({
               className={cn(
                 'border-strong pointer-events-auto absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95',
                 isVisited
-                  ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                  : 'bg-[rgba(15,23,19,0.88)] text-[var(--accent-green)]',
+                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                  : 'bg-[rgba(15,23,19,0.88)] text-[var(--primary)]',
               )}
               style={{
                 left: `${position.x}%`,

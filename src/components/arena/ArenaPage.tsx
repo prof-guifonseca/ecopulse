@@ -296,10 +296,7 @@ export function ArenaPage() {
         </div>
         <div className="-mx-4 overflow-x-auto px-4 pb-1">
           <div className="relative flex gap-3 pb-1">
-            <span
-              className="absolute top-9 right-7 left-7 h-px bg-[var(--line-soft)]"
-              aria-hidden
-            />
+            <span className="absolute top-9 right-7 left-7 h-px bg-[var(--border)]" aria-hidden />
             {orderedOpponents.map((opponent) => {
               const locked = !isOpponentUnlocked(opponent, defeatedOpponents, orderedOpponents);
               const tribeDef = TRIBES[(tribe ?? 'guardioes') as TribeId];
@@ -342,7 +339,7 @@ function LoadoutSummaryCard({
   return (
     <Card tone="solid" padded={false} className="border-soft px-5 py-5">
       <div className="flex items-start gap-4">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--bg-primary)]">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[var(--background)]">
           <Avatar loadout={playerFighter.loadout} size="lg" alt={name} pose="battleReady" />
         </div>
         <div className="min-w-0 flex-1">
@@ -399,7 +396,7 @@ function ArenaSetup({
     <Card
       tone="hero"
       padded={false}
-      className="relative isolate border border-[var(--line-soft)] px-4 py-5 shadow-[var(--shadow-deep-glow)]"
+      className="relative isolate border border-[var(--border)] px-4 py-5 shadow-[var(--shadow-deep-glow)]"
       style={{
         background: `radial-gradient(circle at 50% 12%, ${stage.palette.glow}2f, transparent 40%), linear-gradient(180deg, ${stage.palette.skyTop}, ${stage.palette.skyBottom})`,
       }}
@@ -497,7 +494,10 @@ function InfoPill({ icon, label, muted }: { icon: LucideIcon; label: string; mut
       <Icon
         icon={icon}
         size={16}
-        className={cn('mx-auto', muted ? 'text-[var(--text-muted)]' : 'text-[var(--accent-green)]')}
+        className={cn(
+          'mx-auto',
+          muted ? 'text-[var(--muted-foreground)]' : 'text-[var(--primary)]',
+        )}
       />
       <p className="t-caption mt-1 break-words text-[var(--text-secondary)]">{label}</p>
     </div>

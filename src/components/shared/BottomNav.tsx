@@ -29,9 +29,9 @@ export function BottomNav() {
     <nav
       id="bottom-nav"
       role="tablist"
-      className="shrink-0 border-t border-[var(--line-soft)] bg-[color-mix(in_srgb,var(--bg-primary)_92%,transparent)] px-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] backdrop-blur-xl sm:px-8"
+      className="shrink-0 border-t border-[var(--border)] bg-[color-mix(in_srgb,var(--background)_92%,transparent)] px-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+8px)] backdrop-blur-xl sm:px-8"
     >
-      <div className="bg-tint-1 relative mx-auto flex max-w-[var(--content-width)] min-w-0 items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--line-soft)] p-1">
+      <div className="bg-tint-1 relative mx-auto flex max-w-[var(--content-width)] min-w-0 items-center gap-1 rounded-[var(--radius-lg)] border border-[var(--border)] p-1">
         <span
           aria-hidden
           className="gradient-primary pointer-events-none absolute top-1 bottom-1 rounded-[var(--radius-md)]"
@@ -57,8 +57,8 @@ export function BottomNav() {
               className={cn(
                 'group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-[var(--radius-md)] px-1 py-1.5 transition-colors duration-200',
                 active
-                  ? 'text-[var(--on-primary)]'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
+                  ? 'text-[var(--primary-foreground)]'
+                  : 'text-[var(--muted-foreground)] hover:text-[var(--text-secondary)]',
               )}
             >
               <span
@@ -72,7 +72,7 @@ export function BottomNav() {
               <span
                 className={cn(
                   'max-w-full truncate text-[0.62rem] leading-none font-semibold tracking-normal transition-colors duration-200',
-                  active ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)]',
+                  active ? 'text-[var(--primary-foreground)]' : 'text-[var(--muted-foreground)]',
                 )}
               >
                 {t.label}

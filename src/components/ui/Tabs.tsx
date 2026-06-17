@@ -26,7 +26,7 @@ export function Tabs<Value extends string>({
     <div
       role="tablist"
       className={cn(
-        'bg-tint-1 relative flex gap-1 rounded-[var(--radius-md)] border border-[var(--line-soft)] p-1',
+        'bg-tint-1 relative flex gap-1 rounded-[var(--radius-md)] border border-[var(--border)] p-1',
         fitted ? 'w-full' : 'inline-flex',
         className,
       )}
@@ -42,8 +42,8 @@ export function Tabs<Value extends string>({
             className={cn(
               'relative flex-1 rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold transition-colors duration-200',
               active
-                ? 'bg-[var(--bg-secondary)] text-[var(--accent-green)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]',
+                ? 'bg-[var(--card)] text-[var(--primary)]'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--text-secondary)]',
             )}
           >
             {item.label}

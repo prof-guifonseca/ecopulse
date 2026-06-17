@@ -85,11 +85,13 @@ export default async function SharePage({ searchParams }: { searchParams: Promis
       </div>
       <Link
         href="/home"
-        className="gradient-primary inline-flex h-11 items-center justify-center rounded-[var(--radius-sm)] px-6 font-semibold text-[var(--on-primary)]"
+        className="gradient-primary inline-flex h-11 items-center justify-center rounded-[var(--radius-sm)] px-6 font-semibold text-[var(--primary-foreground)]"
       >
         Abrir o EcoPulse
       </Link>
-      <p className="t-caption text-[var(--text-muted)]">Hábitos sustentáveis com impacto real.</p>
+      <p className="t-caption text-[var(--muted-foreground)]">
+        Hábitos sustentáveis com impacto real.
+      </p>
     </main>
   );
 }

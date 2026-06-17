@@ -57,7 +57,7 @@ export function SkinPackArt({ id, size = 'md', className }: Props) {
           width: sz,
           height: sz,
           borderRadius: '50%',
-          background: 'var(--bg-secondary)',
+          background: 'var(--card)',
         }}
       />
     );

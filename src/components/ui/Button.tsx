@@ -17,13 +17,13 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'gradient-primary text-[var(--on-primary)] shadow-[0_12px_26px_-22px_rgba(114,211,118,0.75)] hover:brightness-105 active:scale-[0.98]',
+          'gradient-primary text-[var(--primary-foreground)] shadow-[0_12px_26px_-22px_rgba(114,211,118,0.75)] hover:brightness-105 active:scale-[0.98]',
         reward:
           'gradient-gold text-[var(--on-reward)] shadow-[0_12px_26px_-22px_rgba(216,173,77,0.8)] hover:brightness-105 active:scale-[0.98]',
         secondary:
-          'border border-[var(--line-strong)] bg-tint-2 text-[var(--text-primary)] hover:bg-tint-3 active:scale-[0.99]',
+          'border border-[var(--input)] bg-tint-2 text-[var(--foreground)] hover:bg-tint-3 active:scale-[0.99]',
         ghost:
-          'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--text-primary)] active:scale-[0.99]',
+          'text-[var(--text-secondary)] hover:bg-tint-2 hover:text-[var(--foreground)] active:scale-[0.99]',
       },
       size: {
         sm: 'h-8 px-3 text-xs',

@@ -52,7 +52,7 @@ function PickerTile({
         'flex min-h-[132px] flex-col items-center gap-2 rounded-[var(--radius-md)] border px-4 py-4 text-center transition-all duration-150 active:scale-[0.99]',
         selected
           ? 'bg-tint-green-2 border-[var(--line-active)]'
-          : 'bg-tint-1 border-[var(--line-soft)] hover:border-[var(--line-strong)]',
+          : 'bg-tint-1 border-[var(--border)] hover:border-[var(--input)]',
         disabled && 'cursor-not-allowed opacity-50',
         className,
       )}
@@ -163,8 +163,8 @@ export function AvatarBuilder() {
 
   return (
     <div className="animate-fade-in bg-scrim-strong fixed inset-0 z-[700] flex justify-center">
-      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--bg-primary)]">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--line-soft)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+10px)] pb-3 backdrop-blur-xl">
+      <div className="flex h-full w-full max-w-[var(--shell-width)] flex-col bg-[var(--background)]">
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--glass-bg)] px-4 py-[calc(env(safe-area-inset-top,0px)+10px)] pb-3 backdrop-blur-xl">
           <IconButton onClick={close} aria-label="Fechar" icon={<Icon icon={X} size={18} />} />
           <div className="flex-1 text-center">
             <h2 className="t-title">Vestiário</h2>
@@ -226,7 +226,7 @@ export function AvatarBuilder() {
                       alt={base.name}
                       pose="builder"
                     />
-                    <span className="t-caption font-semibold text-[var(--text-primary)]">
+                    <span className="t-caption font-semibold text-[var(--foreground)]">
                       {base.name}
                     </span>
                   </PickerTile>
@@ -285,7 +285,7 @@ function GearSlotGrid({
             className="relative"
           >
             {equipped ? (
-              <span className="gradient-primary absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
+              <span className="gradient-primary absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary-foreground)]">
                 <Icon icon={Check} size={12} strokeWidth={2.4} />
               </span>
             ) : null}
@@ -361,7 +361,7 @@ function PresetGrid({
             className="relative"
           >
             {selected ? (
-              <span className="gradient-primary absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--on-primary)]">
+              <span className="gradient-primary absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary-foreground)]">
                 <Icon icon={Check} size={12} strokeWidth={2.4} />
               </span>
             ) : null}
@@ -435,10 +435,10 @@ function StatsComparison({ current, draft }: { current: BattleStats; draft: Batt
                 className={cn(
                   't-caption font-semibold',
                   delta > 0
-                    ? 'text-[var(--accent-green)]'
+                    ? 'text-[var(--primary)]'
                     : delta < 0
-                      ? 'text-[#c2876f]'
-                      : 'text-[var(--text-muted)]',
+                      ? 'text-[var(--accent-orange)]'
+                      : 'text-[var(--muted-foreground)]',
                 )}
               >
                 {delta > 0 ? `+${delta}` : delta}
@@ -466,7 +466,7 @@ function StatDeltas({ stats }: { stats: Partial<BattleStats> }) {
       {visible.map(([key, label]) => (
         <span
           key={key}
-          className="bg-tint-2 rounded-full border border-[var(--line-soft)] px-2 py-0.5 text-[0.64rem] font-semibold text-[var(--text-secondary)]"
+          className="bg-tint-2 rounded-full border border-[var(--border)] px-2 py-0.5 text-[0.64rem] font-semibold text-[var(--text-secondary)]"
         >
           +{stats[key]} {label}
         </span>

@@ -45,7 +45,7 @@ export function DiscoveryBlock() {
       {/* Featured challenge */}
       <Card tone="solid" padded={false} className="px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="border-active bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
+          <span className="border-active bg-tint-green-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary)]">
             {ChallengeIcon ? <Icon icon={ChallengeIcon} size={18} /> : null}
           </span>
           <div className="min-w-0 flex-1">
@@ -95,7 +95,7 @@ export function DiscoveryBlock() {
           <button
             key={tutorial.id}
             onClick={() => openModal({ kind: 'tutorial', id: tutorial.id })}
-            className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--line-strong)]"
+            className="group block text-left transition-colors duration-200 [&_.card]:hover:border-[var(--input)]"
           >
             <Card tone="solid" padded={false} className="h-full">
               <div

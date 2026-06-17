@@ -22,7 +22,7 @@ export function ArenaStageScene({ session, stageTheme = 'forest', cue }: Props) 
 
   return (
     <section
-      className="arena-stage-scene relative isolate overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-soft)] px-4 pt-3 pb-4 shadow-[var(--shadow-deep-glow)] sm:px-5"
+      className="arena-stage-scene relative isolate overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] px-4 pt-3 pb-4 shadow-[var(--shadow-deep-glow)] sm:px-5"
       style={{
         background: `linear-gradient(180deg, ${visual.palette.skyTop} 0%, ${visual.palette.skyMid} 42%, ${visual.palette.skyBottom} 100%)`,
       }}
@@ -32,7 +32,7 @@ export function ArenaStageScene({ session, stageTheme = 'forest', cue }: Props) 
 
       <div className="relative z-10 flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <p className="t-caption font-semibold text-[var(--text-primary)]">{visual.name}</p>
+          <p className="t-caption font-semibold text-[var(--foreground)]">{visual.name}</p>
           <p className="truncate text-[0.68rem] font-medium tracking-normal text-[var(--text-secondary)] uppercase">
             {visual.ambience}
           </p>
@@ -143,7 +143,7 @@ function ArenaFighterHud({
       <div className="mt-1.5 rounded-[var(--radius-md)] border border-white/10 bg-black/28 px-2.5 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.22)] backdrop-blur-md">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="truncate text-sm leading-tight font-bold text-[var(--text-primary)]">
+            <p className="truncate text-sm leading-tight font-bold text-[var(--foreground)]">
               {fighter.name}
             </p>
             <p className="truncate text-[0.67rem] leading-tight text-[var(--text-secondary)]">
@@ -448,10 +448,10 @@ const CUE_ICON: Record<BattleVisualCue['iconName'], LucideIcon> = {
 
 const CUE_TEXT: Record<BattleVisualCue['tone'], string> = {
   neutral: 'text-[var(--text-secondary)]',
-  attack: 'text-[var(--accent-red)]',
+  attack: 'text-[var(--destructive)]',
   defend: 'text-[var(--accent-cyan)]',
   focus: 'text-[var(--accent-gold)]',
   critical: 'text-[var(--accent-gold)]',
   special: 'text-[var(--accent-cyan)]',
-  finish: 'text-[var(--accent-green)]',
+  finish: 'text-[var(--primary)]',
 };

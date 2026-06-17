@@ -36,7 +36,7 @@ export function ModalShell({
     <Modal onClose={close} variant={variant}>
       {variant === 'bottom' && showHandle ? (
         <div className="flex justify-center pt-2.5">
-          <span aria-hidden className="h-1 w-12 rounded-full bg-[var(--line-strong)]" />
+          <span aria-hidden className="h-1 w-12 rounded-full bg-[var(--input)]" />
         </div>
       ) : null}
 
@@ -66,7 +66,7 @@ export function ModalShell({
       </div>
 
       {footer ? (
-        <footer className="border-t border-[var(--line-soft)] bg-[var(--bg-primary)]/40 px-5 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
+        <footer className="border-t border-[var(--border)] bg-[var(--background)]/40 px-5 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
           {footer}
         </footer>
       ) : null}

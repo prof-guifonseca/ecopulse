@@ -18,7 +18,7 @@ export function BattleStatChips({ stats, className, compact }: Props) {
         <span
           key={entry.key}
           className={cn(
-            'bg-tint-2 inline-flex max-w-full items-center rounded-full border border-[var(--line-soft)] font-semibold text-[var(--text-secondary)]',
+            'bg-tint-2 inline-flex max-w-full items-center rounded-full border border-[var(--border)] font-semibold text-[var(--text-secondary)]',
             compact ? 'px-2 py-1 text-[0.64rem]' : 'px-2.5 py-1 text-[0.68rem]',
           )}
         >

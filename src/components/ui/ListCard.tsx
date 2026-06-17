@@ -2,7 +2,7 @@ import type { ElementType, ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/cn';
 
-export const listCardVariants = cva('divide-y divide-[var(--line-soft)]', {
+export const listCardVariants = cva('divide-y divide-[var(--border)]', {
   variants: {
     tone: {
       /** rounded card surface with border + tint-1 fill and row dividers. */

@@ -48,7 +48,7 @@ const FLOW = [
 
 export default function PitchPage() {
   return (
-    <main className="h-[100dvh] overflow-y-auto bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="h-[100dvh] overflow-y-auto bg-[var(--background)] text-[var(--foreground)]">
       <section className="relative min-h-[100dvh] overflow-hidden px-5 py-5 sm:px-8 lg:px-10">
         <Image
           src="/community/feed/f14-arthur-thomas-trail-cleanup.png"
@@ -74,7 +74,7 @@ export default function PitchPage() {
               className="flex items-center gap-2.5"
               aria-label="Abrir EcoPulse"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] border border-white/[0.15] bg-white/[0.08] text-[var(--accent-green)] backdrop-blur-md">
+              <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] border border-white/[0.15] bg-white/[0.08] text-[var(--primary)] backdrop-blur-md">
                 <Icon icon={Leaf} size={18} />
               </span>
               <span className="text-sm leading-none font-black">EcoPulse</span>
@@ -86,10 +86,8 @@ export default function PitchPage() {
 
           <div className="grid flex-1 items-center gap-8 py-10 lg:grid-cols-[1.08fr_0.92fr]">
             <div className="max-w-2xl">
-              <p className="t-eyebrow text-[var(--accent-green)]">
-                Meio ambiente e sustentabilidade
-              </p>
-              <h1 className="mt-4 text-[3.6rem] leading-[0.92] font-black tracking-normal text-[var(--text-primary)] sm:text-[4.7rem]">
+              <p className="t-eyebrow text-[var(--primary)]">Meio ambiente e sustentabilidade</p>
+              <h1 className="mt-4 text-[3.6rem] leading-[0.92] font-black tracking-normal text-[var(--foreground)] sm:text-[4.7rem]">
                 EcoPulse
               </h1>
               <p className="mt-5 max-w-[38rem] text-lg leading-relaxed font-medium text-[var(--text-secondary)]">
@@ -111,14 +109,14 @@ export default function PitchPage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/onboarding"
-                  className="gradient-primary inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-sm)] px-5 text-sm font-bold text-[var(--on-primary)] transition-all duration-200 hover:brightness-105"
+                  className="gradient-primary inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-sm)] px-5 text-sm font-bold text-[var(--primary-foreground)] transition-all duration-200 hover:brightness-105"
                 >
                   Abrir protótipo
                   <Icon icon={ArrowRight} size={16} />
                 </Link>
                 <a
                   href="#roteiro"
-                  className="inline-flex h-11 items-center justify-center rounded-[var(--radius-sm)] border border-white/[0.16] bg-white/[0.08] px-5 text-sm font-bold text-[var(--text-primary)] backdrop-blur-md transition-colors duration-200 hover:bg-white/[0.12]"
+                  className="inline-flex h-11 items-center justify-center rounded-[var(--radius-sm)] border border-white/[0.16] bg-white/[0.08] px-5 text-sm font-bold text-[var(--foreground)] backdrop-blur-md transition-colors duration-200 hover:bg-white/[0.12]"
                 >
                   Ver roteiro
                 </a>
@@ -126,7 +124,7 @@ export default function PitchPage() {
             </div>
 
             <aside className="rounded-[var(--radius-lg)] border border-white/[0.12] bg-black/[0.28] p-5 backdrop-blur-xl">
-              <p className="t-eyebrow text-[var(--accent-green)]">Roteiro da fala</p>
+              <p className="t-eyebrow text-[var(--primary)]">Roteiro da fala</p>
               <ol className="mt-4 space-y-3">
                 {FLOW.map((item) => (
                   <li key={item.time} className="grid grid-cols-[3.2rem_minmax(0,1fr)] gap-3">
@@ -134,7 +132,7 @@ export default function PitchPage() {
                       {item.time}
                     </span>
                     <div>
-                      <p className="t-micro text-[var(--text-primary)]">{item.label}</p>
+                      <p className="t-micro text-[var(--foreground)]">{item.label}</p>
                       <p className="t-caption mt-1">{item.text}</p>
                     </div>
                   </li>
@@ -149,7 +147,7 @@ export default function PitchPage() {
                 key={block.title}
                 className="rounded-[var(--radius-md)] border border-white/[0.12] bg-black/[0.24] p-4 backdrop-blur-xl"
               >
-                <span className="bg-tint-green-2 flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-[var(--accent-green)]">
+                <span className="bg-tint-green-2 flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-[var(--primary)]">
                   <Icon icon={block.icon} size={17} />
                 </span>
                 <h2 className="t-title mt-4">{block.title}</h2>
@@ -160,7 +158,7 @@ export default function PitchPage() {
 
           <footer className="grid gap-2 border-t border-white/[0.10] py-4 text-[var(--text-secondary)] sm:grid-cols-3">
             <p className="t-caption flex items-center gap-2">
-              <Icon icon={ScanLine} size={13} className="text-[var(--accent-green)]" />
+              <Icon icon={ScanLine} size={13} className="text-[var(--primary)]" />
               Scanner com Open Food Facts
             </p>
             <p className="t-caption flex items-center gap-2">

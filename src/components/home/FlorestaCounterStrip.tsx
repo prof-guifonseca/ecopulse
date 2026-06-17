@@ -38,19 +38,19 @@ export function FlorestaCounterStrip() {
     >
       <header className="mb-2 flex items-baseline justify-between gap-2">
         <h2 className="t-eyebrow">Floresta EcoPulse</h2>
-        <span className="t-micro text-[var(--text-muted)]">Suas ações</span>
+        <span className="t-micro text-[var(--muted-foreground)]">Suas ações</span>
       </header>
       <ul className="grid grid-cols-5 gap-2">
         {metrics.map((m) => (
           <li
             key={m.label}
-            className="border-soft flex flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-1.5 py-2"
+            className="border-soft flex flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] bg-[var(--card)] px-1.5 py-2"
           >
-            <span className="text-[var(--accent-green)]">
+            <span className="text-[var(--primary)]">
               <Icon icon={m.icon} size={16} />
             </span>
             <span className="t-title leading-none">{m.value}</span>
-            <span className="t-micro leading-none text-[var(--text-muted)]">{m.label}</span>
+            <span className="t-micro leading-none text-[var(--muted-foreground)]">{m.label}</span>
           </li>
         ))}
       </ul>

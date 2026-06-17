@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
 export const tileVariants = cva('rounded-[var(--radius-md)] border', {
   variants: {
     tone: {
-      default: 'border-[var(--line-soft)] bg-tint-1',
+      default: 'border-[var(--border)] bg-tint-1',
       brand: 'border-[var(--line-active)] bg-tint-green-1',
       reward:
         'border-[color:color-mix(in_srgb,var(--accent-gold)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--accent-gold)_8%,transparent)]',
@@ -25,8 +25,8 @@ export const tileVariants = cva('rounded-[var(--radius-md)] border', {
 const tileValueVariants = cva('mt-1.5 leading-none font-semibold', {
   variants: {
     tone: {
-      default: 'text-[var(--text-primary)]',
-      brand: 'text-[var(--accent-green)]',
+      default: 'text-[var(--foreground)]',
+      brand: 'text-[var(--primary)]',
       reward: 'text-[var(--accent-gold)]',
     },
     size: {
@@ -52,7 +52,7 @@ export function Tile({ label, value, hint, icon, tone, size, align = 'center', c
   return (
     <div className={cn(tileVariants({ tone, size, align }), className)}>
       <div className={cn('flex items-center gap-1.5', align === 'center' ? 'justify-center' : '')}>
-        {icon ? <span className="text-[var(--accent-green)]">{icon}</span> : null}
+        {icon ? <span className="text-[var(--primary)]">{icon}</span> : null}
         <span className="t-label">{label}</span>
       </div>
       <div className={tileValueVariants({ tone, size })}>{value}</div>

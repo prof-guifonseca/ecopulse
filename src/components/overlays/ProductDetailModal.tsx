@@ -103,7 +103,7 @@ export function ProductDetailModal({ id }: Props) {
           <div aria-hidden className="photo-fade absolute inset-0" />
           <div
             data-score={view.score}
-            className="score-badge t-mega animate-score-reveal absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[var(--on-primary)] shadow-[var(--shadow-deep-glow)]"
+            className="score-badge t-mega animate-score-reveal absolute bottom-3 left-1/2 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[var(--primary-foreground)] shadow-[var(--shadow-deep-glow)]"
           >
             {view.score}
           </div>
@@ -114,18 +114,18 @@ export function ProductDetailModal({ id }: Props) {
         </p>
 
         <div className="border-soft bg-tint-1 t-micro mt-3 inline-flex items-center gap-2 rounded-full px-2.5 py-1">
-          <span className="text-[var(--text-muted)]">Recompensa:</span>
+          <span className="text-[var(--muted-foreground)]">Recompensa:</span>
           <span className="font-semibold text-[var(--accent-gold)]">
             ×{ECO_MULTIPLIER[view.score].toFixed(1)} tokens
           </span>
         </div>
         <div className="border-soft bg-tint-1 t-micro mt-2 inline-flex max-w-full flex-wrap justify-center gap-2 rounded-full px-2.5 py-1">
-          <span className="text-[var(--text-muted)]">Fonte:</span>
+          <span className="text-[var(--muted-foreground)]">Fonte:</span>
           <span className="font-semibold text-[var(--text-secondary)]">
             {view.sourceName ?? 'Open Food Facts'}
           </span>
           {view.confidence ? (
-            <span className="text-[var(--text-muted)]">· confiança {view.confidence}%</span>
+            <span className="text-[var(--muted-foreground)]">· confiança {view.confidence}%</span>
           ) : null}
         </div>
 
@@ -289,7 +289,7 @@ function AlternativesList({
             key={a.id}
             type="button"
             onClick={() => openItem(a.id)}
-            className="border-soft bg-tint-1 flex w-full items-center gap-3 rounded-[var(--radius-md)] p-3 text-left transition-colors hover:border-[var(--line-strong)]"
+            className="border-soft bg-tint-1 flex w-full items-center gap-3 rounded-[var(--radius-md)] p-3 text-left transition-colors hover:border-[var(--input)]"
           >
             <IconTile size="md" icon={<span>{a.emoji}</span>} />
             <div className="min-w-0 flex-1">
@@ -298,7 +298,7 @@ function AlternativesList({
             </div>
             <span
               data-score={a.score}
-              className="score-badge flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[var(--on-primary)]"
+              className="score-badge flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-[var(--primary-foreground)]"
             >
               {a.score}
             </span>

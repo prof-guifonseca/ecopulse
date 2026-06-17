@@ -72,8 +72,8 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
                     className={cn(
                       'flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                       active
-                        ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
-                        : 'bg-tint-2 text-[var(--accent-green)]',
+                        ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                        : 'bg-tint-2 text-[var(--primary)]',
                     )}
                   >
                     <Icon icon={I} size={16} />
@@ -88,7 +88,7 @@ export function OnboardingStepTribe({ initial, onNext, onBack }: Props) {
           })}
         </ul>
 
-        <p className="t-micro text-[var(--text-muted)]">
+        <p className="t-micro text-[var(--muted-foreground)]">
           Piloto inicial em Londrina (PR), com dados abertos e pontos curados.
         </p>
       </main>

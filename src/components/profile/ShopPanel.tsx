@@ -61,7 +61,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
             <div className="mt-1.5 flex items-baseline gap-2">
               <AnimatedNumber
                 value={tokens}
-                className="t-headline leading-[1] text-[var(--accent-green)]"
+                className="t-headline leading-[1] text-[var(--primary)]"
               />
               <span className="t-body-sm">tokens</span>
             </div>
@@ -93,9 +93,9 @@ export function ShopPanel({ tokens }: { tokens: number }) {
               <button
                 key={setItem.id}
                 onClick={() => openModal({ kind: 'gearSet', id: setItem.id })}
-                className="group bg-tint-1 flex w-[168px] shrink-0 flex-col rounded-[var(--radius-md)] border text-left transition-colors hover:border-[var(--line-strong)] focus:outline-none"
+                className="group bg-tint-1 flex w-[168px] shrink-0 flex-col rounded-[var(--radius-md)] border text-left transition-colors hover:border-[var(--input)] focus:outline-none"
                 style={{
-                  borderColor: equipped ? 'var(--line-active)' : 'var(--line-soft)',
+                  borderColor: equipped ? 'var(--line-active)' : 'var(--border)',
                   backgroundColor: equipped ? 'var(--tint-green-2)' : undefined,
                 }}
               >
@@ -111,7 +111,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   <h3 className="t-title truncate">{setItem.name}</h3>
                   <p className="t-caption truncate">
                     {equipped ? (
-                      <span className="text-[var(--accent-green)]">Aplicado</span>
+                      <span className="text-[var(--primary)]">Aplicado</span>
                     ) : owned ? (
                       'Aplicar conjunto'
                     ) : locked ? (
@@ -165,7 +165,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                     className={cn(
                       't-caption shrink-0 font-semibold',
                       equippedHere
-                        ? 'text-[var(--accent-green)]'
+                        ? 'text-[var(--primary)]'
                         : owned
                           ? 'text-[var(--text-secondary)]'
                           : 'text-[var(--accent-gold)]',
@@ -198,7 +198,7 @@ export function ShopPanel({ tokens }: { tokens: number }) {
                   <div
                     className={cn(
                       't-body-sm mt-auto inline-flex items-center gap-1 font-semibold',
-                      isOwned ? 'text-[var(--accent-green)]' : 'text-[var(--accent-gold)]',
+                      isOwned ? 'text-[var(--primary)]' : 'text-[var(--accent-gold)]',
                     )}
                   >
                     {isOwned ? (
@@ -224,7 +224,7 @@ function LoadoutTestCard({ activeLoadoutLabel }: { activeLoadoutLabel: string })
   return (
     <Card tone="solid" padded={false} className="border-active px-5 py-4">
       <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] gap-3">
-        <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--accent-green)]">
+        <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--primary)]">
           <Icon icon={Swords} size={18} />
         </span>
         <div className="min-w-0">

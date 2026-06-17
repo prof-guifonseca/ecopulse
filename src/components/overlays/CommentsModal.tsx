@@ -99,7 +99,11 @@ export function CommentsModal({ id }: Props) {
             ))
           ) : (
             <div className="border-soft bg-tint-1 rounded-[var(--radius-md)] px-4 py-5 text-center">
-              <Icon icon={MessageCircle} size={18} className="mx-auto text-[var(--text-muted)]" />
+              <Icon
+                icon={MessageCircle}
+                size={18}
+                className="mx-auto text-[var(--muted-foreground)]"
+              />
               <p className="t-body-sm mt-2">Nenhum comentário ainda.</p>
               <p className="t-caption mt-1">
                 Abra a conversa com uma observação real sobre este item.
@@ -117,7 +121,7 @@ export function CommentsModal({ id }: Props) {
             value={text}
             onChange={(event) => setText(event.target.value)}
             maxLength={500}
-            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--line-active)]"
+            className="border-soft bg-tint-1 min-w-0 flex-1 rounded-[var(--radius-sm)] px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)] focus:border-[var(--line-active)]"
             placeholder="Escreva um comentário"
           />
           <Button

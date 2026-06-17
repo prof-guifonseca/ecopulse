@@ -16,7 +16,7 @@ export function OnboardingDots({ total, current }: Props) {
             className="h-1.5 rounded-full transition-all duration-300"
             style={{
               width: active ? 22 : 6,
-              background: active ? 'var(--accent-green)' : 'var(--line-strong)',
+              background: active ? 'var(--primary)' : 'var(--input)',
               opacity: active ? 1 : 0.7,
             }}
           />

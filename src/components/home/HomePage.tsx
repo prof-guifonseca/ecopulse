@@ -110,7 +110,7 @@ export function HomePage() {
 
       <Card tone="solid" padded={false} className="px-5 py-5">
         <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-3">
-          <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--accent-green)]">
+          <span className="bg-tint-green-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-[var(--primary)]">
             <Icon icon={ActionIcon} size={19} />
           </span>
           <div className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function HomePage() {
           <ProgressBar value={progressPct} size="sm" ariaLabel="Progresso das missões de hoje" />
         </div>
 
-        <ul className="bg-tint-1 mt-4 divide-y divide-[var(--line-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-soft)]">
+        <ul className="bg-tint-1 mt-4 divide-y divide-[var(--border)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)]">
           {rows.map((row) => {
             const MissionIcon = resolveIcon(row.iconName);
             return (
@@ -138,7 +138,7 @@ export function HomePage() {
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                     row.done
-                      ? 'bg-[var(--accent-green)] text-[var(--on-primary)]'
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                       : 'border-soft text-[var(--text-secondary)]',
                   )}
                 >
@@ -151,7 +151,7 @@ export function HomePage() {
                 <span
                   className={cn(
                     't-body-sm min-w-0 flex-1 truncate',
-                    row.done && 'text-[var(--accent-green)]',
+                    row.done && 'text-[var(--primary)]',
                   )}
                 >
                   {row.title}
@@ -175,10 +175,10 @@ function DailyProofPanel() {
     <section className="border-active rounded-[var(--radius-md)] bg-[linear-gradient(135deg,var(--tint-green-2),var(--tint-1))] p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="t-eyebrow text-[var(--accent-green)]">Jornada EcoPulse</p>
+          <p className="t-eyebrow text-[var(--primary)]">Jornada EcoPulse</p>
           <h2 className="t-title mt-1">Uma escolha consciente precisa virar ação visível.</h2>
         </div>
-        <span className="t-micro shrink-0 rounded-full border border-[var(--line-active)] px-2.5 py-1 text-[var(--accent-green)]">
+        <span className="t-micro shrink-0 rounded-full border border-[var(--line-active)] px-2.5 py-1 text-[var(--primary)]">
           3 passos
         </span>
       </div>
@@ -186,16 +186,16 @@ function DailyProofPanel() {
         {DAILY_PROOF_STEPS.map((step, index) => (
           <li
             key={step.label}
-            className="min-w-0 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] px-3 py-3"
+            className="min-w-0 rounded-[var(--radius-sm)] bg-[var(--card)] px-3 py-3"
           >
             <div className="flex items-center gap-2">
-              <span className="bg-tint-green-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-xs)] text-[var(--accent-green)]">
+              <span className="bg-tint-green-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-xs)] text-[var(--primary)]">
                 <Icon icon={step.icon} size={13} />
               </span>
-              <span className="t-micro text-[var(--text-muted)]">0{index + 1}</span>
+              <span className="t-micro text-[var(--muted-foreground)]">0{index + 1}</span>
             </div>
-            <p className="t-micro mt-2 truncate text-[var(--text-primary)]">{step.label}</p>
-            <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--text-muted)]">
+            <p className="t-micro mt-2 truncate text-[var(--foreground)]">{step.label}</p>
+            <p className="mt-1 text-[0.66rem] leading-tight font-medium text-[var(--muted-foreground)]">
               {step.value}
             </p>
           </li>
@@ -255,14 +255,14 @@ function HomeMetric({
   reward?: boolean;
 }) {
   return (
-    <div className="border-soft min-w-0 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] px-3 py-3">
+    <div className="border-soft min-w-0 rounded-[var(--radius-md)] bg-[var(--card)] px-3 py-3">
       <div className="flex items-center gap-2">
         <Icon
           icon={icon}
           size={15}
-          className={reward ? 'text-[var(--accent-gold)]' : 'text-[var(--accent-green)]'}
+          className={reward ? 'text-[var(--accent-gold)]' : 'text-[var(--primary)]'}
         />
-        <span className="truncate text-sm font-bold text-[var(--text-primary)]">{value}</span>
+        <span className="truncate text-sm font-bold text-[var(--foreground)]">{value}</span>
       </div>
       <p className="t-caption mt-1 truncate">{label}</p>
     </div>

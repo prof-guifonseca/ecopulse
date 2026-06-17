@@ -65,7 +65,7 @@ export function AppHeader() {
   return (
     <header
       id="app-header"
-      className="sticky top-0 z-40 border-b border-[var(--line-soft)] bg-[color-mix(in_srgb,var(--bg-primary)_88%,transparent)] px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)] pb-2.5 backdrop-blur-xl sm:px-8"
+      className="sticky top-0 z-40 border-b border-[var(--border)] bg-[color-mix(in_srgb,var(--background)_88%,transparent)] px-4 pt-[calc(env(safe-area-inset-top,0px)+12px)] pb-2.5 backdrop-blur-xl sm:px-8"
     >
       <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-3">
         <div
@@ -78,16 +78,16 @@ export function AppHeader() {
         >
           <span
             aria-hidden
-            className="bg-tint-green-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--line-soft)]"
+            className="bg-tint-green-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border)]"
           >
-            <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--accent-green)]" />
+            <Icon icon={Leaf} size={16} strokeWidth={2.2} className="text-[var(--primary)]" />
           </span>
           <span className="text-sm leading-none font-bold">EcoPulse</span>
         </div>
         <Chip
           asStatic
           active
-          leftIcon={<Icon icon={summaryIcon} size={13} className="text-[var(--accent-green)]" />}
+          leftIcon={<Icon icon={summaryIcon} size={13} className="text-[var(--primary)]" />}
         >
           {summaryText}
         </Chip>
