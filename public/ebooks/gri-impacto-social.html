@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRI e Impacto Social — CS Hub | Validação</title>
+  <meta
+    name="description"
+    content="Guia prático sobre o GRI e como demonstrar impacto social com evidências, para pequenas empresas e OSCs. Material da CS Hub | Validação."
+  />
+  <style>
+    :root {
+      --verde: #2f7d5b;
+      --verde-escuro: #1d4d39;
+      --verde-claro: #eef5f0;
+      --cinza: #5b6670;
+      --cinza-claro: #f4f6f7;
+      --borda: #d8dee2;
+      --tinta: #1f2933;
+      --tinta-suave: #3a4753;
+      --fundo: #ffffff;
+      --ambar: #b97309;
+      --ambar-fundo: #fdf6ea;
+      --ambar-borda: #e7c98a;
+      --largura-leitura: 680px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--tinta);
+      background: var(--cinza-claro);
+    }
+
+    .pagina {
+      max-width: var(--largura-leitura);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- Capa ---------- */
+    .cover {
+      background: linear-gradient(160deg, var(--verde-escuro), var(--verde));
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 0;
+    }
+
+    .cover .pagina {
+      width: 100%;
+    }
+
+    .cover .marca {
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0.92;
+      margin-bottom: 40px;
+    }
+
+    .cover h1 {
+      font-size: 2.9rem;
+      line-height: 1.1;
+      margin: 0 0 18px;
+      font-weight: 700;
+    }
+
+    .cover .subtitulo {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      font-weight: 400;
+      max-width: 30em;
+      opacity: 0.95;
+      margin: 0;
+    }
+
+    .cover .selo {
+      margin-top: 48px;
+      font-size: 0.9rem;
+      opacity: 0.85;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      padding-top: 18px;
+      max-width: 32em;
+    }
+
+    /* ---------- Corpo ---------- */
+    main {
+      background: var(--fundo);
+    }
+
+    .conteudo {
+      padding: 56px 0 32px;
+    }
+
+    h2 {
+      font-size: 1.65rem;
+      line-height: 1.25;
+      color: var(--verde-escuro);
+      margin: 0 0 0.6em;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: var(--tinta);
+      margin: 1.8em 0 0.4em;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0 0 1.1em;
+    }
+
+    a {
+      color: var(--verde);
+    }
+
+    section {
+      padding: 18px 0 30px;
+    }
+
+    section + section {
+      border-top: 1px solid var(--borda);
+    }
+
+    .cap-num {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--verde);
+      margin-bottom: 6px;
+    }
+
+    ul,
+    ol {
+      margin: 0 0 1.2em;
+      padding-left: 1.3em;
+    }
+
+    li {
+      margin-bottom: 0.55em;
+    }
+
+    strong {
+      color: var(--tinta);
+    }
+
+    code,
+    .termo-fechado {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+        monospace;
+      font-size: 0.88em;
+      background: var(--verde-claro);
+      color: var(--verde-escuro);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ---------- Sumário ---------- */
+    .toc {
+      background: var(--cinza-claro);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 26px 30px;
+      margin: 8px 0 16px;
+    }
+
+    .toc h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cinza);
+      margin: 0 0 14px;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.4em;
+    }
+
+    .toc li {
+      margin-bottom: 0.5em;
+    }
+
+    .toc a {
+      color: var(--tinta-suave);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--verde);
+      text-decoration: underline;
+    }
+
+    /* ---------- Boxes destacados ---------- */
+    .definicao {
+      background: var(--verde-claro);
+      border-left: 4px solid var(--verde);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 22px;
+      margin: 1.4em 0;
+    }
+
+    .definicao .rotulo {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--verde-escuro);
+      margin-bottom: 6px;
+    }
+
+    .definicao p:last-child {
+      margin-bottom: 0;
+    }
+
+    .aviso {
+      background: var(--ambar-fundo);
+      border: 1px solid var(--ambar-borda);
+      border-left: 4px solid var(--ambar);
+      border-radius: 0 8px 8px 0;
+      padding: 18px 24px;
+      margin: 1.5em 0;
+    }
+
+    .aviso .rotulo {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--ambar);
+      margin-bottom: 8px;
+    }
+
+    .aviso p:last-child {
+      margin-bottom: 0;
+    }
+
+    .pode-nao {
+      display: grid;
+      gap: 16px;
+      margin: 1.4em 0;
+    }
+
+    .pode-nao .col {
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+
+    .pode-nao .pode {
+      background: var(--verde-claro);
+      border: 1px solid #cfe3d6;
+    }
+
+    .pode-nao .nao {
+      background: #fcefef;
+      border: 1px solid #e8c9c9;
+    }
+
+    .pode-nao h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .pode-nao .pode h4 {
+      color: var(--verde-escuro);
+    }
+
+    .pode-nao .nao h4 {
+      color: #9a3030;
+    }
+
+    .pode-nao ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    .pode-nao li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Lista de critérios sociais / princípios */
+    .lista-criterios {
+      list-style: none;
+      padding: 0;
+      margin: 1.2em 0;
+    }
+
+    .lista-criterios > li {
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+
+    .lista-criterios .chave {
+      font-weight: 700;
+      color: var(--verde-escuro);
+    }
+
+    .voltar-topo {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--cinza);
+      text-decoration: none;
+    }
+
+    .voltar-topo:hover {
+      color: var(--verde);
+    }
+
+    /* ---------- Rodapé ---------- */
+    footer {
+      background: var(--cinza-claro);
+      border-top: 1px solid var(--borda);
+      color: var(--cinza);
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+
+    footer .pagina {
+      padding-top: 28px;
+      padding-bottom: 40px;
+    }
+
+    footer strong {
+      color: var(--tinta-suave);
+    }
+
+    /* ---------- Impressão / PDF ---------- */
+    @media print {
+      :root {
+        --largura-leitura: 100%;
+      }
+
+      body {
+        background: #fff;
+        font-size: 11.5pt;
+        line-height: 1.5;
+        color: #000;
+      }
+
+      .pagina {
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .toc,
+      .voltar-topo,
+      .no-print {
+        display: none !important;
+      }
+
+      .cover {
+        min-height: auto;
+        color: #fff;
+        padding: 30mm 0;
+        page-break-after: always;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .cover h1 {
+        font-size: 30pt;
+      }
+
+      .conteudo {
+        padding: 0;
+      }
+
+      section {
+        page-break-before: always;
+        border-top: none !important;
+      }
+
+      section:first-of-type {
+        page-break-before: avoid;
+      }
+
+      h2,
+      h3 {
+        page-break-after: avoid;
+      }
+
+      .definicao,
+      .aviso,
+      .pode-nao .col,
+      .lista-criterios > li {
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      footer {
+        page-break-before: always;
+        background: #fff;
+      }
+
+      a {
+        color: #000;
+        text-decoration: none;
+      }
+    }
+
+    @media (min-width: 620px) {
+      .pode-nao {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ============ CAPA ============ -->
+  <header class="cover" id="topo">
+    <div class="pagina">
+      <div class="marca">CS Hub&nbsp;|&nbsp;Validação</div>
+      <h1>GRI e Impacto Social</h1>
+      <p class="subtitulo">
+        Um guia prático para pequenas empresas e organizações da sociedade
+        civil demonstrarem boas práticas ESG — com base em evidências.
+      </p>
+      <p class="selo">
+        Material informativo do braço de Validação da CS Hub. Voltado a
+        gestores que precisam mostrar boas práticas a grandes compradores,
+        sem exigir formação técnica em sustentabilidade.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="pagina conteudo">
+      <!-- ============ SUMÁRIO ============ -->
+      <nav class="toc" aria-label="Sumário">
+        <h2>Sumário</h2>
+        <ol>
+          <li><a href="#cap-1">O que é o GRI e onde ele entra no ESG</a></li>
+          <li><a href="#cap-2">A anatomia de um critério GRI</a></li>
+          <li>
+            <a href="#cap-3"
+              >Os critérios sociais relevantes para OSCs e pequenos
+              negócios</a
+            >
+          </li>
+          <li>
+            <a href="#cap-4"
+              >Os oito princípios de relato como regras de qualidade de
+              dados</a
+            >
+          </li>
+          <li>
+            <a href="#cap-5">Como demonstrar impacto social com evidências</a>
+          </li>
+          <li>
+            <a href="#cap-6">O que pode e o que não pode ser dito</a>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- ============ CAPÍTULO 1 ============ -->
+      <section id="cap-1">
+        <span class="cap-num">Capítulo 1</span>
+        <h2>O que é o GRI e onde ele entra no ESG</h2>
+
+        <p>
+          Quando falamos de ESG (sigla em inglês para Ambiental, Social e
+          Governança), estamos falando de três frentes diferentes de prestação
+          de contas. Cada uma delas costuma se apoiar em uma referência
+          própria. No campo do relato de sustentabilidade, a referência mais
+          difundida do mundo é o <strong>GRI</strong>.
+        </p>
+
+        <div class="definicao">
+          <span class="rotulo">Definição</span>
+          <p>
+            <strong>GRI</strong> (Global Reporting Initiative) é um conjunto de
+            padrões — um <em>framework</em>, ou seja, uma estrutura de
+            referência — para que organizações relatem seus impactos de
+            sustentabilidade de forma comparável. É o modelo de relato mais
+            usado no planeta: adotado por mais de 10 mil empresas em mais de
+            100 países.
+          </p>
+        </div>
+
+        <p>
+          O ponto-chave para entender o lugar do GRI no ESG é a
+          <strong>perspectiva</strong>. O GRI ocupa o pilar do relato de
+          <strong>impactos</strong>: ele olha de "dentro para fora", ou seja,
+          como as atividades da organização afetam a economia, o meio ambiente
+          e as pessoas ao seu redor. Essa visão é diferente de abordagens que
+          olham de "fora para dentro" (como riscos de sustentabilidade afetam o
+          caixa da empresa). Para uma pequena empresa ou uma OSC que quer
+          mostrar o bem que faz à sua comunidade, é justamente a perspectiva de
+          impacto que importa.
+        </p>
+
+        <h3>A estrutura do GRI depois de 2021</h3>
+        <p>
+          A partir da revisão de 2021, os padrões GRI passaram a ser
+          organizados em três famílias. Entender essa divisão ajuda a saber
+          "onde procurar" cada coisa:
+        </p>
+        <ul>
+          <li>
+            <strong>Universal Standards (Padrões Universais)</strong> — valem
+            para qualquer organização. São três:
+            <ul>
+              <li>
+                <strong>GRI 1 — Foundation (Fundamentos):</strong> explica como
+                usar os padrões e quais princípios seguir.
+              </li>
+              <li>
+                <strong>GRI 2 — General Disclosures (Divulgações Gerais):</strong>
+                informações sobre o perfil da organização (quem ela é, como se
+                governa, como trata seus públicos).
+              </li>
+              <li>
+                <strong>GRI 3 — Material Topics (Temas Materiais):</strong>
+                orienta como identificar os temas que de fato importam para
+                aquela organização e seus impactos.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Sector Standards (Padrões Setoriais)</strong> — específicos
+            por setor de atuação (ex.: petróleo e gás, agricultura),
+            destacando os temas mais prováveis em cada ramo.
+          </li>
+          <li>
+            <strong>Topic Standards (Padrões de Tema)</strong> — tratam de um
+            tema específico, como emprego, água ou comunidades locais. É deles
+            que saem os critérios que veremos nos próximos capítulos.
+          </li>
+        </ul>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+
+      <!-- ============ CAPÍTULO 2 ============ -->
+      <section id="cap-2">
+        <span class="cap-num">Capítulo 2</span>
+        <h2>A anatomia de um critério GRI</h2>
+
+        <p>
+          Dentro de cada Topic Standard existem as <strong>divulgações</strong>
+          (em inglês, <em>disclosures</em>): são os itens de informação que a
+          organização pode relatar sobre aquele tema. Cada divulgação tem duas
+          camadas que vale separar:
+        </p>
+        <ul>
+          <li>
+            <strong>Requisito</strong> — o dado que é exigido. É a parte
+            objetiva: "informe o número de…", "descreva a política de…".
+          </li>
+          <li>
+            <strong>Orientação (guidance)</strong> — explica como aplicar o
+            requisito, com definições e exemplos. Não é o dado em si, mas a
+            "bula" de como produzi-lo corretamente.
+          </li>
+        </ul>
+        <p>
+          Essa separação é importante na prática: o requisito diz
+          <em>o que</em> mostrar; a orientação evita que cada um interprete o
+          pedido de um jeito.
+        </p>
+
+        <h3>A camada de gestão do tópico (GRI 3-3)</h3>
+        <p>
+          Mostrar um número solto raramente conta a história toda. Por isso o
+          GRI 3 traz uma divulgação dedicada à <strong>gestão do tema</strong>
+          (a divulgação 3-3). Ela pede que a organização descreva o ciclo
+          completo de como lida com aquele impacto:
+        </p>
+        <ul>
+          <li><strong>Política</strong> — o compromisso assumido.</li>
+          <li><strong>Ação</strong> — o que de fato é feito para cumpri-lo.</li>
+          <li><strong>Resultado</strong> — o que se obteve (e como se mede).</li>
+          <li>
+            <strong>Remediação</strong> — o que se faz quando algo dá errado e
+            há um dano a reparar.
+          </li>
+        </ul>
+        <p>
+          Esse encadeamento — política → ação → resultado → remediação — é uma
+          ótima forma de organizar evidências, porque mostra intenção,
+          execução e consequência.
+        </p>
+
+        <h3>Impacto não é um botão de liga/desliga</h3>
+        <p>
+          Um erro comum é tratar impacto como algo binário ("temos" ou "não
+          temos"). No GRI, impacto é uma grandeza com várias dimensões. Um
+          mesmo impacto pode ser:
+        </p>
+        <ul>
+          <li><strong>positivo ou negativo</strong>;</li>
+          <li>
+            <strong>real ou potencial</strong> (já aconteceu, ou pode vir a
+            acontecer);
+          </li>
+          <li>
+            <strong>direto ou indireto</strong> (causado pela própria
+            organização, ou ligado a ela por relações de negócio);
+          </li>
+          <li><strong>de curto ou de longo prazo</strong>;</li>
+          <li>
+            <strong>intencional ou não intencional</strong> (planejado, ou um
+            efeito colateral).
+          </li>
+        </ul>
+        <p>
+          Reconhecer essas dimensões evita exageros e omissões: ajuda a relatar
+          o que é relevante sem inventar nem esconder.
+        </p>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+
+      <!-- ============ CAPÍTULO 3 ============ -->
+      <section id="cap-3">
+        <span class="cap-num">Capítulo 3</span>
+        <h2>Os critérios sociais relevantes para OSCs e pequenos negócios</h2>
+
+        <p>
+          O GRI tem dezenas de Topic Standards. Para uma pequena empresa ou uma
+          OSC, nem todos fazem sentido — o foco social costuma se concentrar em
+          um punhado de temas. Abaixo, uma lista comentada dos mais úteis, com
+          o número e o nome de cada padrão e uma leitura prática.
+        </p>
+
+        <ul class="lista-criterios">
+          <li>
+            <span class="chave">GRI 401 — Emprego.</span> Como a organização
+            contrata, retém e trata quem trabalha nela: rotatividade,
+            benefícios, condições de admissão e desligamento. É o retrato
+            básico da relação de trabalho.
+          </li>
+          <li>
+            <span class="chave">GRI 403 — Saúde e Segurança no Trabalho.</span>
+            Prevenção de acidentes e doenças, identificação de riscos e
+            cuidado com o bem-estar de quem executa as atividades.
+          </li>
+          <li>
+            <span class="chave">GRI 404 — Capacitação e Educação.</span>
+            Treinamento e desenvolvimento das pessoas: horas de formação,
+            programas de qualificação, apoio à evolução de carreira.
+          </li>
+          <li>
+            <span class="chave"
+              >GRI 405 / 406 — Diversidade e Igualdade de Oportunidades /
+              Não-Discriminação.</span
+            >
+            A composição das equipes e dos órgãos de governança e a existência
+            (ou não) de casos de discriminação e como foram tratados.
+          </li>
+          <li>
+            <span class="chave"
+              >GRI 408 / 409 — Trabalho Infantil / Trabalho Forçado ou
+              Compulsório.</span
+            >
+            Funcionam como <strong>critérios de exclusão</strong>: são linhas
+            que não se cruzam. Mais do que pontuar, servem para garantir que a
+            organização (e sua cadeia) está livre dessas práticas.
+          </li>
+          <li>
+            <span class="chave">GRI 413 — Comunidades Locais.</span> O coração
+            do impacto social do terceiro setor: o engajamento com as
+            comunidades atendidas, os programas voltados a elas e os efeitos —
+            positivos e negativos — sobre essas populações.
+          </li>
+          <li>
+            <span class="chave">GRI 414 — Avaliação Social de Fornecedores.</span>
+            Como a organização leva critérios sociais para a escolha e o
+            acompanhamento de seus fornecedores — o impacto que se estende pela
+            cadeia.
+          </li>
+        </ul>
+
+        <p>
+          Para a maioria das pequenas organizações, GRI 413 (comunidades) e os
+          temas de trabalho (401, 403, 404) são o núcleo da história de impacto
+          social — enquanto 408/409 funcionam como salvaguardas de base.
+        </p>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+
+      <!-- ============ CAPÍTULO 4 ============ -->
+      <section id="cap-4">
+        <span class="cap-num">Capítulo 4</span>
+        <h2>Os oito princípios de relato como regras de qualidade de dados</h2>
+
+        <p>
+          O GRI 1 estabelece oito princípios que definem o que torna um relato
+          confiável. Eles soam abstratos, mas cada um se traduz numa regra
+          concreta de como organizar e validar a informação. Veja a leitura
+          prática de cada princípio:
+        </p>
+
+        <ul class="lista-criterios">
+          <li>
+            <span class="chave">Accuracy (exatidão).</span> A informação deve
+            ser correta e detalhada o suficiente para ser avaliada.
+            <br /><em>Regra de sistema:</em> dados quantificados quando
+            possível, com unidade e método de cálculo registrados.
+          </li>
+          <li>
+            <span class="chave">Balance (equilíbrio).</span> Relatar tanto os
+            aspectos positivos quanto os negativos, sem maquiar.
+            <br /><em>Regra de sistema:</em> campos que aceitam impactos
+            negativos e ressalvas, não só conquistas.
+          </li>
+          <li>
+            <span class="chave">Clarity (clareza).</span> Apresentar de forma
+            compreensível para quem vai ler.
+            <br /><em>Regra de sistema:</em> linguagem simples, termos
+            definidos, evitar siglas sem explicação.
+          </li>
+          <li>
+            <span class="chave">Comparability (comparabilidade).</span>
+            Permitir comparar a organização ao longo do tempo e com outras.
+            <br /><em>Regra de sistema:</em>
+            <strong>vocabulário controlado</strong> — usar sempre os mesmos
+            rótulos e categorias, em vez de texto livre que cada um escreve de
+            um jeito.
+          </li>
+          <li>
+            <span class="chave">Completeness (completude).</span> Cobrir os
+            impactos relevantes de forma suficiente para entender o quadro.
+            <br /><em>Regra de sistema:</em> cobertura mínima por tema — não
+            deixar lacunas nos pontos que importam.
+          </li>
+          <li>
+            <span class="chave">Sustainability context (contexto de
+            sustentabilidade).</span>
+            Situar a informação num contexto mais amplo (do setor, do
+            território, dos limites do planeta).
+            <br /><em>Regra de sistema:</em> registrar a que público, território
+            ou meta cada dado se refere.
+          </li>
+          <li>
+            <span class="chave">Timeliness (tempestividade).</span> Relatar com
+            regularidade e em tempo útil para a decisão.
+            <br /><em>Regra de sistema:</em>
+            <strong>recência e reavaliação periódica</strong> — toda evidência
+            tem data e prazo de validade; o que envelheceu precisa ser revisto.
+          </li>
+          <li>
+            <span class="chave">Verifiability (verificabilidade).</span> A
+            informação deve poder ser conferida por terceiros.
+            <br /><em>Regra de sistema:</em>
+            <strong>evidência com proveniência</strong> — cada afirmação se
+            apoia num documento rastreável, com origem identificada.
+          </li>
+        </ul>
+
+        <p>
+          Repare que esses princípios deixam de ser teoria e viram requisitos
+          de um bom sistema de informação: vocabulário fechado, datas,
+          cobertura e documentos rastreáveis. É exatamente essa ponte que o
+          próximo capítulo explora.
+        </p>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+
+      <!-- ============ CAPÍTULO 5 ============ -->
+      <section id="cap-5">
+        <span class="cap-num">Capítulo 5</span>
+        <h2>Como demonstrar impacto social com evidências</h2>
+
+        <p>
+          Os princípios do capítulo anterior viram método quando se traduzem em
+          um jeito padronizado de registrar o que a organização faz. É assim
+          que o modelo da CS Hub estrutura a demonstração de impacto social,
+          transformando boas práticas em informação organizada e conferível.
+        </p>
+
+        <h3>1. Status com vocabulário fechado</h3>
+        <p>
+          Em vez de descrições soltas, cada item recebe um
+          <strong>status</strong> escolhido de uma lista fixa de opções (um
+          vocabulário fechado, conforme o princípio da comparabilidade):
+        </p>
+        <ul>
+          <li>
+            <span class="termo-fechado">evidenciado</span> — há evidência
+            suficiente para sustentar a prática;
+          </li>
+          <li>
+            <span class="termo-fechado">parcialmente_evidenciado</span> — há
+            evidência, mas ela é incompleta ou cobre apenas parte do tema;
+          </li>
+          <li>
+            <span class="termo-fechado">nao_evidenciado</span> — ainda não há
+            evidência que sustente a prática.
+          </li>
+        </ul>
+        <p>
+          Esse vocabulário fixo elimina ambiguidade: todos leem "evidenciado" da
+          mesma forma, e dá para comparar itens, períodos e organizações.
+        </p>
+
+        <h3>2. Cadeia de evidências</h3>
+        <p>
+          Um status só vale o quanto a evidência por trás dele. Por isso cada
+          afirmação se apoia numa <strong>cadeia de evidências</strong>
+          composta de três elementos (aplicando os princípios de
+          verificabilidade e tempestividade):
+        </p>
+        <ul>
+          <li>
+            <strong>Artefato</strong> — o documento ou registro que comprova (um
+            relatório de atividade, uma foto datada, um contrato, uma ata).
+          </li>
+          <li>
+            <strong>Data</strong> — quando o artefato foi produzido, para
+            avaliar se ainda está vigente.
+          </li>
+          <li>
+            <strong>Proveniência</strong> — de onde ele veio e quem o emitiu,
+            para que terceiros possam rastreá-lo.
+          </li>
+        </ul>
+
+        <h3>3. Cobertura mínima por pilar</h3>
+        <p>
+          Por fim, para honrar o princípio da completude, define-se uma
+          <strong>cobertura mínima por pilar</strong>: um patamar de quantos e
+          quais temas precisam estar evidenciados em cada frente (ambiental,
+          social, governança) para que o conjunto seja considerado
+          consistente. Assim, evita-se um retrato enviesado, com um tema muito
+          detalhado e outros vazios.
+        </p>
+
+        <div class="definicao">
+          <span class="rotulo">Em resumo</span>
+          <p>
+            Status padronizado + cadeia de evidências (artefato, data,
+            proveniência) + cobertura mínima por pilar = uma forma objetiva,
+            comparável e conferível de mostrar impacto social, ancorada nos
+            princípios do GRI.
+          </p>
+        </div>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+
+      <!-- ============ CAPÍTULO 6 ============ -->
+      <section id="cap-6">
+        <span class="cap-num">Capítulo 6</span>
+        <h2>O que pode e o que não pode ser dito</h2>
+
+        <p>
+          Usar o GRI como referência metodológica é legítimo e recomendável.
+          Mas há uma fronteira importante de comunicação: alguns termos são
+          reservados a processos formais e específicos, e usá-los fora desse
+          contexto induz o público a erro. Por isso vale separar com clareza o
+          que pode e o que não pode ser afirmado.
+        </p>
+
+        <div class="pode-nao">
+          <div class="col pode">
+            <h4>✓ Pode</h4>
+            <ul>
+              <li>
+                Estruturar a metodologia sobre os princípios do GRI.
+              </li>
+              <li>
+                Mapear os critérios da organização às divulgações do GRI.
+              </li>
+              <li>
+                Demonstrar boas práticas com base em evidências rastreáveis.
+              </li>
+              <li>
+                Dizer que o trabalho é "inspirado" ou "fundamentado" nos
+                padrões GRI.
+              </li>
+            </ul>
+          </div>
+          <div class="col nao">
+            <h4>✕ Não pode</h4>
+            <ul>
+              <li>Apresentar a saída como um "relatório GRI".</li>
+              <li>Chamá-la de "certificação de conformidade".</li>
+              <li>Descrevê-la como "auditoria independente".</li>
+              <li>Vendê-la como "asseguração".</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="aviso">
+          <span class="rotulo">Aviso de posicionamento</span>
+          <p>
+            "Relatório GRI", "certificação de conformidade", "auditoria
+            independente" e "asseguração" são termos reservados a processos
+            formais, conduzidos por partes com mandato próprio para isso. O que
+            a CS Hub | Validação oferece é a
+            <strong
+              >validação voluntária e contratual de boas práticas, baseada em
+              evidências</strong
+            >
+            — uma relação B2B entre a organização e seus parceiros. É robusto e
+            verificável, mas <strong>não</strong> se confunde com asseguração
+            regulada e não deve ser comunicado como tal.
+          </p>
+        </div>
+
+        <p>
+          Manter essa linguagem precisa protege a organização e dá credibilidade
+          ao trabalho: promete-se exatamente o que se entrega — nem menos, nem
+          mais.
+        </p>
+
+        <a class="voltar-topo" href="#topo">↑ Voltar ao topo</a>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ RODAPÉ ============ -->
+  <footer>
+    <div class="pagina">
+      <p>
+        <strong>CS Hub | Validação.</strong> Este é um material informativo e
+        educativo. Tem finalidade de orientação geral e
+        <strong>não constitui asseguração</strong>, auditoria independente,
+        certificação de conformidade ou relatório GRI. A CS Hub realiza
+        validação voluntária e contratual de boas práticas com base em
+        evidências, em relação B2B entre a organização e seus parceiros.
+      </p>
+      <p>"GRI" e os nomes dos padrões citados pertencem à Global Reporting Initiative.</p>
+    </div>
+  </footer>
+</body>
+</html>
