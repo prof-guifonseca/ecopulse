@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { LONDRINA } from '@/data/regions/londrina';
 import { bboxFromCenter } from './geo';
 import { geocodePlace } from './adapters/nominatim';
@@ -53,6 +54,15 @@ export async function searchEnvironmentalPlaces(
       reason: 'osm-empty-fallback',
     };
   } catch (error) {
+    Sentry.addBreadcrumb({
+      category: 'esg-discovery',
+      level: 'warning',
+      message: 'overpass search failed, falling back to snapshot',
+      data: { message: error instanceof Error ? error.message : String(error) },
+    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[ecopulse] overpass search failed, using snapshot fallback', error);
+    }
     return {
       ...(await snapshotProvider.search(normalizedInput)),
       reason: error instanceof Error ? `osm-error:${error.message}` : 'osm-error',
@@ -83,7 +93,16 @@ async function resolveSearchInput(
           radiusMeters: input.radiusMeters ?? 4500,
         };
       }
-    } catch {
+    } catch (error) {
+      Sentry.addBreadcrumb({
+        category: 'esg-discovery',
+        level: 'warning',
+        message: 'geocoding failed, falling back to Londrina defaults',
+        data: { message: error instanceof Error ? error.message : String(error) },
+      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[ecopulse] geocoding failed, using Londrina defaults', error);
+      }
       return { ...input, bbox: LONDRINA.bbox, center: LONDRINA.center };
     }
   }

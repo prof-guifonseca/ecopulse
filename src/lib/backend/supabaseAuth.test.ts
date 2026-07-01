@@ -46,4 +46,21 @@ describe('resolveUserId', () => {
     );
     await expect(resolveUserId(req({ authorization: 'Bearer bad' }))).resolves.toBe(LOCAL_USER);
   });
+
+  it('falls back to local-user when the upstream call times out', async () => {
+    vi.stubEnv('SUPABASE_URL', 'https://x.supabase.co');
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'svc');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_url: string, init?: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener('abort', () =>
+              reject(Object.assign(new Error('aborted'), { name: 'AbortError' })),
+            );
+          }),
+      ),
+    );
+    await expect(resolveUserId(req({ authorization: 'Bearer slow' }))).resolves.toBe(LOCAL_USER);
+  }, 8000);
 });

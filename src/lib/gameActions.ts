@@ -28,8 +28,7 @@ function snapshotForBadges(): GameSnapshot {
  */
 export function awardTokens(amount: number) {
   const user = useUserStore.getState();
-  user.addTokens(amount);
-  const { leveled, newLevel } = user.addXp(amount);
+  const { leveled, newLevel } = user.addTokensAndXp(amount);
   const ui = useUIStore.getState();
   hapticTap();
 

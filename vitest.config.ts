@@ -9,13 +9,15 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    exclude: ['**/node_modules/**', '**/.next/**', '**/.claude/**', 'e2e/**'],
+    exclude: ['**/node_modules/**', '**/.next/**', '**/.claude/**'],
     coverage: {
       provider: 'v8',
       // Gate the deterministic functional core (pure rule engines + domain).
       // The IO shell (backend/client/net/share, provider fetches) and stateful
-      // action modules are exercised by the Playwright e2e/a11y suite instead,
-      // so they stay out of the unit-coverage gate to avoid a flaky-mock tax.
+      // action modules stay out of the unit-coverage gate to avoid a
+      // flaky-mock tax — no browser e2e suite exists at this prototype stage
+      // to cover them behaviorally instead, so treat this slice as thin and
+      // low-risk by design, not fully verified.
       include: [
         'src/lib/**/rules.ts',
         'src/lib/arena/affinity.ts',

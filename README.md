@@ -55,8 +55,6 @@ npm run build  # next build
 npm run lint   # eslint
 npm run typecheck
 npm run test:unit
-npm run test:e2e
-npm run test:a11y
 npm run audit
 npm run check
 npm run overnight

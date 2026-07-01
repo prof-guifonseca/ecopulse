@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { findProductByBarcode } from '@/data/products';
 import type { ProductLookupResult } from '@/domain';
 import { deriveScore } from '@/lib/scoring';
@@ -39,7 +40,16 @@ export async function lookupProductByBarcode(
       });
       return live;
     }
-  } catch {
+  } catch (error) {
+    Sentry.addBreadcrumb({
+      category: 'product-lookup',
+      level: 'warning',
+      message: 'open food facts lookup failed, falling back to catalog',
+      data: { message: error instanceof Error ? error.message : String(error) },
+    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[ecopulse] open food facts lookup failed', error);
+    }
     // Fall through to local catalog/manual result.
   }
 

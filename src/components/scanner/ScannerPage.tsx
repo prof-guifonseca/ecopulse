@@ -54,7 +54,6 @@ export function ScannerPage() {
   const modal = useUIStore((s) => s.modal);
   const showToast = useUIStore((s) => s.showToast);
   const fireConfetti = useUIStore((s) => s.fireConfetti);
-  const markMission = useGameStore((s) => s.markMission);
   const missionScan = useGameStore((s) => s.dailyMissions.scan);
   const firstScanCompleted = useUserStore((s) => s.firstScanCompleted);
   const markFirstScanCompleted = useUserStore((s) => s.markFirstScanCompleted);
@@ -109,9 +108,8 @@ export function ScannerPage() {
     (record: ScanRecord, source: 'barcode' | 'manual' | 'demo') => {
       setLastBarcode(record.barcode);
       recordScan(record);
-      useGameStore.getState().addScannedProduct(record.productId);
+      useGameStore.getState().recordScanProgress(record.productId, !missionScan);
       awardTokens(source === 'demo' ? 10 : 12);
-      if (!missionScan) markMission('scan', true);
       const totalScans = useScanHistoryStore.getState().history.length;
       if (totalScans === 1) unlockBadge('first-scan');
       if (totalScans >= 5) unlockBadge('scanner-5');
@@ -122,15 +120,7 @@ export function ScannerPage() {
       fireConfetti();
       openModal({ kind: 'product', id: record.id });
     },
-    [
-      fireConfetti,
-      firstRun,
-      markFirstScanCompleted,
-      markMission,
-      missionScan,
-      openModal,
-      recordScan,
-    ],
+    [fireConfetti, firstRun, markFirstScanCompleted, missionScan, openModal, recordScan],
   );
 
   const lookupBarcode = useCallback(

@@ -1,6 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import * as Sentry from '@sentry/nextjs';
+
+/** Falhas seguidas de detect() antes de emitir um breadcrumb — evita inundar
+ * o Sentry a cada frame em câmeras instáveis, mas sinaliza um leitor travado. */
+const DETECT_FAILURE_BREADCRUMB_THRESHOLD = 10;
 
 type BarcodeDetectorResult = { rawValue: string };
 type BarcodeDetectorCtor = new (options?: { formats?: string[] }) => {
@@ -94,12 +99,25 @@ export function useBarcodeScanner({ onDetect }: Options): BarcodeScanner {
       const detector = new Detector({ formats: NATIVE_FORMATS });
       let cancelled = false;
       let frame = 0;
+      let consecutiveDetectFailures = 0;
       const tick = async () => {
         if (cancelled) return;
         if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-          const codes = await detector.detect(video).catch(() => []);
+          const codes = await detector.detect(video).catch((error) => {
+            consecutiveDetectFailures += 1;
+            if (consecutiveDetectFailures === DETECT_FAILURE_BREADCRUMB_THRESHOLD) {
+              Sentry.addBreadcrumb({
+                category: 'barcode-scanner',
+                level: 'warning',
+                message: 'BarcodeDetector.detect failing repeatedly',
+                data: { message: error instanceof Error ? error.message : String(error) },
+              });
+            }
+            return [];
+          });
           const raw = codes[0]?.rawValue;
           if (raw) {
+            consecutiveDetectFailures = 0;
             cancelled = true;
             handleRaw(raw);
             return;
@@ -140,7 +158,13 @@ export function useBarcodeScanner({ onDetect }: Options): BarcodeScanner {
           return;
         }
         zxingControlsRef.current = controls;
-      } catch {
+      } catch (error) {
+        Sentry.addBreadcrumb({
+          category: 'barcode-scanner',
+          level: 'warning',
+          message: 'zxing reader unavailable',
+          data: { message: error instanceof Error ? error.message : String(error) },
+        });
         setError('Leitor de câmera indisponível neste navegador.');
       }
     })();
