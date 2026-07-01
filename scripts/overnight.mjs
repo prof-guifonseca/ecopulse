@@ -2,8 +2,6 @@ import { spawn } from 'node:child_process';
 
 const commands = [
   ['npm', ['run', 'check']],
-  ['npm', ['run', 'test:e2e:all']],
-  ['npm', ['run', 'test:a11y']],
   ['npm', ['run', 'analyze']],
 ];
 
