@@ -1,5 +1,47 @@
-import { describe, expect, it } from 'vitest';
-import { migrateUserStateToV3, migrateUserStateToV4, migrateUserStateToV5 } from './userStore';
+import { beforeEach, describe, expect, it } from 'vitest';
+import {
+  migrateUserStateToV3,
+  migrateUserStateToV4,
+  migrateUserStateToV5,
+  useUserStore,
+} from './userStore';
+
+describe('userStore addTokensAndXp', () => {
+  beforeEach(() => {
+    useUserStore.setState({ tokens: 0, tokensToday: 0, xp: 0, xpToNext: 100, level: 1 });
+  });
+
+  it('commits tokens and xp together, never one without the other', () => {
+    const { leveled, newLevel } = useUserStore.getState().addTokensAndXp(40);
+    const state = useUserStore.getState();
+
+    expect(leveled).toBe(false);
+    expect(newLevel).toBe(1);
+    expect(state.tokens).toBe(40);
+    expect(state.tokensToday).toBe(40);
+    expect(state.xp).toBe(40);
+  });
+
+  it('levels up (possibly multiple times) and reports it from the same commit', () => {
+    const { leveled, newLevel } = useUserStore.getState().addTokensAndXp(250);
+    const state = useUserStore.getState();
+
+    expect(leveled).toBe(true);
+    expect(newLevel).toBeGreaterThan(1);
+    expect(state.level).toBe(newLevel);
+    expect(state.tokens).toBe(250);
+  });
+
+  it('accumulates across repeated calls like the previous two-call sequence did', () => {
+    useUserStore.getState().addTokensAndXp(10);
+    useUserStore.getState().addTokensAndXp(15);
+    const state = useUserStore.getState();
+
+    expect(state.tokens).toBe(25);
+    expect(state.tokensToday).toBe(25);
+    expect(state.xp).toBe(25);
+  });
+});
 
 describe('userStore migration v3', () => {
   it('migrates owned outfits and skin packs into wearable gear without losing progress', () => {

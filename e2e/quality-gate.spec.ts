@@ -278,6 +278,75 @@ test('map renders live ESG points, filters them, and restores modal focus', asyn
   await expect(placeButton).toBeFocused();
 });
 
+test('place modal traps focus and wraps with Tab/Shift+Tab', async ({ page }) => {
+  await seedOnboardedState(page);
+  await mockEsgPlaces(page);
+  await gotoApp(page, '/map');
+
+  await page.getByRole('button', { name: 'Reparo' }).click();
+  const placeButton = page
+    .locator('li')
+    .filter({ hasText: 'Conserta Tudo OSM' })
+    .getByRole('button')
+    .first();
+  await placeButton.focus();
+  await placeButton.press('Enter');
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  const closeButton = dialog.getByRole('button', { name: 'Fechar' });
+  const visitButton = dialog.getByRole('button', { name: 'Marcar visita' });
+
+  // Initial focus lands on the first focusable element (the close button,
+  // which precedes the body content in DOM order).
+  await expect(closeButton).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await expect(visitButton).toBeFocused();
+
+  // Tab from the last focusable element wraps back to the first.
+  await page.keyboard.press('Tab');
+  await expect(closeButton).toBeFocused();
+
+  // Shift+Tab from the first focusable element wraps to the last.
+  await page.keyboard.press('Shift+Tab');
+  await expect(visitButton).toBeFocused();
+});
+
+test('bottom-sheet modal dismisses on a downward drag past the threshold', async ({ page }) => {
+  await seedOnboardedState(page);
+  await mockEsgPlaces(page);
+  await gotoApp(page, '/map');
+
+  await page.getByRole('button', { name: 'Reparo' }).click();
+  const placeButton = page
+    .locator('li')
+    .filter({ hasText: 'Conserta Tudo OSM' })
+    .getByRole('button')
+    .first();
+  await placeButton.focus();
+  await placeButton.press('Enter');
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  // The draggable surface is the dialog's direct child with the focus-trap
+  // tabIndex; the dialog role itself sits on the backdrop.
+  const surface = dialog.locator('[tabindex="-1"]');
+
+  await surface.dispatchEvent('touchstart', {
+    touches: [{ identifier: 0, clientX: 0, clientY: 200 }],
+  });
+  await surface.dispatchEvent('touchmove', {
+    touches: [{ identifier: 0, clientX: 0, clientY: 350 }],
+  });
+  await surface.dispatchEvent('touchend', {
+    touches: [],
+    changedTouches: [{ identifier: 0, clientX: 0, clientY: 350 }],
+  });
+
+  await expect(dialog).toBeHidden();
+});
+
 test('map falls back to the curated Londrina ESG snapshot when the API reports official data', async ({
   page,
 }) => {
@@ -426,6 +495,25 @@ test('scanner can search, lookup a barcode, use a real sample, and restore modal
   await page.keyboard.press('Escape');
   await expect(catalogDialog).toBeHidden();
   await expect(firstCatalogItem).toBeFocused();
+});
+
+test('scanner surfaces a permission-denied message when the camera is unavailable', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'mediaDevices', {
+      configurable: true,
+      value: {
+        getUserMedia: () =>
+          Promise.reject(new DOMException('Permission denied', 'NotAllowedError')),
+      },
+    });
+  });
+  await seedOnboardedState(page);
+  await gotoApp(page, '/scanner');
+
+  await page.getByRole('button', { name: 'Usar câmera' }).click();
+  await expect(page.getByText('Permissão de câmera não concedida.')).toBeVisible();
 });
 
 test('onboarding works when the demo seed is neutralized', async ({ page }) => {

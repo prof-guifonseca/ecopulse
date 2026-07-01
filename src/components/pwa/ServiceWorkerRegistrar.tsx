@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 
 /**
  * Registra o service worker (`public/sw.js`) que dá suporte offline e
@@ -18,8 +19,16 @@ export function ServiceWorkerRegistrar() {
     const register = () => {
       navigator.serviceWorker
         .register('/sw.js', { scope: '/', updateViaCache: 'none' })
-        .catch(() => {
-          // SW é opcional; sem ele o app segue navegável online.
+        .catch((error) => {
+          // SW é opcional; sem ele o app segue navegável online. Breadcrumb
+          // only — never blocks the app (mirrors composition.ts's
+          // onAppendFailure shape).
+          Sentry.addBreadcrumb({
+            category: 'pwa',
+            level: 'warning',
+            message: 'service worker registration failed',
+            data: { message: error instanceof Error ? error.message : String(error) },
+          });
         });
     };
 

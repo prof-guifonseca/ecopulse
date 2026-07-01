@@ -52,6 +52,9 @@ interface UserState {
   setProfile: (partial: Partial<UserState>) => void;
   addXp: (amount: number) => { leveled: boolean; newLevel: number };
   addTokens: (amount: number) => void;
+  /** Awards tokens and XP (with level-up) in a single store commit, so the
+   *  two values can never desync if interrupted mid-sequence. */
+  addTokensAndXp: (amount: number) => { leveled: boolean; newLevel: number };
   spendTokens: (amount: number) => boolean;
   resetTokensToday: () => void;
   setStreak: (value: number) => void;
@@ -253,6 +256,21 @@ export const useUserStore = create<UserState>()(
           tokens: s.tokens + amount,
           tokensToday: s.tokensToday + amount,
         })),
+
+      addTokensAndXp: (amount) => {
+        let { xp, xpToNext, level } = get();
+        let leveled = false;
+        xp += amount;
+        while (xp >= xpToNext) {
+          xp -= xpToNext;
+          level += 1;
+          xpToNext = Math.floor(xpToNext * 1.4);
+          leveled = true;
+        }
+        const { tokens, tokensToday } = get();
+        set({ tokens: tokens + amount, tokensToday: tokensToday + amount, xp, xpToNext, level });
+        return { leveled, newLevel: level };
+      },
 
       spendTokens: (amount) => {
         const { tokens } = get();

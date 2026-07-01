@@ -39,7 +39,21 @@ import type { TribeId } from '@/data/tribes';
 const FILTERS: Array<'todos' | EnvironmentalCategory> = ['todos', ...ENVIRONMENTAL_CATEGORIES];
 const LIVE_DISCOVERY_ENABLED = process.env.NEXT_PUBLIC_ENABLE_LIVE_ESG_DISCOVERY !== 'false';
 
-type LoadStatus = 'ready' | 'loading' | 'fallback' | 'error';
+export type LoadStatus = 'ready' | 'loading' | 'fallback' | 'error';
+
+/**
+ * Decides the post-fetch status from a search result or error, isolated from
+ * the IO shell so the source/error matrix is unit-testable without a DOM
+ * (mirrors lib/game/rules.ts vs gameActions.ts: pure decision, thin wrapper).
+ */
+export function resolveMapLoadStatus(
+  result: EsgPlaceSearchResult | null,
+  error?: unknown,
+): LoadStatus {
+  if (error !== undefined) return 'error';
+  if (!result) return 'fallback';
+  return result.source === 'official' ? 'fallback' : 'ready';
+}
 
 export function MapPage() {
   const region = useCurrentRegion();
@@ -136,14 +150,14 @@ export function MapPage() {
         setSourceReason(result.reason ?? null);
         setFocusCenter(result.center ?? opts.center);
         setScopeLabel(opts.label);
-        setStatus(result.source === 'official' ? 'fallback' : 'ready');
+        setStatus(resolveMapLoadStatus(result));
       } catch (error) {
         if (opts.signal?.aborted) return;
         rememberEnvironmentalPoints(fallbackPoints);
         setAllPoints(fallbackPoints);
         setDataSource('official');
         setSourceReason(error instanceof Error ? error.message : 'request-error');
-        setStatus('error');
+        setStatus(resolveMapLoadStatus(null, error));
       }
     },
     [fallbackPoints, region.id],

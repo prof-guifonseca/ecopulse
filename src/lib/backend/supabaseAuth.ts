@@ -1,6 +1,12 @@
+import { fetchWithRetry } from '@/lib/net/fetchRetry';
 import { isSupabaseConfigured } from './supabaseRest';
 
 export const LOCAL_USER = 'local-user';
+
+// A hung Supabase instance must not hang every authenticated API route.
+// retries: 0 because a stuck call should fail fast, not wait the same
+// timeout again per retry — see fetchRetry.ts's own AbortError short-circuit.
+const AUTH_TIMEOUT_MS = 3000;
 
 /**
  * Resolves the request's user id from a Supabase access token
@@ -16,12 +22,18 @@ export async function resolveUserId(request: Request): Promise<string> {
   if (!token) return LOCAL_USER;
 
   try {
-    const res = await fetch(`${(process.env.SUPABASE_URL ?? '').replace(/\/$/, '')}/auth/v1/user`, {
-      headers: {
-        apikey: process.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
-        authorization: `Bearer ${token}`,
+    const res = await fetchWithRetry(
+      fetch,
+      `${(process.env.SUPABASE_URL ?? '').replace(/\/$/, '')}/auth/v1/user`,
+      {
+        headers: {
+          apikey: process.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
+          authorization: `Bearer ${token}`,
+        },
+        signal: AbortSignal.timeout(AUTH_TIMEOUT_MS),
       },
-    });
+      { retries: 0 },
+    );
     if (!res.ok) return LOCAL_USER;
     const user = (await res.json()) as { id?: string };
     return user.id ?? LOCAL_USER;

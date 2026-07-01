@@ -37,6 +37,9 @@ interface GameState {
   realImpact: RealImpact;
 
   addScannedProduct: (id: string) => void;
+  /** Records a scanned product and (optionally) marks the daily scan mission
+   *  in a single commit, so the two can never desync if interrupted. */
+  recordScanProgress: (productId: string, markScanMission: boolean) => void;
   addVisitedPoint: (id: string) => void;
   addOwnedShopItem: (id: string) => void;
   joinChallenge: (id: string) => void;
@@ -124,6 +127,14 @@ export const useGameStore = create<GameState>()(
         set((s) =>
           s.scannedProducts.includes(id) ? s : { scannedProducts: [...s.scannedProducts, id] },
         ),
+
+      recordScanProgress: (productId, markScanMission) =>
+        set((s) => ({
+          scannedProducts: s.scannedProducts.includes(productId)
+            ? s.scannedProducts
+            : [...s.scannedProducts, productId],
+          dailyMissions: markScanMission ? { ...s.dailyMissions, scan: true } : s.dailyMissions,
+        })),
 
       addVisitedPoint: (id) =>
         set((s) => {
